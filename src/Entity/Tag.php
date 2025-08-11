@@ -15,15 +15,15 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity]
 #[ORM\Table(name: 'tags')]
 #[ORM\UniqueConstraint(columns: ['tenant_id', 'name'])]
-#[ApiResource(
-    operations: [
-        new Get(security: "is_granted('ROLE_USER')"),
-        new GetCollection(security: "is_granted('ROLE_USER')"),
-        new Post(security: "is_granted('ROLE_ADMIN')"),
-        new Put(security: "is_granted('ROLE_ADMIN')"),
-        new Delete(security: "is_granted('ROLE_ADMIN')")
-    ]
-)]
+       #[ApiResource(
+           operations: [
+               new Get(),
+               new GetCollection(),
+               new Post(),
+               new Put(),
+               new Delete()
+           ]
+       )]
 class Tag
 {
     #[ORM\Id]
