@@ -26,7 +26,7 @@ export interface CaseStudy {
   title: string;
   slug: string;
   summary?: string;
-  metricsJson: any;
+  metricsJson: Record<string, unknown>;
   heroImage?: string;
   practiceArea?: string;
   isActive: boolean;
@@ -115,8 +115,8 @@ export class ApiService {
   }
 
   // Get API entry point to discover available endpoints
-  async getApiInfo(): Promise<any> {
-    return this.fetchApi<any>('/');
+  async getApiInfo(): Promise<Record<string, unknown>> {
+    return this.fetchApi<Record<string, unknown>>('/');
   }
 }
 
