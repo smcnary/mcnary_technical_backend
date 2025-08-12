@@ -1,0 +1,145 @@
+<?php //property_metadata_56ddca22ab4ffd53
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['ApiPlatform\\Metadata\\ApiProperty'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\ApiProperty')),
+        clone ($p['Symfony\\Component\\PropertyInfo\\Type'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\PropertyInfo\\Type')),
+    ],
+    null,
+    [
+        'ApiPlatform\\Metadata\\ApiProperty' => [
+            'types' => [
+                null,
+            ],
+            'serialize' => [
+                [
+                    null,
+                ],
+            ],
+            'description' => [
+                null,
+            ],
+            'readable' => [
+                true,
+            ],
+            'writable' => [
+                false,
+            ],
+            'readableLink' => [
+                null,
+            ],
+            'writableLink' => [
+                null,
+            ],
+            'required' => [
+                null,
+            ],
+            'identifier' => [
+                null,
+            ],
+            'default' => [
+                [],
+            ],
+            'example' => [
+                null,
+            ],
+            'deprecationReason' => [
+                null,
+            ],
+            'fetchable' => [
+                null,
+            ],
+            'fetchEager' => [
+                null,
+            ],
+            'jsonldContext' => [
+                [
+                    '@type' => 'ConstraintViolationList',
+                ],
+            ],
+            'openapiContext' => [
+                null,
+            ],
+            'jsonSchemaContext' => [
+                null,
+            ],
+            'push' => [
+                null,
+            ],
+            'security' => [
+                null,
+            ],
+            'securityPostDenormalize' => [
+                null,
+            ],
+            'builtinTypes' => [
+                [
+                    $o[1],
+                ],
+            ],
+            'schema' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'propertyPath' => [
+                                'type' => 'string',
+                                'description' => 'The property path of the violation',
+                            ],
+                            'message' => [
+                                'type' => 'string',
+                                'description' => 'The message associated with the violation',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'initializable' => [
+                false,
+            ],
+            'genId' => [
+                null,
+            ],
+            'uriTemplate' => [
+                null,
+            ],
+            'property' => [
+                null,
+            ],
+            'policy' => [
+                null,
+            ],
+            'hydra' => [
+                null,
+            ],
+            'extraProperties' => [
+                [
+                    'user_defined_schema' => true,
+                ],
+            ],
+        ],
+        'Symfony\\Component\\PropertyInfo\\Type' => [
+            'collectionKeyType' => [
+                1 => [],
+            ],
+            'collectionValueType' => [
+                1 => [],
+            ],
+            'builtinType' => [
+                1 => 'object',
+            ],
+            'nullable' => [
+                1 => false,
+            ],
+            'class' => [
+                1 => 'Symfony\\Component\\Validator\\ConstraintViolationListInterface',
+            ],
+            'collection' => [
+                1 => false,
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

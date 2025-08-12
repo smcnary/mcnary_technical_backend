@@ -44,6 +44,8 @@ A Symfony-based backend API with a separate React frontend, providing a professi
 
 ### Backend Setup
 ```bash
+cd backend
+
 # Install dependencies
 composer install
 
@@ -79,21 +81,27 @@ The backend will run at `http://localhost:8000` and frontend at `http://localhos
 
 ```
 mcnary_technical_backend/
-├── src/                    # Backend PHP source code
-│   ├── Entity/            # Doctrine entities
-│   ├── Controller/        # API controllers
-│   ├── Repository/        # Data repositories
-│   └── ...
-├── frontend/              # React frontend application
+├── backend/               # Symfony backend application
+│   ├── src/              # PHP source code
+│   │   ├── Entity/       # Doctrine entities
+│   │   ├── Controller/   # API controllers
+│   │   ├── Repository/   # Data repositories
+│   │   └── ...
+│   ├── config/           # Symfony configuration
+│   ├── migrations/       # Database migrations
+│   ├── public/           # Web root directory
+│   ├── composer.json     # Backend dependencies
+│   └── README.md         # Backend documentation
+├── frontend/             # React frontend application
 │   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── services/      # API services
-│   │   └── App.tsx        # Main app component
-│   ├── package.json       # Frontend dependencies
-│   └── vite.config.ts     # Build configuration
-├── config/                 # Symfony configuration
-├── migrations/            # Database migrations
-└── composer.json          # Backend dependencies
+│   │   ├── components/   # React components
+│   │   ├── services/     # API services
+│   │   └── App.tsx       # Main app component
+│   ├── package.json      # Frontend dependencies
+│   ├── vite.config.ts    # Build configuration
+│   └── README.md         # Frontend documentation
+├── README.md             # Main project documentation
+└── .gitignore           # Git ignore rules
 ```
 
 ### API Endpoints
