@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { apiService } from '../services/api';
+import { apiService, Lead } from '../services/api';
 import './LeadForm.css';
 
 interface LeadFormData {
@@ -84,7 +84,7 @@ const LeadForm: React.FC = () => {
       errors.email = 'Please enter a valid email address';
     }
 
-    if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
+    if (formData.phone && !/^[+]?[1-9]\d{0,15}$/.test(formData.phone.replace(/[\s\-()]/g, ''))) {
       errors.phone = 'Please enter a valid phone number';
     }
 
@@ -142,7 +142,7 @@ const LeadForm: React.FC = () => {
         )
       );
 
-      await apiService.submitLead(submitData as any);
+      await apiService.submitLead(submitData as Omit<Lead, 'id' | 'status' | 'createdAt' | 'updatedAt'>);
       setSuccess(true);
       setFormData({
         name: '',
@@ -178,7 +178,7 @@ const LeadForm: React.FC = () => {
     return (
       <div className="lead-form-success">
         <h2>Thank You!</h2>
-        <p>Your inquiry has been submitted successfully. We'll be in touch soon!</p>
+        <p>Your inquiry has been submitted successfully. We&apos;ll be in touch soon!</p>
         <button onClick={resetForm} className="btn-primary">
           Submit Another Inquiry
         </button>
@@ -189,7 +189,7 @@ const LeadForm: React.FC = () => {
   return (
     <div className="lead-form-container">
       <h2>Get Legal Help</h2>
-      <p>Fill out the form below and we'll connect you with the right legal assistance.</p>
+      <p>Fill out the form below and we&apos;ll connect you with the right legal assistance.</p>
       
       {error && (
         <div className="error-message" role="alert">

@@ -165,7 +165,7 @@ const Faqs: React.FC = () => {
 
       {faqs.length > 0 && (
         <div className="faqs-footer">
-          <p>Can't find what you're looking for? <a href="#contact">Contact us</a> for more information.</p>
+          <p>Can&apos;t find what you&apos;re looking for? <a href="#contact">Contact us</a> for more information.</p>
         </div>
       )}
     </div>
