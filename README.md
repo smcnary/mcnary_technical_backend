@@ -1,167 +1,221 @@
-# McNary Technical Backend
+# McNary Legal Services Frontend
 
-A Symfony-based backend application for SEO database management with multi-tenancy support, built with modern PHP practices and Docker containerization.
+A modern React TypeScript frontend for the McNary Technical Backend, providing a professional legal services website with lead capture, case studies, and FAQ management.
 
 ## 🚀 Features
 
-- **SEO Database Management** - Comprehensive entities for forms, pages, posts, and SEO metadata
-- **Multi-Tenancy Support** - Built-in tenant isolation and management
-- **RESTful API** - Powered by API Platform for GraphQL and REST endpoints
-- **JWT Authentication** - Secure authentication with Lexik JWT Bundle
-- **PostgreSQL Database** - Robust database backend with Docker containerization
-- **Modern Symfony 7** - Latest Symfony framework with best practices
+- **Lead Capture Form**: Professional legal inquiry submission
+- **Case Studies Display**: Showcase successful legal cases with filtering
+- **FAQ Management**: Searchable frequently asked questions
+- **Responsive Design**: Mobile-first, modern UI/UX
+- **Real-time API Integration**: Direct connection to Symfony backend
+- **TypeScript**: Full type safety and IntelliSense
 
-## 🏗️ Architecture
+## 🛠️ Technology Stack
 
-### Core Entities
-- **Form & FormSubmission** - Dynamic form creation and data collection
-- **Page & Post** - Content management with SEO optimization
-- **SeoMeta** - Comprehensive SEO metadata management
-- **Site & Tenant** - Multi-tenant site management
-- **User** - User authentication and management
-
-### Technology Stack
-- **Backend Framework:** Symfony 7
-- **Database:** PostgreSQL 16
-- **ORM:** Doctrine ORM with migrations
-- **API:** API Platform (REST/GraphQL)
-- **Authentication:** JWT with Lexik JWT Bundle
-- **Containerization:** Docker & Docker Compose
-- **CORS:** Nelmio CORS Bundle
+- **React 18** with TypeScript
+- **Modern CSS** with responsive design
+- **Fetch API** for backend communication
+- **Component-based architecture**
+- **Mobile-responsive design**
 
 ## 📋 Prerequisites
 
-- PHP 8.2+
-- Composer
-- Docker & Docker Compose
-- Git
+- Node.js 16+ and npm
+- Running Symfony backend (see backend README)
+- Backend accessible at `http://localhost:8000`
 
-## 🛠️ Installation
+## 🚀 Quick Start
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-github-repo-url>
-   cd mcnary_technical_backend
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   composer install
-   ```
-
-3. **Start the database:**
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **Configure database connection:**
-   ```bash
-   source connect-db.sh
-   ```
-
-5. **Run database migrations:**
-   ```bash
-   bin/console doctrine:migrations:migrate
-   ```
-
-## 🗄️ Database Setup
-
-The application uses PostgreSQL running in Docker. See [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed configuration.
-
-### Quick Database Connection
+### 1. Install Dependencies
 ```bash
-# Start database
-docker-compose up -d
-
-# Connect to database
-source connect-db.sh
-
-# Check status
-bin/console doctrine:migrations:status
+npm install
 ```
 
-## 🚀 Usage
-
-### Development Server
+### 2. Start Development Server
 ```bash
-# Start Symfony development server
-symfony server:start
-
-# Or use PHP built-in server
-php -S localhost:8000 -t public/
+npm start
 ```
 
-### API Endpoints
-- **REST API:** `/api`
-- **GraphQL:** `/api/graphql`
-- **Documentation:** `/api/docs`
+The frontend will open at `http://localhost:3000`
 
-### Console Commands
+### 3. Build for Production
 ```bash
-# Database operations
-bin/console doctrine:migrations:migrate
-bin/console doctrine:schema:validate
-
-# Cache operations
-bin/console cache:clear
-bin/console cache:warmup
-
-# User management
-bin/console app:create-user
+npm run build
 ```
+
+## 🔗 Backend Integration
+
+This frontend connects to your Symfony backend at `http://localhost:8000`. Make sure your backend is running before testing the frontend.
+
+### API Endpoints Used
+- `GET /` - API discovery
+- `POST /leads` - Lead submission
+- `GET /case_studies` - Case studies listing
+- `GET /faqs` - FAQ listing
+
+## 📱 Components
+
+### LeadForm
+- Professional legal inquiry form
+- Practice area selection
+- Budget and timeline options
+- Consent management
+- Form validation
+
+### CaseStudies
+- Grid layout for case studies
+- Practice area filtering
+- Active/inactive status filtering
+- Responsive card design
+- Metrics display
+
+### Faqs
+- Accordion-style FAQ display
+- Search functionality
+- Expandable questions
+- Status indicators
+
+## 🎨 Styling
+
+- **Modern Design**: Clean, professional legal services aesthetic
+- **Responsive Layout**: Works on all device sizes
+- **Interactive Elements**: Hover effects and smooth transitions
+- **Color Scheme**: Professional blues and grays
+- **Typography**: Readable, accessible fonts
 
 ## 🔧 Configuration
 
-### Environment Variables
-- `APP_ENV` - Application environment (dev, prod, test)
-- `DATABASE_URL` - PostgreSQL connection string
-- `JWT_SECRET_KEY` - JWT private key path
-- `JWT_PUBLIC_KEY` - JWT public key path
-- `JWT_PASSPHRASE` - JWT key passphrase
+### API Base URL
+The frontend connects to the backend at `http://localhost:8000` by default. To change this:
 
-### Docker Configuration
-- PostgreSQL 16 Alpine image
-- Persistent volume storage
-- Health checks enabled
-- Port 5433 exposed (avoiding conflicts)
+1. Edit `src/services/api.ts`
+2. Update `API_BASE_URL` constant
+3. Restart the development server
+
+### Environment Variables
+Create a `.env` file in the root directory:
+```env
+REACT_APP_API_BASE_URL=http://localhost:8000
+```
+
+## 📱 Responsive Design
+
+- **Desktop**: Full-featured layout with side-by-side elements
+- **Tablet**: Optimized for medium screens
+- **Mobile**: Single-column layout with touch-friendly controls
 
 ## 🧪 Testing
 
 ```bash
 # Run tests
-bin/phpunit
+npm test
 
-# Run with coverage
-bin/phpunit --coverage-html coverage/
+# Run tests with coverage
+npm test -- --coverage
+
+# Run tests in watch mode
+npm test -- --watch
 ```
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Deploy to Static Hosting
+The `build` folder contains optimized static files ready for deployment to:
+- Netlify
+- Vercel
+- AWS S3
+- GitHub Pages
+- Any static hosting service
+
+### Environment Configuration
+For production, update the API base URL to point to your production backend.
+
+## 🔒 Security Features
+
+- **Input Validation**: Client-side form validation
+- **CORS Handling**: Proper cross-origin request handling
+- **Error Handling**: Graceful error display and recovery
+- **Data Sanitization**: Safe data transmission to backend
+
+## 📊 Performance
+
+- **Lazy Loading**: Components load on demand
+- **Optimized Images**: Responsive image handling
+- **Minified CSS/JS**: Production builds are optimized
+- **Efficient Rendering**: React optimization techniques
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Backend Connection Failed**
+   - Ensure Symfony backend is running
+   - Check backend URL in `api.ts`
+   - Verify CORS configuration
+
+2. **Build Errors**
+   - Clear `node_modules` and reinstall
+   - Check TypeScript compilation
+   - Verify React version compatibility
+
+3. **Styling Issues**
+   - Check CSS imports
+   - Verify responsive breakpoints
+   - Clear browser cache
+
+### Debug Mode
+Enable React DevTools in your browser for component debugging.
 
 ## 📚 API Documentation
 
-The API is self-documenting through API Platform. Visit `/api/docs` after starting the application to explore available endpoints and test them interactively.
+### Lead Submission
+```typescript
+const leadData = {
+  name: "John Doe",
+  email: "john@example.com",
+  phone: "+1234567890",
+  practiceAreas: ["Personal Injury"],
+  consent: true
+};
 
-## 🔒 Security
+await apiService.submitLead(leadData);
+```
 
-- JWT-based authentication
-- CORS configuration for frontend integration
-- Multi-tenant data isolation
-- Environment-based configuration
+### Fetching Data
+```typescript
+// Get case studies
+const caseStudies = await apiService.getCaseStudies();
+
+// Get FAQs
+const faqs = await apiService.getFaqs();
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## 📄 License
 
-This project is proprietary software. All rights reserved.
+This project is proprietary software for McNary Legal Services.
 
 ## 🆘 Support
 
-For support and questions, please contact the development team or create an issue in the repository.
+For technical support or questions:
+- Check the backend documentation
+- Review API responses in browser dev tools
+- Verify backend connectivity
+- Check console for error messages
 
 ---
 
-**Built with ❤️ using Symfony 7 and modern PHP practices**
+**Built with ❤️ for McNary Legal Services**
