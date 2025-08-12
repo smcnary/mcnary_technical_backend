@@ -3083,3 +3083,412 @@
 [Mon Aug 11 20:58:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
 [Mon Aug 11 20:58:07 2025] [::1]:49427 [500]: GET /case_studies
 [Mon Aug 11 20:58:07 2025] [::1]:49427 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50147 Accepted
+[Mon Aug 11 21:39:13 2025] [info] User Deprecated: Class "Doctrine\ORM\Proxy\Autoloader" is deprecated. Use native lazy objects instead. (Autoloader.php:74 called by DoctrineBundle.php:130, https://github.com/doctrine/orm/pull/12005, package doctrine/orm)
+[Mon Aug 11 21:39:13 2025] [info] Matched route "api_entrypoint".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::configureLogoutUrlGenerator".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsCsrfTokenValidAttributeListener::onKernelControllerArguments".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener::onKernelControllerArguments".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver::onKernelControllerArguments".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Mon Aug 11 21:39:13 2025] [info] User Deprecated: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Type" class is deprecated. Use "Symfony\Component\TypeInfo\Type" class from "symfony/type-info" instead.
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Mon Aug 11 21:39:13 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Mon Aug 11 21:39:13 2025] [::1]:50147 [200]: GET /
+[Mon Aug 11 21:39:13 2025] [::1]:50147 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50148 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50150 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50151 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50148 [200]: GET /bundles/apiplatform/fonts/open-sans/400.css
+[Mon Aug 11 21:39:13 2025] [::1]:50152 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50153 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50150 [200]: GET /bundles/apiplatform/fonts/open-sans/700.css
+[Mon Aug 11 21:39:13 2025] [::1]:50154 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50148 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50151 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui.css
+[Mon Aug 11 21:39:13 2025] [::1]:50152 [200]: GET /bundles/apiplatform/style.css
+[Mon Aug 11 21:39:13 2025] [::1]:50153 [200]: GET /bundles/apiplatform/logo-header.svg
+[Mon Aug 11 21:39:13 2025] [::1]:50154 [200]: GET /bundles/apiplatform/web.png
+[Mon Aug 11 21:39:13 2025] [::1]:50150 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50152 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50153 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50151 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50154 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50155 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50156 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50157 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50158 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50155 [200]: GET /bundles/apiplatform/webby.png
+[Mon Aug 11 21:39:13 2025] [::1]:50159 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50156 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-bundle.js
+[Mon Aug 11 21:39:13 2025] [::1]:50157 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-standalone-preset.js
+[Mon Aug 11 21:39:13 2025] [::1]:50158 [200]: GET /bundles/apiplatform/init-swagger-ui.js
+[Mon Aug 11 21:39:13 2025] [::1]:50159 [200]: GET /bundles/apiplatform/init-common-ui.js
+[Mon Aug 11 21:39:13 2025] [::1]:50155 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50158 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50157 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50159 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50156 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50160 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50160 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-400-normal.woff2
+[Mon Aug 11 21:39:13 2025] [::1]:50160 Closing
+[Mon Aug 11 21:39:13 2025] [::1]:50161 Accepted
+[Mon Aug 11 21:39:13 2025] [::1]:50161 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-700-normal.woff2
+[Mon Aug 11 21:39:13 2025] [::1]:50161 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54899 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54900 Accepted
+[Tue Aug 12 09:04:25 2025] [info] User Deprecated: Class "Doctrine\ORM\Proxy\Autoloader" is deprecated. Use native lazy objects instead. (Autoloader.php:74 called by DoctrineBundle.php:130, https://github.com/doctrine/orm/pull/12005, package doctrine/orm)
+[Tue Aug 12 09:04:25 2025] [info] Matched route "api_entrypoint".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::configureLogoutUrlGenerator".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsCsrfTokenValidAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver::onKernelControllerArguments".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Tue Aug 12 09:04:25 2025] [info] User Deprecated: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Type" class is deprecated. Use "Symfony\Component\TypeInfo\Type" class from "symfony/type-info" instead.
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:04:25 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:04:25 2025] [::1]:54899 [200]: GET /
+[Tue Aug 12 09:04:25 2025] [::1]:54899 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54901 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54902 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54900 [200]: GET /bundles/apiplatform/fonts/open-sans/400.css
+[Tue Aug 12 09:04:25 2025] [::1]:54903 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54901 [200]: GET /bundles/apiplatform/fonts/open-sans/700.css
+[Tue Aug 12 09:04:25 2025] [::1]:54902 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui.css
+[Tue Aug 12 09:04:25 2025] [::1]:54904 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54903 [200]: GET /bundles/apiplatform/style.css
+[Tue Aug 12 09:04:25 2025] [::1]:54905 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54900 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54904 [200]: GET /bundles/apiplatform/logo-header.svg
+[Tue Aug 12 09:04:25 2025] [::1]:54901 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54905 [200]: GET /bundles/apiplatform/web.png
+[Tue Aug 12 09:04:25 2025] [::1]:54902 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54903 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54904 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54905 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54906 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54907 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54908 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54909 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54910 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54906 [200]: GET /bundles/apiplatform/webby.png
+[Tue Aug 12 09:04:25 2025] [::1]:54907 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-bundle.js
+[Tue Aug 12 09:04:25 2025] [::1]:54908 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-standalone-preset.js
+[Tue Aug 12 09:04:25 2025] [::1]:54909 [200]: GET /bundles/apiplatform/init-swagger-ui.js
+[Tue Aug 12 09:04:25 2025] [::1]:54910 [200]: GET /bundles/apiplatform/init-common-ui.js
+[Tue Aug 12 09:04:25 2025] [::1]:54906 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54909 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54908 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54910 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54907 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54911 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54911 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-400-normal.woff2
+[Tue Aug 12 09:04:25 2025] [::1]:54911 Closing
+[Tue Aug 12 09:04:25 2025] [::1]:54912 Accepted
+[Tue Aug 12 09:04:25 2025] [::1]:54912 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-700-normal.woff2
+[Tue Aug 12 09:04:25 2025] [::1]:54912 Closing
+[Tue Aug 12 09:05:07 2025] [::1]:54929 Accepted
+[Tue Aug 12 09:05:07 2025] [info] User Deprecated: Class "Doctrine\ORM\Proxy\Autoloader" is deprecated. Use native lazy objects instead. (Autoloader.php:74 called by DoctrineBundle.php:130, https://github.com/doctrine/orm/pull/12005, package doctrine/orm)
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "POST http://localhost:8000/api/auth/login" (from "http://localhost:8000/")" at RouterListener.php line 156
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::configureLogoutUrlGenerator".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsCsrfTokenValidAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver::onKernelControllerArguments".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::logKernelException".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelException".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.exception" to listener "ApiPlatform\Symfony\EventListener\ExceptionListener::onKernelException".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException".
+[Tue Aug 12 09:05:07 2025] [debug] Listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException" stopped propagation of the event "kernel.exception".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:07 2025] [::1]:54929 [404]: POST /api/auth/login
+[Tue Aug 12 09:05:07 2025] [::1]:54929 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54931 Accepted
+[Tue Aug 12 09:05:30 2025] [info] User Deprecated: Class "Doctrine\ORM\Proxy\Autoloader" is deprecated. Use native lazy objects instead. (Autoloader.php:74 called by DoctrineBundle.php:130, https://github.com/doctrine/orm/pull/12005, package doctrine/orm)
+[Tue Aug 12 09:05:30 2025] [info] Matched route "api_entrypoint".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::configureLogoutUrlGenerator".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsCsrfTokenValidAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver::onKernelControllerArguments".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Tue Aug 12 09:05:30 2025] [info] User Deprecated: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Type" class is deprecated. Use "Symfony\Component\TypeInfo\Type" class from "symfony/type-info" instead.
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:30 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:30 2025] [::1]:54931 [200]: GET /
+[Tue Aug 12 09:05:30 2025] [::1]:54931 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54932 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54933 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54934 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54932 [200]: GET /bundles/apiplatform/fonts/open-sans/400.css
+[Tue Aug 12 09:05:30 2025] [::1]:54933 [200]: GET /bundles/apiplatform/fonts/open-sans/700.css
+[Tue Aug 12 09:05:30 2025] [::1]:54934 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui.css
+[Tue Aug 12 09:05:30 2025] [::1]:54932 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54933 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54934 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54935 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54936 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54937 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54935 [200]: GET /bundles/apiplatform/style.css
+[Tue Aug 12 09:05:30 2025] [::1]:54936 [200]: GET /bundles/apiplatform/logo-header.svg
+[Tue Aug 12 09:05:30 2025] [::1]:54937 [200]: GET /bundles/apiplatform/web.png
+[Tue Aug 12 09:05:30 2025] [::1]:54935 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54936 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54937 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54938 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54939 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54938 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-bundle.js
+[Tue Aug 12 09:05:30 2025] [::1]:54939 [200]: GET /bundles/apiplatform/webby.png
+[Tue Aug 12 09:05:30 2025] [::1]:54940 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54939 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54940 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-standalone-preset.js
+[Tue Aug 12 09:05:30 2025] [::1]:54940 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54941 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54941 [200]: GET /bundles/apiplatform/init-swagger-ui.js
+[Tue Aug 12 09:05:30 2025] [::1]:54941 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54938 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54942 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54942 [200]: GET /bundles/apiplatform/init-common-ui.js
+[Tue Aug 12 09:05:30 2025] [::1]:54942 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54943 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54943 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-400-normal.woff2
+[Tue Aug 12 09:05:30 2025] [::1]:54943 Closing
+[Tue Aug 12 09:05:30 2025] [::1]:54944 Accepted
+[Tue Aug 12 09:05:30 2025] [::1]:54944 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-700-normal.woff2
+[Tue Aug 12 09:05:30 2025] [::1]:54944 Closing
+[Tue Aug 12 09:05:35 2025] [::1]:54945 Accepted
+[Tue Aug 12 09:05:35 2025] [info] User Deprecated: Class "Doctrine\ORM\Proxy\Autoloader" is deprecated. Use native lazy objects instead. (Autoloader.php:74 called by DoctrineBundle.php:130, https://github.com/doctrine/orm/pull/12005, package doctrine/orm)
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost:8000/api"" at RouterListener.php line 156
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::configureLogoutUrlGenerator".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsCsrfTokenValidAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver::onKernelControllerArguments".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::logKernelException".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelException".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.exception" to listener "ApiPlatform\Symfony\EventListener\ExceptionListener::onKernelException".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException".
+[Tue Aug 12 09:05:35 2025] [debug] Listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException" stopped propagation of the event "kernel.exception".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:05:35 2025] [::1]:54945 [404]: GET /api
+[Tue Aug 12 09:05:35 2025] [::1]:54945 Closing
+[Tue Aug 12 09:05:35 2025] [::1]:54946 Accepted
+[Tue Aug 12 09:08:02 2025] [::1]:54946 Closed without sending a request; it was probably just an unused speculative preconnection
+[Tue Aug 12 09:08:02 2025] [::1]:54946 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55012 Accepted
+[Tue Aug 12 09:09:41 2025] [info] User Deprecated: Class "Doctrine\ORM\Proxy\Autoloader" is deprecated. Use native lazy objects instead. (Autoloader.php:74 called by DoctrineBundle.php:130, https://github.com/doctrine/orm/pull/12005, package doctrine/orm)
+[Tue Aug 12 09:09:41 2025] [info] Matched route "api_entrypoint".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::configureLogoutUrlGenerator".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsCsrfTokenValidAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver::onKernelControllerArguments".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Tue Aug 12 09:09:41 2025] [info] User Deprecated: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Type" class is deprecated. Use "Symfony\Component\TypeInfo\Type" class from "symfony/type-info" instead.
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+[Tue Aug 12 09:09:41 2025] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Tue Aug 12 09:09:41 2025] [::1]:55012 [200]: GET /
+[Tue Aug 12 09:09:41 2025] [::1]:55012 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55013 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55014 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55015 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55013 [200]: GET /bundles/apiplatform/fonts/open-sans/400.css
+[Tue Aug 12 09:09:41 2025] [::1]:55014 [200]: GET /bundles/apiplatform/fonts/open-sans/700.css
+[Tue Aug 12 09:09:41 2025] [::1]:55015 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui.css
+[Tue Aug 12 09:09:41 2025] [::1]:55013 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55014 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55015 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55016 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55017 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55016 [200]: GET /bundles/apiplatform/style.css
+[Tue Aug 12 09:09:41 2025] [::1]:55018 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55017 [200]: GET /bundles/apiplatform/logo-header.svg
+[Tue Aug 12 09:09:41 2025] [::1]:55018 [200]: GET /bundles/apiplatform/web.png
+[Tue Aug 12 09:09:41 2025] [::1]:55016 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55017 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55018 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55019 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55020 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55019 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-bundle.js
+[Tue Aug 12 09:09:41 2025] [::1]:55021 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55020 [200]: GET /bundles/apiplatform/webby.png
+[Tue Aug 12 09:09:41 2025] [::1]:55021 [200]: GET /bundles/apiplatform/swagger-ui/swagger-ui-standalone-preset.js
+[Tue Aug 12 09:09:41 2025] [::1]:55020 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55021 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55022 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55022 [200]: GET /bundles/apiplatform/init-swagger-ui.js
+[Tue Aug 12 09:09:41 2025] [::1]:55022 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55019 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55023 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55023 [200]: GET /bundles/apiplatform/init-common-ui.js
+[Tue Aug 12 09:09:41 2025] [::1]:55023 Closing
+[Tue Aug 12 09:09:41 2025] [::1]:55024 Accepted
+[Tue Aug 12 09:09:41 2025] [::1]:55024 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-400-normal.woff2
+[Tue Aug 12 09:09:41 2025] [::1]:55024 Closing
+[Tue Aug 12 09:09:42 2025] [::1]:55025 Accepted
+[Tue Aug 12 09:09:42 2025] [::1]:55025 [200]: GET /bundles/apiplatform/fonts/open-sans/files/open-sans-latin-700-normal.woff2
+[Tue Aug 12 09:09:42 2025] [::1]:55025 Closing

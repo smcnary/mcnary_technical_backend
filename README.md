@@ -76,7 +76,7 @@ npm run dev
 npm run build
 ```
 
-The backend will run at `http://localhost:8000` and frontend at `http://localhost:3000`
+The backend will run at `http://localhost:8080` and frontend at `http://localhost:3000`
 
 ## 🔗 Project Structure
 

@@ -27,7 +27,7 @@ npm run preview
 
 ## API Proxy
 
-The development server is configured to proxy `/api` requests to the Symfony backend running on `localhost:8000`.
+The development server is configured to proxy `/api` requests to the Symfony backend running on `localhost:8080`.
 
 ## Technologies
 

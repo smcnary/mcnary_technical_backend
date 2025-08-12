@@ -32,7 +32,7 @@ php bin/console doctrine:migrations:migrate
 
 # Start server
 symfony server:start
-# Or: php -S localhost:8000 -t public/
+# Or: php -S localhost:8080 -t public/
 ```
 
 ## API Endpoints
