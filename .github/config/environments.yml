@@ -1,0 +1,154 @@
+# Environment Configuration for CounselRank.legal
+# Copy and customize this file for your specific environments
+
+environments:
+  staging:
+    name: "Staging Environment"
+    description: "Pre-production testing environment"
+    url: "https://staging.counselrank.legal"
+    branch: "develop"
+    auto_deploy: true
+    required_reviewers: []
+    
+    # Server Configuration
+    server:
+      host: "staging-server.example.com"
+      user: "deploy"
+      path: "/var/www/counselrank-legal-staging"
+      ssh_key: "${{ secrets.STAGING_SSH_KEY }}"
+    
+    # Database Configuration
+    database:
+      host: "staging-db.example.com"
+      name: "counselrank_staging"
+      user: "staging_user"
+      password: "${{ secrets.STAGING_DB_PASSWORD }}"
+    
+    # Environment Variables
+    env_vars:
+      APP_ENV: "staging"
+      APP_DEBUG: "false"
+      DATABASE_URL: "mysql://staging_user:password@staging-db.example.com/counselrank_staging"
+      REDIS_URL: "redis://staging-redis.example.com:6379"
+      MAILER_DSN: "smtp://staging-mail.example.com:587"
+    
+    # Monitoring
+    monitoring:
+      health_check_url: "https://staging.counselrank.legal/health"
+      alert_email: "dev-team@counselrank.legal"
+      log_level: "warning"
+
+  production:
+    name: "Production Environment"
+    description: "Live production environment"
+    url: "https://counselrank.legal"
+    branch: "main"
+    auto_deploy: true
+    required_reviewers: ["tech-lead", "devops"]
+    
+    # Server Configuration
+    server:
+      host: "prod-server.example.com"
+      user: "deploy"
+      path: "/var/www/counselrank-legal"
+      ssh_key: "${{ secrets.PRODUCTION_SSH_KEY }}"
+    
+    # Database Configuration
+    database:
+      host: "prod-db.example.com"
+      name: "counselrank_production"
+      user: "prod_user"
+      password: "${{ secrets.PRODUCTION_DB_PASSWORD }}"
+    
+    # Environment Variables
+    env_vars:
+      APP_ENV: "production"
+      APP_DEBUG: "false"
+      DATABASE_URL: "mysql://prod_user:password@prod-db.example.com/counselrank_production"
+      REDIS_URL: "redis://prod-redis.example.com:6379"
+      MAILER_DSN: "smtp://prod-mail.example.com:587"
+    
+    # Monitoring
+    monitoring:
+      health_check_url: "https://counselrank.legal/health"
+      alert_email: "alerts@counselrank.legal"
+      log_level: "error"
+      uptime_monitoring: true
+      performance_monitoring: true
+
+  development:
+    name: "Development Environment"
+    description: "Local development environment"
+    url: "http://localhost:3000"
+    branch: "feature/*"
+    auto_deploy: false
+    required_reviewers: []
+    
+    # Local Configuration
+    local:
+      backend_port: 8000
+      frontend_port: 3000
+      database_port: 3306
+    
+    # Environment Variables
+    env_vars:
+      APP_ENV: "dev"
+      APP_DEBUG: "true"
+      DATABASE_URL: "mysql://root:root@localhost:3306/counselrank_dev"
+      REDIS_URL: "redis://localhost:6379"
+      MAILER_DSN: "null://null"
+
+# Global Configuration
+global:
+  # Backup Configuration
+  backup:
+    enabled: true
+    retention_days: 30
+    backup_path: "/var/backups/counselrank-legal"
+  
+  # Notification Configuration
+  notifications:
+    slack_webhook: "${{ secrets.SLACK_WEBHOOK }}"
+    email_recipients: "dev-team@counselrank.legal"
+    success_notifications: true
+    failure_notifications: true
+  
+  # Security Configuration
+  security:
+    snyk_enabled: true
+    dependency_scanning: true
+    secret_scanning: true
+    code_signing: false
+  
+  # Performance Configuration
+  performance:
+    lighthouse_audit: true
+    bundle_analysis: true
+    compression_enabled: true
+    cache_headers: true
+
+# Deployment Strategies
+deployment_strategies:
+  blue_green:
+    enabled: false
+    description: "Blue-green deployment for zero-downtime updates"
+  
+  rolling:
+    enabled: true
+    description: "Rolling deployment with health checks"
+    max_unavailable: 1
+    max_surge: 1
+  
+  canary:
+    enabled: false
+    description: "Canary deployment for gradual rollouts"
+    percentage: 10
+    duration: "5m"
+
+# Rollback Configuration
+rollback:
+  automatic: false
+  manual: true
+  max_rollbacks: 3
+  health_check_timeout: "2m"
+  rollback_on_failure: true

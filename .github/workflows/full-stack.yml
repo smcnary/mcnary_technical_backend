@@ -1,0 +1,251 @@
+name: Full Stack CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_mysql, xml, zip, gd, curl, iconv
+          tools: composer:v2
+
+      - name: Install backend dependencies
+        run: cd backend && composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          cp .env .env.test
+          echo "DATABASE_URL=mysql://test_user:test_password@127.0.0.1:3306/test_db" >> .env.test
+          echo "APP_ENV=test" >> .env.test
+          php bin/console doctrine:database:create --env=test --if-not-exists
+          php bin/console doctrine:schema:create --env=test
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction
+          # Run tests if phpunit is available
+          if [ -f "vendor/bin/phpunit" ]; then
+            vendor/bin/phpunit
+          else
+            echo "PHPUnit not found, skipping tests"
+          fi
+
+  frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm ci
+
+      - name: Run frontend linting
+        run: cd frontend && npm run lint
+
+      - name: Run frontend type checking
+        run: cd frontend && npx tsc --noEmit
+
+  backend-build:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    needs: backend-test
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install backend dependencies
+        run: cd backend && composer install --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction
+
+      - name: Build backend
+        run: |
+          cd backend
+          php bin/console cache:clear --env=prod --no-debug
+          php bin/console cache:warmup --env=prod
+          php bin/console assets:install public --env=prod
+
+      - name: Create backend artifact
+        run: |
+          cd backend
+          tar -czf backend-build.tar.gz \
+            --exclude='.git' \
+            --exclude='tests' \
+            --exclude='var/cache/dev' \
+            --exclude='var/log/dev.log' \
+            --exclude='.env.local' \
+            --exclude='.env.test' \
+            .
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-build
+          path: backend/backend-build.tar.gz
+          retention-days: 30
+
+  frontend-build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: frontend-test
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm ci
+
+      - name: Build frontend
+        run: cd frontend && npm run build
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/dist/
+          retention-days: 30
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build]
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: staging
+
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-build
+          path: backend/
+
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/
+
+      - name: Deploy to staging
+        run: |
+          echo "🚀 Deploying full stack to staging environment..."
+          echo "Backend: $(ls -la backend/)"
+          echo "Frontend: $(ls -la frontend/)"
+          # Add your staging deployment logic here
+          # Example: Deploy to staging server, cloud platform, etc.
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build]
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment: production
+
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-build
+          path: backend/
+
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying full stack to production environment..."
+          echo "Backend: $(ls -la backend/)"
+          echo "Frontend: $(ls -la frontend/)"
+          # Add your production deployment logic here
+          # Example: Deploy to production server, cloud platform, etc.
+
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+
+    steps:
+      - name: Run integration tests
+        run: |
+          echo "🧪 Running integration tests..."
+          # Add your integration test logic here
+          # Example: Test API endpoints, frontend-backend communication, etc.
+
+  notify:
+    name: Notify Team
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production, integration-test]
+    if: always()
+
+    steps:
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ Full stack deployment completed successfully!"
+          # Add your success notification logic here (Slack, email, etc.)
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Full stack deployment failed!"
+          # Add your failure notification logic here
