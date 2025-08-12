@@ -1,31 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiService, CaseStudy } from '../services/api';
 import './CaseStudies.css';
+
+interface FilterState {
+  practiceArea: string;
+  isActive: boolean;
+}
 
 const CaseStudies: React.FC = () => {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<FilterState>({
     practiceArea: '',
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchCaseStudies();
-  }, []);
-
-  const fetchCaseStudies = async () => {
+  const fetchCaseStudies = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await apiService.getCaseStudies();
       setCaseStudies(response.member || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch case studies');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch case studies';
+      setError(errorMessage);
+      console.error('Error fetching case studies:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCaseStudies();
+  }, [fetchCaseStudies]);
 
   const filteredCaseStudies = caseStudies.filter(study => {
     if (filter.practiceArea && study.practiceArea !== filter.practiceArea) {
@@ -39,12 +47,19 @@ const CaseStudies: React.FC = () => {
 
   const practiceAreas = Array.from(
     new Set(caseStudies.map(study => study.practiceArea).filter(Boolean))
-  );
+  ).sort();
+
+  const handleFilterChange = (key: keyof FilterState, value: string | boolean) => {
+    setFilter(prev => ({ ...prev, [key]: value }));
+  };
 
   if (loading) {
     return (
       <div className="case-studies-container">
-        <div className="loading">Loading case studies...</div>
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <p>Loading case studies...</p>
+        </div>
       </div>
     );
   }
@@ -53,7 +68,8 @@ const CaseStudies: React.FC = () => {
     return (
       <div className="case-studies-container">
         <div className="error-message">
-          {error}
+          <h3>Error Loading Case Studies</h3>
+          <p>{error}</p>
           <button onClick={fetchCaseStudies} className="btn-retry">
             Try Again
           </button>
@@ -70,13 +86,14 @@ const CaseStudies: React.FC = () => {
       </div>
 
       {caseStudies.length > 0 && (
-        <div className="filters">
+        <div className="filters" role="region" aria-label="Case study filters">
           <div className="filter-group">
             <label htmlFor="practiceArea">Practice Area:</label>
             <select
               id="practiceArea"
               value={filter.practiceArea}
-              onChange={(e) => setFilter(prev => ({ ...prev, practiceArea: e.target.value }))}
+              onChange={(e) => handleFilterChange('practiceArea', e.target.value)}
+              aria-label="Filter by practice area"
             >
               <option value="">All Practice Areas</option>
               {practiceAreas.map(area => (
@@ -86,11 +103,13 @@ const CaseStudies: React.FC = () => {
           </div>
 
           <div className="filter-group">
-            <label>
+            <label htmlFor="activeFilter">
               <input
+                id="activeFilter"
                 type="checkbox"
                 checked={filter.isActive}
-                onChange={(e) => setFilter(prev => ({ ...prev, isActive: e.target.checked }))}
+                onChange={(e) => handleFilterChange('isActive', e.target.checked)}
+                aria-label="Show active case studies only"
               />
               Show Active Only
             </label>
@@ -107,14 +126,18 @@ const CaseStudies: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="case-studies-grid">
+        <div className="case-studies-grid" role="region" aria-label="Case studies list">
           {filteredCaseStudies
-            .sort((a, b) => a.sort - b.sort)
+            .sort((a, b) => (a.sort || 0) - (b.sort || 0))
             .map(study => (
-              <div key={study.id} className="case-study-card">
+              <article key={study.id} className="case-study-card">
                 {study.heroImage && (
                   <div className="case-study-image">
-                    <img src={study.heroImage} alt={study.title} />
+                    <img 
+                      src={study.heroImage} 
+                      alt={`${study.title} case study`}
+                      loading="lazy"
+                    />
                   </div>
                 )}
                 
@@ -122,15 +145,17 @@ const CaseStudies: React.FC = () => {
                   <h3>{study.title}</h3>
                   
                   {study.practiceArea && (
-                    <span className="practice-area">{study.practiceArea}</span>
+                    <span className="practice-area" aria-label={`Practice area: ${study.practiceArea}`}>
+                      {study.practiceArea}
+                    </span>
                   )}
                   
                   {study.summary && (
                     <p className="summary">{study.summary}</p>
                   )}
                   
-                  {study.metricsJson && Object.keys(study.metricsJson).length > 0 && (
-                    <div className="metrics">
+                  {study.metricsJson && typeof study.metricsJson === 'object' && Object.keys(study.metricsJson).length > 0 && (
+                    <div className="metrics" role="region" aria-label="Case study metrics">
                       {Object.entries(study.metricsJson).map(([key, value]) => (
                         <div key={key} className="metric">
                           <span className="metric-label">{key}:</span>
@@ -141,7 +166,7 @@ const CaseStudies: React.FC = () => {
                   )}
                   
                   <div className="case-study-footer">
-                    <span className="status">
+                    <span className={`status status-${study.isActive ? 'active' : 'inactive'}`}>
                       {study.isActive ? 'Active' : 'Inactive'}
                     </span>
                     <span className="date">
@@ -149,7 +174,7 @@ const CaseStudies: React.FC = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
         </div>
       )}

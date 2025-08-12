@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiService, Faq } from '../services/api';
 import './Faqs.css';
 
@@ -9,31 +9,43 @@ const Faqs: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedFaqs, setExpandedFaqs] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    fetchFaqs();
-  }, []);
-
-  const fetchFaqs = async () => {
+  const fetchFaqs = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await apiService.getFaqs();
       setFaqs(response.member || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch FAQs');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch FAQs';
+      setError(errorMessage);
+      console.error('Error fetching FAQs:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const toggleFaq = (faqId: string) => {
-    const newExpanded = new Set(expandedFaqs);
-    if (newExpanded.has(faqId)) {
-      newExpanded.delete(faqId);
-    } else {
-      newExpanded.add(faqId);
+  useEffect(() => {
+    fetchFaqs();
+  }, [fetchFaqs]);
+
+  const toggleFaq = useCallback((faqId: string) => {
+    setExpandedFaqs(prev => {
+      const newExpanded = new Set(prev);
+      if (newExpanded.has(faqId)) {
+        newExpanded.delete(faqId);
+      } else {
+        newExpanded.add(faqId);
+      }
+      return newExpanded;
+    });
+  }, []);
+
+  const handleKeyPress = useCallback((faqId: string, event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleFaq(faqId);
     }
-    setExpandedFaqs(newExpanded);
-  };
+  }, [toggleFaq]);
 
   const filteredFaqs = faqs.filter(faq => {
     if (!searchTerm) return true;
@@ -44,12 +56,15 @@ const Faqs: React.FC = () => {
     );
   });
 
-  const sortedFaqs = filteredFaqs.sort((a, b) => a.sort - b.sort);
+  const sortedFaqs = filteredFaqs.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
   if (loading) {
     return (
       <div className="faqs-container">
-        <div className="loading">Loading FAQs...</div>
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <p>Loading FAQs...</p>
+        </div>
       </div>
     );
   }
@@ -58,7 +73,8 @@ const Faqs: React.FC = () => {
     return (
       <div className="faqs-container">
         <div className="error-message">
-          {error}
+          <h3>Error Loading FAQs</h3>
+          <p>{error}</p>
           <button onClick={fetchFaqs} className="btn-retry">
             Try Again
           </button>
@@ -75,7 +91,7 @@ const Faqs: React.FC = () => {
       </div>
 
       {faqs.length > 0 && (
-        <div className="search-container">
+        <div className="search-container" role="search">
           <div className="search-box">
             <input
               type="text"
@@ -83,8 +99,9 @@ const Faqs: React.FC = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
+              aria-label="Search frequently asked questions"
             />
-            <span className="search-icon">🔍</span>
+            <span className="search-icon" aria-hidden="true">🔍</span>
           </div>
           <div className="search-results">
             {searchTerm && (
@@ -105,24 +122,34 @@ const Faqs: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="faqs-list">
+        <div className="faqs-list" role="region" aria-label="Frequently asked questions">
           {sortedFaqs.map(faq => (
             <div key={faq.id} className="faq-item">
               <div 
                 className="faq-question"
                 onClick={() => toggleFaq(faq.id)}
+                onKeyDown={(e) => handleKeyPress(faq.id, e)}
+                tabIndex={0}
+                role="button"
+                aria-expanded={expandedFaqs.has(faq.id)}
+                aria-controls={`faq-answer-${faq.id}`}
               >
                 <h3>{faq.question}</h3>
-                <span className="expand-icon">
+                <span className="expand-icon" aria-hidden="true">
                   {expandedFaqs.has(faq.id) ? '−' : '+'}
                 </span>
               </div>
               
               {expandedFaqs.has(faq.id) && (
-                <div className="faq-answer">
+                <div 
+                  id={`faq-answer-${faq.id}`}
+                  className="faq-answer"
+                  role="region"
+                  aria-label={`Answer to: ${faq.question}`}
+                >
                   <p>{faq.answer}</p>
                   <div className="faq-meta">
-                    <span className="status">
+                    <span className={`status status-${faq.isActive ? 'active' : 'inactive'}`}>
                       {faq.isActive ? 'Active' : 'Inactive'}
                     </span>
                     <span className="date">

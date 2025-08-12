@@ -49,3 +49,24 @@ symfony server:start
 - Doctrine ORM
 - JWT Authentication
 - Multi-tenancy support
+
+## 📚 Documentation
+
+- **[Entity Creation Guide](ENTITY_CREATION_GUIDE.md)** - How to create and manage database entities
+- **[Database Setup](DATABASE_SETUP.md)** - Database connection and migration workflow
+- **[Server Deployment](SERVER_DEPLOYMENT.md)** - Production deployment and server configuration
+
+## 🚀 Quick Commands
+
+```bash
+# Development
+composer install                    # Install dependencies
+bin/console server:start          # Start development server
+bin/console make:migration        # Create new migration
+bin/console doctrine:migrations:migrate  # Run migrations
+
+# Production
+composer install --no-dev --optimize-autoloader  # Install production dependencies
+bin/console cache:clear --env=prod              # Clear production cache
+bin/console doctrine:migrations:migrate --env=prod --no-interaction  # Run production migrations
+```

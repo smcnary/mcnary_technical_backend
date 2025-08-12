@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { apiService, Lead } from '../services/api';
+import React, { useState, useCallback } from 'react';
+import { apiService } from '../services/api';
 import './LeadForm.css';
 
 interface LeadFormData {
@@ -15,6 +15,10 @@ interface LeadFormData {
   timeline: string;
   notes: string;
   consent: boolean;
+}
+
+interface FormErrors {
+  [key: string]: string;
 }
 
 const LeadForm: React.FC = () => {
@@ -36,6 +40,7 @@ const LeadForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const practiceAreaOptions = [
     'Personal Injury',
@@ -66,7 +71,36 @@ const LeadForm: React.FC = () => {
     'No specific timeline',
   ];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const validateForm = useCallback((): boolean => {
+    const errors: FormErrors = {};
+
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required';
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+
+    if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
+      errors.phone = 'Please enter a valid phone number';
+    }
+
+    if (formData.website && !/^https?:\/\/.+/.test(formData.website)) {
+      errors.website = 'Please enter a valid website URL starting with http:// or https://';
+    }
+
+    if (!formData.consent) {
+      errors.consent = 'You must consent to being contacted';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [formData]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
@@ -74,19 +108,29 @@ const LeadForm: React.FC = () => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
-  };
+    
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  }, [formErrors]);
 
-  const handlePracticeAreaChange = (practiceArea: string) => {
+  const handlePracticeAreaChange = useCallback((practiceArea: string) => {
     setFormData(prev => ({
       ...prev,
       practiceAreas: prev.practiceAreas.includes(practiceArea)
         ? prev.practiceAreas.filter(pa => pa !== practiceArea)
         : [...prev.practiceAreas, practiceArea]
     }));
-  };
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -114,19 +158,28 @@ const LeadForm: React.FC = () => {
         notes: '',
         consent: false,
       });
+      setFormErrors({});
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to submit lead');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit lead';
+      setError(errorMessage);
+      console.error('Error submitting lead:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [formData, validateForm]);
+
+  const resetForm = useCallback(() => {
+    setSuccess(false);
+    setError(null);
+    setFormErrors({});
+  }, []);
 
   if (success) {
     return (
       <div className="lead-form-success">
         <h2>Thank You!</h2>
         <p>Your inquiry has been submitted successfully. We'll be in touch soon!</p>
-        <button onClick={() => setSuccess(false)} className="btn-primary">
+        <button onClick={resetForm} className="btn-primary">
           Submit Another Inquiry
         </button>
       </div>
@@ -139,12 +192,13 @@ const LeadForm: React.FC = () => {
       <p>Fill out the form below and we'll connect you with the right legal assistance.</p>
       
       {error && (
-        <div className="error-message">
-          {error}
+        <div className="error-message" role="alert">
+          <h3>Submission Error</h3>
+          <p>{error}</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="lead-form">
+      <form onSubmit={handleSubmit} className="lead-form" noValidate>
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="name">Full Name *</label>
@@ -156,7 +210,12 @@ const LeadForm: React.FC = () => {
               onChange={handleInputChange}
               required
               placeholder="Enter your full name"
+              aria-describedby={formErrors.name ? 'name-error' : undefined}
+              aria-invalid={!!formErrors.name}
             />
+            {formErrors.name && (
+              <span id="name-error" className="error-text" role="alert">{formErrors.name}</span>
+            )}
           </div>
           
           <div className="form-group">
@@ -169,7 +228,12 @@ const LeadForm: React.FC = () => {
               onChange={handleInputChange}
               required
               placeholder="Enter your email"
+              aria-describedby={formErrors.email ? 'email-error' : undefined}
+              aria-invalid={!!formErrors.email}
             />
+            {formErrors.email && (
+              <span id="email-error" className="error-text" role="alert">{formErrors.email}</span>
+            )}
           </div>
         </div>
 
@@ -183,7 +247,12 @@ const LeadForm: React.FC = () => {
               value={formData.phone}
               onChange={handleInputChange}
               placeholder="Enter your phone number"
+              aria-describedby={formErrors.phone ? 'phone-error' : undefined}
+              aria-invalid={!!formErrors.phone}
             />
+            {formErrors.phone && (
+              <span id="phone-error" className="error-text" role="alert">{formErrors.phone}</span>
+            )}
           </div>
           
           <div className="form-group">
@@ -208,23 +277,31 @@ const LeadForm: React.FC = () => {
             value={formData.website}
             onChange={handleInputChange}
             placeholder="https://yourwebsite.com"
+            aria-describedby={formErrors.website ? 'website-error' : undefined}
+            aria-invalid={!!formErrors.website}
           />
+          {formErrors.website && (
+            <span id="website-error" className="error-text" role="alert">{formErrors.website}</span>
+          )}
         </div>
 
         <div className="form-group">
-          <label>Practice Areas</label>
-          <div className="checkbox-grid">
-            {practiceAreaOptions.map(area => (
-              <label key={area} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  checked={formData.practiceAreas.includes(area)}
-                  onChange={() => handlePracticeAreaChange(area)}
-                />
-                <span>{area}</span>
-              </label>
-            ))}
-          </div>
+          <fieldset>
+            <legend>Practice Areas</legend>
+            <div className="checkbox-grid">
+              {practiceAreaOptions.map(area => (
+                <label key={area} className="checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={formData.practiceAreas.includes(area)}
+                    onChange={() => handlePracticeAreaChange(area)}
+                    aria-label={`Select ${area} practice area`}
+                  />
+                  <span>{area}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </div>
 
         <div className="form-row">
@@ -305,18 +382,29 @@ const LeadForm: React.FC = () => {
               checked={formData.consent}
               onChange={handleInputChange}
               required
+              aria-describedby={formErrors.consent ? 'consent-error' : undefined}
+              aria-invalid={!!formErrors.consent}
             />
             <span>I consent to being contacted regarding my inquiry *</span>
           </label>
+          {formErrors.consent && (
+            <span id="consent-error" className="error-text" role="alert">{formErrors.consent}</span>
+          )}
         </div>
 
         <button 
           type="submit" 
           className="btn-submit"
           disabled={loading}
+          aria-describedby={loading ? 'loading-description' : undefined}
         >
           {loading ? 'Submitting...' : 'Submit Inquiry'}
         </button>
+        {loading && (
+          <div id="loading-description" className="sr-only">
+            Form is being submitted, please wait
+          </div>
+        )}
       </form>
     </div>
   );

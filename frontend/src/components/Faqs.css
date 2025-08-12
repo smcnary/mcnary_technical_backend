@@ -148,8 +148,17 @@
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: #27ae60;
-  color: white;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-inactive {
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .date {
@@ -184,32 +193,51 @@
   text-align: center;
   padding: 3rem;
   color: #7f8c8d;
-  font-size: 1.2rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .error-message {
-  background: #e74c3c;
-  color: white;
-  padding: 2rem;
-  border-radius: 8px;
   text-align: center;
-  margin: 2rem 0;
+  padding: 2rem;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  color: #c33;
+}
+
+.error-message h3 {
+  margin-bottom: 1rem;
+  color: #c33;
 }
 
 .btn-retry {
-  background: white;
-  color: #e74c3c;
+  background: #e74c3c;
+  color: white;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
-  font-weight: 600;
   cursor: pointer;
+  font-size: 1rem;
   margin-top: 1rem;
   transition: background-color 0.2s ease;
 }
 
 .btn-retry:hover {
-  background: #f8f9fa;
+  background: #c0392b;
 }
 
 .no-results {
