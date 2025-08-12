@@ -1,6 +1,6 @@
-# McNary Legal Services Frontend
+# McNary Technical Backend
 
-A modern React TypeScript frontend for the McNary Technical Backend, providing a professional legal services website with lead capture, case studies, and FAQ management.
+A Symfony-based backend API with a separate React frontend, providing a professional legal services platform with lead capture, case studies, and FAQ management.
 
 ## 🚀 Features
 
@@ -13,6 +13,14 @@ A modern React TypeScript frontend for the McNary Technical Backend, providing a
 
 ## 🛠️ Technology Stack
 
+### Backend
+- **Symfony 6** with PHP 8+
+- **API Platform** for REST/GraphQL APIs
+- **Doctrine ORM** with database migrations
+- **JWT Authentication**
+- **Multi-tenancy support**
+
+### Frontend
 - **React 18** with TypeScript
 - **Modern CSS** with responsive design
 - **Fetch API** for backend communication
@@ -21,38 +29,78 @@ A modern React TypeScript frontend for the McNary Technical Backend, providing a
 
 ## 📋 Prerequisites
 
+### Backend
+- PHP 8.1+
+- Composer
+- MySQL/PostgreSQL database
+- Symfony CLI (optional)
+
+### Frontend
 - Node.js 16+ and npm
-- Running Symfony backend (see backend README)
+- Running Symfony backend
 - Backend accessible at `http://localhost:8000`
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Backend Setup
 ```bash
+# Install dependencies
+composer install
+
+# Set up environment
+cp .env.example .env
+# Edit .env with your database credentials
+
+# Run migrations
+php bin/console doctrine:migrations:migrate
+
+# Start server
+symfony server:start
+# Or: php -S localhost:8000 -t public/
+```
+
+### Frontend Setup
+```bash
+cd frontend
+
+# Install dependencies
 npm install
-```
 
-### 2. Start Development Server
-```bash
-npm start
-```
+# Start development server
+npm run dev
 
-The frontend will open at `http://localhost:3000`
-
-### 3. Build for Production
-```bash
+# Build for production
 npm run build
 ```
 
-## 🔗 Backend Integration
+The backend will run at `http://localhost:8000` and frontend at `http://localhost:3000`
 
-This frontend connects to your Symfony backend at `http://localhost:8000`. Make sure your backend is running before testing the frontend.
+## 🔗 Project Structure
 
-### API Endpoints Used
-- `GET /` - API discovery
-- `POST /leads` - Lead submission
-- `GET /case_studies` - Case studies listing
-- `GET /faqs` - FAQ listing
+```
+mcnary_technical_backend/
+├── src/                    # Backend PHP source code
+│   ├── Entity/            # Doctrine entities
+│   ├── Controller/        # API controllers
+│   ├── Repository/        # Data repositories
+│   └── ...
+├── frontend/              # React frontend application
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── services/      # API services
+│   │   └── App.tsx        # Main app component
+│   ├── package.json       # Frontend dependencies
+│   └── vite.config.ts     # Build configuration
+├── config/                 # Symfony configuration
+├── migrations/            # Database migrations
+└── composer.json          # Backend dependencies
+```
+
+### API Endpoints
+- `GET /api` - API discovery
+- `POST /api/leads` - Lead submission
+- `GET /api/case_studies` - Case studies listing
+- `GET /api/faqs` - FAQ listing
 
 ## 📱 Components
 
