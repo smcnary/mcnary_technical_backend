@@ -1,6 +1,6 @@
-# Mcnary Technical Backend
+# CounselRank.legal Backend
 
-This is the Symfony-based backend API for the Mcnary Technical project.
+This is the Symfony-based backend API for the CounselRank.legal platform.
 
 ## Structure
 

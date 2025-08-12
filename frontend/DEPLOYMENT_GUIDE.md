@@ -1,4 +1,4 @@
-# 🚀 Frontend Deployment Guide
+# 🚀 CounselRank.legal Frontend Deployment Guide
 
 This guide covers deploying the React frontend application to production, including build optimization, server configuration, and integration with the Symfony backend.
 
@@ -18,7 +18,7 @@ Create `.env.production` file:
 ```bash
 # API Configuration
 VITE_API_BASE_URL=https://your-backend-domain.com/api
-VITE_APP_NAME="McNary Technical"
+VITE_APP_NAME="CounselRank.legal"
 VITE_APP_VERSION=1.0.0
 
 # Feature Flags

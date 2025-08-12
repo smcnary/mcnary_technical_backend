@@ -1,4 +1,4 @@
-# 🗄️ Frontend Database Integration Guide
+# 🗄️ CounselRank.legal Frontend Database Integration Guide
 
 This guide explains how the React frontend integrates with the Symfony backend database through API calls, data management, and state synchronization.
 

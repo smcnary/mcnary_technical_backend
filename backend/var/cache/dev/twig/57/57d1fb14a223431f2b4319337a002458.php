@@ -506,6 +506,6 @@ class __TwigTemplate_8c012a269875c705ba733119afce2114 extends Template
 
 </body>
 </html>
-", "@ApiPlatform/SwaggerUi/index.html.twig", "/Users/seanmcnary/Desktop/repos/mcnary_technical_backend/vendor/api-platform/symfony/Bundle/Resources/views/SwaggerUi/index.html.twig");
+", "@ApiPlatform/SwaggerUi/index.html.twig", "/Users/seanmcnary/Desktop/repos/mcnary_technical_backend/backend/vendor/api-platform/symfony/Bundle/Resources/views/SwaggerUi/index.html.twig");
     }
 }

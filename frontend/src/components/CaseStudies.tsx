@@ -82,7 +82,7 @@ const CaseStudies: React.FC = () => {
     <div className="case-studies-container">
       <div className="case-studies-header">
         <h2>Case Studies</h2>
-        <p>Explore our successful legal cases and outcomes</p>
+        <p>Explore our successful legal cases and outcomes at CounselRank.legal</p>
       </div>
 
       {caseStudies.length > 0 && (

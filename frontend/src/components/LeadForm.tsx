@@ -178,7 +178,7 @@ const LeadForm: React.FC = () => {
     return (
       <div className="lead-form-success">
         <h2>Thank You!</h2>
-        <p>Your inquiry has been submitted successfully. We&apos;ll be in touch soon!</p>
+        <p>Your inquiry has been submitted successfully to CounselRank.legal. We&apos;ll be in touch soon!</p>
         <button onClick={resetForm} className="btn-primary">
           Submit Another Inquiry
         </button>
@@ -189,7 +189,7 @@ const LeadForm: React.FC = () => {
   return (
     <div className="lead-form-container">
       <h2>Get Legal Help</h2>
-      <p>Fill out the form below and we&apos;ll connect you with the right legal assistance.</p>
+      <p>Fill out the form below and we&apos;ll connect you with the right legal assistance through CounselRank.legal.</p>
       
       {error && (
         <div className="error-message" role="alert">

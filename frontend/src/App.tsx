@@ -18,8 +18,8 @@ function App() {
       default:
         return (
           <div className="home-content">
-            <h1>Welcome to McNary Legal Services</h1>
-            <p>Professional legal assistance for all your needs</p>
+            <h1>Welcome to CounselRank.legal</h1>
+            <p>Your trusted partner for professional legal services</p>
             <div className="home-grid">
               <div className="home-card" onClick={() => setActiveTab('leads')}>
                 <h3>Get Legal Help</h3>
@@ -46,7 +46,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div className="header-content">
-          <h1 className="logo">McNary Legal</h1>
+          <h1 className="logo">CounselRank.legal</h1>
           <nav className="nav-menu">
             <button 
               className={`nav-item ${activeTab === 'home' ? 'active' : ''}`}
@@ -82,8 +82,8 @@ function App() {
 
       <footer className="App-footer">
         <div className="footer-content">
-          <p>&copy; 2025 McNary Legal Services. All rights reserved.</p>
-          <p>Professional legal assistance you can trust.</p>
+          <p>&copy; 2025 CounselRank.legal. All rights reserved.</p>
+          <p>Your trusted partner for professional legal services.</p>
         </div>
       </footer>
     </div>

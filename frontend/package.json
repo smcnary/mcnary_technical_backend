@@ -1,7 +1,7 @@
 {
-  "name": "mcnary-technical-frontend",
+  "name": "counselrank-legal-frontend",
   "version": "1.0.0",
-  "description": "Frontend React application for Mcnary Technical Backend",
+  "description": "Frontend React application for CounselRank.legal",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

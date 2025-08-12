@@ -1,6 +1,6 @@
-# Mcnary Technical Frontend
+# CounselRank.legal Frontend
 
-This is the React frontend application for the Mcnary Technical Backend project.
+This is the React frontend application for the CounselRank.legal platform.
 
 ## Structure
 

@@ -1,6 +1,6 @@
-# McNary Technical Backend
+# CounselRank.legal
 
-A Symfony-based backend API with a separate React frontend, providing a professional legal services platform with lead capture, case studies, and FAQ management.
+CounselRank.legal is a comprehensive legal services platform built with Symfony backend API and React frontend, providing professional legal services with lead capture, case studies, and FAQ management. Our platform connects clients with experienced attorneys and legal resources.
 
 ## 🚀 Features
 
@@ -10,6 +10,7 @@ A Symfony-based backend API with a separate React frontend, providing a professi
 - **Responsive Design**: Mobile-first, modern UI/UX
 - **Real-time API Integration**: Direct connection to Symfony backend
 - **TypeScript**: Full type safety and IntelliSense
+- **Legal Services Platform**: Comprehensive legal assistance and resources
 
 ## 🛠️ Technology Stack
 
@@ -80,7 +81,7 @@ The backend will run at `http://localhost:8000` and frontend at `http://localhos
 ## 🔗 Project Structure
 
 ```
-mcnary_technical_backend/
+counselrank-legal/
 ├── backend/               # Symfony backend application
 │   ├── src/              # PHP source code
 │   │   ├── Entity/       # Doctrine entities

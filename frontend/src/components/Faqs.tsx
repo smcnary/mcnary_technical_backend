@@ -87,7 +87,7 @@ const Faqs: React.FC = () => {
     <div className="faqs-container">
       <div className="faqs-header">
         <h2>Frequently Asked Questions</h2>
-        <p>Find answers to common questions about our legal services</p>
+        <p>Find answers to common questions about CounselRank.legal services</p>
       </div>
 
       {faqs.length > 0 && (
@@ -165,7 +165,7 @@ const Faqs: React.FC = () => {
 
       {faqs.length > 0 && (
         <div className="faqs-footer">
-          <p>Can&apos;t find what you&apos;re looking for? <a href="#contact">Contact us</a> for more information.</p>
+          <p>Can&apos;t find what you&apos;re looking for? <a href="#contact">Contact CounselRank.legal</a> for more information.</p>
         </div>
       )}
     </div>
