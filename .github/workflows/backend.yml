@@ -47,27 +47,43 @@ jobs:
       - name: Install dependencies
         run: cd backend && composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Copy environment file
-        run: cd backend && cp .env .env.test
-
       - name: Configure test environment
         run: |
           cd backend
-          echo "DATABASE_URL=mysql://test_user:test_password@127.0.0.1:3306/test_db" >> .env.test
-          echo "APP_ENV=test" >> .env.test
-          echo "APP_SECRET=test_secret_key_for_testing_only" >> .env.test
+          # Remove any existing test environment file
+          rm -f .env.test
+          
+          # Create test environment file with test-specific configuration
+          cat > .env.test << 'EOF'
+          APP_ENV=test
+          APP_DEBUG=false
+          APP_SECRET=test_secret_key_for_testing_only
+          DATABASE_URL="mysql://test_user:test_password@127.0.0.1:3306/test_db?serverVersion=8.0&charset=utf8"
+          JWT_SECRET_KEY=test-jwt-secret-key-for-ci
+          JWT_PASSPHRASE=test-jwt-passphrase-for-ci
+          CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"
+          EOF
+          
+          echo "✅ Test environment file created successfully"
 
       - name: Create database schema
-        run: |
-          cd backend
-          php bin/console doctrine:database:create --env=test --if-not-exists
-          php bin/console doctrine:schema:create --env=test
+        run: cd backend && php bin/console doctrine:database:create --env=test --if-not-exists && php bin/console doctrine:schema:create --env=test
 
       - name: Run migrations
         run: cd backend && php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
       - name: Run tests
-        run: cd backend && php bin/phpunit --coverage-clover=coverage.xml
+        run: |
+          cd backend
+          echo "🧪 Running backend tests..."
+          php bin/phpunit --coverage-clover=coverage.xml || {
+            echo "❌ Tests failed"
+            exit 1
+          }
+          echo "✅ Tests completed successfully"
+          
+          # Clean up test environment file
+          rm -f .env.test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -138,16 +154,7 @@ jobs:
         run: cd backend && php bin/console assets:install public --env=prod
 
       - name: Create build artifact
-        run: |
-          cd backend
-          tar -czf backend-build.tar.gz \
-            --exclude='.git' \
-            --exclude='tests' \
-            --exclude='var/cache/dev' \
-            --exclude='var/log/dev.log' \
-            --exclude='.env.local' \
-            --exclude='.env.test' \
-            .
+        run: cd backend && tar -czf backend-build.tar.gz --exclude='.git' --exclude='tests' --exclude='var/cache/dev' --exclude='var/log/dev.log' --exclude='.env.local' --exclude='.env.test' .
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -171,10 +178,7 @@ jobs:
           path: backend/
 
       - name: Deploy to staging
-        run: |
-          echo "Deploying to staging environment..."
-          # Add your staging deployment logic here
-          # Example: rsync, SSH deployment, or cloud platform deployment
+        run: echo "Deploying to staging environment..."
 
   deploy-production:
     name: Deploy to Production
@@ -191,7 +195,4 @@ jobs:
           path: backend/
 
       - name: Deploy to production
-        run: |
-          echo "Deploying to production environment..."
-          # Add your production deployment logic here
-          # Example: rsync, SSH deployment, or cloud platform deployment
+        run: echo "Deploying to production environment..."
