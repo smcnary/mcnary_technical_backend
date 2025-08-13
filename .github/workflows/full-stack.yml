@@ -50,18 +50,51 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
-          cp .env .env.test
-          echo "DATABASE_URL=mysql://test_user:test_password@127.0.0.1:3306/test_db" >> .env.test
-          echo "APP_ENV=test" >> .env.test
-          php bin/console doctrine:database:create --env=test --if-not-exists
-          php bin/console doctrine:schema:create --env=test
-          php bin/console doctrine:migrations:migrate --env=test --no-interaction
+          # Remove any existing test environment file
+          rm -f .env.test
+          
+          # Create test environment file with test-specific configuration
+          cat > .env.test << 'EOF'
+          APP_ENV=test
+          APP_DEBUG=false
+          APP_SECRET=test-secret-key-for-ci
+          DATABASE_URL="mysql://test_user:test_password@127.0.0.1:3306/test_db?serverVersion=8.0&charset=utf8"
+          JWT_SECRET_KEY=test-jwt-secret-key-for-ci
+          JWT_PASSPHRASE=test-jwt-passphrase-for-ci
+          CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"
+          EOF
+          
+          echo "✅ Test environment file created successfully"
+          echo "📋 Test environment configuration:"
+          cat .env.test
+          
+          echo "🗄️ Setting up test database..."
+          php bin/console doctrine:database:create --env=test --if-not-exists || {
+            echo "❌ Failed to create test database"
+            exit 1
+          }
+          php bin/console doctrine:schema:create --env=test || {
+            echo "❌ Failed to create test schema"
+            exit 1
+          }
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction || {
+            echo "❌ Failed to run test migrations"
+            exit 1
+          }
           # Run tests if phpunit is available
+          echo "🧪 Running tests..."
           if [ -f "vendor/bin/phpunit" ]; then
-            vendor/bin/phpunit
+            vendor/bin/phpunit || {
+              echo "❌ Tests failed"
+              exit 1
+            }
+            echo "✅ Tests completed successfully"
           else
-            echo "PHPUnit not found, skipping tests"
+            echo "⚠️ PHPUnit not found, skipping tests"
           fi
+          
+          # Clean up test environment file
+          rm -f .env.test
 
   frontend-test:
     name: Frontend Tests
@@ -82,13 +115,7 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Fix security vulnerabilities
-        run: |
-          cd frontend
-          echo "🔧 Attempting to fix security vulnerabilities..."
-          npm audit fix --audit-level=moderate || {
-            echo "⚠️ Some vulnerabilities could not be automatically fixed."
-            echo "Manual review required for remaining issues."
-          }
+        run: cd frontend && echo "🔧 Attempting to fix security vulnerabilities..." && npm audit fix --audit-level=moderate || { echo "⚠️ Some vulnerabilities could not be automatically fixed."; echo "Manual review required for remaining issues."; }
 
       - name: Run frontend linting
         run: cd frontend && npm run lint
@@ -116,23 +143,10 @@ jobs:
         run: cd backend && composer install --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction
 
       - name: Build backend
-        run: |
-          cd backend
-          php bin/console cache:clear --env=prod --no-debug
-          php bin/console cache:warmup --env=prod
-          php bin/console assets:install public --env=prod
+        run: cd backend && php bin/console cache:clear --env=prod --no-debug && php bin/console cache:warmup --env=prod && php bin/console assets:install public --env=prod
 
       - name: Create backend artifact
-        run: |
-          cd backend
-          tar -czf backend-build.tar.gz \
-            --exclude='.git' \
-            --exclude='tests' \
-            --exclude='var/cache/dev' \
-            --exclude='var/log/dev.log' \
-            --exclude='.env.local' \
-            --exclude='.env.test' \
-            .
+        run: cd backend && tar -czf backend-build.tar.gz --exclude='.git' --exclude='tests' --exclude='var/cache/dev' --exclude='var/log/dev.log' --exclude='.env.local' --exclude='.env.test' .
 
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
@@ -192,12 +206,7 @@ jobs:
           path: frontend/
 
       - name: Deploy to staging
-        run: |
-          echo "🚀 Deploying full stack to staging environment..."
-          echo "Backend: $(ls -la backend/)"
-          echo "Frontend: $(ls -la frontend/)"
-          # Add your staging deployment logic here
-          # Example: Deploy to staging server, cloud platform, etc.
+        run: echo "🚀 Deploying full stack to staging environment..."
 
   deploy-production:
     name: Deploy to Production
@@ -220,12 +229,7 @@ jobs:
           path: frontend/
 
       - name: Deploy to production
-        run: |
-          echo "🚀 Deploying full stack to production environment..."
-          echo "Backend: $(ls -la backend/)"
-          echo "Frontend: $(ls -la frontend/)"
-          # Add your production deployment logic here
-          # Example: Deploy to production server, cloud platform, etc.
+        run: echo "🚀 Deploying full stack to production environment..."
 
   integration-test:
     name: Integration Tests
@@ -235,10 +239,7 @@ jobs:
 
     steps:
       - name: Run integration tests
-        run: |
-          echo "🧪 Running integration tests..."
-          # Add your integration test logic here
-          # Example: Test API endpoints, frontend-backend communication, etc.
+        run: echo "🧪 Running integration tests..."
 
   notify:
     name: Notify Team
@@ -249,12 +250,8 @@ jobs:
     steps:
       - name: Notify on success
         if: success()
-        run: |
-          echo "✅ Full stack deployment completed successfully!"
-          # Add your success notification logic here (Slack, email, etc.)
+        run: echo "✅ Full stack deployment completed successfully!"
 
       - name: Notify on failure
         if: failure()
-        run: |
-          echo "❌ Full stack deployment failed!"
-          # Add your failure notification logic here
+        run: echo "❌ Full stack deployment failed!"
