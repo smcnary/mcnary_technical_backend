@@ -32,13 +32,7 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Fix security vulnerabilities
-        run: |
-          cd frontend
-          echo "🔧 Attempting to fix security vulnerabilities..."
-          npm audit fix --audit-level=moderate || {
-            echo "⚠️ Some vulnerabilities could not be automatically fixed."
-            echo "Manual review required for remaining issues."
-          }
+        run: cd frontend && echo "🔧 Attempting to fix security vulnerabilities..." && npm audit fix --audit-level=moderate || { echo "⚠️ Some vulnerabilities could not be automatically fixed."; echo "Manual review required for remaining issues."; }
 
       - name: Run linting
         run: cd frontend && npm run lint
@@ -47,13 +41,7 @@ jobs:
         run: cd frontend && npx tsc --noEmit
 
       - name: Run tests (if test script exists)
-        run: |
-          cd frontend
-          if npm run | grep -q "test"; then
-            npm test -- --coverage --watchAll=false
-          else
-            echo "No test script found, skipping tests"
-          fi
+        run: cd frontend && if npm run | grep -q "test"; then npm test -- --coverage --watchAll=false; else echo "No test script found, skipping tests"; fi
 
       - name: Upload test coverage
         uses: codecov/codecov-action@v4
@@ -82,21 +70,15 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Run npm audit
-        run: |
-          cd frontend
-          npm audit --audit-level=moderate || {
-            echo "⚠️ Security vulnerabilities found. Continuing with workflow..."
-            echo "Vulnerabilities will be reported but won't block the build."
-            exit 0
-          }
+        run: cd frontend && npm audit --audit-level=moderate || { echo "⚠️ Security vulnerabilities found. Continuing with workflow..."; echo "Vulnerabilities will be reported but won't block the build."; exit 0; }
+
+      - name: Install Snyk
+        run: npm install -g snyk
 
       - name: Run Snyk security scan
-        uses: snyk/actions/node@master
+        run: cd frontend && snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
-          working-directory: frontend
 
   build:
     name: Build Application
@@ -162,9 +144,7 @@ jobs:
         run: npm install -g @lhci/cli@0.12.x
 
       - name: Run Lighthouse CI
-        run: |
-          cd frontend
-          lhci autorun --upload.target=temporary-public-storage
+        run: cd frontend && lhci autorun --upload.target=temporary-public-storage
 
   deploy-staging:
     name: Deploy to Staging
@@ -181,10 +161,7 @@ jobs:
           path: frontend/dist/
 
       - name: Deploy to staging
-        run: |
-          echo "Deploying frontend to staging environment..."
-          # Add your staging deployment logic here
-          # Example: AWS S3, Netlify, Vercel, or custom server deployment
+        run: echo "Deploying frontend to staging environment..."
 
   deploy-production:
     name: Deploy to Production
@@ -201,10 +178,7 @@ jobs:
           path: frontend/dist/
 
       - name: Deploy to production
-        run: |
-          echo "Deploying frontend to production environment..."
-          # Add your production deployment logic here
-          # Example: AWS S3, Netlify, Vercel, or custom server deployment
+        run: echo "Deploying frontend to production environment..."
 
   notify:
     name: Notify Team
@@ -215,12 +189,8 @@ jobs:
     steps:
       - name: Notify on success
         if: success()
-        run: |
-          echo "✅ Deployment completed successfully!"
-          # Add your notification logic here (Slack, email, etc.)
+        run: echo "✅ Deployment completed successfully!"
 
       - name: Notify on failure
         if: failure()
-        run: |
-          echo "❌ Deployment failed!"
-          # Add your failure notification logic here
+        run: echo "❌ Deployment failed!"
