@@ -48,7 +48,19 @@ jobs:
         run: cd backend && composer validate --strict
 
       - name: Install dependencies
-        run: cd backend && composer install --prefer-dist --no-progress --no-interaction
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd backend
+          echo "📦 Installing backend dependencies..."
+          composer install --verbose --prefer-dist --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          echo "✅ Backend dependencies installed successfully"
 
       - name: Setup MySQL permissions
         run: |
@@ -124,7 +136,19 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies
-        run: cd backend && composer install --prefer-dist --no-dev --no-progress --no-interaction
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd backend
+          echo "📦 Installing backend dependencies (security)..."
+          composer install --verbose --prefer-dist --no-dev --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          echo "✅ Backend dependencies installed successfully"
 
       - name: Run security audit
         run: cd backend && composer audit --format=json --output=security-report.json
@@ -152,7 +176,19 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies
-        run: cd backend && composer install --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd backend
+          echo "📦 Installing backend dependencies (build)..."
+          composer install --verbose --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          echo "✅ Backend dependencies installed successfully"
 
       - name: Clear cache
         run: cd backend && php bin/console cache:clear --env=prod --no-debug
