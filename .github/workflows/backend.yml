@@ -54,15 +54,13 @@ jobs:
           rm -f .env.test
           
           # Create test environment file with test-specific configuration
-          cat > .env.test << 'EOF'
-          APP_ENV=test
-          APP_DEBUG=false
-          APP_SECRET=test_secret_key_for_testing_only
-          DATABASE_URL="mysql://test_user:test_password@127.0.0.1:3306/test_db?serverVersion=8.0&charset=utf8"
-          JWT_SECRET_KEY=test-jwt-secret-key-for-ci
-          JWT_PASSPHRASE=test-jwt-passphrase-for-ci
-          CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"
-          EOF
+          echo "APP_ENV=test" > .env.test
+          echo "APP_DEBUG=false" >> .env.test
+          echo "APP_SECRET=test_secret_key_for_testing_only" >> .env.test
+          echo 'DATABASE_URL="mysql://test_user:test_password@127.0.0.1:3306/test_db?serverVersion=8.0&charset=utf8"' >> .env.test
+          echo "JWT_SECRET_KEY=test-jwt-secret-key-for-ci" >> .env.test
+          echo "JWT_PASSPHRASE=test-jwt-passphrase-for-ci" >> .env.test
+          echo 'CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"' >> .env.test
           
           echo "✅ Test environment file created successfully"
 

@@ -34,15 +34,13 @@ jobs:
           cp .env.test .env.test.local
         else
           echo "Creating minimal .env.test.local for testing..."
-          cat > .env.test.local << 'EOF'
-          APP_ENV=test
-          APP_DEBUG=false
-          APP_SECRET=test-secret-key-for-ci
-          DATABASE_URL="sqlite:///%kernel.project_dir%/data/database.sqlite"
-          JWT_SECRET_KEY=test-jwt-secret-key-for-ci
-          JWT_PASSPHRASE=test-jwt-passphrase-for-ci
-          CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"
-          EOF
+          echo "APP_ENV=test" > .env.test.local
+          echo "APP_DEBUG=false" >> .env.test.local
+          echo "APP_SECRET=test-secret-key-for-ci" >> .env.test.local
+          echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/data/database.sqlite"' >> .env.test.local
+          echo "JWT_SECRET_KEY=test-jwt-secret-key-for-ci" >> .env.test.local
+          echo "JWT_PASSPHRASE=test-jwt-passphrase-for-ci" >> .env.test.local
+          echo 'CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"' >> .env.test.local
         fi
     - name: Cache Composer packages
       id: composer-cache
