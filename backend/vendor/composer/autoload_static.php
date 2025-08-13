@@ -442,7 +442,7 @@ class ComposerStaticInitaf3a971b86a4585c7c3bf9fe517e48ae
         ),
         'Doctrine\\Inflector\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
+            0 => __DIR__ . '/..' . '/doctrine/inflector/src',
         ),
         'Doctrine\\Deprecations\\' => 
         array (

@@ -16,7 +16,7 @@ if (!\class_exists(App_KernelDevDebugContainer::class, false)) {
 
 return new \ContainerTiciHRY\App_KernelDevDebugContainer([
     'container.build_hash' => 'TiciHRY',
-    'container.build_id' => 'dad624ee',
-    'container.build_time' => 1754963287,
+    'container.build_id' => '6daf1bfb',
+    'container.build_time' => 1755087881,
     'container.runtime_mode' => \in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true) ? 'web=0' : 'web=1',
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerTiciHRY');
