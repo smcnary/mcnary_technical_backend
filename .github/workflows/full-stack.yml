@@ -81,6 +81,15 @@ jobs:
       - name: Install frontend dependencies
         run: cd frontend && npm ci
 
+      - name: Fix security vulnerabilities
+        run: |
+          cd frontend
+          echo "🔧 Attempting to fix security vulnerabilities..."
+          npm audit fix --audit-level=moderate || {
+            echo "⚠️ Some vulnerabilities could not be automatically fixed."
+            echo "Manual review required for remaining issues."
+          }
+
       - name: Run frontend linting
         run: cd frontend && npm run lint
 
