@@ -48,7 +48,19 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y mysql-client
 
       - name: Install backend dependencies
-        run: cd backend && composer install --prefer-dist --no-progress --no-interaction
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd backend
+          echo "📦 Installing backend dependencies..."
+          composer install --verbose --prefer-dist --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          echo "✅ Backend dependencies installed successfully"
 
       - name: Setup MySQL permissions
         run: |
@@ -150,7 +162,19 @@ jobs:
           tools: composer:v2
 
       - name: Install backend dependencies
-        run: cd backend && composer install --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd backend
+          echo "📦 Installing backend dependencies (production)..."
+          composer install --verbose --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          echo "✅ Backend dependencies installed successfully"
 
       - name: Build backend
         run: cd backend && php bin/console cache:clear --env=prod --no-debug && php bin/console cache:warmup --env=prod && php bin/console assets:install public --env=prod

@@ -50,8 +50,26 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
+    - name: Verify Composer configuration
+      run: |
+        echo "🔍 Checking Composer configuration..."
+        composer --version
+        composer config --list --global
+        
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      env:
+        COMPOSER_PROCESS_TIMEOUT: 300
+        COMPOSER_NO_INTERACTION: 1
+        COMPOSER_NO_AUDIT: 1
+      run: |
+        echo "📦 Installing Composer dependencies..."
+        composer install --verbose --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist || {
+          echo "❌ Composer install failed"
+          echo "🔍 Checking for common issues..."
+          composer diagnose
+          exit 1
+        }
+        echo "✅ Dependencies installed successfully"
     - name: Create Database
       run: |
         mkdir -p data
