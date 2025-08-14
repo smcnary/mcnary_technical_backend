@@ -148,12 +148,39 @@ jobs:
           echo "JWT_PASSPHRASE=test-jwt-passphrase-for-ci" >> .env.test
           echo 'CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"' >> .env.test
           
+          # Also create .env.test.local to ensure highest precedence
+          cp .env.test .env.test.local
+          
           echo "✅ Test environment file created successfully"
+          echo "📋 Test environment configuration:"
+          cat .env.test
+          
+          echo "📋 Test environment local configuration:"
+          cat .env.test.local
+          
+          echo "🔍 Verifying environment variable precedence..."
+          echo "Current DATABASE_URL: $DATABASE_URL"
 
       - name: Create database schema
         run: |
           cd backend
           echo "🗄️ Creating database schema..."
+          
+          # Explicitly unset any conflicting environment variables
+          echo "🧹 Clearing conflicting environment variables..."
+          unset DATABASE_URL || true
+          unset PGPASSWORD || true
+          unset PGHOST || true
+          unset PGPORT || true
+          unset PGDATABASE || true
+          unset PGUSER || true
+          
+          # Verify the test environment is loaded
+          echo "🔍 Verifying test environment loading..."
+          php bin/console debug:container --env=test | grep -i database || {
+            echo "⚠️ Could not verify database configuration, continuing..."
+          }
+          
           php bin/console doctrine:database:create --env=test --if-not-exists || {
             echo "❌ Failed to create test database"
             exit 1
@@ -197,8 +224,8 @@ jobs:
           }
           echo "✅ Tests completed successfully"
           
-          # Clean up test environment file
-          rm -f .env.test
+          # Clean up test environment files
+          rm -f .env.test .env.test.local
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
