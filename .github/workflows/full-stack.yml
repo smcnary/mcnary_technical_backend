@@ -136,10 +136,11 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
-          # Remove any existing test environment file
-          rm -f .env.test
+          # Remove any existing test environment files
+          rm -f .env.test .env.test.local
           
           # Create test environment file with test-specific configuration
+          # This will override any PostgreSQL settings from base .env files
           echo "APP_ENV=test" > .env.test
           echo "APP_DEBUG=false" >> .env.test
           echo "APP_SECRET=test-secret-key-for-ci" >> .env.test
@@ -148,11 +149,36 @@ jobs:
           echo "JWT_PASSPHRASE=test-jwt-passphrase-for-ci" >> .env.test
           echo 'CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"' >> .env.test
           
+          # Also create .env.test.local to ensure highest precedence
+          cp .env.test .env.test.local
+          
           echo "✅ Test environment file created successfully"
           echo "📋 Test environment configuration:"
           cat .env.test
           
+          echo "📋 Test environment local configuration:"
+          cat .env.test.local
+          
+          echo "🔍 Verifying environment variable precedence..."
+          echo "Current DATABASE_URL: $DATABASE_URL"
+          
           echo "🗄️ Setting up test database..."
+          
+          # Explicitly unset any conflicting environment variables
+          echo "🧹 Clearing conflicting environment variables..."
+          unset DATABASE_URL || true
+          unset PGPASSWORD || true
+          unset PGHOST || true
+          unset PGPORT || true
+          unset PGDATABASE || true
+          unset PGUSER || true
+          
+          # Verify the test environment is loaded
+          echo "🔍 Verifying test environment loading..."
+          php bin/console debug:container --env=test | grep -i database || {
+            echo "⚠️ Could not verify database configuration, continuing..."
+          }
+          
           php bin/console doctrine:database:create --env=test --if-not-exists || {
             echo "❌ Failed to create test database"
             exit 1
@@ -198,8 +224,8 @@ jobs:
             echo "⚠️ PHPUnit not found, skipping tests"
           fi
           
-          # Clean up test environment file
-          rm -f .env.test
+          # Clean up test environment files
+          rm -f .env.test .env.test.local
 
   frontend-test:
     name: Frontend Tests
