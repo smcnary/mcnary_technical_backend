@@ -105,14 +105,33 @@ jobs:
             SELECT 'Connection successful' as status;
             -- Test if user can see the test database
             SHOW DATABASES LIKE 'test_db_test';
-            -- Test if user can create a test table
-            CREATE TABLE IF NOT EXISTS test_permissions (id INT);
-            DROP TABLE IF EXISTS test_permissions;
           " || {
             echo "❌ Test user permissions verification failed"
             exit 1
           }
+          
+          echo "🔍 Testing table creation permissions..."
+          mysql -h 127.0.0.1 -P 3306 -u test_user -ptest_password test_db_test -e "
+            -- Test if user can create a test table
+            CREATE TABLE IF NOT EXISTS test_permissions (id INT);
+            -- Test if user can drop the test table
+            DROP TABLE IF EXISTS test_permissions;
+            SELECT 'Table operations successful' as status;
+          " || {
+            echo "❌ Test user table permissions verification failed"
+            exit 1
+          }
           echo "✅ Test user permissions verified successfully"
+
+      - name: Debug MySQL status
+        run: |
+          echo "🔍 Debugging MySQL status..."
+          echo "--- Current MySQL users ---"
+          mysql -h 127.0.0.1 -P 3306 -u root -proot -e "SELECT User, Host, authentication_string FROM mysql.user WHERE User = 'test_user';"
+          echo "--- Current databases ---"
+          mysql -h 127.0.0.1 -P 3306 -u root -proot -e "SHOW DATABASES;"
+          echo "--- Test user privileges ---"
+          mysql -h 127.0.0.1 -P 3306 -u root -proot -e "SHOW GRANTS FOR 'test_user'@'%';"
 
       - name: Configure test environment
         run: |
