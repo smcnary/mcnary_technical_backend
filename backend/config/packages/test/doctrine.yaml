@@ -1,0 +1,17 @@
+doctrine:
+    dbal:
+        # Force MySQL platform for test environment
+        platform: 'doctrine.dbal.platform.mysql'
+        # Override server version for MySQL compatibility
+        server_version: '8.0'
+        # Ensure MySQL-specific options
+        options:
+            # MySQL-specific connection options
+            1002: "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO'"
+        # Disable PostgreSQL-specific features
+        schema_filter: '~^(?!pg_stat_statements)~'
+        # Use MySQL-compatible mapping types
+        mapping_types:
+            citext: string
+            # Ensure TEXT columns don't get PostgreSQL-specific defaults
+            text: text

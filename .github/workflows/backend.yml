@@ -143,7 +143,7 @@ jobs:
           echo "APP_ENV=test" > .env.test
           echo "APP_DEBUG=false" >> .env.test
           echo "APP_SECRET=test_secret_key_for_testing_only" >> .env.test
-          echo 'DATABASE_URL="mysql://test_user:test_password@127.0.0.1:3306/test_db_test?serverVersion=8.0&charset=utf8"' >> .env.test
+          echo 'DATABASE_URL="mysql://test_user:test_password@127.0.0.1:3306/test_db_test?serverVersion=8.0&charset=utf8&platform=mysql"' >> .env.test
           echo "JWT_SECRET_KEY=test-jwt-secret-key-for-ci" >> .env.test
           echo "JWT_PASSPHRASE=test-jwt-passphrase-for-ci" >> .env.test
           echo 'CORS_ALLOW_ORIGIN="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"' >> .env.test
@@ -151,7 +151,38 @@ jobs:
           echo "✅ Test environment file created successfully"
 
       - name: Create database schema
-        run: cd backend && php bin/console doctrine:database:create --env=test --if-not-exists && php bin/console doctrine:schema:create --env=test
+        run: |
+          cd backend
+          echo "🗄️ Creating database schema..."
+          php bin/console doctrine:database:create --env=test --if-not-exists || {
+            echo "❌ Failed to create test database"
+            exit 1
+          }
+          
+          echo "🔧 Clearing Doctrine cache..."
+          php bin/console cache:clear --env=test || {
+            echo "⚠️ Cache clear failed, continuing..."
+          }
+          
+          echo "🔍 Verifying Doctrine configuration..."
+          php bin/console debug:config doctrine dbal || {
+            echo "⚠️ Could not show Doctrine config, continuing..."
+          }
+          
+          echo "🔍 Checking Doctrine platform..."
+          php bin/console debug:container doctrine.dbal.default_connection.driver || {
+            echo "⚠️ Could not show driver info, continuing..."
+          }
+          
+          echo "🗄️ Creating database schema..."
+          php bin/console doctrine:schema:create --env=test || {
+            echo "❌ Failed to create test schema"
+            echo "🔍 Checking for schema validation issues..."
+            php bin/console doctrine:schema:validate --env=test || {
+              echo "⚠️ Schema validation failed"
+            }
+            exit 1
+          }
 
       - name: Run migrations
         run: cd backend && php bin/console doctrine:migrations:migrate --env=test --no-interaction
