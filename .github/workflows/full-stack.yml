@@ -45,7 +45,7 @@ jobs:
           tools: composer:v2
 
       - name: Setup PostgreSQL
-        uses: Harmon758/postgresql-action@v1.0.3
+        uses: supercharge/postgresql@v1
         with:
           postgresql-version: '16'
           postgresql-db: 'test_db_test'
