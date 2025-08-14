@@ -44,6 +44,28 @@ jobs:
       - name: Install MySQL client
         run: sudo apt-get update && sudo apt-get install -y mysql-client
 
+      - name: Verify MySQL connection
+        run: |
+          echo "🔍 Verifying MySQL connection..."
+          mysql -h 127.0.0.1 -P 3306 -u root -proot -e "SELECT VERSION();" || {
+            echo "❌ Cannot connect to MySQL as root"
+            echo "🔍 Checking MySQL service status..."
+            sudo systemctl status mysql || echo "MySQL service not found"
+            echo "🔍 Checking if MySQL port is listening..."
+            netstat -tlnp | grep 3306 || echo "Port 3306 not listening"
+            exit 1
+          }
+          echo "✅ MySQL connection verified successfully"
+
+      - name: Ensure test database exists
+        run: |
+          echo "🗄️ Ensuring test database exists..."
+          mysql -h 127.0.0.1 -P 3306 -u root -proot -e "
+            CREATE DATABASE IF NOT EXISTS test_db_test;
+            SHOW DATABASES LIKE 'test_db_test';
+          "
+          echo "✅ Test database verified/created successfully"
+
       - name: Validate composer.json
         run: cd backend && composer validate --strict
 
@@ -66,10 +88,31 @@ jobs:
         run: |
           echo "🔧 Setting up MySQL permissions..."
           mysql -h 127.0.0.1 -P 3306 -u root -proot -e "
-            GRANT ALL PRIVILEGES ON test_db_test.* TO 'test_user'@'%';
+            -- Grant all privileges on all databases to test_user
+            GRANT ALL PRIVILEGES ON *.* TO 'test_user'@'%';
+            -- Grant specific privileges for test database
+            GRANT CREATE, DROP, ALTER, INDEX, SELECT, INSERT, UPDATE, DELETE ON *.* TO 'test_user'@'%';
             FLUSH PRIVILEGES;
+            -- Show the granted privileges
             SHOW GRANTS FOR 'test_user'@'%';
+            -- Verify the user can connect
+            SELECT User, Host FROM mysql.user WHERE User = 'test_user';
           "
+          
+          echo "🔍 Verifying test user permissions..."
+          mysql -h 127.0.0.1 -P 3306 -u test_user -ptest_password -e "
+            -- Test if user can connect
+            SELECT 'Connection successful' as status;
+            -- Test if user can see the test database
+            SHOW DATABASES LIKE 'test_db_test';
+            -- Test if user can create a test table
+            CREATE TABLE IF NOT EXISTS test_permissions (id INT);
+            DROP TABLE IF EXISTS test_permissions;
+          " || {
+            echo "❌ Test user permissions verification failed"
+            exit 1
+          }
+          echo "✅ Test user permissions verified successfully"
 
       - name: Configure test environment
         run: |
