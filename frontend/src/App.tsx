@@ -3,6 +3,7 @@ import './App.css';
 import LeadForm from './components/LeadForm';
 import CaseStudies from './components/CaseStudies';
 import Faqs from './components/Faqs';
+import ApiTest from './components/ApiTest';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -15,6 +16,8 @@ function App() {
         return <CaseStudies />;
       case 'faqs':
         return <Faqs />;
+      case 'api-test':
+        return <ApiTest />;
       default:
         return (
           <div className="home-content">
@@ -35,6 +38,11 @@ function App() {
                 <h3>FAQ</h3>
                 <p>Find answers to common legal questions</p>
                 <button className="btn-primary">View FAQs</button>
+              </div>
+              <div className="home-card" onClick={() => setActiveTab('api-test')}>
+                <h3>API Test</h3>
+                <p>Test the connection to the backend API</p>
+                <button className="btn-primary">Test API</button>
               </div>
             </div>
           </div>
@@ -71,6 +79,12 @@ function App() {
               onClick={() => setActiveTab('faqs')}
             >
               FAQ
+            </button>
+            <button 
+              className={`nav-item ${activeTab === 'api-test' ? 'active' : ''}`}
+              onClick={() => setActiveTab('api-test')}
+            >
+              API Test
             </button>
           </nav>
         </div>
