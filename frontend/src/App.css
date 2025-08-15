@@ -262,3 +262,119 @@ body {
     font-size: 1.3rem;
   }
 }
+
+/* API Test Component Styles */
+.api-test {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.api-test h2 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.status-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.status-section h3 {
+  margin: 0 0 10px 0;
+  color: #495057;
+}
+
+.error {
+  color: #dc3545;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.api-info {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.api-info h3 {
+  margin: 0 0 15px 0;
+  color: #495057;
+}
+
+.api-info pre {
+  background: #e9ecef;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.endpoints {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.endpoints h3 {
+  margin: 0 0 15px 0;
+  color: #495057;
+}
+
+.endpoints ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.endpoints li {
+  padding: 8px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.endpoints li:last-child {
+  border-bottom: none;
+}
+
+.endpoints strong {
+  color: #495057;
+  display: inline-block;
+  width: 120px;
+}
+
+.endpoints a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.endpoints a:hover {
+  text-decoration: underline;
+}
