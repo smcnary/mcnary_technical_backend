@@ -3,52 +3,91 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'pages')]
-#[ORM\UniqueConstraint(columns: ['tenant_id', 'site_id', 'slug'])]
-#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    operations: [
+        new Get(security: "PUBLIC_ACCESS"), // Public pages
+        new GetCollection(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"),
+        new Post(security: "is_granted('ROLE_AGENCY_ADMIN')"),
+        new Put(security: "is_granted('ROLE_AGENCY_ADMIN')"),
+        new Delete(security: "is_granted('ROLE_AGENCY_ADMIN')")
+    ]
+)]
 class Page
 {
+    use Timestamps;
+
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\Column(name: 'tenant_id', type: 'uuid')]
-    public string $tenantId;
+    #[ORM\Column(name: 'client_id', type: 'uuid', nullable: true)]
+    private ?string $clientId = null;
 
-    #[ORM\Column(name: 'site_id', type: 'uuid')]
-    public string $siteId;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private string $title;
 
-    #[ORM\Column(type: 'string')]
-    public string $title;
-
-    #[ORM\Column(type: 'string')]
-    public string $slug;
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank]
+    private string $slug;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    public ?string $content = null;
+    private ?string $excerpt = null;
 
-    #[ORM\Column(type: 'string', options: ['default' => 'draft'])]
-    public string $status = 'draft';
+    #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank]
+    private string $content;
 
-    #[ORM\Column(name: 'published_at', type: 'datetimetz_immutable', nullable: true)]
-    public ?\DateTimeImmutable $publishedAt = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $metaTitle = null;
 
-    #[ORM\Column(name: 'created_at', type: 'datetimetz_immutable')]
-    public \DateTimeImmutable $createdAt;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $metaDescription = null;
 
-    #[ORM\Column(name: 'updated_at', type: 'datetimetz_immutable')]
-    public \DateTimeImmutable $updatedAt;
+    #[ORM\Column(type: 'jsonb', nullable: true)]
+    private ?array $metaKeywords = [];
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $featuredImage = null;
+
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'page'])]
+    private string $type = 'page'; // page, service, about, contact, etc.
+
+    #[ORM\Column(type: 'string', options: ['default' => 'published'])]
+    private string $status = 'published'; // draft, published, archived
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $sortOrder = 0;
+
+    #[ORM\Column(type: 'jsonb', nullable: true)]
+    private ?array $metadata = [];
+
+    #[ORM\Column(type: 'jsonb', nullable: true)]
+    private ?array $seoSettings = [];
+
+    #[ORM\Column(name: 'published_at', type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $publishedAt = null;
 
     public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $now = new \DateTimeImmutable();
-        $this->createdAt = $now;
-        $this->updatedAt = $now;
+        $this->metaKeywords = [];
+        $this->metadata = [];
+        $this->seoSettings = [];
     }
 
     public function getId(): string
@@ -56,25 +95,14 @@ class Page
         return $this->id;
     }
 
-    public function getTenantId(): string
+    public function getClientId(): ?string
     {
-        return $this->tenantId;
+        return $this->clientId;
     }
 
-    public function setTenantId(string $tenantId): self
+    public function setClientId(?string $clientId): self
     {
-        $this->tenantId = $tenantId;
-        return $this;
-    }
-
-    public function getSiteId(): string
-    {
-        return $this->siteId;
-    }
-
-    public function setSiteId(string $siteId): self
-    {
-        $this->siteId = $siteId;
+        $this->clientId = $clientId;
         return $this;
     }
 
@@ -100,14 +128,94 @@ class Page
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getExcerpt(): ?string
+    {
+        return $this->excerpt;
+    }
+
+    public function setExcerpt(?string $excerpt): self
+    {
+        $this->excerpt = $excerpt;
+        return $this;
+    }
+
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function setContent(?string $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
+        return $this;
+    }
+
+    public function getMetaTitle(): ?string
+    {
+        return $this->metaTitle;
+    }
+
+    public function setMetaTitle(?string $metaTitle): self
+    {
+        $this->metaTitle = $metaTitle;
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->metaDescription;
+    }
+
+    public function setMetaDescription(?string $metaDescription): self
+    {
+        $this->metaDescription = $metaDescription;
+        return $this;
+    }
+
+    public function getMetaKeywords(): ?array
+    {
+        return $this->metaKeywords;
+    }
+
+    public function setMetaKeywords(?array $metaKeywords): self
+    {
+        $this->metaKeywords = $metaKeywords;
+        return $this;
+    }
+
+    public function addMetaKeyword(string $keyword): self
+    {
+        if (!in_array($keyword, $this->metaKeywords, true)) {
+            $this->metaKeywords[] = $keyword;
+        }
+        return $this;
+    }
+
+    public function removeMetaKeyword(string $keyword): self
+    {
+        $this->metaKeywords = array_filter($this->metaKeywords, fn($k) => $k !== $keyword);
+        return $this;
+    }
+
+    public function getFeaturedImage(): ?string
+    {
+        return $this->featuredImage;
+    }
+
+    public function setFeaturedImage(?string $featuredImage): self
+    {
+        $this->featuredImage = $featuredImage;
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
         return $this;
     }
 
@@ -122,6 +230,61 @@ class Page
         return $this;
     }
 
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
+        return $this;
+    }
+
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
+    }
+
+    public function setMetadata(?array $metadata): self
+    {
+        $this->metadata = $metadata;
+        return $this;
+    }
+
+    public function getMetadataValue(string $key, $default = null)
+    {
+        return $this->metadata[$key] ?? $default;
+    }
+
+    public function setMetadataValue(string $key, $value): self
+    {
+        $this->metadata[$key] = $value;
+        return $this;
+    }
+
+    public function getSeoSettings(): ?array
+    {
+        return $this->seoSettings;
+    }
+
+    public function setSeoSettings(?array $seoSettings): self
+    {
+        $this->seoSettings = $seoSettings;
+        return $this;
+    }
+
+    public function getSeoSetting(string $key, $default = null)
+    {
+        return $this->seoSettings[$key] ?? $default;
+    }
+
+    public function setSeoSetting(string $key, $value): self
+    {
+        $this->seoSettings[$key] = $value;
+        return $this;
+    }
+
     public function getPublishedAt(): ?\DateTimeImmutable
     {
         return $this->publishedAt;
@@ -133,19 +296,74 @@ class Page
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function isPublished(): bool
     {
-        return $this->createdAt;
+        return $this->status === 'published';
     }
 
-    public function getUpdatedAt(): \DateTimeImmutable
+    public function isDraft(): bool
     {
-        return $this->updatedAt;
+        return $this->status === 'draft';
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    public function isArchived(): bool
     {
-        $this->updatedAt = $updatedAt;
+        return $this->status === 'archived';
+    }
+
+    public function publish(): self
+    {
+        $this->status = 'published';
+        if ($this->publishedAt === null) {
+            $this->publishedAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function unpublish(): self
+    {
+        $this->status = 'draft';
+        return $this;
+    }
+
+    public function archive(): self
+    {
+        $this->status = 'archived';
+        return $this;
+    }
+
+    public function getMetaValue(string $key, $default = null)
+    {
+        return $this->metadata[$key] ?? $default;
+    }
+
+    public function setMetaValue(string $key, $value): self
+    {
+        $this->metadata[$key] = $value;
+        return $this;
+    }
+
+    public function getSeoValue(string $key, $default = null)
+    {
+        return $this->seoSettings[$key] ?? $default;
+    }
+
+    public function setSeoValue(string $key, $value): self
+    {
+        $this->seoSettings[$key] = $value;
+        return $this;
+    }
+
+    // Legacy getter for backward compatibility
+    public function getTenantId(): ?string
+    {
+        // This method is kept for backward compatibility but should not be used
+        return null;
+    }
+
+    public function setTenantId(?string $tenantId): self
+    {
+        // This method is kept for backward compatibility but should not be used
         return $this;
     }
 }

@@ -1,0 +1,15 @@
+# Database configuration for counselrank.legal
+# Copy this content to .env.local and update with your actual credentials
+
+# PostgreSQL connection string
+DATABASE_URL="postgresql://username:password@host:port/database_name?serverVersion=16&charset=utf8"
+
+# Example:
+# DATABASE_URL="postgresql://myuser:mypassword@192.168.1.100:5432/counselrank_db?serverVersion=16&charset=utf8"
+
+# Update these values:
+# - username: your database username
+# - password: your database password  
+# - host: your database host/IP address
+# - port: your database port (usually 5432)
+# - database_name: your database name

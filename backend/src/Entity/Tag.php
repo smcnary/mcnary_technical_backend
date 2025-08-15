@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Uid\Uuid;
+use App\Entity\Tenant;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'tags')]
@@ -30,8 +31,9 @@ class Tag
     #[ORM\Column(type: 'uuid')]
     private string $id;
 
-    #[ORM\Column(name: 'tenant_id', type: 'uuid', nullable: true)]
-    private ?string $tenantId = null;
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', nullable: true, onDelete: 'SET NULL')]
+    private ?Tenant $tenant = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
@@ -69,14 +71,14 @@ class Tag
         return $this->id;
     }
 
-    public function getTenantId(): ?string
+    public function getTenant(): ?Tenant
     {
-        return $this->tenantId;
+        return $this->tenant;
     }
 
-    public function setTenantId(?string $tenantId): self
+    public function setTenant(?Tenant $tenant): self
     {
-        $this->tenantId = $tenantId;
+        $this->tenant = $tenant;
         return $this;
     }
 

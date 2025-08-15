@@ -3,24 +3,46 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Uid\Uuid;
+use App\Entity\Tenant;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
-#[ORM\UniqueConstraint(columns: ['tenant_id', 'email'])]
-#[ApiResource(security: "is_granted('ROLE_ADMIN') or object == user")]
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource(security: "is_granted('ROLE_AGENCY_ADMIN') or object == user")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use Timestamps;
+
+    // Role constants for the new access control system
+    public const ROLE_AGENCY_ADMIN = 'ROLE_AGENCY_ADMIN';
+    public const ROLE_AGENCY_STAFF = 'ROLE_AGENCY_STAFF';
+    public const ROLE_CLIENT_ADMIN = 'ROLE_CLIENT_ADMIN';
+    public const ROLE_CLIENT_STAFF = 'ROLE_CLIENT_STAFF';
+    public const ROLE_SYSTEM_ADMIN = 'ROLE_SYSTEM_ADMIN';
+
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\Column(name: 'tenant_id', type: 'uuid', nullable: true)]
-    private ?string $tenantId = null;
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private Organization $organization;
+
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', nullable: true, onDelete: 'SET NULL')]
+    private ?Tenant $tenant = null;
+
+    #[ORM\Column(name: 'client_id', type: 'uuid', nullable: true)]
+    private ?string $clientId = null;
 
     #[ORM\Column(type: 'string')]
     #[Assert\Email]
@@ -30,7 +52,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $passwordHash = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $name = null;
+    private ?string $firstName = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $lastName = null;
 
     #[ORM\Column(type: 'string', options: ['default' => 'invited'])]
     private string $status = 'invited';
@@ -38,21 +63,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'last_login_at', type: 'datetimetz_immutable', nullable: true)]
     private ?\DateTimeImmutable $lastLoginAt = null;
 
-    #[ORM\Column(name: 'created_at', type: 'datetimetz_immutable')]
-    private \DateTimeImmutable $createdAt;
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $role; // 'AGENCY_ADMIN','AGENCY_STAFF','CLIENT_ADMIN','CLIENT_STAFF'
 
-    #[ORM\Column(name: 'updated_at', type: 'datetimetz_immutable')]
-    private \DateTimeImmutable $updatedAt;
+    /** @var Collection<int,UserClientAccess> */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserClientAccess::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $clientAccess;
 
-    #[ORM\Column(type: 'json')]
-    private array $roles = [];
+    #[ORM\Column(type: 'jsonb', nullable: true)]
+    private ?array $metadata = [];
 
-    public function __construct()
+    public function __construct(Organization $organization, string $email, string $hash, string $role)
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $now = new \DateTimeImmutable();
-        $this->createdAt = $now;
-        $this->updatedAt = $now;
+        $this->organization = $organization;
+        $this->email = $email;
+        $this->passwordHash = $hash;
+        $this->role = $role;
+        $this->clientAccess = new ArrayCollection();
+        $this->metadata = [];
     }
 
     public function getUserIdentifier(): string
@@ -72,7 +101,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return array_unique(array_merge(['ROLE_USER'], $this->roles));
+        return array_unique(array_merge(['ROLE_USER'], [$this->role]));
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    public function isAgencyUser(): bool
+    {
+        return $this->hasRole(self::ROLE_AGENCY_ADMIN) || $this->hasRole(self::ROLE_AGENCY_STAFF);
+    }
+
+    public function isClientUser(): bool
+    {
+        return $this->hasRole(self::ROLE_CLIENT_ADMIN) || $this->hasRole(self::ROLE_CLIENT_STAFF);
     }
 
     public function getId(): string
@@ -80,14 +124,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getTenantId(): ?string
+    public function getOrganization(): Organization
     {
-        return $this->tenantId;
+        return $this->organization;
     }
 
-    public function setTenantId(?string $tenantId): self
+    public function setOrganization(Organization $organization): self
     {
-        $this->tenantId = $tenantId;
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getTenant(): ?Tenant
+    {
+        return $this->tenant;
+    }
+
+    public function setTenant(?Tenant $tenant): self
+    {
+        $this->tenant = $tenant;
+        return $this;
+    }
+
+    public function getClientId(): ?string
+    {
+        return $this->clientId;
+    }
+
+    public function setClientId(?string $clientId): self
+    {
+        $this->clientId = $clientId;
         return $this;
     }
 
@@ -102,7 +168,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setPasswordHash(?string $passwordHash): self
+    public function getPasswordHash(): ?string
+    {
+        return $this->passwordHash;
+    }
+
+    public function setPasswordHash(string $passwordHash): self
     {
         $this->passwordHash = $passwordHash;
         return $this;
@@ -110,12 +181,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getName(): ?string
     {
-        return $this->name;
+        if ($this->firstName && $this->lastName) {
+            return $this->firstName . ' ' . $this->lastName;
+        }
+        return $this->firstName ?: $this->lastName;
     }
 
-    public function setName(?string $name): self
+    public function getFirstName(): ?string
     {
-        $this->name = $name;
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
         return $this;
     }
 
@@ -141,25 +231,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getRole(): string
     {
-        return $this->createdAt;
+        return $this->role;
     }
 
-    public function getUpdatedAt(): \DateTimeImmutable
+    public function setRole(string $role): self
     {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
+        $this->role = $role;
         return $this;
     }
 
-    public function setRoles(array $roles): self
+    public function getClientAccess(): Collection
     {
-        $this->roles = $roles;
+        return $this->clientAccess;
+    }
+
+    public function addClientAccess(UserClientAccess $clientAccess): self
+    {
+        if (!$this->clientAccess->contains($clientAccess)) {
+            $this->clientAccess->add($clientAccess);
+            $clientAccess->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeClientAccess(UserClientAccess $clientAccess): self
+    {
+        if ($this->clientAccess->removeElement($clientAccess)) {
+            if ($clientAccess->getUser() === $this) {
+                $clientAccess->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
+    }
+
+    public function setMetadata(?array $metadata): self
+    {
+        $this->metadata = $metadata;
         return $this;
     }
 }
