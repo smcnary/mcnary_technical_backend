@@ -1,7 +1,5 @@
 doctrine:
     dbal:
-        # Use PostgreSQL platform for test environment (matches production)
-        platform: 'doctrine.dbal.platform.postgresql'
         # Override server version for PostgreSQL compatibility
         server_version: '16'
         # Ensure PostgreSQL-specific options
@@ -12,6 +10,5 @@ doctrine:
         schema_filter: '~^(?!pg_stat_statements)~'
         # Use PostgreSQL-compatible mapping types
         mapping_types:
-            citext: citext
             # Ensure TEXT columns work properly with PostgreSQL
             text: text
