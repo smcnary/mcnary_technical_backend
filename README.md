@@ -1,278 +1,73 @@
-# CounselRank.legal
+# CounselRank.legal Platform
 
-CounselRank.legal is a comprehensive legal services platform built with Symfony backend API and React frontend, providing professional legal services with lead capture, case studies, and FAQ management. Our platform connects clients with experienced attorneys and legal resources.
-
-## 🚀 Features
-
-- **Lead Capture Form**: Professional legal inquiry submission
-- **Case Studies Display**: Showcase successful legal cases with filtering
-- **FAQ Management**: Searchable frequently asked questions
-- **Responsive Design**: Mobile-first, modern UI/UX
-- **Real-time API Integration**: Direct connection to Symfony backend
-- **TypeScript**: Full type safety and IntelliSense
-- **Legal Services Platform**: Comprehensive legal assistance and resources
-
-## 🛠️ Technology Stack
-
-### Backend
-- **Symfony 6** with PHP 8+
-- **API Platform** for REST/GraphQL APIs
-- **Doctrine ORM** with database migrations
-- **JWT Authentication**
-- **Multi-tenancy support**
-
-### Frontend
-- **React 18** with TypeScript
-- **Modern CSS** with responsive design
-- **Fetch API** for backend communication
-- **Component-based architecture**
-- **Mobile-responsive design**
-
-## 📋 Prerequisites
-
-### Backend
-- PHP 8.1+
-- Composer
-- MySQL/PostgreSQL database
-- Symfony CLI (optional)
-
-### Frontend
-- Node.js 16+ and npm
-- Running Symfony backend
-- Backend accessible at `http://localhost:8000`
+A comprehensive digital marketing platform for law firms, built with modern web technologies and a robust API-first architecture.
 
 ## 🚀 Quick Start
 
-### Backend Setup
 ```bash
-cd backend
+# Clone the repository
+git clone <repository-url>
+cd mcnary_technical_backend
 
-# Install dependencies
-composer install
-
-# Set up environment
-cp .env.example .env
-# Edit .env with your database credentials
-
-# Run migrations
-php bin/console doctrine:migrations:migrate
-
-# Start server
-symfony server:start
-# Or: php -S localhost:8000 -t public/
+# Start the development environment
+./dev-start.sh
 ```
 
-### Frontend Setup
-```bash
-cd frontend
+## 📚 Documentation
 
-# Install dependencies
-npm install
+**All documentation has been moved to the `backend/documentation/` folder.**
 
-# Start development server
-npm run dev
+- **[📖 Documentation Index](backend/documentation/README.md)** - Complete documentation overview
+- **[🚀 Quick Start Guide](backend/documentation/QUICK_START.md)** - Get up and running fast
+- **[🏗️ Architecture Overview](backend/documentation/ARCHITECTURE.md)** - System design and principles
+- **[🔌 API Documentation](backend/documentation/API_V1_ENDPOINTS.md)** - Complete REST API v1 reference
 
-# Build for production
-npm run build
-```
-
-The backend will run at `http://localhost:8080` and frontend at `http://localhost:3000`
-
-## 🔗 Project Structure
+## 🏗️ Project Structure
 
 ```
-counselrank-legal/
-├── backend/               # Symfony backend application
-│   ├── src/              # PHP source code
-│   │   ├── Entity/       # Doctrine entities
-│   │   ├── Controller/   # API controllers
-│   │   ├── Repository/   # Data repositories
-│   │   └── ...
-│   ├── config/           # Symfony configuration
-│   ├── migrations/       # Database migrations
-│   ├── public/           # Web root directory
-│   ├── composer.json     # Backend dependencies
-│   └── README.md         # Backend documentation
-├── frontend/             # React frontend application
-│   ├── src/
-│   │   ├── components/   # React components
-│   │   ├── services/     # API services
-│   │   └── App.tsx       # Main app component
-│   ├── package.json      # Frontend dependencies
-│   ├── vite.config.ts    # Build configuration
-│   └── README.md         # Frontend documentation
-├── README.md             # Main project documentation
-└── .gitignore           # Git ignore rules
+mcnary_technical_backend/
+├── backend/                    # Symfony 7.3 + API Platform backend
+│   ├── documentation/          # 📚 All project documentation
+│   ├── src/                   # PHP source code
+│   ├── config/                # Symfony configuration
+│   └── migrations/            # Database migrations
+├── frontend/                  # React 18 + TypeScript frontend
+└── dev-start.sh              # Development environment startup
 ```
 
-### API Endpoints
-- `GET /api` - API discovery
-- `POST /api/leads` - Lead submission
-- `GET /api/case_studies` - Case studies listing
-- `GET /api/faqs` - FAQ listing
+## 🔧 Technology Stack
 
-## 📱 Components
+- **Backend**: PHP 8.2+, Symfony 7.3, API Platform 4.x, PostgreSQL 16
+- **Frontend**: React 18.2, TypeScript 5.3, Vite 6.3, TailwindCSS
+- **Security**: JWT Authentication, Role-Based Access Control (RBAC)
+- **Architecture**: Multi-tenant, API-first, UUID primary keys, JSONB metadata
 
-### LeadForm
-- Professional legal inquiry form
-- Practice area selection
-- Budget and timeline options
-- Consent management
-- Form validation
+## 🎯 Features
 
-### CaseStudies
-- Grid layout for case studies
-- Practice area filtering
-- Active/inactive status filtering
-- Responsive card design
-- Metrics display
+- ✅ **Complete REST API v1** with authentication and authorization
+- ✅ **Role-Based Access Control** for agency and client users
+- ✅ **Multi-tenant architecture** with client scoping
+- ✅ **Public content management** (pages, FAQs, packages, media)
+- ✅ **User and client management** with proper security
+- ✅ **Comprehensive documentation** for all components
 
-### Faqs
-- Accordion-style FAQ display
-- Search functionality
-- Expandable questions
-- Status indicators
+## 📖 Getting Started
 
-## 🎨 Styling
-
-- **Modern Design**: Clean, professional legal services aesthetic
-- **Responsive Layout**: Works on all device sizes
-- **Interactive Elements**: Hover effects and smooth transitions
-- **Color Scheme**: Professional blues and grays
-- **Typography**: Readable, accessible fonts
-
-## 🔧 Configuration
-
-### API Base URL
-The frontend connects to the backend at `http://localhost:8000` by default. To change this:
-
-1. Edit `src/services/api.ts`
-2. Update `API_BASE_URL` constant
-3. Restart the development server
-
-### Environment Variables
-Create a `.env` file in the root directory:
-```env
-REACT_APP_API_BASE_URL=http://localhost:8000
-```
-
-## 📱 Responsive Design
-
-- **Desktop**: Full-featured layout with side-by-side elements
-- **Tablet**: Optimized for medium screens
-- **Mobile**: Single-column layout with touch-friendly controls
-
-## 🧪 Testing
-
-```bash
-# Run tests
-npm test
-
-# Run tests with coverage
-npm test -- --coverage
-
-# Run tests in watch mode
-npm test -- --watch
-```
-
-## 🚀 Deployment
-
-### Build for Production
-```bash
-npm run build
-```
-
-### Deploy to Static Hosting
-The `build` folder contains optimized static files ready for deployment to:
-- Netlify
-- Vercel
-- AWS S3
-- GitHub Pages
-- Any static hosting service
-
-### Environment Configuration
-For production, update the API base URL to point to your production backend.
-
-## 🔒 Security Features
-
-- **Input Validation**: Client-side form validation
-- **CORS Handling**: Proper cross-origin request handling
-- **Error Handling**: Graceful error display and recovery
-- **Data Sanitization**: Safe data transmission to backend
-
-## 📊 Performance
-
-- **Lazy Loading**: Components load on demand
-- **Optimized Images**: Responsive image handling
-- **Minified CSS/JS**: Production builds are optimized
-- **Efficient Rendering**: React optimization techniques
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Backend Connection Failed**
-   - Ensure Symfony backend is running
-   - Check backend URL in `api.ts`
-   - Verify CORS configuration
-
-2. **Build Errors**
-   - Clear `node_modules` and reinstall
-   - Check TypeScript compilation
-   - Verify React version compatibility
-
-3. **Styling Issues**
-   - Check CSS imports
-   - Verify responsive breakpoints
-   - Clear browser cache
-
-### Debug Mode
-Enable React DevTools in your browser for component debugging.
-
-## 📚 API Documentation
-
-### Lead Submission
-```typescript
-const leadData = {
-  name: "John Doe",
-  email: "john@example.com",
-  phone: "+1234567890",
-  practiceAreas: ["Personal Injury"],
-  consent: true
-};
-
-await apiService.submitLead(leadData);
-```
-
-### Fetching Data
-```typescript
-// Get case studies
-const caseStudies = await apiService.getCaseStudies();
-
-// Get FAQs
-const faqs = await apiService.getFaqs();
-```
+1. **Read the [Quick Start Guide](backend/documentation/QUICK_START.md)**
+2. **Review the [Architecture Overview](backend/documentation/ARCHITECTURE.md)**
+3. **Set up your [Development Environment](backend/documentation/DEVELOPMENT_SETUP.md)**
+4. **Explore the [API Documentation](backend/documentation/API_V1_ENDPOINTS.md)**
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+Please read our contributing guidelines and ensure all documentation is placed in the `backend/documentation/` folder.
 
-## 📄 License
+## 📞 Support
 
-This project is proprietary software for McNary Legal Services.
-
-## 🆘 Support
-
-For technical support or questions:
-- Check the backend documentation
-- Review API responses in browser dev tools
-- Verify backend connectivity
-- Check console for error messages
+For questions and support, please refer to the comprehensive documentation in the `backend/documentation/` folder.
 
 ---
 
-**Built with ❤️ for McNary Legal Services**
+**Status**: ✅ Core platform complete with full API v1 implementation  
+**Version**: 1.0.0  
+**Last Updated**: January 15, 2025
