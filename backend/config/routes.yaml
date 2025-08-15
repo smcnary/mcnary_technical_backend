@@ -1,7 +1,3 @@
-api_platform:
-    resource: ./.well-known/apip
-    type: api_platform
-
 controllers:
     resource:
         path: ../src/Controller/
