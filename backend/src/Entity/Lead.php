@@ -12,6 +12,8 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\LeadRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -31,11 +33,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Get(
             normalizationContext: ['groups' => ['lead:admin:read']],
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or (is_granted('ROLE_CLIENT_ADMIN') and object.getClient().getClientId() == user.getClientId())"
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['lead:admin:read']],
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"
         ),
     ],
     paginationItemsPerPage: 25
@@ -51,20 +53,28 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC'], arguments: ['orderParameterName' => 'order'])]
 class Lead
 {
+    use Timestamps;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(['lead:read', 'lead:admin:read'])]
     #[ApiProperty(identifier: true)]
-    private Uuid $id;
+    private string $id;
 
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Tenant $tenant;
+    #[ORM\ManyToOne(inversedBy: 'leads')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Client $client = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?LeadSource $source = null;
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
-    private string $name;
+    private string $fullName;
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
@@ -85,8 +95,6 @@ class Lead
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
     private ?string $website = null;
 
-    // Doctrine maps TEXT[] as "simple_array" (comma string) by default; we need real TEXT[]
-    // Use "json" at PHP level for portability, or a custom type. We'll keep PostgreSQL TEXT[] via columnDefinition.
     #[ORM\Column(type: Types::ARRAY, options: ['default' => '{}'])]
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
     private array $practiceAreas = [];
@@ -101,120 +109,252 @@ class Lead
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
-    private ?string $budget = null;
-
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    #[Groups(['lead:read','lead:write','lead:admin:read'])]
-    private ?string $timeline = null;
+    private ?string $zipCode = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
-    private ?string $notes = null;
+    private ?string $message = null;
 
-    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
-    #[Assert\NotNull]
-    #[Groups(['lead:write','lead:admin:read'])] // consent isn't echoed to public read by default
-    private bool $consent = false;
+    #[ORM\Column(type: Types::STRING, length: 16, options: ['default' => 'new'])]
+    #[Groups(['lead:read','lead:admin:read'])]
+    private string $status = 'new';
 
-    #[ORM\Column(type: Types::STRING, options: ['default' => 'pending'])]
-    #[Assert\Choice(['pending','contacted','qualified','disqualified'])]
+    #[ORM\Column(type: Types::JSON, options: ['default' => '{}'])]
+    #[Groups(['lead:read','lead:write','lead:admin:read'])]
+    private array $utmJson = [];
+
+    #[ORM\Column(options: ['default' => false])]
     #[Groups(['lead:admin:read'])]
-    private string $status = 'pending';
+    private bool $isTest = false;
 
-    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
-    #[Groups(['lead:admin:read'])]
-    private array $utm = [];
+    /** @var Collection<int,LeadEvent> */
+    #[ORM\OneToMany(mappedBy: 'lead', targetEntity: LeadEvent::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $events;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['lead:admin:read'])]
-    private ?string $userAgent = null;
-
-    #[ORM\Column(name: 'ip_address', type: Types::STRING, nullable: true)]
-    #[Groups(['lead:admin:read'])]
-    private ?string $ipAddress = null;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['lead:admin:read'])]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['lead:admin:read'])]
-    private \DateTimeImmutable $updatedAt;
-
-    public function __construct(Tenant $tenant)
+    public function __construct()
     {
-        $this->id = Uuid::v4();
-        $this->tenant = $tenant;
-        $this->createdAt = new \DateTimeImmutable('now');
-        $this->updatedAt = new \DateTimeImmutable('now');
-        $this->utm = [];
+        $this->id = Uuid::v4()->toRfc4122();
+        $this->events = new ArrayCollection();
         $this->practiceAreas = [];
+        $this->utmJson = [];
     }
 
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
+    public function getId(): string
     {
-        $this->updatedAt = new \DateTimeImmutable('now');
+        return $this->id;
     }
 
-    // --- getters/setters ---
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
 
-    public function getId(): Uuid { return $this->id; }
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+        return $this;
+    }
 
-    public function getTenant(): Tenant { return $this->tenant; }
-    public function setTenant(Tenant $tenant): self { $this->tenant = $tenant; return $this; }
+    public function getSource(): ?LeadSource
+    {
+        return $this->source;
+    }
 
-    public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = $name; return $this; }
+    public function setSource(?LeadSource $source): self
+    {
+        $this->source = $source;
+        return $this;
+    }
 
-    public function getEmail(): string { return $this->email; }
-    public function setEmail(string $email): self { $this->email = $email; return $this; }
+    public function getFullName(): string
+    {
+        return $this->fullName;
+    }
 
-    public function getPhone(): ?string { return $this->phone; }
-    public function setPhone(?string $phone): self { $this->phone = $phone; return $this; }
+    public function setFullName(string $fullName): self
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
 
-    public function getFirm(): ?string { return $this->firm; }
-    public function setFirm(?string $firm): self { $this->firm = $firm; return $this; }
+    // Legacy getter for backward compatibility
+    public function getName(): string
+    {
+        return $this->fullName;
+    }
 
-    public function getWebsite(): ?string { return $this->website; }
-    public function setWebsite(?string $website): self { $this->website = $website; return $this; }
+    public function setName(string $name): self
+    {
+        $this->fullName = $name;
+        return $this;
+    }
 
-    public function getPracticeAreas(): array { return $this->practiceAreas; }
-    public function setPracticeAreas(array $practiceAreas): self { $this->practiceAreas = $practiceAreas; return $this; }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
 
-    public function getCity(): ?string { return $this->city; }
-    public function setCity(?string $city): self { $this->city = $city; return $this; }
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
 
-    public function getState(): ?string { return $this->state; }
-    public function setState(?string $state): self { $this->state = $state; return $this; }
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
 
-    public function getBudget(): ?string { return $this->budget; }
-    public function setBudget(?string $budget): self { $this->budget = $budget; return $this; }
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+        return $this;
+    }
 
-    public function getTimeline(): ?string { return $this->timeline; }
-    public function setTimeline(?string $timeline): self { $this->timeline = $timeline; return $this; }
+    public function getFirm(): ?string
+    {
+        return $this->firm;
+    }
 
-    public function getNotes(): ?string { return $this->notes; }
-    public function setNotes(?string $notes): self { $this->notes = $notes; return $this; }
+    public function setFirm(?string $firm): self
+    {
+        $this->firm = $firm;
+        return $this;
+    }
 
-    public function getConsent(): bool { return $this->consent; }
-    public function setConsent(bool $consent): self { $this->consent = $consent; return $this; }
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
 
-    public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): self { $this->status = $status; return $this; }
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+        return $this;
+    }
 
-    public function getUtm(): array { return $this->utm; }
-    public function setUtm(array $utm): self { $this->utm = $utm; return $this; }
+    public function getPracticeAreas(): array
+    {
+        return $this->practiceAreas;
+    }
 
-    public function getUserAgent(): ?string { return $this->userAgent; }
-    public function setUserAgent(?string $ua): self { $this->userAgent = $ua; return $this; }
+    public function setPracticeAreas(array $practiceAreas): self
+    {
+        $this->practiceAreas = $practiceAreas;
+        return $this;
+    }
 
-    public function getIpAddress(): ?string { return $this->ipAddress; }
-    public function setIpAddress(?string $ip): self { $this->ipAddress = $ip; return $this; }
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
 
-    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
-    public function setCreatedAt(\DateTimeImmutable $dt): self { $this->createdAt = $dt; return $this; }
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+        return $this;
+    }
 
-    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
-    public function setUpdatedAt(\DateTimeImmutable $dt): self { $this->updatedAt = $dt; return $this; }
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): self
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getZipCode(): ?string
+    {
+        return $this->zipCode;
+    }
+
+    public function setZipCode(?string $zipCode): self
+    {
+        $this->zipCode = $zipCode;
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getUtmJson(): array
+    {
+        return $this->utmJson;
+    }
+
+    public function setUtmJson(array $utmJson): self
+    {
+        $this->utmJson = $utmJson;
+        return $this;
+    }
+
+    public function isTest(): bool
+    {
+        return $this->isTest;
+    }
+
+    public function setIsTest(bool $isTest): self
+    {
+        $this->isTest = $isTest;
+        return $this;
+    }
+
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(LeadEvent $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setLead($this);
+        }
+        return $this;
+    }
+
+    public function removeEvent(LeadEvent $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            if ($event->getLead() === $this) {
+                $event->setLead(null);
+            }
+        }
+        return $this;
+    }
+
+    // Legacy getter for backward compatibility
+    public function getClientId(): ?string
+    {
+        return $this->client?->getId();
+    }
+
+    public function setClientId(?string $clientId): self
+    {
+        // This method is kept for backward compatibility but should not be used
+        // Use setClient() instead
+        return $this;
+    }
 }

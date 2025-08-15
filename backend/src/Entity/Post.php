@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use App\Entity\Tenant;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'posts')]
@@ -17,8 +18,9 @@ class Post
     #[ORM\Column(type: 'uuid')]
     private string $id;
 
-    #[ORM\Column(name: 'tenant_id', type: 'uuid')]
-    public string $tenantId;
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', nullable: false, onDelete: 'CASCADE')]
+    private ?Tenant $tenant = null;
 
     #[ORM\Column(name: 'site_id', type: 'uuid')]
     public string $siteId;
@@ -60,14 +62,14 @@ class Post
         return $this->id;
     }
 
-    public function getTenantId(): string
+    public function getTenant(): ?Tenant
     {
-        return $this->tenantId;
+        return $this->tenant;
     }
 
-    public function setTenantId(string $tenantId): self
+    public function setTenant(?Tenant $tenant): self
     {
-        $this->tenantId = $tenantId;
+        $this->tenant = $tenant;
         return $this;
     }
 

@@ -22,34 +22,33 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FaqRepository::class)]
 #[ORM\Table(name: 'faqs')]
-#[ORM\UniqueConstraint(name: 'uq_faqs_tenant_question', columns: ['tenant_id', 'question'])]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     operations: [
         new GetCollection(normalizationContext: ['groups' => ['faq:read']]),
         new Get(normalizationContext: ['groups' => ['faq:read']]),
-        new Post(denormalizationContext: ['groups' => ['faq:write']], security: "is_granted('ROLE_ADMIN')"),
-        new Put(denormalizationContext: ['groups' => ['faq:write']], security: "is_granted('ROLE_ADMIN')"),
-        new Patch(denormalizationContext: ['groups' => ['faq:write']], security: "is_granted('ROLE_ADMIN')"),
-        new Delete(security: "is_granted('ROLE_ADMIN')"),
+        new Post(denormalizationContext: ['groups' => ['faq:write']], security: "is_granted('ROLE_AGENCY_ADMIN')"),
+        new Put(denormalizationContext: ['groups' => ['faq:write']], security: "is_granted('ROLE_AGENCY_ADMIN')"),
+        new Patch(denormalizationContext: ['groups' => ['faq:write']], security: "is_granted('ROLE_AGENCY_ADMIN')"),
+        new Delete(security: "is_granted('ROLE_AGENCY_ADMIN')"),
     ],
     paginationEnabled: false
 )]
 #[ApiFilter(SearchFilter::class, properties: ['isActive' => 'exact', 'question' => 'partial'])]
-#[ApiFilter(OrderFilter::class, properties: ['sort' => 'ASC', 'createdAt' => 'DESC'])]
+#[ApiFilter(OrderFilter::class, properties: ['orderIndex' => 'ASC', 'createdAt' => 'DESC'])]
 class Faq
 {
+    use Timestamps;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[ApiProperty(identifier: true)]
     #[Groups(['faq:read'])]
-    private Uuid $id;
+    private string $id;
 
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Tenant $tenant;
-
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     #[Groups(['faq:read','faq:write'])]
     private string $question;
@@ -57,60 +56,106 @@ class Faq
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     #[Groups(['faq:read','faq:write'])]
-    private string $answer;
+    private string $answerMd;
 
     #[ORM\Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => true])]
     #[Groups(['faq:read','faq:write'])]
     private bool $isActive = true;
 
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(options: ['default' => 0])]
     #[Groups(['faq:read','faq:write'])]
-    private int $sort = 0;
+    private int $orderIndex = 0;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['faq:read'])]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['faq:read'])]
-    private \DateTimeImmutable $updatedAt;
-
-    public function __construct(Tenant $tenant)
+    public function __construct(string $question, string $answer)
     {
-        $this->id = Uuid::v4();
-        $this->tenant = $tenant;
-        $this->createdAt = new \DateTimeImmutable('now');
-        $this->updatedAt = new \DateTimeImmutable('now');
+        $this->id = Uuid::v4()->toRfc4122();
+        $this->question = $question;
+        $this->answerMd = $answer;
     }
 
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
+    public function getId(): string
     {
-        $this->updatedAt = new \DateTimeImmutable('now');
+        return $this->id;
     }
 
-    // getters/setters ...
+    public function getQuestion(): string
+    {
+        return $this->question;
+    }
 
-    public function getId(): Uuid { return $this->id; }
+    public function setQuestion(string $question): self
+    {
+        $this->question = $question;
+        return $this;
+    }
 
-    public function getTenant(): Tenant { return $this->tenant; }
-    public function setTenant(Tenant $tenant): self { $this->tenant = $tenant; return $this; }
+    public function getAnswerMd(): string
+    {
+        return $this->answerMd;
+    }
 
-    public function getQuestion(): string { return $this->question; }
-    public function setQuestion(string $question): self { $this->question = $question; return $this; }
+    public function setAnswerMd(string $answerMd): self
+    {
+        $this->answerMd = $answerMd;
+        return $this;
+    }
 
-    public function getAnswer(): string { return $this->answer; }
-    public function setAnswer(string $answer): self { $this->answer = $answer; return $this; }
+    // Legacy getter for backward compatibility
+    public function getAnswer(): string
+    {
+        return $this->answerMd;
+    }
 
-    public function isActive(): bool { return $this->isActive; }
-    public function setIsActive(bool $active): self { $this->isActive = $active; return $this; }
+    public function setAnswer(string $answer): self
+    {
+        $this->answerMd = $answer;
+        return $this;
+    }
 
-    public function getSort(): int { return $this->sort; }
-    public function setSort(int $sort): self { $this->sort = $sort; return $this; }
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
 
-    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
-    public function setCreatedAt(\DateTimeImmutable $dt): self { $this->createdAt = $dt; return $this; }
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
 
-    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
-    public function setUpdatedAt(\DateTimeImmutable $dt): self { $this->updatedAt = $dt; return $this; }
+    public function getOrderIndex(): int
+    {
+        return $this->orderIndex;
+    }
+
+    public function setOrderIndex(int $orderIndex): self
+    {
+        $this->orderIndex = $orderIndex;
+        return $this;
+    }
+
+    // Legacy getter for backward compatibility
+    public function getSort(): int
+    {
+        return $this->orderIndex;
+    }
+
+    public function setSort(int $sort): self
+    {
+        $this->orderIndex = $sort;
+        return $this;
+    }
+
+    // Legacy getter for backward compatibility
+    public function getTenant(): ?object
+    {
+        // This method is kept for backward compatibility but should not be used
+        return null;
+    }
+
+    public function setTenant(object $tenant): self
+    {
+        // This method is kept for backward compatibility but should not be used
+        return $this;
+    }
 }
