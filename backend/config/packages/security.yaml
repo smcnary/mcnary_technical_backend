@@ -5,9 +5,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: email
+            id: App\Repository\UserRepository
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -15,12 +13,7 @@ security:
         login:
             pattern: ^/api/auth/login
             stateless: true
-            json_login:
-                check_path: /api/auth/login
-                username_path: email
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            security: false
         api:
             pattern: ^/api
             stateless: true
@@ -30,7 +23,12 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/leads, roles: PUBLIC_ACCESS } # Allow public lead submissions
+        - { path: ^/api/v1/newsletter-subs, roles: PUBLIC_ACCESS } # Allow public newsletter signups
+        - { path: ^/api/v1/pages, roles: PUBLIC_ACCESS } # Allow public page access
+        - { path: ^/api/v1/media-assets, roles: PUBLIC_ACCESS } # Allow public media access
+        - { path: ^/api/v1/packages, roles: PUBLIC_ACCESS } # Allow public package viewing
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
