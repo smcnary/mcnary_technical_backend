@@ -39,7 +39,7 @@ class FaqRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByCriteria(array $criteria, array $sortFields = [], int $limit = null, int $offset = null): array
+    public function findByCriteria(array $criteria, array $sortFields = [], ?int $limit = null, ?int $offset = null): array
     {
         $qb = $this->createQueryBuilder('f');
 
