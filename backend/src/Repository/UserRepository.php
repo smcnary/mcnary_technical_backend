@@ -87,7 +87,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return User::class === $class || is_subclass_of($class, User::class);
     }
 
-    public function findByCriteria(array $criteria, array $sortFields = [], int $limit = null, int $offset = null): array
+    public function findByCriteria(array $criteria, array $sortFields = [], ?int $limit = null, ?int $offset = null): array
     {
         $qb = $this->createQueryBuilder('u');
 
