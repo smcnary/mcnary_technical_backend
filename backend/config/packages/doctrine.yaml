@@ -5,6 +5,8 @@ doctrine:
         schema_filter: '~^(?!pg_stat_statements)~'
         mapping_types:
             citext: string
+        types:
+            jsonb: App\Doctrine\DBAL\Types\JsonbType
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
