@@ -40,7 +40,7 @@ class RankingDaily
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Keyword $keyword;
 
-    #[ORM\Column(type: 'date_mutable')]
+    #[ORM\Column(type: 'date')]
     private \DateTimeInterface $date;
 
     #[ORM\Column(nullable: true)]
