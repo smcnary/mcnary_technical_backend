@@ -35,15 +35,15 @@ const ApiTest: React.FC = () => {
   };
 
   return (
-    <div className="api-test">
-      <h2>API Connection Test</h2>
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      <h2 className="section-title">API Connection Test</h2>
       
-      <div className="status-section">
-        <h3>Status: {apiStatus}</h3>
-        {error && <p className="error">Error: {error}</p>}
+      <div className="bg-gray-50 rounded-lg p-6 mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Status: {apiStatus}</h3>
+        {error && <p className="text-red-600 font-medium">Error: {error}</p>}
       </div>
 
-      <div className="actions">
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <button onClick={testApiConnection} className="btn-primary">
           Test Connection
         </button>
@@ -53,17 +53,17 @@ const ApiTest: React.FC = () => {
       </div>
 
       {apiInfo && (
-        <div className="api-info">
-          <h3>API Information</h3>
-          <pre>{JSON.stringify(apiInfo, null, 2)}</pre>
+        <div className="card mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">API Information</h3>
+          <pre className="bg-gray-100 rounded-lg p-4 overflow-x-auto text-sm">{JSON.stringify(apiInfo, null, 2)}</pre>
         </div>
       )}
 
-      <div className="endpoints">
-        <h3>Available Endpoints</h3>
-        <ul>
+      <div className="card">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Endpoints</h3>
+        <ul className="space-y-2 text-gray-700">
           <li><strong>API Base:</strong> {import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}</li>
-          <li><strong>API Docs:</strong> <a href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api`} target="_blank" rel="noopener noreferrer">View API Documentation</a></li>
+          <li><strong>API Docs:</strong> <a href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">View API Documentation</a></li>
           <li><strong>Health Check:</strong> /api (GET)</li>
           <li><strong>Authentication:</strong> /api/auth/login (POST)</li>
           <li><strong>Current User:</strong> /api/v1/me (GET)</li>
