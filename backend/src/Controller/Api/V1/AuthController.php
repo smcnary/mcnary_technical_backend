@@ -64,8 +64,8 @@ class AuthController extends AbstractController
                 return $this->json(['error' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
             }
 
-            // Check if user is active
-            if ($user->getStatus() !== 'active') {
+            // Check if user can log in (invited users can log in to complete setup, active users are fully active)
+            if (!in_array($user->getStatus(), ['invited', 'active'])) {
                 return $this->json(['error' => 'Account is not active'], Response::HTTP_FORBIDDEN);
             }
 
@@ -83,7 +83,7 @@ class AuthController extends AbstractController
                 'name' => $user->getName(),
                 'roles' => $user->getRoles(),
                 'client_id' => $user->getClientId(),
-                'tenant_id' => $user->getTenantId(),
+                'tenant_id' => $user->getTenant()?->getId(),
                 'status' => $user->getStatus(),
                 'created_at' => $user->getCreatedAt()->format('c'),
                 'last_login_at' => $user->getLastLoginAt()?->format('c')
