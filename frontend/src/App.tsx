@@ -116,8 +116,8 @@ function App() {
                 </ul>
                 <button className="btn-primary">Select Plan</button>
               </div>
-              <div className="card text-center border-2 border-accent-500 relative">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent-500 text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</div>
+                              <div className="card text-center border-2 border-teal-500 relative">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-teal-500 text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Growth</h3>
                 <div className="text-4xl font-bold text-gray-900 mb-4">$6,000<span className="text-lg text-gray-500">/month</span></div>
                 <ul className="space-y-2 mb-6 text-gray-600">
@@ -232,7 +232,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-primary-900 text-white py-4 shadow-header sticky top-0 z-50">
+      <header className="bg-gray-900 text-white py-4 shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-white">CounselRank.legal</h1>
           
@@ -241,7 +241,7 @@ function App() {
               className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
                 activeTab === 'home' 
                   ? 'bg-blue-500 text-white' 
-                  : 'text-white hover:bg-white/10 hover:text-accent-400'
+                  : 'text-white hover:bg-white/10 hover:text-teal-400'
               }`}
               onClick={() => setActiveTab('home')}
             >
@@ -254,7 +254,7 @@ function App() {
                 className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 ${
                   activeDropdown === 'services' 
                     ? 'bg-blue-500 text-white' 
-                    : 'text-white hover:bg-white/10 hover:text-accent-400'
+                    : 'text-white hover:bg-white/10 hover:text-teal-400'
                 }`}
                 onClick={() => handleDropdownToggle('services')}
               >
@@ -264,7 +264,7 @@ function App() {
                 }`}>▼</span>
               </button>
               {activeDropdown === 'services' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-slide-down">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
                   <button 
                     className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
                     onClick={() => { setActiveTab('services'); setActiveDropdown(null); }}
@@ -299,7 +299,7 @@ function App() {
                 className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 ${
                   activeDropdown === 'resources' 
                     ? 'bg-blue-500 text-white' 
-                    : 'text-white hover:bg-white/10 hover:text-accent-400'
+                    : 'text-white hover:bg-white/10 hover:text-teal-400'
                 }`}
                 onClick={() => handleDropdownToggle('resources')}
               >
@@ -309,7 +309,7 @@ function App() {
                 }`}>▼</span>
               </button>
               {activeDropdown === 'resources' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-slide-down">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
                   <button 
                     className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
                     onClick={() => { setActiveTab('case-studies'); setActiveDropdown(null); }}
@@ -344,7 +344,7 @@ function App() {
                 className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 ${
                   activeDropdown === 'company' 
                     ? 'bg-blue-500 text-white' 
-                    : 'text-white hover:bg-white/10 hover:text-accent-400'
+                    : 'text-white hover:bg-white/10 hover:text-teal-400'
                 }`}
                 onClick={() => handleDropdownToggle('company')}
               >
@@ -354,7 +354,7 @@ function App() {
                 }`}>▼</span>
               </button>
               {activeDropdown === 'company' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-slide-down">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
                   <button 
                     className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
                     onClick={() => { setActiveTab('about'); setActiveDropdown(null); }}
@@ -379,7 +379,7 @@ function App() {
           </nav>
 
           <div className="flex gap-4">
-            <button className="px-4 py-2 text-white hover:text-accent-400 transition-colors duration-200 font-medium">Client Login</button>
+            <button className="px-4 py-2 text-white hover:text-teal-400 transition-colors duration-200 font-medium">Client Login</button>
             <button className="btn-primary">Book Demo</button>
           </div>
         </div>
@@ -388,21 +388,21 @@ function App() {
       <main className="flex-1">
         {activeTab === 'home' && (
           <div>
-            <div className="bg-gradient-to-br from-primary-900 to-primary-800 text-white py-20">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-20">
               <div className="max-w-4xl mx-auto px-6 text-center">
                 <h1 className="text-5xl font-bold mb-6">Legal SEO that wins cases</h1>
-                <p className="text-xl text-primary-100 mb-8">We help law firms dominate Google search with local + AI-first SEO.</p>
+                <p className="text-xl text-gray-200 mb-8">We help law firms dominate Google search with local + AI-first SEO.</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                   <button className="btn-primary text-lg px-8 py-4">Book Demo</button>
                   <button 
-                    className="text-primary-100 hover:text-white transition-colors duration-200 font-medium"
+                    className="text-gray-200 hover:text-white transition-colors duration-200 font-medium"
                     onClick={() => setActiveTab('pricing')}
                   >
                     See Pricing
                   </button>
                 </div>
                 <div className="mb-12">
-                  <p className="text-primary-200 mb-6">Trusted by leading firms</p>
+                  <p className="text-gray-300 mb-6">Trusted by leading firms</p>
                   <div className="flex flex-wrap justify-center gap-4">
                     <button 
                       className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors duration-200"
@@ -415,7 +415,7 @@ function App() {
                         }
                       }}
                     >
-                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-primary-900 font-bold">G</div>
+                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-900 font-bold">G</div>
                       <span>Google</span>
                     </button>
                     <button 
@@ -429,7 +429,7 @@ function App() {
                         }
                       }}
                     >
-                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-primary-900 font-bold">C</div>
+                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-900 font-bold">C</div>
                       <span>Clutch</span>
                     </button>
                     <button 
@@ -443,7 +443,7 @@ function App() {
                         }
                       }}
                     >
-                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-primary-900 font-bold">A</div>
+                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-900 font-bold">A</div>
                       <span>Avvo</span>
                     </button>
                     <button 
@@ -457,12 +457,12 @@ function App() {
                         }
                       }}
                     >
-                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-primary-900 font-bold">B</div>
+                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-900 font-bold">B</div>
                       <span>BBB</span>
                     </button>
                   </div>
                 </div>
-                <div className="text-primary-200 animate-bounce">
+                <div className="text-gray-300 animate-bounce">
                   <span>↓ Learn more</span>
                 </div>
               </div>
