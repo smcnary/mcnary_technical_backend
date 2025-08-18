@@ -28,22 +28,21 @@ class TenantExtension implements QueryCollectionExtensionInterface, QueryItemExt
     private function addTenantFilter(QueryBuilder $queryBuilder, string $resourceClass): void
     {
         // Skip if no user is authenticated
-        if (!$this->security->getUser()) {
+        $user = $this->security->getUser();
+        if (!$user) {
             return;
         }
 
-        // Get the user's tenant ID
-        $user = $this->security->getUser();
-        /** @var \App\Entity\User|null $user */
-        $tenantId = method_exists($user, 'getTenantId') ? $user->getTenantId() : null;
-
-        if (!$tenantId) {
+        // Get the user's tenant
+        /** @var \App\Entity\User $user */
+        $tenant = $user->getTenant();
+        if (!$tenant) {
             return;
         }
 
         // Add tenant filter to the query
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $queryBuilder->andWhere(sprintf('%s.tenantId = :tenantId', $rootAlias));
-        $queryBuilder->setParameter('tenantId', $tenantId);
+        $queryBuilder->setParameter('tenantId', $tenant->getId());
     }
 }
