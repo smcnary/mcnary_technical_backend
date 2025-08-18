@@ -1,24 +1,92 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import ClientLoginModal from './components/ClientLoginModal';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const navRef = useRef<HTMLDivElement>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const handleDropdownToggle = (dropdown: string) => {
-    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
+  // Valid tab names for navigation
+  const validTabs = ['home', 'services', 'pricing', 'leads', 'case-studies', 'faqs', 'api-test', 'blog', 'about', 'contact'] as const;
+
+  // Page titles for each tab
+  const titles: Record<typeof validTabs[number], string> = {
+    'home': 'CounselRank.legal - Professional Legal Services',
+    'services': 'Our Services - CounselRank.legal',
+    'pricing': 'Pricing Plans - CounselRank.legal',
+    'leads': 'Get Legal Help - CounselRank.legal',
+    'case-studies': 'Case Studies - CounselRank.legal',
+    'faqs': 'Frequently Asked Questions - CounselRank.legal',
+    'api-test': 'API Test - CounselRank.legal',
+    'blog': 'Latest Insights - CounselRank.legal',
+    'about': 'About Us - CounselRank.legal',
+    'contact': 'Contact Us - CounselRank.legal'
   };
 
+  // Validate if a tab name is valid
+  const isValidTab = (tab: string): tab is typeof validTabs[number] => {
+    return validTabs.includes(tab as any);
+  };
+
+  // Handle browser back/forward navigation
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
+    const handlePopState = (event: PopStateEvent) => {
+      console.log('PopState event triggered:', event.state);
+      if (event.state && event.state.tab) {
+        console.log(`Navigating to tab from history: ${event.state.tab}`);
+        setActiveTab(event.state.tab);
+      } else {
+        console.log('Navigating to home from history');
+        setActiveTab('home');
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    // Handle initial page load with hash
+    const handleInitialLoad = () => {
+      const hash = window.location.hash.slice(1); // Remove the # symbol
+      if (hash && isValidTab(hash)) {
+        setActiveTab(hash);
+        window.history.replaceState({ tab: hash }, '', `#${hash}`);
+      }
+      
+      // Set initial title
+      const currentTab = hash || 'home';
+      document.title = titles[currentTab as keyof typeof titles] || titles.home;
+    };
+
+    // Set initial history state
+    if (activeTab !== 'home') {
+      window.history.replaceState({ tab: activeTab }, '', `#${activeTab}`);
+    }
+
+    handleInitialLoad();
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [activeTab]);
+
+  // Update browser history when tab changes
+  const handleTabChange = (tab: string) => {
+    // Validate the tab before setting it
+    if (!isValidTab(tab)) {
+      console.warn(`Invalid tab: ${tab}`);
+      return;
+    }
+    
+    console.log(`Navigating to tab: ${tab}`);
+    setActiveTab(tab);
+    
+    // Update browser title
+    document.title = titles[tab];
+    
+    // Update browser history
+    if (tab === 'home') {
+      window.history.pushState({ tab }, '', '/');
+    } else {
+      window.history.pushState({ tab }, '', `#${tab}`);
+    }
+    
+    console.log(`URL updated to: ${window.location.href}`);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -232,158 +300,11 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-gray-900 text-white py-4 shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-white">CounselRank.legal</h1>
-          
-          <nav className="flex gap-8 items-center" ref={navRef}>
-            <button 
-              className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
-                activeTab === 'home' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'text-white hover:bg-white/10 hover:text-teal-400'
-              }`}
-              onClick={() => setActiveTab('home')}
-            >
-              Home
-            </button>
-            
-            {/* Services Dropdown */}
-            <div className="relative">
-              <button 
-                className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 ${
-                  activeDropdown === 'services' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-white hover:bg-white/10 hover:text-teal-400'
-                }`}
-                onClick={() => handleDropdownToggle('services')}
-              >
-                Services
-                <span className={`text-xs transition-transform duration-200 ${
-                  activeDropdown === 'services' ? 'rotate-180' : ''
-                }`}>▼</span>
-              </button>
-              {activeDropdown === 'services' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('services'); setActiveDropdown(null); }}
-                  >
-                    Local SEO
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('services'); setActiveDropdown(null); }}
-                  >
-                    Content & AEO
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('services'); setActiveDropdown(null); }}
-                  >
-                    GBP & Reviews
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('services'); setActiveDropdown(null); }}
-                  >
-                    Technical SEO
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Resources Dropdown */}
-            <div className="relative">
-              <button 
-                className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 ${
-                  activeDropdown === 'resources' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-white hover:bg-white/10 hover:text-teal-400'
-                }`}
-                onClick={() => handleDropdownToggle('resources')}
-              >
-                Resources
-                <span className={`text-xs transition-transform duration-200 ${
-                  activeDropdown === 'resources' ? 'rotate-180' : ''
-                }`}>▼</span>
-              </button>
-              {activeDropdown === 'resources' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('case-studies'); setActiveDropdown(null); }}
-                  >
-                    Case Studies
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('blog'); setActiveDropdown(null); }}
-                  >
-                    Blog
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('faqs'); setActiveDropdown(null); }}
-                  >
-                    FAQ
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('api-test'); setActiveDropdown(null); }}
-                  >
-                    API Test
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Company Dropdown */}
-            <div className="relative">
-              <button 
-                className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 ${
-                  activeDropdown === 'company' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-white hover:bg-white/10 hover:text-teal-400'
-                }`}
-                onClick={() => handleDropdownToggle('company')}
-              >
-                Company
-                <span className={`text-xs transition-transform duration-200 ${
-                  activeDropdown === 'company' ? 'rotate-180' : ''
-                }`}>▼</span>
-              </button>
-              {activeDropdown === 'company' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('about'); setActiveDropdown(null); }}
-                  >
-                    About
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('pricing'); setActiveDropdown(null); }}
-                  >
-                    Pricing
-                  </button>
-                  <button 
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    onClick={() => { setActiveTab('contact'); setActiveDropdown(null); }}
-                  >
-                    Contact
-                  </button>
-                </div>
-              )}
-            </div>
-          </nav>
-
-          <div className="flex gap-4">
-            <button className="px-4 py-2 text-white hover:text-teal-400 transition-colors duration-200 font-medium">Client Login</button>
-            <button className="btn-primary">Book Demo</button>
-          </div>
-        </div>
-      </header>
+      <Header 
+        onNavigate={handleTabChange} 
+        activeTab={activeTab}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+      />
 
       <main className="flex-1">
         {activeTab === 'home' && (
@@ -396,7 +317,7 @@ function App() {
                   <button className="btn-primary text-lg px-8 py-4">Book Demo</button>
                   <button 
                     className="text-gray-200 hover:text-white transition-colors duration-200 font-medium"
-                    onClick={() => setActiveTab('pricing')}
+                    onClick={() => handleTabChange('pricing')}
                   >
                     See Pricing
                   </button>
@@ -469,22 +390,22 @@ function App() {
             </div>
             <div className="max-w-6xl mx-auto px-6 py-16">
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => setActiveTab('leads')}>
+                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleTabChange('leads')}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">Get Legal Help</h3>
                   <p className="text-gray-600 mb-6">Submit your legal inquiry and get connected with the right attorney</p>
                   <button className="btn-primary">Submit Inquiry</button>
                 </div>
-                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => setActiveTab('case-studies')}>
+                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleTabChange('case-studies')}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">Case Studies</h3>
                   <p className="text-gray-600 mb-6">Explore our successful legal cases and outcomes</p>
                   <button className="btn-primary">View Cases</button>
                 </div>
-                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => setActiveTab('faqs')}>
+                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleTabChange('faqs')}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">FAQ</h3>
                   <p className="text-gray-600 mb-6">Find answers to common legal questions</p>
                   <button className="btn-primary">View FAQs</button>
                 </div>
-                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => setActiveTab('api-test')}>
+                <div className="card text-center cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleTabChange('api-test')}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">API Test</h3>
                   <p className="text-gray-600 mb-6">Test the connection to the backend API</p>
                   <button className="btn-primary">Test API</button>
@@ -495,6 +416,17 @@ function App() {
         )}
         {renderContent()}
       </main>
+
+      {/* Client Login Modal */}
+      <ClientLoginModal
+        open={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSuccess={(user) => {
+          console.log('Login successful:', user);
+          // TODO: Handle successful login (e.g., update user state, redirect, etc.)
+          setIsLoginModalOpen(false);
+        }}
+      />
     </div>
   );
 }
