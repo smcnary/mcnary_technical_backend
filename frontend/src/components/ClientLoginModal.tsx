@@ -99,18 +99,18 @@ export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <div className="fixed inset-0 z-[60] animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="login-title">
       {/* Overlay */}
-      <button className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} aria-label="Close" />
+      <button className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-200" onClick={onClose} aria-label="Close" />
 
       {/* Panel */}
       <div className="absolute inset-0 flex items-center justify-center px-4">
-        <div className="w-full max-w-md rounded-2xl bg-white shadow-xl ring-1 ring-black/5">
+        <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 animate-slide-up">
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <h2 id="login-title" className="text-lg font-semibold text-gray-900">Client Login</h2>
+            <h2 id="login-title" className="text-xl font-bold text-gray-900">Client Login</h2>
             <button
               onClick={onClose}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 transition-all duration-200"
               aria-label="Close"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -119,15 +119,15 @@ export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
             </button>
           </div>
 
-          <form onSubmit={onSubmit} className="px-6 py-5 space-y-4">
+          <form onSubmit={onSubmit} className="px-6 py-6 space-y-5">
             {formError && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 animate-fade-in">
                 {formError}
               </div>
             )}
 
-            <div className="space-y-1.5">
-              <label htmlFor="email" className="text-sm font-medium text-gray-800">Email</label>
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-semibold text-gray-800">Email</label>
               <input
                 ref={firstFieldRef}
                 id="email"
@@ -136,16 +136,15 @@ export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@lawfirm.com"
-                className={`w-full rounded-xl border px-3.5 py-2.5 text-[15px] shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2
-                ${fieldErrors.email ? "border-red-400 focus:ring-red-300" : "border-gray-300 focus:border-blue-600 focus:ring-blue-600/30"}`}
+                className={`input-field ${fieldErrors.email ? "border-red-400 focus:ring-red-500/20 focus:border-red-500" : ""}`}
               />
-              {fieldErrors.email && <p className="text-xs text-red-600">{fieldErrors.email}</p>}
+              {fieldErrors.email && <p className="text-xs text-red-600 animate-fade-in">{fieldErrors.email}</p>}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-sm font-medium text-gray-800">Password</label>
-                <a href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700">Forgot?</a>
+                <label htmlFor="password" className="text-sm font-semibold text-gray-800">Password</label>
+                <a href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">Forgot?</a>
               </div>
               <input
                 id="password"
@@ -154,29 +153,28 @@ export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className={`w-full rounded-xl border px-3.5 py-2.5 text-[15px] shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2
-                ${fieldErrors.password ? "border-red-400 focus:ring-red-300" : "border-gray-300 focus:border-blue-600 focus:ring-blue-600/30"}`}
+                className={`input-field ${fieldErrors.password ? "border-red-400 focus:ring-red-500/20 focus:border-red-500" : ""}`}
               />
-              {fieldErrors.password && <p className="text-xs text-red-600">{fieldErrors.password}</p>}
+              {fieldErrors.password && <p className="text-xs text-red-600 animate-fade-in">{fieldErrors.password}</p>}
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+              <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={remember}
                   onChange={(e) => setRemember(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600/20 focus:ring-2 transition-all duration-200"
                 />
                 Remember me
               </label>
-              <a href="/register" className="text-sm text-gray-500 hover:text-gray-700">Need an account?</a>
+              <a href="/register" className="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200">Need an account?</a>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-blue-600 px-4 py-2.5 text-white font-medium shadow-sm hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
             >
               {loading ? (
                 <span className="inline-flex items-center justify-center gap-2">
