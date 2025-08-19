@@ -1,42 +1,47 @@
+'use client'
+
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface HeaderProps {
-  onNavigate: (tab: string) => void;
-  activeTab: string;
   onOpenLogin: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onNavigate, activeTab, onOpenLogin }) => {
+const Header: React.FC<HeaderProps> = ({ onOpenLogin }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleNavigation = (tab: string) => {
-    onNavigate(tab);
-    setIsMobileMenuOpen(false); // Close mobile menu when navigating
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(path);
   };
 
   return (
     <header className="bg-[#0F1724]">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Brand */}
-        <span 
+        <Link 
+          href="/"
           className="text-white font-semibold text-lg cursor-pointer hover:text-gray-200 transition-colors"
-          onClick={() => handleNavigation('home')}
         >
           CounselRank.legal
-        </span>
+        </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-gray-200">
-          <button 
-            className={`hover:text-white font-medium transition-colors ${activeTab === 'home' ? 'text-white' : ''}`}
-            onClick={() => handleNavigation('home')}
+          <Link 
+            href="/"
+            className={`hover:text-white font-medium transition-colors ${isActive('/') ? 'text-white' : ''}`}
           >
             Home
-          </button>
+          </Link>
           <div className="relative group">
             <button className="flex items-center hover:text-white">
               Services ▾
@@ -44,24 +49,24 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeTab, onOpenLogin }) =
             {/* Services Dropdown */}
             <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
-                <button 
+                <Link 
+                  href="/services"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('services')}
                 >
                   SEO Services
-                </button>
-                <button 
+                </Link>
+                <Link 
+                  href="/pricing"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('pricing')}
                 >
                   Pricing Plans
-                </button>
-                <button 
+                </Link>
+                <Link 
+                  href="/contact"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('contact')}
                 >
                   Get Started
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -72,24 +77,24 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeTab, onOpenLogin }) =
             {/* Resources Dropdown */}
             <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
-                <button 
+                <Link 
+                  href="/blog"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('blog')}
                 >
                   Blog
-                </button>
-                <button 
+                </Link>
+                <Link 
+                  href="/case-studies"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('case-studies')}
                 >
                   Case Studies
-                </button>
-                <button 
+                </Link>
+                <Link 
+                  href="/faqs"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('faqs')}
                 >
                   FAQs
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -100,41 +105,47 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeTab, onOpenLogin }) =
             {/* Company Dropdown */}
             <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
-                <button 
+                <Link 
+                  href="/about"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('about')}
                 >
                   About Us
-                </button>
-                <button 
+                </Link>
+                <Link 
+                  href="/contact"
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={() => handleNavigation('contact')}
                 >
                   Contact
-                </button>
+                </Link>
               </div>
             </div>
           </div>
+          <Link 
+            href="/leads"
+            className={`hover:text-white font-medium transition-colors ${isActive('/leads') ? 'text-white' : ''}`}
+          >
+            Get Legal Help
+          </Link>
         </nav>
 
-        {/* CTAs */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* CTA Buttons */}
+        <div className="hidden md:flex items-center gap-4">
           <button 
-            className="px-4 py-2 rounded-lg border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition"
             onClick={onOpenLogin}
+            className="text-gray-200 hover:text-white font-medium transition-colors"
           >
             Client Login
           </button>
-          <button 
-            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition"
-            onClick={() => handleNavigation('contact')}
+          <Link 
+            href="/contact"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
-            Book Demo
-          </button>
+            Get Started
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <button
+        <button 
           className="md:hidden text-white p-2"
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
@@ -152,106 +163,89 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeTab, onOpenLogin }) =
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-[#0F1724] border-t border-gray-700">
-          <nav className="px-6 py-4 space-y-4">
-            <button 
-              className={`block w-full text-left text-gray-200 hover:text-white font-medium ${activeTab === 'home' ? 'text-white' : ''}`}
-              onClick={() => handleNavigation('home')}
+          <div className="px-6 py-4 space-y-4">
+            <Link 
+              href="/"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
-            </button>
-            <div>
-              <button className="flex items-center justify-between w-full text-gray-200 hover:text-white font-medium">
-                Services
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="mt-2 ml-4 space-y-2">
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('services')}
-                >
-                  SEO Services
-                </button>
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('pricing')}
-                >
-                  Pricing Plans
-                </button>
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('contact')}
-                >
-                  Get Started
-                </button>
-              </div>
-            </div>
-            <div>
-              <button className="flex items-center justify-between w-full text-gray-200 hover:text-white font-medium">
-                Resources
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="mt-2 ml-4 space-y-2">
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('blog')}
-                >
-                  Blog
-                </button>
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('case-studies')}
-                >
-                  Case Studies
-                </button>
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('faqs')}
-                >
-                  FAQs
-                </button>
-              </div>
-            </div>
-            <div>
-              <button className="flex items-center justify-between w-full text-gray-200 hover:text-white font-medium">
-                Company
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="mt-2 ml-4 space-y-2">
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('about')}
-                >
-                  About Us
-                </button>
-                <button 
-                  className="block w-full text-left text-gray-300 hover:text-white"
-                  onClick={() => handleNavigation('contact')}
-                >
-                  Contact
-                </button>
-              </div>
-            </div>
-            <div className="pt-4 space-y-3">
+            </Link>
+            <Link 
+              href="/services"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Services
+            </Link>
+            <Link 
+              href="/pricing"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Pricing
+            </Link>
+            <Link 
+              href="/leads"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Get Legal Help
+            </Link>
+            <Link 
+              href="/case-studies"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Case Studies
+            </Link>
+            <Link 
+              href="/faqs"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              FAQs
+            </Link>
+            <Link 
+              href="/blog"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Blog
+            </Link>
+            <Link 
+              href="/about"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link 
+              href="/contact"
+              className="block text-gray-200 hover:text-white font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+            <div className="pt-4 border-t border-gray-700">
               <button 
-                className="w-full px-4 py-2 rounded-lg border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition"
-                onClick={onOpenLogin}
+                onClick={() => {
+                  onOpenLogin();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left text-gray-200 hover:text-white font-medium mb-2"
               >
                 Client Login
               </button>
-              <button 
-                className="w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition"
-                onClick={() => handleNavigation('contact')}
+              <Link 
+                href="/contact"
+                className="block w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-center"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                Book Demo
-              </button>
+                Get Started
+              </Link>
             </div>
-          </nav>
+          </div>
         </div>
       )}
     </header>
