@@ -108,11 +108,11 @@ class Recommendation
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
     #[Groups(['recommendation:read', 'recommendation:write'])]
-    private ?float $estimatedEffort = null; // Hours
+    private ?string $estimatedEffort = null; // Hours
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
     #[Groups(['recommendation:read', 'recommendation:write'])]
-    private ?float $estimatedCost = null;
+    private ?string $estimatedCost = null;
 
     #[ORM\Column(type: 'jsonb', nullable: true)]
     #[Groups(['recommendation:read', 'recommendation:write'])]
@@ -295,23 +295,23 @@ class Recommendation
         return $this;
     }
 
-    public function getEstimatedEffort(): ?float
+    public function getEstimatedEffort(): ?string
     {
         return $this->estimatedEffort;
     }
 
-    public function setEstimatedEffort(?float $estimatedEffort): self
+    public function setEstimatedEffort(?string $estimatedEffort): self
     {
         $this->estimatedEffort = $estimatedEffort;
         return $this;
     }
 
-    public function getEstimatedCost(): ?float
+    public function getEstimatedCost(): ?string
     {
         return $this->estimatedCost;
     }
 
-    public function setEstimatedCost(?float $estimatedCost): self
+    public function setEstimatedCost(?string $estimatedCost): self
     {
         $this->estimatedCost = $estimatedCost;
         return $this;

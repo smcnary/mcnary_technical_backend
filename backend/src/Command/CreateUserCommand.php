@@ -101,24 +101,40 @@ HELP
             return Command::FAILURE;
         }
 
-        // Create new user
-        $user = new User();
-        $user->setEmail($email);
-        $user->setName($name);
+        // Get the default organization (assuming there's at least one)
+        $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+        if (!$organization) {
+            $io->error('No organization found. Please create an organization first.');
+            return Command::FAILURE;
+        }
+
+        // Hash password
+        $hashedPassword = $this->passwordHasher->hashPassword(new User($organization, 'temp@temp.com', 'temp', 'CLIENT_STAFF'), $password);
+
+        // Create new user with constructor
+        $user = new User($organization, $email, $hashedPassword, $role);
+        
+        // Parse name into first and last name
+        $nameParts = explode(' ', trim($name), 2);
+        $user->setFirstName($nameParts[0]);
+        $user->setLastName(isset($nameParts[1]) ? $nameParts[1] : null);
+        
         $user->setStatus($status);
-        $user->setRoles([$role]);
 
         if ($tenantId) {
-            $user->setTenantId($tenantId);
+            // Find the tenant entity
+            $tenant = $this->entityManager->getRepository(\App\Entity\Tenant::class)->find($tenantId);
+            if ($tenant) {
+                $user->setTenant($tenant);
+            }
         }
 
         if ($clientId) {
             $user->setClientId($clientId);
         }
 
-        // Hash password
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
-        $user->setPasswordHash($hashedPassword);
+        // Explicitly set metadata to null to avoid array to string conversion
+        $user->setMetadata(null);
 
         // Persist user
         $this->entityManager->persist($user);

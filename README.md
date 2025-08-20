@@ -15,19 +15,28 @@ cd mcnary_technical_backend
 
 ## 📚 Documentation
 
-**All documentation has been moved to the `backend/documentation/` folder.**
+**All documentation has been consolidated into the `backend/documentation/` folder.**
 
 - **[📖 Documentation Index](backend/documentation/README.md)** - Complete documentation overview
 - **[🚀 Quick Start Guide](backend/documentation/QUICK_START.md)** - Get up and running fast
 - **[🏗️ Architecture Overview](backend/documentation/ARCHITECTURE.md)** - System design and principles
-- **[🔌 API Documentation](backend/documentation/API_V1_ENDPOINTS.md)** - Complete REST API v1 reference
+- **[🔌 API Documentation](backend/documentation/API_REFERENCE.md)** - Complete REST API v1 reference
+- **[🎨 Frontend Setup](backend/documentation/FRONTEND_SETUP.md)** - Frontend development guide
+- **[🐛 Error Handling](backend/documentation/ERROR_HANDLING_IMPROVEMENTS.md)** - Error handling and logging guide
 
 ## 🏗️ Project Structure
 
 ```
 mcnary_technical_backend/
 ├── backend/                    # Symfony 7.3 + API Platform backend
-│   ├── documentation/          # 📚 All project documentation
+│   ├── documentation/          # 📚 All project documentation (consolidated)
+│   │   ├── README.md          # Documentation index
+│   │   ├── QUICK_START.md     # Getting started guide
+│   │   ├── ARCHITECTURE.md    # System architecture
+│   │   ├── API_REFERENCE.md   # API documentation
+│   │   ├── FRONTEND_*.md      # Frontend guides
+│   │   ├── ERROR_HANDLING_IMPROVEMENTS.md # Error handling guide
+│   │   └── ...                # Additional documentation
 │   ├── src/                   # PHP source code
 │   ├── config/                # Symfony configuration
 │   └── migrations/            # Database migrations
@@ -41,6 +50,7 @@ mcnary_technical_backend/
 - **Frontend**: React 18.2, TypeScript 5.3, Vite 6.3, TailwindCSS
 - **Security**: JWT Authentication, Role-Based Access Control (RBAC)
 - **Architecture**: Multi-tenant, API-first, UUID primary keys, JSONB metadata
+- **Logging**: Comprehensive error handling and logging with Monolog
 
 ## 🎯 Features
 
@@ -50,13 +60,16 @@ mcnary_technical_backend/
 - ✅ **Public content management** (pages, FAQs, packages, media)
 - ✅ **User and client management** with proper security
 - ✅ **Comprehensive documentation** for all components
+- ✅ **Enhanced error handling and logging** throughout the system
 
 ## 📖 Getting Started
 
 1. **Read the [Quick Start Guide](backend/documentation/QUICK_START.md)**
 2. **Review the [Architecture Overview](backend/documentation/ARCHITECTURE.md)**
-3. **Set up your [Development Environment](backend/documentation/DEVELOPMENT_SETUP.md)**
-4. **Explore the [API Documentation](backend/documentation/API_V1_ENDPOINTS.md)**
+3. **Set up your [Development Environment](backend/documentation/QUICK_START.md)**
+4. **Explore the [API Documentation](backend/documentation/API_REFERENCE.md)**
+5. **Check [Frontend Setup](backend/documentation/FRONTEND_SETUP.md)** for frontend development
+6. **Review [Error Handling](backend/documentation/ERROR_HANDLING_IMPROVEMENTS.md)** for best practices
 
 ## 🤝 Contributing
 
@@ -68,6 +81,6 @@ For questions and support, please refer to the comprehensive documentation in th
 
 ---
 
-**Status**: ✅ Core platform complete with full API v1 implementation  
+**Status**: ✅ Core platform complete with full API v1 implementation and enhanced error handling  
 **Version**: 1.0.0  
 **Last Updated**: January 15, 2025

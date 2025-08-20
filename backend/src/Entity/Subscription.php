@@ -76,7 +76,7 @@ class Subscription
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     #[Groups(['subscription:read', 'subscription:write'])]
-    private float $amount;
+    private string $amount;
 
     #[ORM\Column(type: 'string', length: 3)]
     #[Groups(['subscription:read', 'subscription:write'])]
@@ -224,12 +224,12 @@ class Subscription
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(string $amount): self
     {
         $this->amount = $amount;
         return $this;

@@ -87,7 +87,7 @@ class Campaign
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     #[Groups(['campaign:read', 'campaign:write'])]
-    private ?float $budget = null;
+    private ?string $budget = null;
 
     #[ORM\Column(type: 'jsonb', nullable: true)]
     #[Groups(['campaign:read', 'campaign:write'])]
@@ -194,12 +194,12 @@ class Campaign
         return $this;
     }
 
-    public function getBudget(): ?float
+    public function getBudget(): ?string
     {
         return $this->budget;
     }
 
-    public function setBudget(?float $budget): self
+    public function setBudget(?string $budget): self
     {
         $this->budget = $budget;
         return $this;

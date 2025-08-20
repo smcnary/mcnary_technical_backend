@@ -79,15 +79,15 @@ class Invoice
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     #[Groups(['invoice:read', 'invoice:write'])]
-    private float $amount;
+    private string $amount;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, options: ['default' => 0])]
     #[Groups(['invoice:read', 'invoice:write'])]
-    private float $taxAmount = 0.0;
+    private string $taxAmount = '0.00';
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     #[Groups(['invoice:read', 'invoice:write'])]
-    private float $totalAmount;
+    private string $totalAmount;
 
     #[ORM\Column(type: 'string', length: 3)]
     #[Groups(['invoice:read', 'invoice:write'])]
@@ -235,34 +235,34 @@ class Invoice
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(string $amount): self
     {
         $this->amount = $amount;
         return $this;
     }
 
-    public function getTaxAmount(): float
+    public function getTaxAmount(): string
     {
         return $this->taxAmount;
     }
 
-    public function setTaxAmount(float $taxAmount): self
+    public function setTaxAmount(string $taxAmount): self
     {
         $this->taxAmount = $taxAmount;
         return $this;
     }
 
-    public function getTotalAmount(): float
+    public function getTotalAmount(): string
     {
         return $this->totalAmount;
     }
 
-    public function setTotalAmount(float $totalAmount): self
+    public function setTotalAmount(string $totalAmount): self
     {
         $this->totalAmount = $totalAmount;
         return $this;

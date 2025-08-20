@@ -85,7 +85,7 @@ class Keyword
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
     #[Groups(['keyword:read', 'keyword:write'])]
-    private ?float $cpc = null;
+    private ?string $cpc = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(['keyword:read', 'keyword:write'])]
@@ -205,12 +205,12 @@ class Keyword
         return $this;
     }
 
-    public function getCpc(): ?float
+    public function getCpc(): ?string
     {
         return $this->cpc;
     }
 
-    public function setCpc(?float $cpc): self
+    public function setCpc(?string $cpc): self
     {
         $this->cpc = $cpc;
         return $this;

@@ -48,7 +48,7 @@ class Package
     private ?string $description = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private ?float $price = null;
+    private ?string $price = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $billingCycle = null; // monthly, quarterly, annually
@@ -129,12 +129,12 @@ class Package
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(?float $price): self
+    public function setPrice(?string $price): self
     {
         $this->price = $price;
         return $this;
