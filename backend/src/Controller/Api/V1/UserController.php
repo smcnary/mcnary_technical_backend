@@ -40,8 +40,8 @@ class UserController extends AbstractController
             'email' => $user->getEmail(),
             'name' => $user->getName(),
             'roles' => $user->getRoles(),
+            'agency_id' => $user->getAgency()?->getId(),
             'client_id' => $user->getClientId(),
-            'tenant_id' => $user->getTenantId(),
             'status' => $user->getStatus(),
             'created_at' => $user->getCreatedAt()->format('c'),
             'last_login_at' => $user->getLastLoginAt()?->format('c'),
@@ -55,6 +55,15 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_AGENCY_ADMIN')]
     public function listUsers(Request $request): JsonResponse
     {
+        // Check if user has appropriate role
+        if (!$this->isGranted('ROLE_SYSTEM_ADMIN') && !$this->isGranted('ROLE_AGENCY_ADMIN')) {
+            return $this->json(['error' => 'Access denied. System Admin or Agency Admin role required.'], Response::HTTP_FORBIDDEN);
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $isAgencyAdmin = $this->isGranted('ROLE_AGENCY_ADMIN') && !$this->isGranted('ROLE_SYSTEM_ADMIN');
+        
         $page = max(1, (int) $request->query->get('page', 1));
         $perPage = min(100, max(1, (int) $request->query->get('per_page', 20)));
         $sort = $request->query->get('sort', 'created_at');
@@ -84,6 +93,11 @@ class UserController extends AbstractController
         if ($status) {
             $criteria['status'] = $status;
         }
+        
+        // Agency admins can only see users within their agency scope
+        if ($isAgencyAdmin && $currentUser->getAgency()) {
+            $criteria['agency_id'] = $currentUser->getAgency()->getId();
+        }
 
         $users = $this->userRepository->findByCriteria($criteria, $sortFields, $perPage, ($page - 1) * $perPage);
         $totalUsers = $this->userRepository->countByCriteria($criteria);
@@ -95,8 +109,8 @@ class UserController extends AbstractController
                 'email' => $user->getEmail(),
                 'name' => $user->getName(),
                 'roles' => $user->getRoles(),
+                'agency_id' => $user->getAgency()?->getId(),
                 'client_id' => $user->getClientId(),
-                'tenant_id' => $user->getTenantId(),
                 'status' => $user->getStatus(),
                 'created_at' => $user->getCreatedAt()->format('c'),
                 'last_login_at' => $user->getLastLoginAt()?->format('c')
@@ -118,6 +132,15 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_AGENCY_ADMIN')]
     public function createUser(Request $request): JsonResponse
     {
+        // Check if user has appropriate role
+        if (!$this->isGranted('ROLE_SYSTEM_ADMIN') && !$this->isGranted('ROLE_AGENCY_ADMIN')) {
+            return $this->json(['error' => 'Access denied. System Admin or Agency Admin role required.'], Response::HTTP_FORBIDDEN);
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $isAgencyAdmin = $this->isGranted('ROLE_AGENCY_ADMIN') && !$this->isGranted('ROLE_SYSTEM_ADMIN');
+        
         try {
             $data = json_decode($request->getContent(), true);
             
@@ -131,12 +154,11 @@ class UserController extends AbstractController
                 'name' => [new Assert\NotBlank()],
                 'role' => [new Assert\NotBlank(), new Assert\Choice([
                     User::ROLE_AGENCY_ADMIN,
-                    User::ROLE_AGENCY_STAFF,
-                    User::ROLE_CLIENT_ADMIN,
-                    User::ROLE_CLIENT_STAFF
+                    User::ROLE_CLIENT_USER,
+                    User::ROLE_READ_ONLY
                 ])],
+                'agency_id' => [new Assert\Optional([new Assert\Uuid()])],
                 'client_id' => [new Assert\Optional([new Assert\Uuid()])],
-                'tenant_id' => [new Assert\Optional([new Assert\Uuid()])],
                 'status' => [new Assert\Optional([new Assert\Choice(['invited', 'active', 'inactive'])])]
             ]);
 
@@ -155,6 +177,27 @@ class UserController extends AbstractController
                 return $this->json(['error' => 'User with this email already exists'], Response::HTTP_CONFLICT);
             }
 
+            // Security check for agency admins
+            if ($isAgencyAdmin) {
+                // Agency admins can only create users within their own agency scope
+                if (!isset($data['agency_id']) || $data['agency_id'] !== $currentUser->getAgency()?->getId()) {
+                    return $this->json(['error' => 'Agency admins can only create users within their own agency scope'], Response::HTTP_FORBIDDEN);
+                }
+                
+                // Agency admins cannot create system admins
+                if ($data['role'] === User::ROLE_SYSTEM_ADMIN) {
+                    return $this->json(['error' => 'Agency admins cannot create system admins'], Response::HTTP_FORBIDDEN);
+                }
+            }
+
+            // Validate agency_id if provided
+            if (isset($data['agency_id'])) {
+                $agency = $this->entityManager->getRepository('App\Entity\Agency')->find($data['agency_id']);
+                if (!$agency) {
+                    return $this->json(['error' => 'Agency not found'], Response::HTTP_NOT_FOUND);
+                }
+            }
+
             // Validate client_id if provided
             if (isset($data['client_id'])) {
                 $client = $this->clientRepository->find($data['client_id']);
@@ -163,25 +206,32 @@ class UserController extends AbstractController
                 }
             }
 
+            // Generate temporary password for invited users
+            $tempPassword = bin2hex(random_bytes(8));
+            $hashedPassword = $this->passwordHasher->hashPassword($currentUser, $tempPassword);
+
             // Create user
-            $user = new User();
-            $user->setEmail($data['email']);
-            $user->setName($data['name']);
-            $user->setRoles([$data['role']]);
+            $agency = isset($data['agency_id']) ? 
+                $this->entityManager->getRepository('App\Entity\Agency')->find($data['agency_id']) : 
+                $currentUser->getAgency();
+                
+            $user = new User(
+                $agency,                    // agency
+                $data['email'],             // email
+                $hashedPassword,            // hash
+                $data['role']               // role
+            );
+            
+            // Set first and last name from the name field
+            $nameParts = explode(' ', $data['name'], 2);
+            $user->setFirstName($nameParts[0]);
+            $user->setLastName($nameParts[1] ?? '');
+            
             $user->setStatus($data['status'] ?? 'invited');
 
             if (isset($data['client_id'])) {
                 $user->setClientId($data['client_id']);
             }
-
-            if (isset($data['tenant_id'])) {
-                $user->setTenantId($data['tenant_id']);
-            }
-
-            // Generate temporary password for invited users
-            $tempPassword = bin2hex(random_bytes(8));
-            $hashedPassword = $this->passwordHasher->hashPassword($user, $tempPassword);
-            $user->setPasswordHash($hashedPassword);
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
@@ -191,8 +241,8 @@ class UserController extends AbstractController
                 'email' => $user->getEmail(),
                 'name' => $user->getName(),
                 'roles' => $user->getRoles(),
+                'agency_id' => $user->getAgency()?->getId(),
                 'client_id' => $user->getClientId(),
-                'tenant_id' => $user->getTenantId(),
                 'status' => $user->getStatus(),
                 'created_at' => $user->getCreatedAt()->format('c')
             ];
@@ -212,6 +262,15 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_AGENCY_ADMIN')]
     public function updateUser(string $id, Request $request): JsonResponse
     {
+        // Check if user has appropriate role
+        if (!$this->isGranted('ROLE_SYSTEM_ADMIN') && !$this->isGranted('ROLE_AGENCY_ADMIN')) {
+            return $this->json(['error' => 'Access denied. System Admin or Agency Admin role required.'], Response::HTTP_FORBIDDEN);
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $isAgencyAdmin = $this->isGranted('ROLE_AGENCY_ADMIN') && !$this->isGranted('ROLE_SYSTEM_ADMIN');
+        
         try {
             if (!Uuid::isValid($id)) {
                 return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
@@ -220,6 +279,19 @@ class UserController extends AbstractController
             $user = $this->userRepository->find($id);
             if (!$user) {
                 return $this->json(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+            }
+
+            // Security check for agency admins
+            if ($isAgencyAdmin) {
+                // Agency admins can only update users within their own agency scope
+                if ($user->getAgency()?->getId() !== $currentUser->getAgency()?->getId()) {
+                    return $this->json(['error' => 'Agency admins can only update users within their own agency scope'], Response::HTTP_FORBIDDEN);
+                }
+                
+                // Agency admins cannot update system admins
+                if ($user->hasRole(User::ROLE_SYSTEM_ADMIN)) {
+                    return $this->json(['error' => 'Agency admins cannot update system admins'], Response::HTTP_FORBIDDEN);
+                }
             }
 
             $data = json_decode($request->getContent(), true);
@@ -233,10 +305,10 @@ class UserController extends AbstractController
                 'name' => [new Assert\Optional([new Assert\NotBlank()])],
                 'role' => [new Assert\Optional([new Assert\Choice([
                     User::ROLE_AGENCY_ADMIN,
-                    User::ROLE_AGENCY_STAFF,
-                    User::ROLE_CLIENT_ADMIN,
-                    User::ROLE_CLIENT_STAFF
+                    User::ROLE_CLIENT_USER,
+                    User::ROLE_READ_ONLY
                 ])])],
+                'agency_id' => [new Assert\Optional([new Assert\Uuid()])],
                 'client_id' => [new Assert\Optional([new Assert\Uuid()])],
                 'status' => [new Assert\Optional([new Assert\Choice(['invited', 'active', 'inactive'])])],
                 'metadata' => [new Assert\Optional([new Assert\Type('array')])]
@@ -251,13 +323,33 @@ class UserController extends AbstractController
                 return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
             }
 
+            // Additional security check for role changes by agency admins
+            if ($isAgencyAdmin && isset($data['role'])) {
+                if ($data['role'] === User::ROLE_SYSTEM_ADMIN) {
+                    return $this->json(['error' => 'Agency admins cannot assign system admin roles'], Response::HTTP_FORBIDDEN);
+                }
+            }
+
             // Update fields
             if (isset($data['name'])) {
-                $user->setName($data['name']);
+                $nameParts = explode(' ', $data['name'], 2);
+                $user->setFirstName($nameParts[0]);
+                $user->setLastName($nameParts[1] ?? '');
             }
 
             if (isset($data['role'])) {
-                $user->setRoles([$data['role']]);
+                $user->setRole($data['role']);
+            }
+
+            if (isset($data['agency_id'])) {
+                // Agency admins cannot change agency_id
+                if (!$isAgencyAdmin) {
+                    $agency = $this->entityManager->getRepository('App\Entity\Agency')->find($data['agency_id']);
+                    if (!$agency) {
+                        return $this->json(['error' => 'Agency not found'], Response::HTTP_NOT_FOUND);
+                    }
+                    $user->setAgency($agency);
+                }
             }
 
             if (isset($data['client_id'])) {
@@ -283,8 +375,8 @@ class UserController extends AbstractController
                 'email' => $user->getEmail(),
                 'name' => $user->getName(),
                 'roles' => $user->getRoles(),
+                'agency_id' => $user->getAgency()?->getId(),
                 'client_id' => $user->getClientId(),
-                'tenant_id' => $user->getTenantId(),
                 'status' => $user->getStatus(),
                 'created_at' => $user->getCreatedAt()->format('c'),
                 'updated_at' => $user->getUpdatedAt()->format('c'),

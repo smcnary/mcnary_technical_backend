@@ -15,17 +15,18 @@ use App\Entity\Tenant;
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
 #[ORM\HasLifecycleCallbacks]
-#[ApiResource(security: "is_granted('ROLE_AGENCY_ADMIN') or object == user")]
+#[ApiResource(
+    security: "is_granted('ROLE_SYSTEM_ADMIN') or (is_granted('ROLE_AGENCY_ADMIN') and object.agency == user.agency) or (is_granted('ROLE_CLIENT_USER') and object.clientId == user.clientId) or object == user"
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use Timestamps;
 
     // Role constants for the new access control system
-    public const ROLE_AGENCY_ADMIN = 'ROLE_AGENCY_ADMIN';
-    public const ROLE_AGENCY_STAFF = 'ROLE_AGENCY_STAFF';
-    public const ROLE_CLIENT_ADMIN = 'ROLE_CLIENT_ADMIN';
-    public const ROLE_CLIENT_STAFF = 'ROLE_CLIENT_STAFF';
     public const ROLE_SYSTEM_ADMIN = 'ROLE_SYSTEM_ADMIN';
+    public const ROLE_AGENCY_ADMIN = 'ROLE_AGENCY_ADMIN';
+    public const ROLE_CLIENT_USER = 'ROLE_CLIENT_USER';
+    public const ROLE_READ_ONLY = 'ROLE_READ_ONLY';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -33,13 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Organization $organization;
-
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
-    #[ORM\JoinColumn(name: 'tenant_id', nullable: true, onDelete: 'SET NULL')]
-    private ?Tenant $tenant = null;
+    #[ORM\ManyToOne(targetEntity: Agency::class)]
+    #[ORM\JoinColumn(name: 'agency_id', nullable: true, onDelete: 'SET NULL')]
+    private ?Agency $agency = null;
 
     #[ORM\Column(name: 'client_id', type: 'uuid', nullable: true)]
     private ?string $clientId = null;
@@ -73,10 +70,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $metadata = [];
 
-    public function __construct(Organization $organization, string $email, string $hash, string $role)
+    public function __construct(?Agency $agency, string $email, string $hash, string $role)
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $this->organization = $organization;
+        $this->agency = $agency;
         $this->email = $email;
         $this->passwordHash = $hash;
         $this->role = $role;
@@ -109,14 +106,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->role === $role;
     }
 
-    public function isAgencyUser(): bool
+    public function isSystemAdmin(): bool
     {
-        return $this->hasRole(self::ROLE_AGENCY_ADMIN) || $this->hasRole(self::ROLE_AGENCY_STAFF);
+        return $this->hasRole(self::ROLE_SYSTEM_ADMIN);
+    }
+
+    public function isAgencyAdmin(): bool
+    {
+        return $this->hasRole(self::ROLE_AGENCY_ADMIN);
     }
 
     public function isClientUser(): bool
     {
-        return $this->hasRole(self::ROLE_CLIENT_ADMIN) || $this->hasRole(self::ROLE_CLIENT_STAFF);
+        return $this->hasRole(self::ROLE_CLIENT_USER);
+    }
+
+    public function isReadOnly(): bool
+    {
+        return $this->hasRole(self::ROLE_READ_ONLY);
     }
 
     public function getId(): string
@@ -124,25 +131,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getOrganization(): Organization
+    public function getAgency(): ?Agency
     {
-        return $this->organization;
+        return $this->agency;
     }
 
-    public function setOrganization(Organization $organization): self
+    public function setAgency(?Agency $agency): self
     {
-        $this->organization = $organization;
-        return $this;
-    }
-
-    public function getTenant(): ?Tenant
-    {
-        return $this->tenant;
-    }
-
-    public function setTenant(?Tenant $tenant): self
-    {
-        $this->tenant = $tenant;
+        $this->agency = $agency;
         return $this;
     }
 
