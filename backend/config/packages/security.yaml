@@ -14,6 +14,10 @@ security:
             pattern: ^/api/auth/login
             stateless: true
             security: false
+        public_api:
+            pattern: ^/api/v1/(clients/register|leads|newsletter-subs|pages|media-assets|packages)
+            stateless: true
+            security: false
         api:
             pattern: ^/api
             stateless: true
@@ -23,6 +27,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/clients/register, roles: PUBLIC_ACCESS } # Allow public client registration
         - { path: ^/api/v1/leads, roles: PUBLIC_ACCESS } # Allow public lead submissions
         - { path: ^/api/v1/newsletter-subs, roles: PUBLIC_ACCESS } # Allow public newsletter signups
         - { path: ^/api/v1/pages, roles: PUBLIC_ACCESS } # Allow public page access

@@ -103,7 +103,7 @@ class AuditFinding
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
     #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?float $score = null; // Impact score (0-100)
+    private ?string $score = null; // Impact score (0-100)
 
     #[ORM\Column(type: 'jsonb', nullable: true)]
     #[Groups(['audit_finding:read', 'audit_finding:write'])]
@@ -280,12 +280,12 @@ class AuditFinding
         return $this;
     }
 
-    public function getScore(): ?float
+    public function getScore(): ?string
     {
         return $this->score;
     }
 
-    public function setScore(?float $score): self
+    public function setScore(?string $score): self
     {
         $this->score = $score;
         return $this;

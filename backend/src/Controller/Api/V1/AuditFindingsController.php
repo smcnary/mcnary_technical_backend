@@ -66,11 +66,11 @@ class AuditFindingsController extends AbstractController
                 'description' => $auditFinding->getDescription(),
                 'severity' => $auditFinding->getSeverity(),
                 'category' => $auditFinding->getCategory(),
-                'url' => $auditFinding->getUrl(),
-                'line_number' => $auditFinding->getLineNumber(),
-                'code_snippet' => $auditFinding->getCodeSnippet(),
+                'url' => $auditFinding->getLocation(),
+                'line_number' => null,
+                'code_snippet' => $auditFinding->getCodeExample(),
                 'recommendation' => $auditFinding->getRecommendation(),
-                'impact_score' => $auditFinding->getImpactScore(),
+                'impact_score' => $auditFinding->getScore(),
                 'created_at' => $auditFinding->getCreatedAt()->format('c')
             ];
         }
@@ -106,11 +106,11 @@ class AuditFindingsController extends AbstractController
             'description' => $auditFinding->getDescription(),
             'severity' => $auditFinding->getSeverity(),
             'category' => $auditFinding->getCategory(),
-            'url' => $auditFinding->getUrl(),
-            'line_number' => $auditFinding->getLineNumber(),
-            'code_snippet' => $auditFinding->getCodeSnippet(),
+            'url' => $auditFinding->getLocation(),
+            'line_number' => null,
+            'code_snippet' => $auditFinding->getCodeExample(),
             'recommendation' => $auditFinding->getRecommendation(),
-            'impact_score' => $auditFinding->getImpactScore(),
+            'impact_score' => $auditFinding->getScore(),
             'metadata' => $auditFinding->getMetadata(),
             'created_at' => $auditFinding->getCreatedAt()->format('c'),
             'updated_at' => $auditFinding->getUpdatedAt()->format('c')

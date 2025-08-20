@@ -109,7 +109,7 @@ class AuditRun
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
     #[Groups(['audit_run:read', 'audit_run:write'])]
-    private ?float $score = null; // Overall audit score (0-100)
+    private ?string $score = null; // Overall audit score (0-100)
 
     #[ORM\Column(type: 'jsonb', nullable: true)]
     #[Groups(['audit_run:read', 'audit_run:write'])]
@@ -308,12 +308,12 @@ class AuditRun
         return $this;
     }
 
-    public function getScore(): ?float
+    public function getScore(): ?string
     {
         return $this->score;
     }
 
-    public function setScore(?float $score): self
+    public function setScore(?string $score): self
     {
         $this->score = $score;
         return $this;
