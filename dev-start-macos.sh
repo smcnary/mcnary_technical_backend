@@ -141,15 +141,27 @@ start_backend() {
     
     cd backend
     
-    # Check if Symfony server is already running
-    if symfony server:status &> /dev/null; then
-        print_status "Stopping existing Symfony server..."
-        symfony server:stop
+    # If Symfony CLI exists, use it; otherwise fall back to PHP built-in server
+    if command -v symfony &> /dev/null; then
+        # Check if Symfony server is already running
+        if symfony server:status &> /dev/null; then
+            print_status "Stopping existing Symfony server..."
+            symfony server:stop
+        fi
+        
+        # Start Symfony server in background
+        print_status "Starting Symfony server on http://localhost:8000..."
+        symfony server:start -d --port=8000
+    else
+        # Kill anything on 8000
+        if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null 2>&1; then
+            print_warning "Port 8000 is already in use. Killing existing process..."
+            lsof -ti:8000 | xargs kill -9 || true
+        fi
+        print_warning "Symfony CLI not found. Starting PHP built-in server on http://localhost:8000..."
+        nohup php -S 127.0.0.1:8000 -t public > var/php-server.log 2>&1 &
+        echo $! > var/php-server.pid
     fi
-    
-    # Start Symfony server in background
-    print_status "Starting Symfony server on http://localhost:8000..."
-    symfony server:start -d --port=8000
     
     cd ..
     
@@ -171,13 +183,13 @@ start_frontend() {
     
     cd frontend
     
-    # Check if port 5173 is already in use (macOS specific)
-    if lsof -Pi :5173 -sTCP:LISTEN -t >/dev/null 2>&1; then
-        print_warning "Port 5173 is already in use. Killing existing process..."
-        lsof -ti:5173 | xargs kill -9
+    # Next.js default port 3000
+    if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1; then
+        print_warning "Port 3000 is already in use. Killing existing process..."
+        lsof -ti:3000 | xargs kill -9
     fi
     
-    print_status "Starting Vite development server on http://localhost:5173..."
+    print_status "Starting Next.js development server on http://localhost:3000..."
     
     # Start frontend in background
     npm run dev &
@@ -189,8 +201,8 @@ start_frontend() {
     sleep 5
     
     # Check if server is responding
-    if curl -s http://localhost:5173 > /dev/null; then
-        print_success "Frontend server is running on http://localhost:5173"
+    if curl -s http://localhost:3000 > /dev/null; then
+        print_success "Frontend server is running on http://localhost:3000"
     else
         print_warning "Frontend server may still be starting up..."
     fi
@@ -218,7 +230,7 @@ main() {
     echo ""
     echo "🎉 Development environment is starting up!"
     echo "=========================================="
-    echo "📱 Frontend: http://localhost:5173"
+    echo "📱 Frontend: http://localhost:3000"
     echo "🔧 Backend API: http://localhost:8000"
     echo "📚 API Documentation: http://localhost:8000/api"
     echo ""

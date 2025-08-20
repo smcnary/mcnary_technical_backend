@@ -166,13 +166,13 @@ start_frontend() {
     
     cd frontend
     
-    # Check if port 5173 is already in use
-    if lsof -Pi :5173 -sTCP:LISTEN -t >/dev/null ; then
-        print_warning "Port 5173 is already in use. Killing existing process..."
-        lsof -ti:5173 | xargs kill -9
+    # Next.js default port 3000
+    if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null ; then
+        print_warning "Port 3000 is already in use. Killing existing process..."
+        lsof -ti:3000 | xargs kill -9
     fi
     
-    print_status "Starting Vite development server on http://localhost:5173..."
+    print_status "Starting Next.js development server on http://localhost:3000..."
     
     # Start frontend in background
     npm run dev &
@@ -184,8 +184,8 @@ start_frontend() {
     sleep 5
     
     # Check if server is responding
-    if curl -s http://localhost:5173 > /dev/null; then
-        print_success "Frontend server is running on http://localhost:5173"
+    if curl -s http://localhost:3000 > /dev/null; then
+        print_success "Frontend server is running on http://localhost:3000"
     else
         print_warning "Frontend server may still be starting up..."
     fi
@@ -213,7 +213,7 @@ main() {
     echo ""
     echo "🎉 Development environment is starting up!"
     echo "=========================================="
-    echo "📱 Frontend: http://localhost:5173"
+    echo "📱 Frontend: http://localhost:3000"
     echo "🔧 Backend API: http://localhost:8000"
     echo "📚 API Documentation: http://localhost:8000/api"
     echo ""
