@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 export default function ServicesPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header onOpenLogin={() => {}} />
+      <Header />
 
       <main className="flex-1">
         <div className="max-w-6xl mx-auto px-6 py-12">

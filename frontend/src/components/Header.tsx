@@ -4,11 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-interface HeaderProps {
-  onOpenLogin: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onOpenLogin }) => {
+const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -142,12 +138,18 @@ const Header: React.FC<HeaderProps> = ({ onOpenLogin }) => {
 
         {/* CTA Buttons */}
         <div className="hidden lg:flex items-center gap-4">
-          <button 
-            onClick={onOpenLogin}
+          <Link 
+            href="/login"
             className="text-gray-200 hover:text-white font-medium transition-all duration-200 hover:bg-white/10 px-4 py-2 rounded-lg"
           >
             Client Login
-          </button>
+          </Link>
+          <Link 
+            href="/register"
+            className="text-gray-200 hover:text-white font-medium transition-all duration-200 hover:bg-white/10 px-4 py-2 rounded-lg"
+          >
+            Need Account?
+          </Link>
           <Link 
             href="/contact"
             className="btn-primary"
@@ -240,15 +242,20 @@ const Header: React.FC<HeaderProps> = ({ onOpenLogin }) => {
               Contact
             </Link>
             <div className="pt-4 border-t border-gray-700 space-y-3">
-              <button 
-                onClick={() => {
-                  onOpenLogin();
-                  setIsMobileMenuOpen(false);
-                }}
+              <Link 
+                href="/login"
                 className="mobile-menu-item w-full text-left"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Client Login
-              </button>
+              </Link>
+              <Link 
+                href="/register"
+                className="mobile-menu-item w-full text-left"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Need Account?
+              </Link>
               <Link 
                 href="/contact"
                 className="btn-primary w-full text-center block"

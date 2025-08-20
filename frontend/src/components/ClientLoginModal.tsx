@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { loginClient, storeAuthData, type LoginResponse } from "../lib/api";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSuccess?: (user?: any) => void; // optional user payload if your API returns one
+  onSuccess?: (response?: LoginResponse) => void;
 };
-
-type ApiError = { code?: string; message: string };
 
 export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(true);
+
 
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
@@ -47,46 +46,17 @@ export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
     setFormError(null);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // needed for cookie-based sessions
-        body: JSON.stringify({ email, password, remember }),
-      });
-
-      // Cookie-session success (204/201/200 without token)
-      if (res.ok && res.status !== 200) {
-        onSuccess?.();
-        onClose();
-        return;
-      }
-
-      // JWT success (200 with access_token)
-      if (res.ok && res.headers.get("content-type")?.includes("application/json")) {
-        const json = await res.json();
-        if (json?.access_token) {
-          // Prefer httpOnly cookie; but if API returns token, store minimally
-          // Better: exchange token for cookie on a secure endpoint
-          sessionStorage.setItem("access_token", json.access_token);
-        }
-        onSuccess?.(json?.user);
-        onClose();
-        return;
-      }
-
-      // Error path
-      let errMsg = "Unable to sign in. Please check your credentials.";
-      try {
-        const err: ApiError = await res.json();
-        if (err?.message) errMsg = err.message;
-      } catch {
-        // Ignore JSON parsing errors, use default message
-      }
-      if (res.status === 401) errMsg = "Incorrect email or password.";
-      if (res.status === 429) errMsg = "Too many attempts. Please try again later.";
-      setFormError(errMsg);
-    } catch (e) {
-      setFormError("Network error. Please try again.");
+      const response = await loginClient(email, password);
+      
+      // Store authentication data
+      storeAuthData(response);
+      
+      // Call success callback and close modal
+      onSuccess?.(response);
+      onClose();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Login failed. Please try again.";
+      setFormError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -158,16 +128,7 @@ export default function ClientLoginModal({ open, onClose, onSuccess }: Props) {
               {fieldErrors.password && <p className="text-xs text-red-600 animate-fade-in">{fieldErrors.password}</p>}
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600/20 focus:ring-2 transition-all duration-200"
-                />
-                Remember me
-              </label>
+            <div className="flex items-center justify-end">
               <a href="/register" className="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200">Need an account?</a>
             </div>
 
