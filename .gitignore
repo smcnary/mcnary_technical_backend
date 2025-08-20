@@ -1,14 +1,27 @@
+# Cache and build artifacts
+backend/var/cache/
+backend/var/log/
+backend/vendor/
+frontend/.next/
+frontend/node_modules/
+frontend/tsconfig.tsbuildinfo
 
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
+# Environment files
+.env
+.env.local
+.env.*.local
 
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+dev.log
+server.log
+*.log
