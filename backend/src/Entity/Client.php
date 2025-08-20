@@ -38,7 +38,7 @@ class Client
 
     #[ORM\ManyToOne(inversedBy: 'clients')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Organization $organization;
+    private Agency $agency;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
@@ -112,56 +112,63 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Keyword::class)]
     private Collection $keywords;
 
-    /** @var Collection<int,Backlink> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Backlink::class)]
-    private Collection $backlinks;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,Backlink> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Backlink::class)]
+    // private Collection $backlinks;
 
-    /** @var Collection<int,Citation> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Citation::class)]
-    private Collection $citations;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,Citation> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Citation::class)]
+    // private Collection $citations;
 
-    /** @var Collection<int,Review> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Review::class)]
-    private Collection $reviews;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,Review> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Review::class)]
+    // private Collection $reviews;
 
-    /** @var Collection<int,ContentItem> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ContentItem::class)]
-    private Collection $contentItems;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,ContentItem> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: ContentItem::class)]
+    // private Collection $contentItems;
 
-    /** @var Collection<int,AuditRun> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: AuditRun::class)]
-    private Collection $auditRuns;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,AuditRun> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: AuditRun::class)]
+    // private Collection $auditRuns;
 
-    /** @var Collection<int,Recommendation> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Recommendation::class)]
-    private Collection $recommendations;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,Recommendation> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Recommendation::class)]
+    // private Collection $recommendations;
 
     /** @var Collection<int,OAuthConnection> */
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: OAuthConnection::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $oauthConnections;
 
-    /** @var Collection<int,Subscription> */
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Subscription::class)]
-    private Collection $subscriptions;
+    // Temporarily commented out - missing proper mappedBy relationship
+    // /** @var Collection<int,Subscription> */
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Subscription::class)]
+    // private Collection $subscriptions;
 
-    public function __construct(Organization $organization, string $name)
+    public function __construct(Agency $agency, string $name)
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $this->organization = $organization;
+        $this->agency = $agency;
         $this->name = $name;
         $this->locations = new ArrayCollection();
         $this->userAccess = new ArrayCollection();
         $this->leads = new ArrayCollection();
         $this->campaigns = new ArrayCollection();
         $this->keywords = new ArrayCollection();
-        $this->backlinks = new ArrayCollection();
-        $this->citations = new ArrayCollection();
-        $this->reviews = new ArrayCollection();
-        $this->contentItems = new ArrayCollection();
-        $this->auditRuns = new ArrayCollection();
-        $this->recommendations = new ArrayCollection();
+        // $this->backlinks = new ArrayCollection();
+        // $this->citations = new ArrayCollection();
+        // $this->reviews = new ArrayCollection();
+        // $this->contentItems = new ArrayCollection();
+        // $this->auditRuns = new ArrayCollection();
+        // $this->recommendations = new ArrayCollection();
         $this->oauthConnections = new ArrayCollection();
-        $this->subscriptions = new ArrayCollection();
+        // $this->subscriptions = new ArrayCollection();
         $this->metadata = [];
         $this->googleBusinessProfile = [];
         $this->googleSearchConsole = [];
@@ -173,14 +180,14 @@ class Client
         return $this->id;
     }
 
-    public function getOrganization(): Organization
+    public function getAgency(): Agency
     {
-        return $this->organization;
+        return $this->agency;
     }
 
-    public function setOrganization(Organization $organization): self
+    public function setAgency(Agency $agency): self
     {
-        $this->organization = $organization;
+        $this->agency = $agency;
         return $this;
     }
 
@@ -491,6 +498,8 @@ class Client
         return $this;
     }
 
+    // Temporarily commented out - these associations are invalid
+    /*
     public function getBacklinks(): Collection
     {
         return $this->backlinks;
@@ -514,7 +523,10 @@ class Client
         }
         return $this;
     }
+    */
 
+    // Temporarily commented out - these associations are invalid
+    /*
     public function getCitations(): Collection
     {
         return $this->citations;
@@ -538,6 +550,7 @@ class Client
         }
         return $this;
     }
+    */
 
     public function getReviews(): Collection
     {

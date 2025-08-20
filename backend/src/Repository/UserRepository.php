@@ -93,13 +93,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         // Apply filters
         if (isset($criteria['search']) && $criteria['search']) {
-            $qb->andWhere('u.name LIKE :search OR u.email LIKE :search')
+            $qb->andWhere('u.firstName LIKE :search OR u.lastName LIKE :search OR u.email LIKE :search')
                ->setParameter('search', '%' . $criteria['search'] . '%');
         }
 
         if (isset($criteria['role']) && $criteria['role']) {
-            $qb->andWhere('u.roles LIKE :role')
-               ->setParameter('role', '%' . $criteria['role'] . '%');
+            $qb->andWhere('u.role = :role')
+               ->setParameter('role', $criteria['role']);
         }
 
         if (isset($criteria['status']) && $criteria['status']) {
@@ -107,14 +107,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                ->setParameter('status', $criteria['status']);
         }
 
+        if (isset($criteria['agency_id']) && $criteria['agency_id']) {
+            $qb->andWhere('u.agency = :agency_id')
+               ->setParameter('agency_id', $criteria['agency_id']);
+        }
+
         if (isset($criteria['client_id']) && $criteria['client_id']) {
             $qb->andWhere('u.clientId = :client_id')
                ->setParameter('client_id', $criteria['client_id']);
-        }
-
-        if (isset($criteria['tenant_id']) && $criteria['tenant_id']) {
-            $qb->andWhere('u.tenantId = :tenant_id')
-               ->setParameter('tenant_id', $criteria['tenant_id']);
         }
 
         // Apply sorting
@@ -148,13 +148,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         // Apply filters
         if (isset($criteria['search']) && $criteria['search']) {
-            $qb->andWhere('u.name LIKE :search OR u.email LIKE :search')
+            $qb->andWhere('u.firstName LIKE :search OR u.lastName LIKE :search OR u.email LIKE :search')
                ->setParameter('search', '%' . $criteria['search'] . '%');
         }
 
         if (isset($criteria['role']) && $criteria['role']) {
-            $qb->andWhere('u.roles LIKE :role')
-               ->setParameter('role', '%' . $criteria['role'] . '%');
+            $qb->andWhere('u.role = :role')
+               ->setParameter('role', $criteria['role']);
         }
 
         if (isset($criteria['status']) && $criteria['status']) {
@@ -162,14 +162,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                ->setParameter('status', $criteria['status']);
         }
 
+        if (isset($criteria['agency_id']) && $criteria['agency_id']) {
+            $qb->andWhere('u.agency = :agency_id')
+               ->setParameter('agency_id', $criteria['agency_id']);
+        }
+
         if (isset($criteria['client_id']) && $criteria['client_id']) {
             $qb->andWhere('u.clientId = :client_id')
                ->setParameter('client_id', $criteria['client_id']);
-        }
-
-        if (isset($criteria['tenant_id']) && $criteria['tenant_id']) {
-            $qb->andWhere('u.tenantId = :tenant_id')
-               ->setParameter('tenant_id', $criteria['tenant_id']);
         }
 
         return $qb->getQuery()->getSingleScalarResult();
