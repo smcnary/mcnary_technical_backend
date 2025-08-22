@@ -63,6 +63,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSSO = () => {
+    // Redirect to Google OAuth endpoint
     window.location.href = "/api/auth/google";
   };
 

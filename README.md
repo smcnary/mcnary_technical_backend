@@ -59,6 +59,8 @@ mcnary_technical_backend/
 - ✅ **Multi-tenant architecture** with client scoping
 - ✅ **Public content management** (pages, FAQs, packages, media)
 - ✅ **User and client management** with proper security
+- ✅ **Google OAuth SSO integration** for seamless authentication
+- ✅ **Microsoft OAuth SSO integration** for enterprise authentication
 - ✅ **Comprehensive documentation** for all components
 - ✅ **Enhanced error handling and logging** throughout the system
 
@@ -67,9 +69,11 @@ mcnary_technical_backend/
 1. **Read the [Quick Start Guide](backend/documentation/QUICK_START.md)**
 2. **Review the [Architecture Overview](backend/documentation/ARCHITECTURE.md)**
 3. **Set up your [Development Environment](backend/documentation/QUICK_START.md)**
-4. **Explore the [API Documentation](backend/documentation/API_REFERENCE.md)**
-5. **Check [Frontend Setup](backend/documentation/FRONTEND_SETUP.md)** for frontend development
-6. **Review [Error Handling](backend/documentation/ERROR_HANDLING_IMPROVEMENTS.md)** for best practices
+4. **Configure [Google OAuth](backend/documentation/GOOGLE_OAUTH_SETUP.md)** for SSO authentication
+5. **Configure [Microsoft OAuth](backend/documentation/MICROSOFT_OAUTH_SETUP.md)** for enterprise SSO
+6. **Explore the [API Documentation](backend/documentation/API_REFERENCE.md)**
+7. **Check [Frontend Setup](backend/documentation/FRONTEND_SETUP.md)** for frontend development
+8. **Review [Error Handling](backend/documentation/ERROR_HANDLING_IMPROVEMENTS.md)** for best practices
 
 ## 🤝 Contributing
 

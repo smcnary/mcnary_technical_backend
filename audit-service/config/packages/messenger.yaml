@@ -1,0 +1,56 @@
+framework:
+    messenger:
+        default_bus: messenger.bus.default
+        buses:
+            messenger.bus.default: ~
+        
+        transports:
+            crawl: '%env(REDIS_MESSENGER_DSN)%'
+            lighthouse: '%env(REDIS_MESSENGER_DSN)%'
+            analyze: '%env(REDIS_MESSENGER_DSN)%'
+            aggregate: '%env(REDIS_MESSENGER_DSN)%'
+            report: '%env(REDIS_MESSENGER_DSN)%'
+            notify: '%env(REDIS_MESSENGER_DSN)%'
+            failed: 'doctrine://default?queue_name=failed'
+            sync: 'sync://'
+        
+        routing:
+            'App\Message\CrawlPageMessage': crawl
+            'App\Message\RunLighthouseMessage': lighthouse
+            'App\Message\AnalyzePageMessage': analyze
+            'App\Message\AggregateAuditMessage': aggregate
+            'App\Message\GenerateReportMessage': report
+            'App\Message\EmitWebhookMessage': notify
+        
+        # Serialization
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context:
+                    json_encode_options: JSON_PRESERVE_ZERO_FRACTION
+        
+        # Retry strategy
+        failure_transport: failed
+        
+        # Redis configuration
+        redis:
+            dsn: '%env(REDIS_MESSENGER_DSN)%'
+            options:
+                cluster: null
+                replication: false
+                lazy: false
+                redis_cluster: false
+                redis_sentinel: false
+                dbindex: 0
+                timeout: 30
+                read_timeout: 0
+                retry_interval: 0
+                compression: false
+                tcp_keepalive: 0
+                tcp_nodelay: false
+                persistent: 0
+                pconnect: false
+                throw_errors: true
+                scan: false
+                serialization: 'php'

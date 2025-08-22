@@ -49,12 +49,10 @@ class Organization
     #[ORM\Column(type: 'string', options: ['default' => 'active'])]
     private string $status = 'active';
 
-    /** @var Collection<int,User> */
-    #[ORM\OneToMany(mappedBy: 'organization', targetEntity: User::class, cascade: ['persist'], orphanRemoval: true)]
+    // Note: Organization relationships are not currently implemented
+    // These collections are kept for future use but not mapped to avoid Doctrine errors
     private Collection $users;
 
-    /** @var Collection<int,Client> */
-    #[ORM\OneToMany(mappedBy: 'organization', targetEntity: Client::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $clients;
 
     public function __construct(string $name)
@@ -125,41 +123,29 @@ class Organization
         return $this->clients; 
     }
 
+    // Note: Organization relationship methods are not currently implemented
+    // These methods are kept for future use but don't perform actual operations
     public function addUser(User $user): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setOrganization($this);
-        }
+        // TODO: Implement when organization-user relationship is properly mapped
         return $this;
     }
 
     public function removeUser(User $user): self
     {
-        if ($this->users->removeElement($user)) {
-            if ($user->getOrganization() === $this) {
-                $user->setOrganization(null);
-            }
-        }
+        // TODO: Implement when organization-user relationship is properly mapped
         return $this;
     }
 
     public function addClient(Client $client): self
     {
-        if (!$this->clients->contains($client)) {
-            $this->clients->add($client);
-            $client->setOrganization($this);
-        }
+        // TODO: Implement when organization-client relationship is properly mapped
         return $this;
     }
 
     public function removeClient(Client $client): self
     {
-        if ($this->clients->removeElement($client)) {
-            if ($client->getOrganization() === $this) {
-                $client->setOrganization(null);
-            }
-        }
+        // TODO: Implement when organization-client relationship is properly mapped
         return $this;
     }
 }

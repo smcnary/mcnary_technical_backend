@@ -1,5 +1,5 @@
-import AdminSidebar from '@/components/portal/AdminSidebar'
-import Topbar from '@/components/portal/Topbar'
+import AdminSidebar from '@/components/portal/navigation/AdminSidebar'
+import Topbar from '@/components/portal/layout/Topbar'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

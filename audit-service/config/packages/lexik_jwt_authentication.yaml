@@ -1,0 +1,62 @@
+lexik_jwt_authentication:
+    secret_key: '%env(JWT_SECRET_KEY)%'
+    public_key: '%env(JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    token_ttl: '%env(JWT_TOKEN_TTL)%'
+    
+    # Token extraction
+    token_extractors:
+        authorization_header:
+            enabled: true
+            prefix: Bearer
+            name: Authorization
+        query_parameter:
+            enabled: false
+            name: _token
+        cookie:
+            enabled: false
+            name: BEARER
+    
+    # User identity field
+    user_identity_field: email
+    
+    # Token creation
+    token_creation:
+        token_ttl: '%env(JWT_TOKEN_TTL)%'
+        user_identity_field: email
+        clock_skew: 0
+        allow_no_expiration: false
+    
+    # Token validation
+    token_validation:
+        clock_skew: 0
+        allow_no_expiration: false
+        allow_expired: false
+        lifetime: '%env(JWT_TOKEN_TTL)%'
+    
+    # Response
+    response:
+        token: 'lexik_jwt_authentication.response.authentication_success'
+        refresh_token: 'lexik_jwt_authentication.response.authentication_success'
+        authentication_failure: 'lexik_jwt_authentication.response.authentication_failure'
+        no_token: 'lexik_jwt_authentication.response.no_token'
+        invalid_token: 'lexik_jwt_authentication.response.invalid_token'
+        expired_token: 'lexik_jwt_authentication.response.expired_token'
+        invalid_credentials: 'lexik_jwt_authentication.response.invalid_credentials'
+    
+    # Events
+    events:
+        authentication_success:
+            - 'lexik_jwt_authentication.event.authentication_success'
+        authentication_failure:
+            - 'lexik_jwt_authentication.event.authentication_failure'
+        jwt_created:
+            - 'lexik_jwt_authentication.event.jwt_created'
+        jwt_decoded:
+            - 'lexik_jwt_authentication.event.jwt_decoded'
+        jwt_invalid:
+            - 'lexik_jwt_authentication.event.jwt_invalid'
+        jwt_expired:
+            - 'lexik_jwt_authentication.event.jwt_expired'
+        jwt_not_found:
+            - 'lexik_jwt_authentication.event.jwt_not_found'

@@ -123,7 +123,7 @@ export async function registerClient(data: {
  */
 export function storeAuthData(loginResponse: LoginResponse): void {
   if (loginResponse.token) {
-    localStorage.setItem('authToken', loginResponse.token);
+    localStorage.setItem('auth_token', loginResponse.token);
   }
   
   if (loginResponse.user) {
@@ -139,7 +139,7 @@ export function storeAuthData(loginResponse: LoginResponse): void {
  * Clear authentication data from localStorage
  */
 export function clearAuthData(): void {
-  localStorage.removeItem('authToken');
+  localStorage.removeItem('auth_token');
   localStorage.removeItem('userData');
   localStorage.removeItem('clientData');
 }
@@ -148,7 +148,7 @@ export function clearAuthData(): void {
  * Get stored authentication token
  */
 export function getAuthToken(): string | null {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem('auth_token');
 }
 
 /**
