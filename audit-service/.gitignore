@@ -1,0 +1,77 @@
+# Composer
+/vendor/
+composer.phar
+
+# Symfony
+/var/
+.env
+.env.local
+.env.*.local
+.env.test
+.env.prod
+
+# Cache and logs
+/var/cache/
+/var/logs/
+/var/sessions/
+/var/tmp/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+/coverage/
+.phpunit.result.cache
+phpunit.xml
+
+# Build
+/build/
+/dist/
+
+# Temporary files
+*.tmp
+*.temp
+*.pid
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.dockerignore
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Node modules (if any frontend assets)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Symfony specific
+/public/bundles/
+/var/bootstrap.php.cache
+/var/cache/*
+!/var/cache/.gitkeep
+/var/logs/*
+!/var/logs/.gitkeep
+/var/sessions/*
+!/var/sessions/.gitkeep
+/var/tmp/*
+!/var/tmp/.gitkeep
+
+# Application specific
+/uploads/
+/storage/

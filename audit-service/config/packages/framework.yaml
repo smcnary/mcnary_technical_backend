@@ -1,0 +1,236 @@
+framework:
+    # Uncomment this line if you're using the assets component
+    # assets: ~
+
+    # Uncomment this line if you're using the cache component
+    cache:
+        app: cache.adapter.redis
+        system: cache.adapter.system
+        directory: '%kernel.cache_dir%'
+        default_redis_provider: '%env(REDIS_CACHE_DSN)%'
+
+    # Uncomment this line if you're using the csrf component
+    csrf_protection: ~
+
+    # Uncomment this line if you're using the form component
+    form: ~
+
+    # Uncomment this line if you're using the http_client component
+    http_client:
+        default_options:
+            max_duration: 30
+            extra:
+                curl:
+                    CURLOPT_TIMEOUT: 30
+                    CURLOPT_CONNECTTIMEOUT: 10
+
+    # Uncomment this line if you're using the mailer component
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+
+    # Uncomment this line if you're using the messenger component
+    messenger:
+        transports:
+            crawl: '%env(MESSENGER_TRANSPORT_DSN)%'
+            lighthouse: '%env(MESSENGER_TRANSPORT_DSN)%'
+            analyze: '%env(MESSENGER_TRANSPORT_DSN)%'
+            aggregate: '%env(MESSENGER_TRANSPORT_DSN)%'
+            report: '%env(MESSENGER_TRANSPORT_DSN)%'
+            notify: '%env(MESSENGER_TRANSPORT_DSN)%'
+        routing:
+            'App\Message\CrawlMessage': crawl
+            'App\Message\LighthouseMessage': lighthouse
+            'App\Message\AnalyzeMessage': analyze
+            'App\Message\AggregateMessage': aggregate
+            'App\Message\ReportMessage': report
+            'App\Message\NotifyMessage': notify
+
+    # Uncomment this line if you're using the profiler component
+    profiler:
+        only_exceptions: false
+        collect: true
+
+    # Uncomment this line if you're using the router component
+    router:
+        default_uri: 'http://localhost'
+        utf8: true
+
+    # Uncomment this line if you're using the secret component
+    secret: '%env(APP_SECRET)%'
+
+    # Uncomment this line if you're using the session component
+    session:
+        handler_id: null
+        cookie_secure: auto
+        cookie_samesite: lax
+        storage_factory_id: session.storage.factory.native
+
+    # Uncomment this line if you're using the translation component
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - en
+
+    # Uncomment this line if you're using the validation component
+    validation:
+        email_validation_mode: html5
+        not_compromised_password: false
+        auto_mapping:
+            App\Entity\: []
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/validation'
+
+    # Uncomment this line if you're using the web_link component
+    web_link: ~
+
+    # Uncomment this line if you're using the serializer component
+    serializer:
+        enable_annotations: true
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/serialization'
+
+    # Uncomment this line if you're using the property_access component
+    property_access: ~
+
+    # Uncomment this line if you're using the property_info component
+    property_info: ~
+
+    # Uncomment this line if you're using the lock component
+    lock: ~
+
+    # Uncomment this line if you're using the rate_limiter component
+    rate_limiter:
+        limiters:
+            api:
+                policy: 'fixed_window'
+                limit: 100
+                interval: '1 minute'
+            login:
+                policy: 'fixed_window'
+                limit: 5
+                interval: '1 minute'
+
+    # Uncomment this line if you're using the scheduler component
+    scheduler: ~
+
+    # Uncomment this line if you're using the workflow component
+    workflow: ~
+
+    # Uncomment this line if you're using the html_sanitizer component
+    html_sanitizer: ~
+
+    # Uncomment this line if you're using the notifier component
+    notifier: ~
+
+    # Uncomment this line if you're using the remote_event component
+    remote_event: ~
+
+    # Uncomment this line if you're using the uid component
+    uid: ~
+
+    # Uncomment this line if you're using the webhook component
+    webhook: ~
+
+    # Uncomment this line if you're using the type_info component
+    type_info: ~
+
+    # Uncomment this line if you're using the asset_mapper component
+    asset_mapper: ~
+
+    # Uncomment this line if you're using the json_streamer component
+    json_streamer: ~
+
+    # Uncomment this line if you're using the esi component
+    esi: ~
+
+    # Uncomment this line if you're using the fragments component
+    fragments: ~
+
+    # Uncomment this line if you're using the http_cache component
+    http_cache: ~
+
+    # Uncomment this line if you're using the http_foundation component
+    http_foundation: ~
+
+    # Uncomment this line if you're using the http_kernel component
+    http_kernel: ~
+
+    # Uncomment this line if you're using the request component
+    request: ~
+
+    # Uncomment this line if you're using the response component
+    response: ~
+
+    # Uncomment this line if you're using the routing component
+    routing: ~
+
+    # Uncomment this line if you're using the security component
+    security: ~
+
+    # Uncomment this line if you're using the templating component
+    templating: ~
+
+    # Uncomment this line if you're using the twig component
+    twig: ~
+
+    # Uncomment this line if you're using the web_profiler component
+    web_profiler: ~
+
+    # Uncomment this line if you're using the debug component
+    debug: ~
+
+    # Uncomment this line if you're using the error_handler component
+    error_handler: ~
+
+    # Uncomment this line if you're using the exception_controller component
+    exception_controller: ~
+
+    # Uncomment this line if you're using the file_locator component
+    file_locator: ~
+
+    # Uncomment this line if you're using the kernel component
+    kernel: ~
+
+    # Uncomment this line if you're using the logger component
+    logger: ~
+
+    # Uncomment this line if you're using the options_resolver component
+    options_resolver: ~
+
+    # Uncomment this line if you're using the parameter_bag component
+    parameter_bag: ~
+
+    # Uncomment this line if you're using the process component
+    process: ~
+
+    # Uncomment this line if you're using the service_container component
+    service_container: ~
+
+    # Uncomment this line if you're using the stopwatch component
+    stopwatch: ~
+
+    # Uncomment this line if you're using the test component
+    test: ~
+
+    # Uncomment this line if you're using the translation component
+    translation: ~
+
+    # Uncomment this line if you're using the validator component
+    validator: ~
+
+    # Uncomment this line if you're using the var_dumper component
+    var_dumper: ~
+
+    # Uncomment this line if you're using the var_exporter component
+    var_exporter: ~
+
+    # Uncomment this line if you're using the web_link component
+    web_link: ~
+
+    # Uncomment this line if you're using the workflow component
+    workflow: ~
+
+    # Uncomment this line if you're using the yaml component
+    yaml: ~
