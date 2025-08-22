@@ -1,5 +1,5 @@
-import ClientSidebar from '@/components/portal/ClientSidebar'
-import Topbar from '@/components/portal/Topbar'
+import ClientSidebar from '@/components/portal/navigation/ClientSidebar'
+import Topbar from '@/components/portal/layout/Topbar'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (

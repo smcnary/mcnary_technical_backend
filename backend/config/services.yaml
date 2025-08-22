@@ -4,6 +4,17 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Google OAuth Configuration
+    google_oauth_client_id: '%env(GOOGLE_OAUTH_CLIENT_ID)%'
+    google_oauth_client_secret: '%env(GOOGLE_OAUTH_CLIENT_SECRET)%'
+    google_oauth_redirect_uri: '%env(GOOGLE_OAUTH_REDIRECT_URI)%'
+    
+    # Microsoft OAuth Configuration
+    microsoft_oauth_client_id: '%env(MICROSOFT_OAUTH_CLIENT_ID)%'
+    microsoft_oauth_client_secret: '%env(MICROSOFT_OAUTH_CLIENT_SECRET)%'
+    microsoft_oauth_redirect_uri: '%env(MICROSOFT_OAUTH_REDIRECT_URI)%'
+    
+    app_frontend_url: '%env(APP_FRONTEND_URL)%'
 
 services:
     # default configuration for services in *this* file
@@ -15,6 +26,11 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

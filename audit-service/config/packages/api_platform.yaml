@@ -1,0 +1,72 @@
+api_platform:
+    title: 'CounselRank SEO Audit Service API'
+    description: 'Comprehensive SEO audit automation service for agencies and clients'
+    version: '1.0.0'
+    formats:
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+        html: ['text/html']
+        jsonhal: ['application/hal+json']
+        csv: ['text/csv']
+        pdf: ['application/pdf']
+    
+    docs_formats:
+        jsonld: ['application/ld+json']
+        jsonopenapi: ['application/vnd.openapi+json']
+        html: ['text/html']
+    
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+        extra_properties: false
+        pagination_client_enabled: true
+        pagination_client_items_per_page: true
+        pagination_client_partial: false
+        pagination_enabled: true
+        pagination_items_per_page: 30
+        pagination_maximum_items_per_page: 100
+        order: null
+        order_direction: 'ASC'
+        http_cache_headers: []
+        http_cache_vary: []
+        http_cache_max_age: 0
+        http_cache_shared_max_age: 0
+        http_cache_headers_vary: []
+    
+    collection:
+        pagination:
+            enabled: true
+            items_per_page: 30
+            maximum_items_per_page: 100
+            partial: false
+            client_partial: false
+            client_items_per_page: true
+            client_enabled: true
+            page_parameter_name: 'page'
+            items_per_page_parameter_name: 'itemsPerPage'
+            partial_parameter_name: 'partial'
+            envelope_parameter_name: 'envelope'
+    
+    # Security
+    security:
+        enable_denormalization: false
+    
+    # Swagger UI
+    swagger:
+        api_keys:
+            JWT:
+                name: 'Authorization'
+                type: 'header'
+    
+    # Rate limiting
+    rate_limiting:
+        enabled: true
+        limit: 100
+        interval: '1 hour'
+    
+    # CORS
+    cors_allow_origin: ['*']
+    cors_allow_headers: ['*']
+    cors_allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    cors_max_age: 3600

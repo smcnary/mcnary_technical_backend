@@ -1,0 +1,60 @@
+security:
+    enable_authenticator_manager: true
+    
+    # Password hashing
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    
+    # Providers
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+    
+    # Firewalls
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        
+        login:
+            pattern: ^/api/auth
+            stateless: true
+            json_login:
+                check_path: /api/auth/login
+                username_path: email
+                password_path: password
+        
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+            entry_point: lexik_jwt_authentication.entry_point
+            user_provider: app_user_provider
+            custom_authenticators:
+                - App\Security\TenantAuthenticator
+    
+    # Access control
+    access_control:
+        - { path: ^/api/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+    
+    # Role hierarchy
+    role_hierarchy:
+        ROLE_CLIENT_READ: []
+        ROLE_ANALYST: [ROLE_CLIENT_READ]
+        ROLE_AGENCY_ADMIN: [ROLE_ANALYST]
+        ROLE_SUPER_ADMIN: [ROLE_AGENCY_ADMIN]
+    
+    # Voters
+    access_decision_manager:
+        strategy: affirmative
+        allow_if_all_abstain: false
+    
+    # JWT Configuration
+    jwt:
+        secret_key: '%env(JWT_SECRET_KEY)%'
+        passphrase: '%env(JWT_PASSPHRASE)%'
+        token_ttl: '%env(JWT_TOKEN_TTL)%'

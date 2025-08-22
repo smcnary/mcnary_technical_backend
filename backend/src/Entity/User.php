@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(targetEntity: Agency::class)]
+    #[ORM\ManyToOne(targetEntity: Agency::class, inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'agency_id', nullable: true, onDelete: 'SET NULL')]
     private ?Agency $agency = null;
 

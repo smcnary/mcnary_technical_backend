@@ -1,0 +1,15 @@
+{
+  "name": "CounselRank Legal Services",
+  "short_name": "CounselRank",
+  "description": "Legal services platform for law firms and legal professionals",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#1e293b",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

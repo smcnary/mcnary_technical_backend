@@ -1,0 +1,75 @@
+monolog:
+    channels: ['deprecation']
+    
+    handlers:
+        main:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!event', '!deprecation']
+            formatter: monolog.formatter.json
+        
+        # Structured logging for audit runs
+        audit:
+            type: stream
+            path: '%kernel.logs_dir%/audit.log'
+            level: info
+            channels: ['audit']
+            formatter: monolog.formatter.json
+        
+        # Performance metrics
+        performance:
+            type: stream
+            path: '%kernel.logs_dir%/performance.log'
+            level: info
+            channels: ['performance']
+            formatter: monolog.formatter.json
+        
+        # Security events
+        security:
+            type: stream
+            path: '%kernel.logs_dir%/security.log'
+            level: warning
+            channels: ['security']
+            formatter: monolog.formatter.json
+        
+        # Console output
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ['!event', '!doctrine', '!console']
+        
+        # Failed message handling
+        failed_messages:
+            type: stream
+            path: '%kernel.logs_dir%/failed_messages.log'
+            level: error
+            channels: ['messenger']
+            formatter: monolog.formatter.json
+        
+        # Uncaught exceptions
+        uncaught_exception:
+            type: stream
+            path: '%kernel.logs_dir%/uncaught_exceptions.log'
+            level: critical
+            channels: ['!event']
+            formatter: monolog.formatter.json
+    
+    # Processors
+    processors:
+        correlation_id:
+            id: App\Monolog\CorrelationIdProcessor
+            priority: 100
+        tenant_context:
+            id: App\Monolog\TenantContextProcessor
+            priority: 90
+        user_context:
+            id: App\Monolog\UserContextProcessor
+            priority: 80
+    
+    # Formatters
+    formatters:
+        json:
+            id: monolog.formatter.json
+            date_format: 'Y-m-d\TH:i:s.v\Z'
+            include_stacktraces: true

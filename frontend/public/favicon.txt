@@ -1,0 +1,29 @@
+FAVICON GENERATION INSTRUCTIONS
+================================
+
+1. QUICK METHOD - Use the SVG favicon:
+   - The favicon.svg file is already created and working
+   - Modern browsers support SVG favicons
+   - No conversion needed
+
+2. TRADITIONAL METHOD - Generate favicon.ico:
+   - Visit: https://favicon.io/favicon-converter/
+   - Upload the favicon.svg file
+   - Download the generated favicon.ico
+   - Place it in the public directory
+
+3. MANUAL METHOD - Convert SVG to ICO:
+   - Use online tools like:
+     * https://convertio.co/svg-ico/
+     * https://cloudconvert.com/svg-to-ico
+   - Or use image editors like GIMP, Photoshop, or Figma
+
+4. DELETE THIS FILE after generating favicon.ico
+
+CURRENT FAVICON DESIGN:
+- Background: Dark slate (#1e293b)
+- Text: White "CR" (CounselRank)
+- Shape: Rounded rectangle
+- Size: 32x32 pixels
+
+The favicon.svg is already working and will display in modern browsers!

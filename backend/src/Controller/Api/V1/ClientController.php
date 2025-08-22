@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\V1;
 
+use App\Entity\Agency;
 use App\Entity\Client;
 use App\Entity\Organization;
 use App\Entity\Tenant;
@@ -310,7 +311,7 @@ class ClientController extends AbstractController
             }
 
             // Create client
-            $client = new Client($currentUser->getOrganization(), $data['name']);
+            $client = new Client($currentUser->getAgency(), $data['name']);
             $client->setSlug($slug);
 
             if (isset($data['description'])) {
@@ -842,8 +843,7 @@ class ClientController extends AbstractController
                 'role' => $user->getRole(),
                 'status' => $user->getStatus(),
                 'client_id' => $user->getClientId(),
-                'tenant_id' => $user->getTenant()?->getId(),
-                'organization_id' => $user->getOrganization()->getId(),
+                'agency_id' => $user->getAgency()?->getId(),
                 'created_at' => $user->getCreatedAt()->format('c'),
                 'last_login_at' => $user->getLastLoginAt()?->format('c')
             ];
@@ -975,12 +975,12 @@ class ClientController extends AbstractController
                 ], Response::HTTP_CONFLICT);
             }
 
-            // Create organization
-            $organization = new Organization($data['organization_name']);
+            // Create agency
+            $agency = new Agency($data['organization_name']);
             if (isset($data['organization_domain'])) {
-                $organization->setDomain($data['organization_domain']);
+                $agency->setDomain($data['organization_domain']);
             }
-            $this->organizationRepository->save($organization);
+            $this->entityManager->persist($agency);
 
             // Create tenant
             $tenantName = $data['tenant_name'] ?? $data['organization_name'];
@@ -991,7 +991,7 @@ class ClientController extends AbstractController
             $this->tenantRepository->save($tenant);
 
             // Create client
-            $client = new Client($organization, $data['client_name']);
+            $client = new Client($agency, $data['client_name']);
             $client->setSlug($clientSlug);
 
             if (isset($data['client_description'])) {
@@ -1034,13 +1034,12 @@ class ClientController extends AbstractController
 
             // Create admin user
             $hashedPassword = $this->passwordHasher->hashPassword(
-                new User($organization, $data['admin_email'], '', User::ROLE_CLIENT_ADMIN),
+                new User($agency, $data['admin_email'], '', User::ROLE_CLIENT_USER),
                 $data['admin_password']
             );
 
-            $adminUser = new User($organization, $data['admin_email'], $hashedPassword, User::ROLE_CLIENT_ADMIN);
+            $adminUser = new User($agency, $data['admin_email'], $hashedPassword, User::ROLE_CLIENT_USER);
             $adminUser->setClientId($client->getId());
-            $adminUser->setTenant($tenant);
             $adminUser->setStatus('active');
 
             if (isset($data['admin_first_name'])) {
@@ -1059,10 +1058,10 @@ class ClientController extends AbstractController
             // Return response
             $responseData = [
                 'message' => 'Client registration successful',
-                'organization' => [
-                    'id' => $organization->getId(),
-                    'name' => $organization->getName(),
-                    'domain' => $organization->getDomain()
+                'agency' => [
+                    'id' => $agency->getId(),
+                    'name' => $agency->getName(),
+                    'domain' => $agency->getDomain()
                 ],
                 'tenant' => [
                     'id' => $tenant->getId(),
@@ -1084,7 +1083,7 @@ class ClientController extends AbstractController
             ];
 
             $this->logSuccess('Client registration successful', [
-                'organization_id' => $organization->getId(),
+                'agency_id' => $agency->getId(),
                 'tenant_id' => $tenant->getId(),
                 'client_id' => $client->getId(),
                 'admin_user_id' => $adminUser->getId(),
