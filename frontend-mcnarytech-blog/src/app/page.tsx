@@ -3,8 +3,14 @@ import { Button } from '@/components/ui/Button';
 import { PostList } from '@/components/blog/PostList';
 import { CategoryList } from '@/components/blog/CategoryList';
 import { TagCloud } from '@/components/blog/TagCloud';
+import type { Post, Category, Tag } from '@/lib/types';
 
 export default function HomePage() {
+  // Mock data for now - in production this would come from the API
+  const mockPosts: Post[] = [];
+  const mockCategories: Category[] = [];
+  const mockTags: Tag[] = [];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -40,7 +46,7 @@ export default function HomePage() {
               Our latest insights and tutorials
             </p>
           </div>
-          <PostList featured={true} limit={6} />
+          <PostList posts={mockPosts} featured={true} limit={6} />
         </div>
       </section>
 
@@ -50,11 +56,11 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Categories</h3>
-              <CategoryList />
+              <CategoryList categories={mockCategories} />
             </div>
             <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Popular Tags</h3>
-              <TagCloud />
+              <TagCloud tags={mockTags} />
             </div>
           </div>
         </div>
