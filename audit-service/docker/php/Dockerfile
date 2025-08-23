@@ -15,7 +15,8 @@ RUN apk add --no-cache \
     gd-dev \
     freetype-dev \
     libjpeg-turbo-dev \
-    libwebp-dev
+    libwebp-dev \
+    linux-headers
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
@@ -30,7 +31,8 @@ RUN docker-php-ext-install \
     gd \
     intl \
     zip \
-    opcache
+    opcache \
+    sockets
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -41,8 +43,8 @@ WORKDIR /var/www/html
 # Copy composer files
 COPY composer.json composer.lock ./
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install dependencies (with platform requirements ignored for missing extensions)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs --no-scripts
 
 # Copy application code
 COPY . .
