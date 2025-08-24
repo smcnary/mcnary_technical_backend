@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { TrendingUp, TrendingDown, Phone, Eye, MapPin, RefreshCcw, AlertTriangle, Building2 } from "lucide-react";
+import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import UserGreeting from "./UserGreeting";
 
 function cx(...cls: (string | false | null | undefined)[]) {
   return cls.filter(Boolean).join(" ");
@@ -286,20 +287,15 @@ export default function ClientDashboard() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex gap-6">
           <main className="flex-1 py-8">
-            {/* Status banner */}
-            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5 rounded-lg bg-white/60 p-1.5 text-amber-700">
-                  <AlertTriangle className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Dashboard Status</p>
-                  <p className="mt-1 text-sm">Charts are disabled while we resolve a rendering issue. KPIs and data export remain available.</p>
-                </div>
-                <button className="inline-flex items-center gap-2 rounded-lg border border-amber-300 bg-white/70 px-3 py-1.5 text-sm font-medium hover:bg-white">
-                  <RefreshCcw className="h-4 w-4" /> Check again
-                </button>
-              </div>
+            {/* User Greeting */}
+            <div className="mb-6">
+              <UserGreeting 
+                fallbackData={{
+                  userName: "John Doe",
+                  organizationName: "McNary Legal Services",
+                  userRole: "Client Admin"
+                }}
+              />
             </div>
 
             {/* KPI grid */}
