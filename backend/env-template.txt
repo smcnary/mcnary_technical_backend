@@ -5,7 +5,7 @@
 DATABASE_URL="postgresql://username:password@host:port/database_name?serverVersion=16&charset=utf8"
 
 # Example:
-# DATABASE_URL="postgresql://myuser:mypassword@192.168.1.100:5432/counselrank_db?serverVersion=16&charset=utf8"
+# DATABASE_URL="postgresql://myuser:mypassword@192.168.1.100:5432/tulsa_seo?serverVersion=16&charset=utf8"
 
 # Google OAuth Configuration
 GOOGLE_OAUTH_CLIENT_ID="your_google_oauth_client_id"
