@@ -1,7 +1,7 @@
 {
-  "name": "counselrank-legal-frontend",
+  "name": "tulsa-seo-frontend",
   "version": "1.0.0",
-  "description": "Frontend Next.js application for CounselRank.legal",
+  "description": "Frontend Next.js application for tulsa-seo.com",
   "private": true,
   "scripts": {
     "dev": "next dev",

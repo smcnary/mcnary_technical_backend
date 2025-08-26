@@ -106,11 +106,15 @@
   }
 
   .dropdown-menu {
-    @apply absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100;
+    @apply absolute top-full left-0 mt-2 w-48 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50;
+    @apply bg-gradient-to-b from-gray-800 to-gray-900 border border-white/10; /* match app dark gradient */
+    @apply overflow-hidden; /* ensure dropdown content doesn't overflow */
   }
 
   .dropdown-item {
-    @apply block w-full text-left px-4 py-3 text-gray-800 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 rounded-lg mx-2 my-1;
+    @apply block w-full text-left px-4 py-3 text-gray-200 hover:text-white transition-all duration-200 rounded-lg mx-2 my-1;
+    @apply hover:bg-white/10; /* subtle glass hover to match theme */
+    @apply overflow-hidden; /* ensure content doesn't overflow */
   }
 
   .mobile-menu-item {
@@ -145,6 +149,34 @@
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+      transform: translate3d(0, -8px, 0);
+    }
+    70% {
+      transform: translate3d(0, -4px, 0);
+    }
+    90% {
+      transform: translate3d(0, -2px, 0);
+    }
   }
 }
 

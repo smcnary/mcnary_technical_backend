@@ -122,16 +122,18 @@ export async function registerClient(data: {
  * Store authentication data in localStorage
  */
 export function storeAuthData(loginResponse: LoginResponse): void {
-  if (loginResponse.token) {
-    localStorage.setItem('auth_token', loginResponse.token);
-  }
-  
-  if (loginResponse.user) {
-    localStorage.setItem('userData', JSON.stringify(loginResponse.user));
-  }
-  
-  if (loginResponse.client) {
-    localStorage.setItem('clientData', JSON.stringify(loginResponse.client));
+  if (typeof window !== 'undefined') {
+    if (loginResponse.token) {
+      localStorage.setItem('auth_token', loginResponse.token);
+    }
+    
+    if (loginResponse.user) {
+      localStorage.setItem('userData', JSON.stringify(loginResponse.user));
+    }
+    
+    if (loginResponse.client) {
+      localStorage.setItem('clientData', JSON.stringify(loginResponse.client));
+    }
   }
 }
 
@@ -139,16 +141,18 @@ export function storeAuthData(loginResponse: LoginResponse): void {
  * Clear authentication data from localStorage
  */
 export function clearAuthData(): void {
-  localStorage.removeItem('auth_token');
-  localStorage.removeItem('userData');
-  localStorage.removeItem('clientData');
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('clientData');
+  }
 }
 
 /**
  * Get stored authentication token
  */
 export function getAuthToken(): string | null {
-  return localStorage.getItem('auth_token');
+  return typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
 }
 
 /**
