@@ -191,7 +191,7 @@ const LeadForm: React.FC = () => {
       <div className="max-w-2xl mx-auto text-center py-12">
         <div className="bg-green-50 border border-green-200 rounded-lg p-8">
           <h2 className="text-3xl font-bold text-green-800 mb-4">Thank You!</h2>
-          <p className="text-green-700 mb-6">Your inquiry has been submitted successfully to CounselRank.legal. We&apos;ll be in touch soon!</p>
+          <p className="text-green-700 mb-6">Your inquiry has been submitted successfully to tulsa-seo.com. We&apos;ll be in touch soon!</p>
           <button onClick={resetForm} className="btn-primary">
             Submit Another Inquiry
           </button>
@@ -202,10 +202,10 @@ const LeadForm: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Get Legal Help</h2>
-        <p className="text-lg text-gray-600">Fill out the form below and we&apos;ll connect you with the right legal assistance through CounselRank.legal.</p>
-      </div>
+              <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Get SEO Help</h2>
+          <p className="text-lg text-gray-600">Fill out the form below and we&apos;ll connect you with the right SEO assistance through tulsa-seo.com.</p>
+        </div>
       
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8" role="alert">
@@ -275,7 +275,7 @@ const LeadForm: React.FC = () => {
           </div>
           
           <div>
-            <label htmlFor="firm" className="block text-sm font-medium text-gray-700 mb-2">Law Firm (if applicable)</label>
+                            <label htmlFor="firm" className="block text-sm font-medium text-gray-700 mb-2">Business Name (if applicable)</label>
             <input
               type="text"
               id="firm"
@@ -396,7 +396,7 @@ const LeadForm: React.FC = () => {
             value={formData.notes}
             onChange={handleInputChange}
             rows={4}
-            placeholder="Tell us more about your legal needs..."
+                            placeholder="Tell us more about your SEO needs..."
             className="input-field"
           />
         </div>

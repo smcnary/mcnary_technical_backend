@@ -81,7 +81,7 @@ const CaseStudies: React.FC = () => {
     <div className="max-w-6xl mx-auto px-6 py-12">
       <div className="text-center mb-12">
         <h2 className="section-title">Case Studies</h2>
-        <p className="section-subtitle">Explore our successful legal cases and outcomes at CounselRank.legal</p>
+        <p className="section-subtitle">Explore our successful SEO cases and outcomes at tulsa-seo.com</p>
       </div>
 
       {caseStudies.length > 0 && (

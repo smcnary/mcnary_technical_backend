@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { registerClient } from "../lib/api";
+import { RegistrationLoadingModal } from "./LoadingModal";
 
 const scorePassword = (v: string) => {
   let s = 0;
@@ -105,14 +106,18 @@ export default function CreateAccountSection() {
   const bad = "border-red-400 focus:ring-red-300";
 
   return (
-    <section className="bg-[#F5F7FB] py-16">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="rounded-2xl bg-white shadow-xl ring-1 ring-black/5">
-          {/* Header */}
-          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Create account</h2>
-            <a href="/login" className="text-sm text-blue-600 hover:text-blue-700">Log in</a>
-          </div>
+    <>
+      {/* Loading Modal */}
+      <RegistrationLoadingModal isOpen={submitting} />
+      
+      <section className="bg-[#F5F7FB] py-16">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="rounded-2xl bg-white shadow-xl ring-1 ring-black/5">
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">Create account</h2>
+              <a href="/login" className="text-sm text-blue-600 hover:text-blue-700">Log in</a>
+            </div>
 
           {/* Alerts */}
           {successMsg && (
@@ -173,7 +178,7 @@ export default function CreateAccountSection() {
                     id="clientName"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
-                    placeholder="McNary Law Firm"
+                    placeholder="McNary SEO Services"
                     className={`w-full rounded-xl border px-3.5 py-2.5 text-[15px] shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 ${fieldErrors.clientName ? bad : ok}`}
                     aria-invalid={!!fieldErrors.clientName}
                     aria-describedby={fieldErrors.clientName ? "clientName-err" : undefined}
@@ -416,5 +421,6 @@ export default function CreateAccountSection() {
         </div>
       </div>
     </section>
+    </>
   );
 }

@@ -86,7 +86,7 @@ const Faqs: React.FC = () => {
     <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="text-center mb-12">
         <h2 className="section-title">Frequently Asked Questions</h2>
-        <p className="section-subtitle">Find answers to common questions about CounselRank.legal services</p>
+        <p className="section-subtitle">Find answers to common questions about tulsa-seo.com services</p>
       </div>
 
       {faqs.length > 0 && (
@@ -171,7 +171,7 @@ const Faqs: React.FC = () => {
           <p className="text-gray-600">
             Can&apos;t find what you&apos;re looking for?{' '}
             <a href="#contact" className="text-blue-600 hover:text-blue-800 font-medium">
-              Contact CounselRank.legal
+              Contact tulsa-seo.com
             </a>{' '}
             for more information.
           </p>

@@ -62,8 +62,8 @@ const ApiTest: React.FC = () => {
       <div className="card">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Endpoints</h3>
         <ul className="space-y-2 text-gray-700">
-          <li><strong>API Base:</strong> {import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}</li>
-          <li><strong>API Docs:</strong> <a href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">View API Documentation</a></li>
+          <li><strong>API Base:</strong> {process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}</li>
+          <li><strong>API Docs:</strong> <a href={`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">View API Documentation</a></li>
           <li><strong>Health Check:</strong> /api (GET)</li>
           <li><strong>Authentication:</strong> /api/auth/login (POST)</li>
           <li><strong>Current User:</strong> /api/v1/me (GET)</li>

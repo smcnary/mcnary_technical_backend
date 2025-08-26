@@ -9,12 +9,12 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">CR</span>
+                <span className="text-white font-bold text-lg">TS</span>
               </div>
-              <span className="text-xl font-bold">CounselRank.legal</span>
+              <span className="text-xl font-bold">tulsa-seo.com</span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
-              We help law firms dominate Google search with local + AI-first SEO strategies that drive real results and win more cases.
+              We help businesses dominate Google search with local + AI-first SEO strategies that drive real results and attract more customers.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
@@ -41,19 +41,11 @@ export default function Footer() {
                   SEO Services
                 </Link>
               </li>
-              <li>
-                <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors duration-200">
-                  Pricing Plans
-                </Link>
-              </li>
-              <li>
-                <Link href="/case-studies" className="text-gray-300 hover:text-white transition-colors duration-200">
-                  Case Studies
-                </Link>
-              </li>
+              {/* Removed Pricing Plans */}
+              {/* Removed Case Studies */}
               <li>
                 <Link href="/leads" className="text-gray-300 hover:text-white transition-colors duration-200">
-                  Get Legal Help
+                  Get SEO Help
                 </Link>
               </li>
             </ul>
@@ -91,7 +83,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 CounselRank.legal. All rights reserved.
+              © 2024 tulsa-seo.com. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors duration-200">

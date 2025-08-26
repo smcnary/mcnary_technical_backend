@@ -2,6 +2,7 @@ import { useState } from "react";
 import ClientLoginModal from "./ClientLoginModal";
 import ClientRegisterModal from "./ClientRegisterModal";
 import { clearAuthData, getAuthToken, type LoginResponse } from "../lib/api";
+import { safeLocalStorage } from "../lib/storage";
 
 /**
  * Example component showing how to use the client authentication modals
@@ -13,7 +14,7 @@ export default function AuthExample() {
 
   // Check if user is already logged in on component mount
   useState(() => {
-    const userData = localStorage.getItem("userData");
+    const userData = safeLocalStorage.getItem("userData");
     if (userData) {
       try {
         setUser(JSON.parse(userData));
@@ -24,10 +25,12 @@ export default function AuthExample() {
     }
   });
 
-  const handleLoginSuccess = (response: LoginResponse) => {
-    setUser(response.user);
-    console.log("Login successful:", response);
-    // Redirect to dashboard or update app state
+  const handleLoginSuccess = (response?: LoginResponse) => {
+    if (response) {
+      setUser(response.user);
+      console.log("Login successful:", response);
+      // Redirect to dashboard or update app state
+    }
   };
 
   const handleLogout = () => {
