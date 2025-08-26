@@ -5,8 +5,8 @@ import '../index.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'CounselRank.legal - Professional Legal Services',
-  description: 'We help law firms dominate Google search with local + AI-first SEO.',
+  title: 'tulsa-seo.com - Professional SEO Services',
+  description: 'We help businesses dominate Google search with local + AI-first SEO.',
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -15,8 +15,12 @@ export const metadata: Metadata = {
     apple: '/favicon.svg',
   },
   manifest: '/site.webmanifest',
+}
+
+export const viewport = {
   themeColor: '#1e293b',
-  viewport: 'width=device-width, initial-scale=1',
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { RegistrationLoadingModal } from "../../components/LoadingModal";
 
 const pwScore = (v: string) => {
   let s = 0;
@@ -87,9 +88,43 @@ export default function RegisterPage() {
         }
         setFormError(msg);
       } else {
-        const data = await res.json();
-        setSuccessMsg("Account created successfully! You can now log in with your credentials.");
-        setTimeout(() => (window.location.href = "/login"), 2000);
+        const responseData = await res.json();
+        setSuccessMsg("Account created successfully! Logging you in...");
+        
+        // Automatically log the user in after successful registration
+        try {
+          const loginResponse = await fetch("http://localhost:8000/api/v1/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (loginResponse.ok) {
+            const loginData = await loginResponse.json();
+            
+            // Store the authentication token
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('auth_token', loginData.token);
+              if (loginData.user) {
+                localStorage.setItem('userData', JSON.stringify(loginData.user));
+              }
+            }
+            
+            // Redirect to the client dashboard
+            setTimeout(() => {
+              window.location.href = "/client";
+            }, 1000);
+          } else {
+            // If auto-login fails, redirect to login page
+            setSuccessMsg("Account created successfully! You can now log in with your credentials.");
+            setTimeout(() => (window.location.href = "/login"), 2000);
+          }
+        } catch (error) {
+          console.error('Auto-login failed:', error);
+          // If auto-login fails, redirect to login page
+          setSuccessMsg("Account created successfully! You can now log in with your credentials.");
+          setTimeout(() => (window.location.href = "/login"), 2000);
+        }
       }
     } catch {
       setFormError("Network error. Please try again.");
@@ -109,9 +144,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FB]">
-      {/* Hero / Header */}
-      <section className="bg-[#0F1724]">
+    <>
+      {/* Loading Modal */}
+      <RegistrationLoadingModal isOpen={loading} />
+      
+      <div className="min-h-screen bg-[#F5F7FB]">
+        {/* Hero / Header */}
+        <section className="bg-[#0F1724]">
         <div className="mx-auto max-w-7xl px-6 py-16 text-center">
           <h1 className="text-3xl md:text-5xl font-extrabold text-white">Create your client account</h1>
           <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
@@ -131,7 +170,7 @@ export default function RegisterPage() {
         {/* Benefits / social proof */}
         <aside className="lg:col-span-2 space-y-6">
           <div className="rounded-2xl bg-white shadow-md ring-1 ring-black/5 p-6">
-            <h3 className="text-lg font-semibold text-gray-900">Why join CounselRank.legal?</h3>
+                          <h3 className="text-lg font-semibold text-gray-900">Why join tulsa-seo.com?</h3>
             <ul className="mt-4 space-y-3 text-sm text-gray-700">
               <li className="flex gap-3">
                 <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-blue-600" />
@@ -351,5 +390,6 @@ export default function RegisterPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { AuthLoadingModal } from "../../components/LoadingModal";
 
 export default function LoginPage() {
   const firstRef = useRef<HTMLInputElement>(null);
@@ -72,9 +73,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FB]">
-      {/* Hero / Header */}
-      <section className="bg-[#0F1724]">
+    <>
+      {/* Loading Modal */}
+      <AuthLoadingModal isOpen={loading} action="signing in" />
+      
+      <div className="min-h-screen bg-[#F5F7FB]">
+        {/* Hero / Header */}
+        <section className="bg-[#0F1724]">
         <div className="mx-auto max-w-7xl px-6 py-16 text-center">
           <h1 className="text-3xl md:text-5xl font-extrabold text-white">Welcome back</h1>
           <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
@@ -122,7 +127,7 @@ export default function LoginPage() {
             </p>
             <div className="mt-4 space-y-2 text-sm">
               <p className="text-gray-600">
-                <span className="font-medium">Email:</span> support@counselrank.legal
+                <span className="font-medium">Email:</span> support@tulsa-seo.com
               </p>
               <p className="text-gray-600">
                 <span className="font-medium">Phone:</span> (555) 123-4567
@@ -252,5 +257,6 @@ export default function LoginPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

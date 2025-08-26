@@ -13,7 +13,7 @@ export default function ServicesPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="card text-center">
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Local SEO</h3>
-              <p className="text-gray-600">Optimize your law firm for local search results</p>
+              <p className="text-gray-600">Optimize your business for local search results</p>
             </div>
             <div className="card text-center">
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Content & AEO</h3>
