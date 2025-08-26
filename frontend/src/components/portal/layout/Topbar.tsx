@@ -2,14 +2,50 @@
 
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, User, Settings, LogOut, Bell } from "lucide-react";
-import UserGreeting from "../user/UserGreeting";
-import { logoutUser } from "../../../services/userProfile";
+import { logoutUser, fetchUserProfile, UserProfileData, testApiConnection } from "../../../services/userProfile";
 import { useRouter } from "next/navigation";
 
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfileData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  // Fetch user profile data
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      try {
+        console.log('🔄 Layout Topbar: Loading user profile...');
+        
+        // First test API connection
+        console.log('🧪 Layout Topbar: Testing API connection...');
+        const apiWorking = await testApiConnection();
+        console.log('🧪 Layout Topbar: API connection test result:', apiWorking);
+        
+        if (!apiWorking) {
+          console.error('❌ Layout Topbar: API connection test failed');
+          setIsLoading(false);
+          return;
+        }
+        
+        const profile = await fetchUserProfile();
+        console.log('✅ Layout Topbar: User profile loaded:', profile);
+        console.log('👤 Layout Topbar: User data:', profile.user);
+        console.log('📧 Layout Topbar: Email:', profile.user.email);
+        console.log('👤 Layout Topbar: First Name:', profile.user.firstName);
+        console.log('👤 Layout Topbar: Last Name:', profile.user.lastName);
+        setUserProfile(profile);
+      } catch (error) {
+        console.error('❌ Layout Topbar: Failed to load user profile:', error);
+        // Fallback to default values if profile loading fails
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUserProfile();
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -25,20 +61,55 @@ export default function Topbar() {
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
+  // Get display name (preferred name or fallback to email prefix)
+  const getDisplayName = () => {
+    if (!userProfile) return 'User';
+    
+    if (userProfile.user.name && userProfile.user.name.trim()) {
+      return userProfile.user.name;
+    }
+    
+    if (userProfile.user.firstName && userProfile.user.lastName) {
+      return `${userProfile.user.firstName} ${userProfile.user.lastName}`;
+    }
+    
+    if (userProfile.user.firstName) {
+      return userProfile.user.firstName;
+    }
+    
+    // Fallback to email prefix
+    const emailParts = userProfile.user.email.split('@');
+    return emailParts[0] ? emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1) : 'User';
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!userProfile) return 'U';
+    
+    if (userProfile.user.firstName && userProfile.user.lastName) {
+      return `${userProfile.user.firstName.charAt(0)}${userProfile.user.lastName.charAt(0)}`.toUpperCase();
+    }
+    
+    if (userProfile.user.firstName) {
+      return userProfile.user.firstName.charAt(0).toUpperCase();
+    }
+    
+    if (userProfile.user.name) {
+      const nameParts = userProfile.user.name.trim().split(' ');
+      if (nameParts.length >= 2) {
+        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+      }
+      return nameParts[0].charAt(0).toUpperCase();
+    }
+    
+    // Fallback to email prefix
+    const emailParts = userProfile.user.email.split('@');
+    return emailParts[0] ? emailParts[0].charAt(0).toUpperCase() : 'U';
+  };
+
   return (
     <div className="h-14 border-b border-gray-200 px-4 flex items-center justify-between bg-white">
       <div className="font-semibold text-gray-900">SEO Portal</div>
-      
-      {/* User Greeting */}
-      <div className="flex-1 flex justify-center">
-        <UserGreeting 
-          fallbackData={{
-            userName: "John Doe",
-            organizationName: "McNary Legal Services",
-            userRole: "Client Admin"
-          }}
-        />
-      </div>
       
       {/* Account Preferences Dropdown */}
       <div className="relative" ref={dropdownRef}>
@@ -48,11 +119,15 @@ export default function Topbar() {
         >
           {/* User Avatar/Initials */}
           <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
-            <span className="text-sm font-semibold text-white">JD</span>
+            <span className="text-sm font-semibold text-white">
+              {isLoading ? '...' : getUserInitials()}
+            </span>
           </div>
           
           {/* User Name */}
-          <span className="hidden sm:block">John Doe</span>
+          <span className="hidden sm:block">
+            {isLoading ? 'Loading...' : getDisplayName()}
+          </span>
           
           {/* Dropdown Arrow */}
           <ChevronDown 
@@ -68,8 +143,12 @@ export default function Topbar() {
             <div className="py-1">
               {/* User Info Section */}
               <div className="px-4 py-3 border-b border-gray-100">
-                <p className="text-sm font-medium text-gray-900">John Doe</p>
-                <p className="text-sm text-gray-500">john.doe@example.com</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {isLoading ? 'Loading...' : getDisplayName()}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {isLoading ? 'Loading...' : userProfile?.user.email || 'No email available'}
+                </p>
               </div>
 
               {/* Menu Items */}

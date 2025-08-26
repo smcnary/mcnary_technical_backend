@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { getUserProfile, logoutUser, UserProfileData } from "../../services/userProfile";
+import { fetchUserProfile, logoutUser, UserProfileData } from "../../services/userProfile";
 
 interface UserProfileDropdownProps {
   className?: string;
@@ -22,7 +22,7 @@ export default function UserProfileDropdown({ className = "" }: UserProfileDropd
       try {
         setLoading(true);
         setError(null);
-        const profile = await getUserProfile();
+        const profile = await fetchUserProfile();
         setUserProfile(profile);
       } catch (err) {
         console.error('Failed to load user profile:', err);
@@ -70,28 +70,28 @@ export default function UserProfileDropdown({ className = "" }: UserProfileDropd
   const getUserInitials = (): string => {
     if (!userProfile) return "U";
     
-    if (userProfile.firstName && userProfile.lastName) {
-      return `${userProfile.firstName[0]}${userProfile.lastName[0]}`.toUpperCase();
-    } else if (userProfile.name) {
-      const names = userProfile.name.split(' ');
+    if (userProfile.user.firstName && userProfile.user.lastName) {
+      return `${userProfile.user.firstName[0]}${userProfile.user.lastName[0]}`.toUpperCase();
+    } else if (userProfile.user.name) {
+      const names = userProfile.user.name.split(' ');
       if (names.length >= 2) {
         return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
       }
       return names[0][0]?.toUpperCase() || "U";
     }
     
-    return userProfile.email[0]?.toUpperCase() || "U";
+    return userProfile.user.email[0]?.toUpperCase() || "U";
   };
 
   // Get display name
   const getDisplayName = (): string => {
     if (!userProfile) return "User";
     
-    if (userProfile.name) return userProfile.name;
-    if (userProfile.firstName && userProfile.lastName) {
-      return `${userProfile.firstName} ${userProfile.lastName}`;
+    if (userProfile.user.name) return userProfile.user.name;
+    if (userProfile.user.firstName && userProfile.user.lastName) {
+      return `${userProfile.user.firstName} ${userProfile.user.lastName}`;
     }
-    return userProfile.email;
+    return userProfile.user.email;
   };
 
   if (loading) {
@@ -165,7 +165,7 @@ export default function UserProfileDropdown({ className = "" }: UserProfileDropd
                   {getDisplayName()}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {userProfile.email}
+                  {userProfile.user.email}
                 </p>
               </div>
             </div>
