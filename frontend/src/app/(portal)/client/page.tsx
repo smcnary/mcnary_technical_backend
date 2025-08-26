@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ClientDashboard from '@/components/portal/ClientDashboard';
 import { ApiService } from '@/services/api';
+import { safeLocalStorage } from '@/lib/storage';
 
 export default function ClientDashboardPage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function ClientDashboardPage() {
         apiService.setAuthToken(token);
         
         // Store user data
-        localStorage.setItem('userData', JSON.stringify({ id: userId }));
+        safeLocalStorage.setItem('userData', JSON.stringify({ id: userId }));
         
         // Remove the token from URL for security
         const newUrl = window.location.pathname;
