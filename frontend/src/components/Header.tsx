@@ -28,9 +28,9 @@ const Header: React.FC = () => {
           className="text-white font-bold text-xl cursor-pointer hover:text-blue-200 transition-all duration-200 flex items-center gap-2"
         >
           <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">CR</span>
+            <span className="text-white font-bold text-sm">TS</span>
           </div>
-          CounselRank.legal
+          tulsa-seo.com
         </Link>
 
         {/* Desktop Menu */}
@@ -57,12 +57,7 @@ const Header: React.FC = () => {
                 >
                   SEO Services
                 </Link>
-                <Link 
-                  href="/pricing"
-                  className="dropdown-item"
-                >
-                  Pricing Plans
-                </Link>
+                {/* Removed Pricing Plans */}
                 <Link 
                   href="/contact"
                   className="dropdown-item"
@@ -88,12 +83,7 @@ const Header: React.FC = () => {
                 >
                   Blog
                 </Link>
-                <Link 
-                  href="/case-studies"
-                  className="dropdown-item"
-                >
-                  Case Studies
-                </Link>
+                {/* Removed Case Studies */}
                 <Link 
                   href="/faqs"
                   className="dropdown-item"
@@ -132,7 +122,7 @@ const Header: React.FC = () => {
             href="/leads"
             className={`nav-link ${isActive('/leads') ? 'active' : ''}`}
           >
-            Get Legal Help
+            Get SEO Help
           </Link>
         </nav>
 
@@ -143,12 +133,6 @@ const Header: React.FC = () => {
             className="text-gray-200 hover:text-white font-medium transition-all duration-200 hover:bg-white/10 px-4 py-2 rounded-lg"
           >
             Client Login
-          </Link>
-          <Link 
-            href="/register"
-            className="text-gray-200 hover:text-white font-medium transition-all duration-200 hover:bg-white/10 px-4 py-2 rounded-lg"
-          >
-            Need Account?
           </Link>
           <Link 
             href="/contact"
@@ -192,27 +176,15 @@ const Header: React.FC = () => {
             >
               Services
             </Link>
-            <Link 
-              href="/pricing"
-              className="mobile-menu-item"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Pricing
-            </Link>
+            {/* Removed Pricing from mobile */}
             <Link 
               href="/leads"
               className="mobile-menu-item"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Get Legal Help
+              Get SEO Help
             </Link>
-            <Link 
-              href="/case-studies"
-              className="mobile-menu-item"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Case Studies
-            </Link>
+            {/* Removed Case Studies from mobile */}
             <Link 
               href="/faqs"
               className="mobile-menu-item"
@@ -249,13 +221,7 @@ const Header: React.FC = () => {
               >
                 Client Login
               </Link>
-              <Link 
-                href="/register"
-                className="mobile-menu-item w-full text-left"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Need Account?
-              </Link>
+              {/* Removed Need Account from mobile */}
               <Link 
                 href="/contact"
                 className="btn-primary w-full text-center block"
