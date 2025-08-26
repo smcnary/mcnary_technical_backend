@@ -1032,13 +1032,20 @@ class ClientController extends AbstractController
 
             $this->entityManager->persist($client);
 
+            // Get the default organization
+            $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+            if (!$organization) {
+                throw new \RuntimeException('No organization found. Please create an organization first.');
+            }
+
             // Create admin user
             $hashedPassword = $this->passwordHasher->hashPassword(
-                new User($agency, $data['admin_email'], '', User::ROLE_CLIENT_USER),
+                new User($organization, $data['admin_email'], '', User::ROLE_CLIENT_USER),
                 $data['admin_password']
             );
 
-            $adminUser = new User($agency, $data['admin_email'], $hashedPassword, User::ROLE_CLIENT_USER);
+            $adminUser = new User($organization, $data['admin_email'], $hashedPassword, User::ROLE_CLIENT_USER);
+            $adminUser->setAgency($agency);
             $adminUser->setClientId($client->getId());
             $adminUser->setStatus('active');
 

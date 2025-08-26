@@ -375,15 +375,25 @@ class AgencyController extends AbstractController
 
             // Generate temporary password for invited users
             $tempPassword = bin2hex(random_bytes(8));
-            $hashedPassword = $this->passwordHasher->hashPassword(new User(null, 'temp', 'temp', 'temp'), $tempPassword);
+            
+            // Get the default organization
+            $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+            if (!$organization) {
+                throw new \RuntimeException('No organization found. Please create an organization first.');
+            }
+            
+            $hashedPassword = $this->passwordHasher->hashPassword(new User($organization, 'temp', 'temp', 'temp'), $tempPassword);
 
             // Create agency admin user
             $user = new User(
-                $agency,                    // agency
+                $organization,              // organization
                 $data['email'],             // email
                 $hashedPassword,            // hash
                 User::ROLE_AGENCY_ADMIN     // role
             );
+            
+            // Set the agency relationship
+            $user->setAgency($agency);
             
             // Set first and last name from the name field
             $nameParts = explode(' ', $data['name'], 2);
@@ -400,7 +410,7 @@ class AgencyController extends AbstractController
                 'email' => $user->getEmail(),
                 'name' => $user->getName(),
                 'roles' => $user->getRoles(),
-                'agency_id' => $user->getAgency()?->getId(),
+                'organization_id' => $user->getOrganization()->getId(),
                 'status' => $user->getStatus(),
                 'created_at' => $user->getCreatedAt()->format('c')
             ];
