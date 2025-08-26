@@ -28,6 +28,15 @@ class UserController extends AbstractController
         private ValidatorInterface $validator
     ) {}
 
+    #[Route('/test', name: 'api_v1_test', methods: ['GET'])]
+    public function test(): JsonResponse
+    {
+        return $this->json([
+            'message' => 'API is working',
+            'timestamp' => (new \DateTime())->format('c')
+        ]);
+    }
+
     #[Route('/me', name: 'api_v1_me', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function me(): JsonResponse
@@ -38,6 +47,8 @@ class UserController extends AbstractController
         $userData = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
             'name' => $user->getName(),
             'roles' => $user->getRoles(),
             'agency_id' => $user->getAgency()?->getId(),
@@ -215,12 +226,23 @@ class UserController extends AbstractController
                 $this->entityManager->getRepository('App\Entity\Agency')->find($data['agency_id']) : 
                 $currentUser->getAgency();
                 
+            // Get the default organization
+            $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+            if (!$organization) {
+                throw new \RuntimeException('No organization found. Please create an organization first.');
+            }
+                
             $user = new User(
-                $agency,                    // agency
+                $organization,               // organization
                 $data['email'],             // email
                 $hashedPassword,            // hash
                 $data['role']               // role
             );
+            
+            // Set the agency relationship
+            if ($agency) {
+                $user->setAgency($agency);
+            }
             
             // Set first and last name from the name field
             $nameParts = explode(' ', $data['name'], 2);

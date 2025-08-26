@@ -315,10 +315,14 @@ class AuthController extends AbstractController
         // Create new user if none exists
         $randomPassword = bin2hex(random_bytes(32));
         
-        // Create default client for the user
-        // For now, we'll need to create a default agency or handle this differently
-        // For simplicity, let's create a user without client for now
-        $user = new User(null, $email, $randomPassword, 'CLIENT_USER');
+        // Get the default organization
+        $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+        if (!$organization) {
+            throw new \RuntimeException('No organization found. Please create an organization first.');
+        }
+        
+        // Create user with the default organization
+        $user = new User($organization, $email, $randomPassword, User::ROLE_CLIENT_USER);
         $user->setFirstName($userInfo['given_name'] ?? 'Google');
         $user->setLastName($userInfo['family_name'] ?? 'User');
         $user->setStatus('active');
@@ -458,10 +462,14 @@ class AuthController extends AbstractController
         // Create new user if none exists
         $randomPassword = bin2hex(random_bytes(32));
         
-        // Create default client for the user
-        // For now, we'll need to create a default agency or handle this differently
-        // For simplicity, let's create a user without client for now
-        $user = new User(null, $email, $randomPassword, 'CLIENT_USER');
+        // Get the default organization
+        $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+        if (!$organization) {
+            throw new \RuntimeException('No organization found. Please create an organization first.');
+        }
+        
+        // Create user with the default organization
+        $user = new User($organization, $email, $randomPassword, User::ROLE_CLIENT_USER);
         $user->setFirstName($userInfo['given_name'] ?? 'Microsoft');
         $user->setLastName($userInfo['family_name'] ?? 'User');
         $user->setStatus('active');
