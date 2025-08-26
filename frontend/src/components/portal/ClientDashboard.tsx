@@ -292,7 +292,7 @@ export default function ClientDashboard() {
               <UserGreeting 
                 fallbackData={{
                   userName: "John Doe",
-                  organizationName: "McNary Legal Services",
+                  organizationName: "McNary SEO Services",
                   userRole: "Client Admin"
                 }}
               />

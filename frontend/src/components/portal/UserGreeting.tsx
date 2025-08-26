@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { fetchUserGreeting, UserGreetingData } from "../../services/userProfile";
+import { fetchUserProfile, UserProfileData } from "../../services/userProfile";
 
 interface UserGreetingProps {
   className?: string;
@@ -20,9 +20,8 @@ export default function UserGreeting({
     userRole: "User"
   }
 }: UserGreetingProps) {
-  const [greetingData, setGreetingData] = useState<UserGreetingData | null>(null);
+  const [profileData, setProfileData] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -35,30 +34,23 @@ export default function UserGreeting({
   }, []);
 
   useEffect(() => {
-    async function loadUserGreeting() {
+    async function loadUserProfile() {
       try {
         setLoading(true);
-        setError(null);
         
-        const data = await fetchUserGreeting();
-        setGreetingData(data);
+        const data = await fetchUserProfile();
+        setProfileData(data);
       } catch (err) {
-        console.error('Failed to load user greeting:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load user data');
+        console.error('Failed to load user profile:', err);
         // Use fallback data on error
-        setGreetingData({
-          displayName: fallbackData.userName || "User",
-          organizationName: fallbackData.organizationName || "Organization",
-          userRole: fallbackData.userRole || "User",
-          timeBasedGreeting: getTimeBasedGreeting(currentTime)
-        });
+        setProfileData(null);
       } finally {
         setLoading(false);
       }
     }
 
-    loadUserGreeting();
-  }, [fallbackData]);
+    loadUserProfile();
+  }, []);
 
   // Get time-based greeting based on current time
   function getTimeBasedGreeting(time: Date): string {
@@ -76,7 +68,7 @@ export default function UserGreeting({
   }
 
   // Show loading state
-  if (loading && !greetingData) {
+  if (loading && !profileData) {
     return (
       <div className={`flex flex-col ${className}`}>
         <div className="text-sm text-slate-600">
@@ -90,10 +82,10 @@ export default function UserGreeting({
   }
 
   // Use API data if available, otherwise use fallback
-  const displayName = greetingData?.displayName || fallbackData.userName || "User";
-  const organizationName = greetingData?.organizationName || fallbackData.organizationName || "Organization";
-  const userRole = greetingData?.userRole || fallbackData.userRole || "User";
-  const timeGreeting = greetingData?.timeBasedGreeting || getTimeBasedGreeting(currentTime);
+  const displayName = profileData?.greeting?.displayName || fallbackData.userName || "User";
+  const organizationName = profileData?.greeting?.organizationName || fallbackData.organizationName || "Organization";
+  const userRole = profileData?.greeting?.userRole || fallbackData.userRole || "User";
+  const timeGreeting = profileData?.greeting?.timeBasedGreeting || getTimeBasedGreeting(currentTime);
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -103,11 +95,6 @@ export default function UserGreeting({
       <div className="text-xs text-slate-500">
         {organizationName} • {userRole}
       </div>
-      {error && (
-        <div className="text-xs text-amber-600 mt-1">
-          Using fallback data
-        </div>
-      )}
     </div>
   );
 }
