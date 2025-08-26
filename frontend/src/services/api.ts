@@ -104,19 +104,23 @@ export class ApiService {
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
     // Load token from localStorage if available
-    this.authToken = localStorage.getItem('auth_token');
+    this.authToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
   }
 
   // Set authentication token
   setAuthToken(token: string): void {
     this.authToken = token;
-    localStorage.setItem('auth_token', token);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', token);
+    }
   }
 
   // Clear authentication token
   clearAuthToken(): void {
     this.authToken = null;
-    localStorage.removeItem('auth_token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+    }
   }
 
   // Generic fetch method with error handling
