@@ -132,10 +132,17 @@ class Client
     // #[ORM\OneToMany(mappedBy: 'client', targetEntity: ContentItem::class)]
     // private Collection $contentItems;
 
-    // Temporarily commented out - missing proper mappedBy relationship
-    // /** @var Collection<int,AuditRun> */
-    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: AuditRun::class)]
-    // private Collection $auditRuns;
+    /** @var Collection<int,AuditIntake> */
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: AuditIntake::class)]
+    private Collection $auditIntakes;
+
+    /** @var Collection<int,AuditRun> */
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: AuditRun::class)]
+    private Collection $auditRuns;
+
+    /** @var Collection<int,AuditFinding> */
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: AuditFinding::class)]
+    private Collection $auditFindings;
 
     // Temporarily commented out - missing proper mappedBy relationship
     // /** @var Collection<int,Recommendation> */
@@ -165,7 +172,9 @@ class Client
         // $this->citations = new ArrayCollection();
         // $this->reviews = new ArrayCollection();
         // $this->contentItems = new ArrayCollection();
-        // $this->auditRuns = new ArrayCollection();
+        $this->auditIntakes = new ArrayCollection();
+        $this->auditRuns = new ArrayCollection();
+        $this->auditFindings = new ArrayCollection();
         // $this->recommendations = new ArrayCollection();
         $this->oauthConnections = new ArrayCollection();
         // $this->subscriptions = new ArrayCollection();
@@ -552,53 +561,7 @@ class Client
     }
     */
 
-    public function getReviews(): Collection
-    {
-        return $this->reviews;
-    }
 
-    public function addReview(Review $review): self
-    {
-        if (!$this->reviews->contains($review)) {
-            $this->reviews->add($review);
-            $review->setClient($this);
-        }
-        return $this;
-    }
-
-    public function removeReview(Review $review): self
-    {
-        if ($this->reviews->removeElement($review)) {
-            if ($review->getClient() === $this) {
-                $review->setClient(null);
-            }
-        }
-        return $this;
-    }
-
-    public function getContentItems(): Collection
-    {
-        return $this->contentItems;
-    }
-
-    public function addContentItem(ContentItem $contentItem): self
-    {
-        if (!$this->contentItems->contains($contentItem)) {
-            $this->contentItems->add($contentItem);
-            $contentItem->setClient($this);
-        }
-        return $this;
-    }
-
-    public function removeContentItem(ContentItem $contentItem): self
-    {
-        if ($this->contentItems->removeElement($contentItem)) {
-            if ($contentItem->getClient() === $this) {
-                $contentItem->setClient(null);
-            }
-        }
-        return $this;
-    }
 
     public function getAuditRuns(): Collection
     {
@@ -624,29 +587,55 @@ class Client
         return $this;
     }
 
-    public function getRecommendations(): Collection
+    public function getAuditIntakes(): Collection
     {
-        return $this->recommendations;
+        return $this->auditIntakes;
     }
 
-    public function addRecommendation(Recommendation $recommendation): self
+    public function addAuditIntake(AuditIntake $auditIntake): self
     {
-        if (!$this->recommendations->contains($recommendation)) {
-            $this->recommendations->add($recommendation);
-            $recommendation->setClient($this);
+        if (!$this->auditIntakes->contains($auditIntake)) {
+            $this->auditIntakes->add($auditIntake);
+            $auditIntake->setClient($this);
         }
         return $this;
     }
 
-    public function removeRecommendation(Recommendation $recommendation): self
+    public function removeAuditIntake(AuditIntake $auditIntake): self
     {
-        if ($this->recommendations->removeElement($recommendation)) {
-            if ($recommendation->getClient() === $this) {
-                $recommendation->setClient(null);
+        if ($this->auditIntakes->removeElement($auditIntake)) {
+            if ($auditIntake->getClient() === $this) {
+                $auditIntake->setClient(null);
             }
         }
         return $this;
     }
+
+    public function getAuditFindings(): Collection
+    {
+        return $this->auditFindings;
+    }
+
+    public function addAuditFinding(AuditFinding $auditFinding): self
+    {
+        if (!$this->auditFindings->contains($auditFinding)) {
+            $this->auditFindings->add($auditFinding);
+            $auditFinding->setClient($this);
+        }
+        return $this;
+    }
+
+    public function removeAuditFinding(AuditFinding $auditFinding): self
+    {
+        if ($this->auditFindings->removeElement($auditFinding)) {
+            if ($auditFinding->getClient() === $this) {
+                $auditFinding->setClient(null);
+            }
+        }
+        return $this;
+    }
+
+
 
     public function getOauthConnections(): Collection
     {
@@ -672,29 +661,7 @@ class Client
         return $this;
     }
 
-    public function getSubscriptions(): Collection
-    {
-        return $this->subscriptions;
-    }
 
-    public function addSubscription(Subscription $subscription): self
-    {
-        if (!$this->subscriptions->contains($subscription)) {
-            $this->subscriptions->add($subscription);
-            $subscription->setClient($this);
-        }
-        return $this;
-    }
-
-    public function removeSubscription(Subscription $subscription): self
-    {
-        if ($this->subscriptions->removeElement($subscription)) {
-            if ($subscription->getClient() === $this) {
-                $subscription->setClient(null);
-            }
-        }
-        return $this;
-    }
 
     // Legacy getter for backward compatibility
     public function getWebsite(): ?string

@@ -29,6 +29,7 @@ Welcome to the comprehensive documentation for the CounselRank.legal platform. T
 ### **🚀 Deployment & Operations**
 - **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Complete deployment guide for all environments
 - **[TECHNICAL_SPECIFICATION.md](./TECHNICAL_SPECIFICATION.md)** - Detailed technical specifications
+- **[ENVIRONMENT_SETUP.md](../ENVIRONMENT_SETUP.md)** - Development and production environment management
 
 ### **🐛 Error Handling & Logging**
 - **[ERROR_HANDLING_IMPROVEMENTS.md](./ERROR_HANDLING_IMPROVEMENTS.md)** - Comprehensive error handling and logging improvements

@@ -6,6 +6,14 @@ use App\Entity\AuditRun;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<AuditRun>
+ *
+ * @method AuditRun|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AuditRun|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AuditRun[]    findAll()
+ * @method AuditRun[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 class AuditRunRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -13,39 +21,21 @@ class AuditRunRepository extends ServiceEntityRepository
         parent::__construct($registry, AuditRun::class);
     }
 
-    public function findByCriteria(array $criteria, array $sortFields, int $limit, int $offset): array
+    public function save(AuditRun $entity, bool $flush = false): void
     {
-        $qb = $this->createQueryBuilder('ar');
-        
-        foreach ($criteria as $field => $value) {
-            if ($value !== '') {
-                $qb->andWhere("ar.$field = :$field")
-                   ->setParameter($field, $value);
-            }
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
-        
-        foreach ($sortFields as $field => $direction) {
-            $qb->addOrderBy("ar.$field", $direction);
-        }
-        
-        return $qb->setMaxResults($limit)
-                 ->setFirstResult($offset)
-                 ->getQuery()
-                 ->getResult();
     }
 
-    public function countByCriteria(array $criteria): int
+    public function remove(AuditRun $entity, bool $flush = false): void
     {
-        $qb = $this->createQueryBuilder('ar')
-                   ->select('COUNT(ar.id)');
-        
-        foreach ($criteria as $field => $value) {
-            if ($value !== '') {
-                $qb->andWhere("ar.$field = :$field")
-                   ->setParameter($field, $value);
-            }
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
-        
-        return $qb->getQuery()->getSingleScalarResult();
     }
 }
