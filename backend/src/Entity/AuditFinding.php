@@ -2,182 +2,104 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata as API;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'audit_findings')]
-#[ORM\HasLifecycleCallbacks]
-#[ApiResource(
+/**
+ * ==========================
+ * AUDIT FINDING
+ * ==========================
+ */
+#[ORM\Entity(repositoryClass: \App\Repository\AuditFindingRepository::class)]
+#[ORM\Table(name: 'audit_finding')]
+#[API\ApiResource(
     operations: [
-        new Get(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or (is_granted('ROLE_CLIENT_ADMIN') and object.getClientId() == user.getClientId())"),
-        new GetCollection(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_ADMIN')"),
-        new Post(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_CLIENT_ADMIN')"),
-        new Put(security: "is_granted('ROLE_AGENCY_ADMIN') or (is_granted('ROLE_CLIENT_ADMIN') and object.getClientId() == user.getClientId())"),
-        new Delete(security: "is_granted('ROLE_AGENCY_ADMIN')")
+        new API\GetCollection(uriTemplate: '/v1/audits/findings'),
+        new API\Post(uriTemplate: '/v1/audits/findings'),
+        new API\Get(uriTemplate: '/v1/audits/findings/{id}'),
+        new API\Patch(uriTemplate: '/v1/audits/findings/{id}')
     ],
-    normalizationContext: ['groups' => ['audit_finding:read']],
-    denormalizationContext: ['groups' => ['audit_finding:write']]
+    security: "is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_ADMIN')"
 )]
-#[ApiFilter(SearchFilter::class, properties: [
-    'title' => 'partial',
-    'severity' => 'exact',
-    'status' => 'exact',
-    'auditRunId' => 'exact',
-    'clientId' => 'exact'
-])]
-#[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC', 'severity' => 'DESC', 'title' => 'ASC'])]
-#[ApiFilter(DateFilter::class, properties: ['createdAt', 'updatedAt'])]
 class AuditFinding
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
-    #[ApiProperty(identifier: true)]
-    #[Groups(['audit_finding:read'])]
-    private string $id;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $id;
 
-    #[ORM\Column(name: 'tenant_id', type: 'uuid', nullable: true)]
-    private ?string $tenantId = null;
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'auditFindings')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private Client $client;
 
-    #[ORM\Column(name: 'client_id', type: 'uuid')]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private string $clientId;
+    #[ORM\ManyToOne(targetEntity: AuditRun::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private AuditRun $auditRun;
 
-    #[ORM\Column(name: 'audit_run_id', type: 'uuid')]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private string $auditRunId;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(length: 255)]
     private string $title;
 
-    #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    #[Assert\Choice(['critical', 'high', 'medium', 'low', 'info'])]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(length: 16)]
     private string $severity = 'medium';
 
-    #[ORM\Column(type: 'string', length: 50)]
-    #[Assert\Choice(['open', 'in_progress', 'resolved', 'wont_fix', 'false_positive'])]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(length: 16)]
     private string $status = 'open';
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(length: 64, nullable: true)]
     private ?string $category = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?string $location = null; // URL, line number, element, etc.
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $location = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $impact = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $recommendation = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?string $codeExample = null;
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 3])]
+    private int $impactScore = 3;
 
-    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?string $score = null; // Impact score (0-100)
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 3])]
+    private int $effortScore = 3;
 
-    #[ORM\Column(type: 'jsonb', nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?array $evidence = [];
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 3])]
+    private int $priorityScore = 3;
 
-    #[ORM\Column(type: 'jsonb', nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?array $references = [];
-
-    #[ORM\Column(type: 'jsonb', nullable: true)]
-    #[Groups(['audit_finding:read', 'audit_finding:write'])]
-    private ?array $metadata = [];
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    #[Groups(['audit_finding:read'])]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-    #[Groups(['audit_finding:read'])]
-    private \DateTimeImmutable $updatedAt;
-
-    public function __construct()
-    {
-        $this->id = Uuid::v4()->toRfc4122();
-        $now = new \DateTimeImmutable();
-        $this->createdAt = $now;
-        $this->updatedAt = $now;
-        $this->evidence = [];
-        $this->references = [];
-        $this->metadata = [];
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAt(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
+    public function __construct() 
+    { 
+        $this->id = Uuid::v7(); 
     }
 
     // Getters and Setters
-    public function getId(): string
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getTenantId(): ?string
+    public function getClient(): Client
     {
-        return $this->tenantId;
+        return $this->client;
     }
 
-    public function setTenantId(?string $tenantId): self
+    public function setClient(Client $client): self
     {
-        $this->tenantId = $tenantId;
+        $this->client = $client;
         return $this;
     }
 
-    public function getClientId(): string
+    public function getAuditRun(): AuditRun
     {
-        return $this->clientId;
+        return $this->auditRun;
     }
 
-    public function setClientId(string $clientId): self
+    public function setAuditRun(AuditRun $auditRun): self
     {
-        $this->clientId = $clientId;
-        return $this;
-    }
-
-    public function getAuditRunId(): string
-    {
-        return $this->auditRunId;
-    }
-
-    public function setAuditRunId(string $auditRunId): self
-    {
-        $this->auditRunId = $auditRunId;
+        $this->auditRun = $auditRun;
         return $this;
     }
 
@@ -269,68 +191,36 @@ class AuditFinding
         return $this;
     }
 
-    public function getCodeExample(): ?string
+    public function getImpactScore(): int
     {
-        return $this->codeExample;
+        return $this->impactScore;
     }
 
-    public function setCodeExample(?string $codeExample): self
+    public function setImpactScore(int $impactScore): self
     {
-        $this->codeExample = $codeExample;
+        $this->impactScore = $impactScore;
         return $this;
     }
 
-    public function getScore(): ?string
+    public function getEffortScore(): int
     {
-        return $this->score;
+        return $this->effortScore;
     }
 
-    public function setScore(?string $score): self
+    public function setEffortScore(int $effortScore): self
     {
-        $this->score = $score;
+        $this->effortScore = $effortScore;
         return $this;
     }
 
-    public function getEvidence(): array
+    public function getPriorityScore(): int
     {
-        return $this->evidence;
+        return $this->priorityScore;
     }
 
-    public function setEvidence(array $evidence): self
+    public function setPriorityScore(int $priorityScore): self
     {
-        $this->evidence = $evidence;
+        $this->priorityScore = $priorityScore;
         return $this;
-    }
-
-    public function getReferences(): array
-    {
-        return $this->references;
-    }
-
-    public function setReferences(array $references): self
-    {
-        $this->references = $references;
-        return $this;
-    }
-
-    public function getMetadata(): array
-    {
-        return $this->metadata;
-    }
-
-    public function setMetadata(array $metadata): self
-    {
-        $this->metadata = $metadata;
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 }

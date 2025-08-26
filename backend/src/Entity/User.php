@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Tenant;
+use App\Entity\Organization;
+use App\Entity\Agency;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
@@ -25,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // Role constants for the new access control system
     public const ROLE_SYSTEM_ADMIN = 'ROLE_SYSTEM_ADMIN';
     public const ROLE_AGENCY_ADMIN = 'ROLE_AGENCY_ADMIN';
+    public const ROLE_AGENCY_STAFF = 'ROLE_AGENCY_STAFF';
+    public const ROLE_CLIENT_ADMIN = 'ROLE_CLIENT_ADMIN';
+    public const ROLE_CLIENT_STAFF = 'ROLE_CLIENT_STAFF';
     public const ROLE_CLIENT_USER = 'ROLE_CLIENT_USER';
     public const ROLE_READ_ONLY = 'ROLE_READ_ONLY';
 
@@ -34,9 +39,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(targetEntity: Agency::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(name: 'agency_id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(name: 'organization_id', nullable: false)]
+    private Organization $organization;
+
+    #[ORM\ManyToOne(targetEntity: Agency::class)]
+    #[ORM\JoinColumn(name: 'agency_id', nullable: true)]
     private ?Agency $agency = null;
+
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', nullable: true)]
+    private ?Tenant $tenant = null;
 
     #[ORM\Column(name: 'client_id', type: 'uuid', nullable: true)]
     private ?string $clientId = null;
@@ -67,17 +80,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserClientAccess::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $clientAccess;
 
+    /** @var Collection<int,AuditIntake> */
+    #[ORM\OneToMany(mappedBy: 'requestedBy', targetEntity: AuditIntake::class)]
+    private Collection $requestedAuditIntakes;
+
+    /** @var Collection<int,AuditRun> */
+    #[ORM\OneToMany(mappedBy: 'initiatedBy', targetEntity: AuditRun::class)]
+    private Collection $initiatedAuditRuns;
+
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $metadata = [];
 
-    public function __construct(?Agency $agency, string $email, string $hash, string $role)
+    public function __construct(Organization $organization, string $email, string $hash, string $role)
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $this->agency = $agency;
+        $this->organization = $organization;
         $this->email = $email;
         $this->passwordHash = $hash;
         $this->role = $role;
         $this->clientAccess = new ArrayCollection();
+        $this->requestedAuditIntakes = new ArrayCollection();
+        $this->initiatedAuditRuns = new ArrayCollection();
         $this->metadata = [];
     }
 
@@ -131,6 +154,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    public function getOrganization(): Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
     public function getAgency(): ?Agency
     {
         return $this->agency;
@@ -139,6 +173,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAgency(?Agency $agency): self
     {
         $this->agency = $agency;
+        return $this;
+    }
+
+    public function getTenant(): ?Tenant
+    {
+        return $this->tenant;
+    }
+
+    public function setTenant(?Tenant $tenant): self
+    {
+        $this->tenant = $tenant;
         return $this;
     }
 
@@ -270,6 +315,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMetadata(?array $metadata): self
     {
         $this->metadata = $metadata;
+        return $this;
+    }
+
+    // Audit-related methods
+    public function getRequestedAuditIntakes(): Collection
+    {
+        return $this->requestedAuditIntakes;
+    }
+
+    public function addRequestedAuditIntake(AuditIntake $auditIntake): self
+    {
+        if (!$this->requestedAuditIntakes->contains($auditIntake)) {
+            $this->requestedAuditIntakes->add($auditIntake);
+            $auditIntake->setRequestedBy($this);
+        }
+        return $this;
+    }
+
+    public function removeRequestedAuditIntake(AuditIntake $auditIntake): self
+    {
+        if ($this->requestedAuditIntakes->removeElement($auditIntake)) {
+            if ($auditIntake->getRequestedBy() === $this) {
+                $auditIntake->setRequestedBy(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getInitiatedAuditRuns(): Collection
+    {
+        return $this->initiatedAuditRuns;
+    }
+
+    public function addInitiatedAuditRun(AuditRun $auditRun): self
+    {
+        if (!$this->initiatedAuditRuns->contains($auditRun)) {
+            $this->initiatedAuditRuns->add($auditRun);
+            $auditRun->setInitiatedBy($this);
+        }
+        return $this;
+    }
+
+    public function removeInitiatedAuditRun(AuditRun $auditRun): self
+    {
+        if ($this->initiatedAuditRuns->removeElement($auditRun)) {
+            if ($auditRun->getInitiatedBy() === $this) {
+                $auditRun->setInitiatedBy(null);
+            }
+        }
         return $this;
     }
 }

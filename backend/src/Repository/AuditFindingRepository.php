@@ -6,6 +6,14 @@ use App\Entity\AuditFinding;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<AuditFinding>
+ *
+ * @method AuditFinding|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AuditFinding|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AuditFinding[]    findAll()
+ * @method AuditFinding[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 class AuditFindingRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -13,77 +21,22 @@ class AuditFindingRepository extends ServiceEntityRepository
         parent::__construct($registry, AuditFinding::class);
     }
 
-    /**
-     * @param array<string, mixed> $criteria
-     * @param array<string, string> $sortFields
-     * @return array<int, AuditFinding>
-     */
-    public function findByCriteria(array $criteria, array $sortFields = [], int $limit = 20, int $offset = 0): array
+    public function save(AuditFinding $entity, bool $flush = false): void
     {
-        $qb = $this->createQueryBuilder('af');
+        $this->getEntityManager()->persist($entity);
 
-        // Normalize snake_case keys from controllers to entity property names
-        $normalizedCriteria = [];
-        foreach ($criteria as $key => $value) {
-            if ($value === '' || $value === null) {
-                continue;
-            }
-            switch ($key) {
-                case 'audit_run_id':
-                    $normalizedCriteria['auditRunId'] = $value;
-                    break;
-                default:
-                    $normalizedCriteria[$key] = $value;
-            }
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
-
-        foreach ($normalizedCriteria as $field => $value) {
-            $qb->andWhere("af.$field = :$field")
-               ->setParameter($field, $value);
-        }
-
-        foreach ($sortFields as $field => $direction) {
-            // Map snake_case to camelCase for known fields
-            if ($field === 'audit_run_id') {
-                $field = 'auditRunId';
-            }
-            $qb->addOrderBy("af.$field", strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC');
-        }
-
-        return $qb->setMaxResults($limit)
-                  ->setFirstResult($offset)
-                  ->getQuery()
-                  ->getResult();
     }
 
-    /**
-     * @param array<string, mixed> $criteria
-     */
-    public function countByCriteria(array $criteria): int
+    public function remove(AuditFinding $entity, bool $flush = false): void
     {
-        $qb = $this->createQueryBuilder('af')
-                   ->select('COUNT(af.id)');
+        $this->getEntityManager()->remove($entity);
 
-        $normalizedCriteria = [];
-        foreach ($criteria as $key => $value) {
-            if ($value === '' || $value === null) {
-                continue;
-            }
-            switch ($key) {
-                case 'audit_run_id':
-                    $normalizedCriteria['auditRunId'] = $value;
-                    break;
-                default:
-                    $normalizedCriteria[$key] = $value;
-            }
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
-
-        foreach ($normalizedCriteria as $field => $value) {
-            $qb->andWhere("af.$field = :$field")
-               ->setParameter($field, $value);
-        }
-
-        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }
 
