@@ -29,7 +29,7 @@ class AuditRun
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'auditRuns')]
+    #[ORM\ManyToOne(targetEntity: Client::class, targetEntity: Client::class, inversedBy: 'auditRuns')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Client $client = null;
 
@@ -37,7 +37,7 @@ class AuditRun
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?AuditIntake $intake = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'initiatedAuditRuns')]
+    #[ORM\ManyToOne(targetEntity: User::class, targetEntity: User::class, inversedBy: 'initiatedAuditRuns')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $initiatedBy = null;
 

@@ -36,7 +36,7 @@ class Client
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'clients')]
+    #[ORM\ManyToOne(targetEntity: Agency::class, inversedBy: 'clients')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Agency $agency = null;
 

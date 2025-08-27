@@ -33,7 +33,7 @@ class ClientLocation
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'locations')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'locations')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Client $client = null;
 
