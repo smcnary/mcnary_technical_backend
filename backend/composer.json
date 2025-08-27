@@ -75,6 +75,12 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "post-install-cmd-ci": [
+            "echo 'Skipping auto-scripts in CI environment'"
+        ],
+        "post-update-cmd-ci": [
+            "echo 'Skipping auto-scripts in CI environment'"
         ]
     },
     "conflict": {
