@@ -73,9 +73,13 @@ deploy_backend() {
             echo "⚠️ Autoloader optimization failed, continuing with standard autoloader"
         }
         
-        # Clear and warm cache
-        php bin/console cache:clear --env=prod --no-debug
-        php bin/console cache:warmup --env=prod
+        # Clear and warm cache in production environment
+        php bin/console cache:clear --env=prod --no-debug || {
+            echo "⚠️ Cache clear failed, continuing..."
+        }
+        php bin/console cache:warmup --env=prod || {
+            echo "⚠️ Cache warmup failed, continuing..."
+        }
         
         # Run migrations
         php bin/console doctrine:migrations:migrate --env=prod --no-interaction

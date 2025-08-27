@@ -107,8 +107,13 @@ jobs:
         run: |
           cd audit-service
           if [ -f "bin/console" ]; then
-            php bin/console cache:clear --env=prod --no-debug || echo "⚠️ Cache clear failed"
-            php bin/console cache:warmup --env=prod || echo "⚠️ Cache warmup failed"
+            # Clear cache in production environment (this won't load dev bundles)
+            php bin/console cache:clear --env=prod --no-debug || {
+              echo "⚠️ Cache clear failed, continuing..."
+            }
+            php bin/console cache:warmup --env=prod || {
+              echo "⚠️ Cache warmup failed, continuing..."
+            }
           else
             echo "ℹ️ No Symfony console found, skipping cache warmup"
           fi
