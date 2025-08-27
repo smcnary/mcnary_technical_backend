@@ -77,7 +77,7 @@ class Agency
     private ?array $metadata = [];
 
     /** @var Collection<int,User> */
-    #[ORM\OneToMany(mappedBy: 'agency', targetEntity: User::class, cascade: ['persist'], orphanRemoval: true, inversedBy: 'agency')]
+    #[ORM\OneToMany(mappedBy: 'agency', targetEntity: User::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $users;
 
     /** @var Collection<int,Client> */
