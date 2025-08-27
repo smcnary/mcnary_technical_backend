@@ -1,9 +1,11 @@
 import { cookies } from 'next/headers'
 
-export function getAuthToken(): string | undefined {
-  return cookies().get('auth')?.value
+export async function getAuthToken(): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  return cookieStore.get('auth')?.value
 }
 
-export function getUserRole(): string | undefined {
-  return cookies().get('role')?.value
+export async function getUserRole(): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  return cookieStore.get('role')?.value
 }

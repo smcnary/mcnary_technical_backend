@@ -1,9 +1,11 @@
 import PageHeader from '@/components/portal/PageHeader'
 
-export default function AdminUserDetailPage({ params }: { params: { userId: string } }) {
+export default async function AdminUserDetailPage({ params }: { params: Promise<{ userId: string }> }) {
+  const { userId } = await params;
+  
   return (
     <div>
-      <PageHeader title={`User ${params.userId}`} />
+      <PageHeader title={`User ${userId}`} />
       <div className="card">User details form (to be implemented)</div>
     </div>
   )
