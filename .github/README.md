@@ -1,6 +1,6 @@
 # GitHub Actions CI/CD Documentation
 
-This directory contains GitHub Actions workflows for automated testing, building, and deployment of the CounselRank.legal application.
+This directory contains GitHub Actions workflows for automated testing, building, and deployment of the Tulsa SEO application.
 
 ## 🚀 Available Workflows
 

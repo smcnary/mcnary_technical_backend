@@ -1,11 +1,11 @@
-# Environment Configuration for CounselRank.legal
+# Environment Configuration for Tulsa SEO
 # Copy and customize this file for your specific environments
 
 environments:
   staging:
     name: "Staging Environment"
     description: "Pre-production testing environment for develop branch"
-    url: "https://staging.counselrank.legal"
+    url: "https://staging.tulsa-seo.com"
     branch: "develop"
     auto_deploy: true
     required_reviewers: []
@@ -35,13 +35,13 @@ environments:
     # Monitoring
     monitoring:
       health_check_url: "https://staging.counselrank.legal/health"
-      alert_email: "dev-team@counselrank.legal"
+      alert_email: "dev-team@tulsa-seo.com"
       log_level: "warning"
 
   production:
     name: "Production Environment"
     description: "Live production environment"
-    url: "https://counselrank.legal"
+    url: "https://tulsa-seo.com"
     branch: "main"
     auto_deploy: true
     required_reviewers: ["tech-lead", "devops"]
@@ -70,8 +70,8 @@ environments:
     
     # Monitoring
     monitoring:
-      health_check_url: "https://counselrank.legal/health"
-      alert_email: "alerts@counselrank.legal"
+      health_check_url: "https://tulsa-seo.com/health"
+      alert_email: "alerts@tulsa-seo.com"
       log_level: "error"
       uptime_monitoring: true
       performance_monitoring: true
@@ -109,7 +109,7 @@ global:
   # Notification Configuration
   notifications:
     slack_webhook: "${{ secrets.SLACK_WEBHOOK }}"
-    email_recipients: "dev-team@counselrank.legal"
+    email_recipients: "dev-team@tulsa-seo.com"
     success_notifications: true
     failure_notifications: true
   

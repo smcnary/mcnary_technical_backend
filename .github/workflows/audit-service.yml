@@ -84,14 +84,24 @@ jobs:
           php-version: '8.2'
           tools: composer:v2
 
-      - name: Install prod dependencies
+      - name: Install dependencies
         env:
           COMPOSER_PROCESS_TIMEOUT: 300
           COMPOSER_NO_INTERACTION: 1
           COMPOSER_NO_AUDIT: 1
         run: |
           cd audit-service
-          composer install --no-dev --optimize-autoloader --no-progress --no-interaction
+          # First install with dev dependencies to run post-install scripts
+          composer install --verbose --prefer-dist --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          
+          # Then optimize for production (this will keep the bundles but optimize autoloader)
+          composer dump-autoload --optimize --no-dev --classmap-authoritative || {
+            echo "⚠️ Autoloader optimization failed, continuing with standard autoloader"
+          }
 
       - name: Warm production cache
         run: |

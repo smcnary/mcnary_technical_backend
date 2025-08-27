@@ -1,4 +1,4 @@
-# CounselRank.legal Platform
+# Tulsa SEO Platform
 
 A comprehensive digital marketing platform for law firms, built with modern web technologies and a robust API-first architecture.
 
