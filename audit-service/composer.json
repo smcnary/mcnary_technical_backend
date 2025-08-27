@@ -7,41 +7,51 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
-        "symfony/framework-bundle": "^7.3",
-        "symfony/runtime": "^7.3",
-        "symfony/yaml": "^7.3",
-        "symfony/console": "^7.3",
-        "symfony/security-bundle": "^7.3",
-        "symfony/validator": "^7.3",
-        "symfony/serializer": "^7.3",
-        "symfony/messenger": "^7.3",
-        "symfony/workflow": "^7.3",
-        "symfony/scheduler": "^7.3",
-        "symfony/http-client": "^7.3",
-        "symfony/expression-language": "^7.3",
-        "api-platform/api-pack": "^1.4",
+        "api-platform/doctrine-orm": "^4.1",
+        "api-platform/symfony": "^4.1",
+        "chrome-php/chrome": "^1.0",
+        "doctrine/dbal": "^3.7",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
-        "doctrine/dbal": "^3.7",
-        "lexik/jwt-authentication-bundle": "^2.20",
-        "nelmio/cors-bundle": "^2.4",
-        "monolog/monolog": "^3.4",
-        "predis/predis": "^2.2",
-        "league/flysystem-aws-s3-v3": "^3.0",
-        "chrome-php/chrome": "^1.0",
         "google/apiclient": "^2.15",
-        "paragonie/sodium_compat": "^1.19"
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "lexik/jwt-authentication-bundle": "^2.20",
+        "monolog/monolog": "^3.4",
+        "nelmio/cors-bundle": "^2.4",
+        "paragonie/sodium_compat": "^1.19",
+        "phpdocumentor/reflection-docblock": "^5.6",
+        "phpstan/phpdoc-parser": "^2.2",
+        "predis/predis": "^2.2",
+        "symfony/asset": "7.3.*",
+        "symfony/console": "^7.3",
+        "symfony/expression-language": "^7.3",
+        "symfony/flex": "^2.8",
+        "symfony/framework-bundle": "^7.3",
+        "symfony/http-client": "^7.3",
+        "symfony/messenger": "^7.3",
+        "symfony/property-access": "7.3.*",
+        "symfony/property-info": "7.3.*",
+        "symfony/runtime": "^7.3",
+        "symfony/scheduler": "^7.3",
+        "symfony/security-bundle": "^7.3",
+        "symfony/serializer": "^7.3",
+        "symfony/twig-bundle": "7.3.*",
+        "symfony/validator": "^7.3",
+        "symfony/workflow": "^7.3",
+        "symfony/yaml": "^7.3"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.52",
-        "symfony/debug-bundle": "^7.3",
-        "symfony/stopwatch": "^7.3",
-        "symfony/web-profiler-bundle": "^7.3",
-        "phpunit/phpunit": "^10.4",
-        "symfony/test-pack": "^1.0",
         "doctrine/doctrine-fixtures-bundle": "^3.5",
-        "fakerphp/faker": "^1.23"
+        "fakerphp/faker": "^1.23",
+        "phpunit/phpunit": "^10.4",
+        "symfony/browser-kit": "7.3.*",
+        "symfony/css-selector": "7.3.*",
+        "symfony/debug-bundle": "^7.3",
+        "symfony/maker-bundle": "^1.52",
+        "symfony/phpunit-bridge": "^7.3",
+        "symfony/stopwatch": "^7.3",
+        "symfony/web-profiler-bundle": "^7.3"
     },
     "autoload": {
         "psr-4": {
@@ -63,6 +73,12 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "post-install-cmd-ci": [
+            "echo 'Skipping auto-scripts in CI environment'"
+        ],
+        "post-update-cmd-ci": [
+            "echo 'Skipping auto-scripts in CI environment'"
         ]
     },
     "config": {
