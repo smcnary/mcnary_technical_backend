@@ -91,8 +91,8 @@ jobs:
           COMPOSER_NO_AUDIT: 1
         run: |
           cd audit-service
-          # First install with dev dependencies to run post-install scripts
-          composer install --verbose --prefer-dist --no-progress --no-interaction || {
+          # Install with dev dependencies but skip post-install scripts in CI
+          composer install --verbose --prefer-dist --no-progress --no-interaction --no-scripts || {
             echo "❌ Composer install failed"
             composer diagnose
             exit 1
