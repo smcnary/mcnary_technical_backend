@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import LoadingModal, { AuthLoadingModal, RegistrationLoadingModal, RedirectLoadingModal } from './LoadingModal';
 
 export default function LoadingModalDemo() {

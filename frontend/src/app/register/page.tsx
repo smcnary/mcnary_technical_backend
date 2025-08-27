@@ -88,7 +88,7 @@ export default function RegisterPage() {
         }
         setFormError(msg);
       } else {
-        const responseData = await res.json();
+        await res.json(); // Just consume the response
         setSuccessMsg("Account created successfully! Logging you in...");
         
         // Automatically log the user in after successful registration

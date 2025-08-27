@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
 const ApiTest: React.FC = () => {
   const [apiStatus, setApiStatus] = useState<string>('Checking...');
-  const [apiInfo, setApiInfo] = useState<any>(null);
+  const [apiInfo, setApiInfo] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
