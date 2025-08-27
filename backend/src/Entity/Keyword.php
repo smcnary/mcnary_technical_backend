@@ -56,7 +56,7 @@ class Keyword
     #[Groups(['keyword:read'])]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'keywords')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'keywords')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Client $client = null;
 

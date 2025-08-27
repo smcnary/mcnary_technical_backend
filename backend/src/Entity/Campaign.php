@@ -54,7 +54,7 @@ class Campaign
     #[Groups(['campaign:read'])]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'campaigns')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'campaigns')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Client $client = null;
 

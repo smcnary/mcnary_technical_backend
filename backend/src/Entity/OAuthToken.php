@@ -33,7 +33,7 @@ class OAuthToken
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'tokens')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tokens')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private OAuthConnection $connection;
 

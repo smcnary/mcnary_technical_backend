@@ -36,7 +36,7 @@ class RankingDaily
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'rankings')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'rankings')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Keyword $keyword;
 

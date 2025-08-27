@@ -34,7 +34,7 @@ class LeadEvent
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: Lead::class, inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Lead $lead;
 
