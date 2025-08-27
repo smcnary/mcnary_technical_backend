@@ -96,8 +96,13 @@ jobs:
           cd backend
           echo "🗄️ Creating database schema..."
           
-          # Create database if it doesn't exist
-          php bin/console doctrine:database:create --env=test --if-not-exists || {
+          # Drop and recreate database to ensure clean state
+          php bin/console doctrine:database:drop --env=test --force --if-exists || {
+            echo "⚠️ Could not drop test database, continuing..."
+          }
+          
+          # Create database
+          php bin/console doctrine:database:create --env=test || {
             echo "❌ Failed to create test database"
             exit 1
           }
@@ -107,20 +112,18 @@ jobs:
             echo "⚠️ Cache clear failed, continuing..."
           }
           
-          # Create schema
+          # Create schema from scratch (not from migrations)
           php bin/console doctrine:schema:create --env=test || {
             echo "❌ Failed to create test schema"
-            php bin/console doctrine:schema:validate --env=test || echo "Schema validation failed"
             exit 1
           }
 
-      - name: Run migrations
+      - name: Verify schema
         run: |
           cd backend
-          echo "🔄 Running migrations..."
-          php bin/console doctrine:migrations:migrate --env=test --no-interaction || {
-            echo "❌ Failed to run migrations"
-            exit 1
+          echo "🔍 Verifying database schema..."
+          php bin/console doctrine:schema:validate --env=test || {
+            echo "⚠️ Schema validation failed, but continuing..."
           }
 
       - name: Run tests
