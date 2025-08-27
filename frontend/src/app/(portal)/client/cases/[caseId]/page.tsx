@@ -1,9 +1,11 @@
 import PageHeader from '@/components/portal/PageHeader'
 
-export default function CaseDetailsPage({ params }: { params: { caseId: string } }) {
+export default async function CaseDetailsPage({ params }: { params: Promise<{ caseId: string }> }) {
+  const { caseId } = await params;
+  
   return (
     <div>
-      <PageHeader title={`Case ${params.caseId}`} />
+      <PageHeader title={`Case ${caseId}`} />
       <div className="card">Case details (to be implemented)</div>
     </div>
   )

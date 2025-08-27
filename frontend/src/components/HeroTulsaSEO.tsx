@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import FeaturesSection from "./FeaturesSection";
 
 type Tier = "Starter" | "Growth" | "Pro" | "Enterprise";

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { create } from "zustand";
 
 // -----------------------------
@@ -77,13 +77,13 @@ const defaultState: Pick<AuditState, "account" | "form"> = {
 const STORAGE_KEY = "tulsa-seo.audit-wizard.v1";
 const AUTH_STORAGE_KEY = "tulsa-seo.auth.v1";
 
-const useAuthStore = create<AuthState>((_set: any) => ({
+const useAuthStore = create<AuthState>((_set) => ({
   token: null,
   userId: null,
   isAuthenticated: false,
 }));
 
-const useAuditStore = create<AuditState>((set: any, get: any) => ({
+const useAuditStore = create<AuditState>((set, get) => ({
   auditId: null,
   isSaving: false,
   saveError: null,
@@ -188,7 +188,13 @@ async function registerUser(account: Account): Promise<{ token: string; userId: 
   return { token: data.token || 'temp-token', userId: data.id };
 }
 
-async function upsertAudit(payload: any): Promise<{ id: string }> {
+type AuditPayload = {
+  id?: string | null;
+  form: AuditForm;
+  account: Account;
+};
+
+async function upsertAudit(payload: AuditPayload): Promise<{ id: string }> {
   const authStore = useAuthStore.getState();
   
   if (!authStore.isAuthenticated) {
@@ -653,8 +659,9 @@ export default function AuditWizard() {
         setSaving(true);
         const res = await upsertAudit(payload);
         markSaved(res.id);
-      } catch (e: any) {
-        setError(e?.message ?? "Failed to save");
+      } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : "Failed to save";
+        setError(errorMessage);
       }
     }, 600);
     return () => clearTimeout(t);

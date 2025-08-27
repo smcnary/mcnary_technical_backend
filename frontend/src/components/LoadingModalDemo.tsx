@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LoadingModal, { AuthLoadingModal, RegistrationLoadingModal, RedirectLoadingModal } from './LoadingModal';
 
 export default function LoadingModalDemo() {
@@ -8,6 +8,35 @@ export default function LoadingModalDemo() {
   const [showRedirect, setShowRedirect] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  // Auto-hide modals with useEffect
+  useEffect(() => {
+    if (showAuth) {
+      const timer = setTimeout(() => setShowAuth(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showAuth]);
+
+  useEffect(() => {
+    if (showRegistration) {
+      const timer = setTimeout(() => setShowRegistration(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [showRegistration]);
+
+  useEffect(() => {
+    if (showRedirect) {
+      const timer = setTimeout(() => setShowRedirect(false), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [showRedirect]);
+
+  useEffect(() => {
+    if (showBasic) {
+      const timer = setTimeout(() => setShowBasic(false), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [showBasic]);
 
   const simulateProgress = () => {
     setShowProgress(true);
@@ -118,11 +147,7 @@ export default function LoadingModalDemo() {
           </div>
         </div>
 
-        {/* Auto-hide modals for demo */}
-        {showAuth && setTimeout(() => setShowAuth(false), 3000)}
-        {showRegistration && setTimeout(() => setShowRegistration(false), 4000)}
-        {showRedirect && setTimeout(() => setShowRedirect(false), 2500)}
-        {showBasic && setTimeout(() => setShowBasic(false), 3500)}
+        {/* Auto-hide modals handled by useEffect hooks */}
 
         {/* Loading Modals */}
         <LoadingModal
