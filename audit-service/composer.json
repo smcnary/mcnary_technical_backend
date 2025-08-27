@@ -48,7 +48,7 @@
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",
         "symfony/debug-bundle": "^7.3",
-        "symfony/maker-bundle": "^1.52",
+        "symfony/maker-bundle": "*",
         "symfony/phpunit-bridge": "^7.3",
         "symfony/stopwatch": "^7.3",
         "symfony/web-profiler-bundle": "^7.3"
