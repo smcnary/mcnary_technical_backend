@@ -31,7 +31,7 @@ class AuditKeyword
 
     #[ORM\ManyToOne(targetEntity: AuditIntake::class, inversedBy: 'keywords')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?AuditIntake $intake = null;
+    private AuditIntake $intake;
 
     #[ORM\Column(length: 255)]
     private string $phrase;
@@ -53,12 +53,12 @@ class AuditKeyword
         return $this->id;
     }
 
-    public function getIntake(): ?AuditIntake
+    public function getIntake(): AuditIntake
     {
         return $this->intake;
     }
 
-    public function setIntake(?AuditIntake $intake): self
+    public function setIntake(AuditIntake $intake): self
     {
         $this->intake = $intake;
         return $this;

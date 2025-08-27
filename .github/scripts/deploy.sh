@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Deployment Script Template for CounselRank.legal
+# Deployment Script Template for Tulsa SEO
 # Customize this script for your specific deployment environment
 
 set -e  # Exit on any error
@@ -64,9 +64,14 @@ deploy_backend() {
         sudo chmod -R 755 "$DEPLOY_PATH/backend"
         sudo chmod -R 777 "$DEPLOY_PATH/backend/var"
         
-        # Install production dependencies
+        # Install dependencies (dev dependencies already included in build)
         cd "$DEPLOY_PATH/backend"
-        composer install --no-dev --optimize-autoloader --no-interaction
+        composer install --no-interaction
+        
+        # Optimize autoloader for production
+        composer dump-autoload --optimize --no-dev --classmap-authoritative || {
+            echo "⚠️ Autoloader optimization failed, continuing with standard autoloader"
+        }
         
         # Clear and warm cache
         php bin/console cache:clear --env=prod --no-debug
@@ -112,10 +117,15 @@ deploy_audit_service() {
         sudo chmod -R 755 "$DEPLOY_PATH/audit-service"
         sudo chmod -R 777 "$DEPLOY_PATH/audit-service/var"
         
-        # Install production dependencies if composer.json exists
+        # Install dependencies if composer.json exists
         if [ -f "$DEPLOY_PATH/audit-service/composer.json" ]; then
             cd "$DEPLOY_PATH/audit-service"
-            composer install --no-dev --optimize-autoloader --no-interaction
+            composer install --no-interaction
+            
+            # Optimize autoloader for production
+            composer dump-autoload --optimize --no-dev --classmap-authoritative || {
+                echo "⚠️ Autoloader optimization failed, continuing with standard autoloader"
+            }
             
             # Clear and warm cache if Symfony console exists
             if [ -f "bin/console" ]; then
@@ -138,7 +148,7 @@ configure_webserver() {
     sudo tee /etc/nginx/sites-available/counselrank-legal << EOF
 server {
     listen 80;
-    server_name counselrank.legal www.counselrank.legal;
+    server_name tulsa-seo.com www.tulsa-seo.com;
     
     # Frontend
     location / {

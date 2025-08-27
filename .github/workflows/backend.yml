@@ -237,10 +237,16 @@ jobs:
           COMPOSER_NO_AUDIT: 1
         run: |
           cd backend
-          composer install --verbose --prefer-dist --no-dev --optimize-autoloader --no-progress --no-interaction || {
+          # First install with dev dependencies to run post-install scripts
+          composer install --verbose --prefer-dist --no-progress --no-interaction || {
             echo "❌ Composer install failed"
             composer diagnose
             exit 1
+          }
+          
+          # Then optimize for production (this will keep the bundles but optimize autoloader)
+          composer dump-autoload --optimize --no-dev --classmap-authoritative || {
+            echo "⚠️ Autoloader optimization failed, continuing with standard autoloader"
           }
 
       - name: Build application
