@@ -56,7 +56,7 @@ class Campaign
 
     #[ORM\ManyToOne(inversedBy: 'campaigns')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Client $client;
+    private ?Client $client = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
@@ -117,12 +117,12 @@ class Campaign
         return $this->id;
     }
 
-    public function getClient(): Client
+    public function getClient(): ?Client
     {
         return $this->client;
     }
 
-    public function setClient(Client $client): self
+    public function setClient(?Client $client): self
     {
         $this->client = $client;
         return $this;

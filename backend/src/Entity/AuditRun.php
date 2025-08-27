@@ -31,11 +31,11 @@ class AuditRun
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'auditRuns')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Client $client;
+    private ?Client $client = null;
 
     #[ORM\ManyToOne(targetEntity: AuditIntake::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private AuditIntake $intake;
+    private ?AuditIntake $intake = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'initiatedAuditRuns')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
@@ -64,23 +64,23 @@ class AuditRun
         return $this->id;
     }
 
-    public function getClient(): Client
+    public function getClient(): ?Client
     {
         return $this->client;
     }
 
-    public function setClient(Client $client): self
+    public function setClient(?Client $client): self
     {
         $this->client = $client;
         return $this;
     }
 
-    public function getIntake(): AuditIntake
+    public function getIntake(): ?AuditIntake
     {
         return $this->intake;
     }
 
-    public function setIntake(AuditIntake $intake): self
+    public function setIntake(?AuditIntake $intake): self
     {
         $this->intake = $intake;
         return $this;

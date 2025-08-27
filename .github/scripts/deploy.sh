@@ -99,6 +99,37 @@ deploy_frontend() {
     fi
 }
 
+# Deploy audit service
+deploy_audit_service() {
+    log "Deploying audit service..."
+    
+    if [ -f "audit-service-build.tar.gz" ]; then
+        sudo mkdir -p "$DEPLOY_PATH/audit-service"
+        sudo tar -xzf audit-service-build.tar.gz -C "$DEPLOY_PATH/audit-service"
+        
+        # Set permissions
+        sudo chown -R www-data:www-data "$DEPLOY_PATH/audit-service"
+        sudo chmod -R 755 "$DEPLOY_PATH/audit-service"
+        sudo chmod -R 777 "$DEPLOY_PATH/audit-service/var"
+        
+        # Install production dependencies if composer.json exists
+        if [ -f "$DEPLOY_PATH/audit-service/composer.json" ]; then
+            cd "$DEPLOY_PATH/audit-service"
+            composer install --no-dev --optimize-autoloader --no-interaction
+            
+            # Clear and warm cache if Symfony console exists
+            if [ -f "bin/console" ]; then
+                php bin/console cache:clear --env=prod --no-debug
+                php bin/console cache:warmup --env=prod
+            fi
+        fi
+        
+        log "Audit service deployed successfully"
+    else
+        warn "Audit service build artifact not found, skipping..."
+    fi
+}
+
 # Configure web server
 configure_webserver() {
     log "Configuring web server..."
@@ -130,6 +161,17 @@ server {
     location /backend/public {
         alias $DEPLOY_PATH/backend/public;
         try_files \$uri /backend/public/index.php\$is_args\$args;
+    }
+    
+    # Audit Service API
+    location /audit {
+        try_files \$uri /audit-service/public/index.php\$is_args\$args;
+    }
+    
+    # Audit Service public files
+    location /audit-service/public {
+        alias $DEPLOY_PATH/audit-service/public;
+        try_files \$uri /audit-service/public/index.php\$is_args\$args;
     }
     
     # PHP processing
@@ -202,6 +244,7 @@ main() {
     # Deploy applications
     deploy_backend
     deploy_frontend
+    deploy_audit_service
     
     # Configure web server
     configure_webserver

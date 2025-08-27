@@ -31,7 +31,7 @@ class AuditCompetitor
 
     #[ORM\ManyToOne(targetEntity: AuditIntake::class, inversedBy: 'competitors')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private AuditIntake $intake;
+    private ?AuditIntake $intake = null;
 
     #[ORM\Column(length: 255)]
     private string $name;
@@ -50,12 +50,12 @@ class AuditCompetitor
         return $this->id;
     }
 
-    public function getIntake(): AuditIntake
+    public function getIntake(): ?AuditIntake
     {
         return $this->intake;
     }
 
-    public function setIntake(AuditIntake $intake): self
+    public function setIntake(?AuditIntake $intake): self
     {
         $this->intake = $intake;
         return $this;
