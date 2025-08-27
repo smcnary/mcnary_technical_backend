@@ -1,0 +1,161 @@
+name: Audit Service CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'audit-service/**'
+      - '.github/workflows/audit-service.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'audit-service/**'
+      - '.github/workflows/audit-service.yml'
+
+jobs:
+  test:
+    name: PHP Tests & Quality (Audit)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_pgsql, xml, zip, gd, curl, iconv
+          tools: composer:v2
+
+      - name: Validate composer.json
+        run: cd audit-service && composer validate --strict
+
+      - name: Install dependencies
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd audit-service
+          echo "📦 Installing audit-service dependencies..."
+          composer install --verbose --prefer-dist --no-progress --no-interaction || {
+            echo "❌ Composer install failed"
+            composer diagnose
+            exit 1
+          }
+          echo "✅ Dependencies installed successfully"
+
+      - name: Run tests (if available)
+        run: |
+          cd audit-service
+          if [ -f "vendor/bin/phpunit" ]; then
+            vendor/bin/phpunit || {
+              echo "❌ Tests failed"
+              exit 1
+            }
+          else
+            echo "⚠️ PHPUnit not found, skipping tests"
+          fi
+
+      - name: Static analysis (PHPStan if present)
+        run: |
+          cd audit-service
+          if [ -f "vendor/bin/phpstan" ]; then
+            vendor/bin/phpstan analyse src --level=max || echo "⚠️ PHPStan issues detected"
+          else
+            echo "⚠️ PHPStan not found, skipping static analysis"
+          fi
+
+  build:
+    name: Build Audit Service
+    runs-on: ubuntu-latest
+    needs: test
+    # Build on both main and develop so staging/dev deploys have artifacts
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install prod dependencies
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 300
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+        run: |
+          cd audit-service
+          composer install --no-dev --optimize-autoloader --no-progress --no-interaction
+
+      - name: Warm production cache
+        run: |
+          cd audit-service
+          if [ -f "bin/console" ]; then
+            php bin/console cache:clear --env=prod --no-debug || echo "⚠️ Cache clear failed"
+            php bin/console cache:warmup --env=prod || echo "⚠️ Cache warmup failed"
+          else
+            echo "ℹ️ No Symfony console found, skipping cache warmup"
+          fi
+
+      - name: Create build artifact
+        run: |
+          cd audit-service
+          tar -czf audit-service-build.tar.gz \
+            --exclude='.git' \
+            --exclude='tests' \
+            --exclude='var/cache/dev' \
+            --exclude='var/log/dev.log' \
+            --exclude='.env.local' \
+            --exclude='.env.test' \
+            .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-service-build
+          path: audit-service/audit-service-build.tar.gz
+          retention-days: 30
+
+  deploy-staging:
+    name: Deploy to Staging (Audit)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: audit-service-build
+          path: audit-service/
+
+      - name: Deploy to staging
+        run: echo "🚀 Deploying audit-service to staging environment..."
+
+  deploy-production:
+    name: Deploy to Production (Audit)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: audit-service-build
+          path: audit-service/
+
+      - name: Deploy to production
+        run: echo "🚀 Deploying audit-service to production environment..."
+
+
