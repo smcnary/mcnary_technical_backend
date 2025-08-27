@@ -39,7 +39,7 @@ jobs:
         run: |
           cd audit-service
           echo "📦 Installing audit-service dependencies..."
-          composer install --verbose --prefer-dist --no-progress --no-interaction || {
+          composer install --verbose --prefer-dist --no-progress --no-interaction --no-scripts || {
             echo "❌ Composer install failed"
             composer diagnose
             exit 1
