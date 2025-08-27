@@ -255,6 +255,10 @@ jobs:
           # Create production bundles config (exclude dev bundles)
           php ../../.github/scripts/create-prod-bundles.php
           
+          # Temporarily backup original bundles.php and use production version
+          cp config/bundles.php config/bundles.php.backup
+          cp config/bundles_prod.php config/bundles.php
+          
           # Clear cache in production environment using production bundles config
           php bin/console cache:clear --env=prod --no-debug || {
             echo "⚠️ Cache clear failed, continuing..."
@@ -265,6 +269,9 @@ jobs:
           php bin/console assets:install public --env=prod || {
             echo "⚠️ Assets install failed, continuing..."
           }
+          
+          # Restore original bundles.php
+          cp config/bundles.php.backup config/bundles.php
 
       - name: Create build artifact
         run: |
