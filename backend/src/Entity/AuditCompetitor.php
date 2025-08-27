@@ -29,7 +29,7 @@ class AuditCompetitor
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\ManyToOne(targetEntity: AuditIntake::class, targetEntity: AuditIntake::class, inversedBy: 'competitors')]
+    #[ORM\ManyToOne(targetEntity: AuditIntake::class, inversedBy: 'competitors')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?AuditIntake $intake = null;
 

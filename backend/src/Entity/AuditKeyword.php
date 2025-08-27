@@ -29,7 +29,7 @@ class AuditKeyword
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\ManyToOne(targetEntity: AuditIntake::class, targetEntity: Client::class, inversedBy: 'keywords')]
+    #[ORM\ManyToOne(targetEntity: AuditIntake::class, inversedBy: 'keywords')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private AuditIntake $intake;
 

@@ -29,7 +29,7 @@ class AuditConversionGoal
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\ManyToOne(targetEntity: AuditIntake::class, targetEntity: AuditIntake::class, inversedBy: 'goals')]
+    #[ORM\ManyToOne(targetEntity: AuditIntake::class, inversedBy: 'goals')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?AuditIntake $intake = null;
 
