@@ -84,9 +84,12 @@ jobs:
       - name: Setup database
         run: |
           cd backend
-          php bin/console doctrine:database:create --env=test --if-not-exists
+          # Drop and recreate database to ensure clean state
+          php bin/console doctrine:database:drop --env=test --force --if-exists || {
+            echo "⚠️ Could not drop test database, continuing..."
+          }
+          php bin/console doctrine:database:create --env=test
           php bin/console doctrine:schema:create --env=test
-          php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
       - name: Build frontend
         run: cd frontend && npm run build
