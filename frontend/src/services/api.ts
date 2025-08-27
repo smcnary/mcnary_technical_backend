@@ -182,10 +182,16 @@ export class ApiService {
     });
   }
 
-  async getLeads(params?: Record<string, any>): Promise<ApiResponse<Lead>> {
-    const queryString = new URLSearchParams(params).toString();
-    const endpoint = queryString ? `/api/v1/leads?${queryString}` : '/api/v1/leads';
-    return this.fetchApi<ApiResponse<Lead>>(endpoint);
+  async getLeads(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Lead>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/leads?${queryString}` : '/api/v1/leads';
+      return this.fetchApi<ApiResponse<Lead>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<Lead>>('/api/v1/leads');
   }
 
   async getLead(id: string): Promise<Lead> {
@@ -202,10 +208,16 @@ export class ApiService {
   }
 
   // FAQs
-  async getFaqs(params?: Record<string, any>): Promise<ApiResponse<Faq>> {
-    const queryString = new URLSearchParams(params).toString();
-    const endpoint = queryString ? `/api/v1/faqs?${queryString}` : '/api/v1/faqs';
-    return this.fetchApi<ApiResponse<Faq>>(endpoint);
+  async getFaqs(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Faq>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/faqs?${queryString}` : '/api/v1/faqs';
+      return this.fetchApi<ApiResponse<Faq>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<Faq>>('/api/v1/faqs');
   }
 
   async getFaq(id: string): Promise<Faq> {
@@ -213,25 +225,31 @@ export class ApiService {
   }
 
   // Pages
-  async getPage(slug: string): Promise<any> {
-    return this.fetchApi<any>(`/api/v1/pages?slug=${slug}`);
+  async getPage(slug: string): Promise<Record<string, unknown>> {
+    return this.fetchApi<Record<string, unknown>>(`/api/v1/pages?slug=${slug}`);
   }
 
   // Media Assets
-  async getMediaAsset(id: string): Promise<any> {
-    return this.fetchApi<any>(`/api/v1/media-assets/${id}`);
+  async getMediaAsset(id: string): Promise<Record<string, unknown>> {
+    return this.fetchApi<Record<string, unknown>>(`/api/v1/media-assets/${id}`);
   }
 
   // Packages
-  async getPackages(): Promise<ApiResponse<any>> {
-    return this.fetchApi<ApiResponse<any>>('/api/v1/packages');
+  async getPackages(): Promise<ApiResponse<Record<string, unknown>>> {
+    return this.fetchApi<ApiResponse<Record<string, unknown>>>('/api/v1/packages');
   }
 
   // Campaigns
-  async getCampaigns(params?: Record<string, any>): Promise<ApiResponse<Campaign>> {
-    const queryString = new URLSearchParams(params).toString();
-    const endpoint = queryString ? `/api/v1/campaigns?${queryString}` : '/api/v1/campaigns';
-    return this.fetchApi<ApiResponse<Campaign>>(endpoint);
+  async getCampaigns(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Campaign>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/campaigns?${queryString}` : '/api/v1/campaigns';
+      return this.fetchApi<ApiResponse<Campaign>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<Campaign>>('/api/v1/campaigns');
   }
 
   async createCampaign(campaignData: Omit<Campaign, 'id' | 'createdAt' | 'updatedAt'>): Promise<Campaign> {
@@ -242,17 +260,29 @@ export class ApiService {
   }
 
   // Users (Admin only)
-  async getUsers(params?: Record<string, any>): Promise<ApiResponse<User>> {
-    const queryString = new URLSearchParams(params).toString();
-    const endpoint = queryString ? `/api/v1/users?${queryString}` : '/api/v1/users';
-    return this.fetchApi<ApiResponse<User>>(endpoint);
+  async getUsers(params?: Record<string, string | number | boolean>): Promise<ApiResponse<User>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/users?${queryString}` : '/api/v1/users';
+      return this.fetchApi<ApiResponse<User>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<User>>('/api/v1/users');
   }
 
   // Clients
-  async getClients(params?: Record<string, any>): Promise<ApiResponse<Client>> {
-    const queryString = new URLSearchParams(params).toString();
-    const endpoint = queryString ? `/api/v1/clients?${queryString}` : '/api/v1/clients';
-    return this.fetchApi<ApiResponse<Client>>(endpoint);
+  async getClients(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Client>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/clients?${queryString}` : '/api/v1/clients';
+      return this.fetchApi<ApiResponse<Client>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<Client>>('/api/v1/clients');
   }
 
   // Get API entry point to discover available endpoints
