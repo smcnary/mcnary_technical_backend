@@ -4,7 +4,7 @@
 environments:
   staging:
     name: "Staging Environment"
-    description: "Pre-production testing environment"
+    description: "Pre-production testing environment for develop branch"
     url: "https://staging.counselrank.legal"
     branch: "develop"
     auto_deploy: true

@@ -38,7 +38,7 @@ class Client
 
     #[ORM\ManyToOne(inversedBy: 'clients')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Agency $agency;
+    private ?Agency $agency = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
@@ -189,12 +189,12 @@ class Client
         return $this->id;
     }
 
-    public function getAgency(): Agency
+    public function getAgency(): ?Agency
     {
         return $this->agency;
     }
 
-    public function setAgency(Agency $agency): self
+    public function setAgency(?Agency $agency): self
     {
         $this->agency = $agency;
         return $this;

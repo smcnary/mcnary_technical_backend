@@ -39,9 +39,15 @@ This directory contains the CI/CD workflows for the CounselRank.legal project.
 
 ## 🚀 Workflow Usage
 
+### ⚠️ **REQUIRED SETUP FIRST**
+Before workflows can deploy, you **MUST** set up GitHub Environments:
+- See [`.github/ENVIRONMENT_SETUP.md`](../ENVIRONMENT_SETUP.md) for complete setup instructions
+- Create `staging` and `production` environments in GitHub Settings → Environments
+- Configure required secrets and protection rules
+
 ### Automatic Triggers
 - **Push to `main`**: Triggers production deployment workflows
-- **Push to `develop`**: Triggers staging deployment workflows
+- **Push to `develop`**: Triggers staging deployment workflows  
 - **Pull Requests**: Triggers testing workflows only
 
 ### Manual Triggers

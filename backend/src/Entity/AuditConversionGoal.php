@@ -31,7 +31,7 @@ class AuditConversionGoal
 
     #[ORM\ManyToOne(targetEntity: AuditIntake::class, inversedBy: 'goals')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private AuditIntake $intake;
+    private ?AuditIntake $intake = null;
 
     #[ORM\Column(length: 32)]
     private string $type = 'form';
@@ -56,12 +56,12 @@ class AuditConversionGoal
         return $this->id;
     }
 
-    public function getIntake(): AuditIntake
+    public function getIntake(): ?AuditIntake
     {
         return $this->intake;
     }
 
-    public function setIntake(AuditIntake $intake): self
+    public function setIntake(?AuditIntake $intake): self
     {
         $this->intake = $intake;
         return $this;

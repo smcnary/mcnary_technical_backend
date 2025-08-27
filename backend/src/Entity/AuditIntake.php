@@ -31,7 +31,7 @@ class AuditIntake
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'auditIntakes')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Assert\NotNull]
-    private Client $client;
+    private ?Client $client = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'requestedAuditIntakes')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
@@ -169,7 +169,7 @@ class AuditIntake
         return $this->id;
     }
 
-    public function getClient(): Client
+    public function getClient(): ?Client
     {
         return $this->client;
     }

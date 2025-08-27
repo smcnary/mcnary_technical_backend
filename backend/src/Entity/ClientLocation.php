@@ -35,7 +35,7 @@ class ClientLocation
 
     #[ORM\ManyToOne(inversedBy: 'locations')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Client $client;
+    private ?Client $client = null;
 
     #[ORM\Column]
     private string $label;
@@ -83,7 +83,7 @@ class ClientLocation
         return $this->id;
     }
 
-    public function getClient(): Client
+    public function getClient(): ?Client
     {
         return $this->client;
     }
