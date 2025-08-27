@@ -253,7 +253,7 @@ jobs:
         run: |
           cd backend
           # Create production bundles config (exclude dev bundles)
-          php ../../.github/scripts/create-prod-bundles.php
+          php ../.github/scripts/create-prod-bundles.php
           
           # Temporarily backup original bundles.php and use production version
           cp config/bundles.php config/bundles.php.backup
