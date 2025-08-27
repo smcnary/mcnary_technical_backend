@@ -29,7 +29,7 @@ class AuditFinding
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, targetEntity: Client::class, inversedBy: 'auditFindings')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'auditFindings')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Client $client = null;
 
