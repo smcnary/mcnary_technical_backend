@@ -252,7 +252,10 @@ jobs:
       - name: Build application
         run: |
           cd backend
-          # Clear cache in production environment (this won't load dev bundles)
+          # Create production bundles config (exclude dev bundles)
+          php ../../.github/scripts/create-prod-bundles.php
+          
+          # Clear cache in production environment using production bundles config
           php bin/console cache:clear --env=prod --no-debug || {
             echo "⚠️ Cache clear failed, continuing..."
           }
