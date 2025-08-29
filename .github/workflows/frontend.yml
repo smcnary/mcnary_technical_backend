@@ -215,7 +215,7 @@ jobs:
           echo "🚀 Deploying frontend to staging environment..."
           
           # Sync build files to S3 staging bucket
-          aws s3 sync frontend/dist/ s3://mcnary-tech-frontend-staging --delete
+          aws s3 sync dist/ s3://mcnary-tech-frontend-staging --delete
           
           echo "✅ Staging deployment completed!"
 
