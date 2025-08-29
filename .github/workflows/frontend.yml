@@ -214,6 +214,9 @@ jobs:
         run: |
           echo "🚀 Deploying frontend to staging environment..."
           
+          # Change to frontend directory where dist/ was created
+          cd frontend
+          
           # Sync build files to S3 staging bucket
           aws s3 sync dist/ s3://mcnary-tech-frontend-staging --delete
           
