@@ -198,10 +198,19 @@ jobs:
       - name: Build application
         run: |
           cd frontend
+          echo "🔍 Current directory: $(pwd)"
+          echo "📁 Directory contents before build:"
+          ls -la
+          
           npm run build || {
             echo "❌ Build failed"
             exit 1
           }
+          
+          echo "📁 Directory contents after build:"
+          ls -la
+          echo "📁 Dist folder contents (if exists):"
+          ls -la dist/ || echo "❌ Dist folder not found"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
