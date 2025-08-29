@@ -227,8 +227,8 @@ jobs:
           cd frontend
           
           # Sync build files to S3 staging bucket
-          # Next.js with output: 'export' creates 'out/' directory
-          aws s3 sync out/ s3://mcnary-tech-frontend-staging --delete
+          # Next.js creates .next/ directory for standard builds
+          aws s3 sync .next/ s3://mcnary-tech-frontend-staging --delete
           
           echo "✅ Staging deployment completed!"
 
