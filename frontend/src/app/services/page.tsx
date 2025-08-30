@@ -1,7 +1,7 @@
 'use client'
 
-import Header from '../../components/Header';
-import OurServicesStacked from '../../components/OurServicesStacked';
+import Header from '../../components/common/Header';
+import OurServicesStacked from '../../components/features/OurServicesStacked';
 
 export default function ServicesPage() {
   return (

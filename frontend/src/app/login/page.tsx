@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { AuthLoadingModal } from "../../components/LoadingModal";
+import { AuthLoadingModal } from "../../components/common/LoadingModal";
 
 export default function LoginPage() {
   const firstRef = useRef<HTMLInputElement>(null);

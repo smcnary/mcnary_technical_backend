@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { RegistrationLoadingModal } from "../../components/LoadingModal";
+import { RegistrationLoadingModal } from "../../components/common/LoadingModal";
 
 const pwScore = (v: string) => {
   let s = 0;

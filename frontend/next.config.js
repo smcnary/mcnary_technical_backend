@@ -7,6 +7,12 @@ const nextConfig = {
     unoptimized: true,
     domains: [],
   },
+  // Exclude API routes from static export
+  experimental: {
+    appDir: true,
+  },
+  // Exclude API routes from build
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   // Remove rewrites for static export
   // async rewrites() {
   //   return [
