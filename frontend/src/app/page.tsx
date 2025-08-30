@@ -1,9 +1,9 @@
 'use client'
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
 import Link from 'next/link';
-import HeroTulsaSEO from '../components/HeroTulsaSEO';
+import HeroTulsaSEO from '../components/features/HeroTulsaSEO';
 
 export default function HomePage() {
   return (
