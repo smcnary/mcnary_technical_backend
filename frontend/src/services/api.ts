@@ -39,6 +39,8 @@ export interface Faq {
   id: string;
   question: string;
   answer: string;
+  category?: string;
+  sortOrder?: number;
   isActive: boolean;
   sort: number;
   createdAt: string;
@@ -47,11 +49,17 @@ export interface Faq {
 
 export interface User {
   id: string;
-  username: string;
+  username?: string;
   email: string;
-  displayName: string;
+  displayName?: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   roles: string[];
   clientId?: string;
+  tenantId?: string;
+  status?: string;
+  lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,13 +67,30 @@ export interface User {
 export interface Client {
   id: string;
   name: string;
-  email: string;
+  slug?: string;
+  description?: string;
+  website?: string;
   phone?: string;
   address?: string;
   city?: string;
   state?: string;
   zipCode?: string;
-  website?: string;
+  status?: string;
+  tenantId?: string;
+  metadata?: Record<string, unknown>;
+  googleBusinessProfile?: {
+    profileId?: string;
+    rating?: number;
+    reviewsCount?: number;
+  };
+  googleSearchConsole?: {
+    property?: string;
+    verificationStatus?: string;
+  };
+  googleAnalytics?: {
+    propertyId?: string;
+    trackingId?: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -86,7 +111,55 @@ export interface Campaign {
   updatedAt: string;
 }
 
+export interface Package {
+  id: string;
+  name: string;
+  description?: string;
+  price?: number;
+  billingCycle?: string;
+  features?: string[];
+  isPopular?: boolean;
+  sortOrder?: number;
+  clientId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Page {
+  id: string;
+  title: string;
+  slug: string;
+  content?: string;
+  type?: string;
+  status?: string;
+  sortOrder?: number;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MediaAsset {
+  id: string;
+  filename: string;
+  originalName: string;
+  mimeType: string;
+  fileSize: number;
+  type?: string;
+  status?: string;
+  clientId?: string;
+  url?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ApiResponse<T> {
+  data?: T[];
+  pagination?: {
+    page: number;
+    per_page: number;
+    total: number;
+    pages: number;
+  };
   '@context'?: string;
   '@id'?: string;
   '@type'?: string;
@@ -94,6 +167,17 @@ export interface ApiResponse<T> {
   'hydra:member'?: T[];
   totalItems?: number;
   member?: T[];
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
+}
+
+export interface ApiError {
+  error: string;
+  details?: Record<string, string>;
+  message?: string;
 }
 
 // API service class
@@ -123,6 +207,11 @@ export class ApiService {
     }
   }
 
+  // Get current auth token
+  getAuthToken(): string | null {
+    return this.authToken;
+  }
+
   // Generic fetch method with error handling
   private async fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
@@ -150,17 +239,17 @@ export class ApiService {
       }
       
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(errorData.error || errorData.message || errorData.detail || `HTTP error! status: ${response.status}`);
     }
 
     return response.json();
   }
 
   // Authentication
-  async login(username: string, password: string): Promise<{ token: string; user: User }> {
-    const response = await this.fetchApi<{ token: string; user: User }>('/api/auth/login', {
+  async login(email: string, password: string): Promise<LoginResponse> {
+    const response = await this.fetchApi<LoginResponse>('/api/v1/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     });
     
     if (response.token) {
@@ -168,6 +257,27 @@ export class ApiService {
     }
     
     return response;
+  }
+
+  async logout(): Promise<{ message: string }> {
+    try {
+      const response = await this.fetchApi<{ message: string }>('/api/v1/auth/logout', {
+        method: 'POST',
+      });
+      this.clearAuthToken();
+      return response;
+    } catch (error) {
+      // Even if logout fails, clear local token
+      this.clearAuthToken();
+      throw error;
+    }
+  }
+
+  async refreshToken(token: string): Promise<{ token: string }> {
+    return this.fetchApi<{ token: string }>('/api/v1/auth/refresh', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
   }
 
   async getCurrentUser(): Promise<User> {
@@ -225,18 +335,59 @@ export class ApiService {
   }
 
   // Pages
-  async getPage(slug: string): Promise<Record<string, unknown>> {
-    return this.fetchApi<Record<string, unknown>>(`/api/v1/pages?slug=${slug}`);
+  async getPages(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Page>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/pages?${queryString}` : '/api/v1/pages';
+      return this.fetchApi<ApiResponse<Page>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<Page>>('/api/v1/pages');
+  }
+
+  async getPage(slug: string): Promise<Page> {
+    const response = await this.fetchApi<ApiResponse<Page>>(`/api/v1/pages?slug=${slug}`);
+    return response.data?.[0] || response['hydra:member']?.[0] || response.member?.[0];
+  }
+
+  async getPageById(id: string): Promise<Page> {
+    return this.fetchApi<Page>(`/api/v1/pages/${id}`);
   }
 
   // Media Assets
-  async getMediaAsset(id: string): Promise<Record<string, unknown>> {
-    return this.fetchApi<Record<string, unknown>>(`/api/v1/media-assets/${id}`);
+  async getMediaAssets(params?: Record<string, string | number | boolean>): Promise<ApiResponse<MediaAsset>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/media-assets?${queryString}` : '/api/v1/media-assets';
+      return this.fetchApi<ApiResponse<MediaAsset>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<MediaAsset>>('/api/v1/media-assets');
+  }
+
+  async getMediaAsset(id: string): Promise<MediaAsset> {
+    return this.fetchApi<MediaAsset>(`/api/v1/media-assets/${id}`);
   }
 
   // Packages
-  async getPackages(): Promise<ApiResponse<Record<string, unknown>>> {
-    return this.fetchApi<ApiResponse<Record<string, unknown>>>('/api/v1/packages');
+  async getPackages(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Package>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/packages?${queryString}` : '/api/v1/packages';
+      return this.fetchApi<ApiResponse<Package>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<Package>>('/api/v1/packages');
+  }
+
+  async getPackage(id: string): Promise<Package> {
+    return this.fetchApi<Package>(`/api/v1/packages/${id}`);
   }
 
   // Campaigns
@@ -259,6 +410,13 @@ export class ApiService {
     });
   }
 
+  async updateCampaign(id: string, campaignData: Partial<Campaign>): Promise<Campaign> {
+    return this.fetchApi<Campaign>(`/api/v1/campaigns/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(campaignData),
+    });
+  }
+
   // Users (Admin only)
   async getUsers(params?: Record<string, string | number | boolean>): Promise<ApiResponse<User>> {
     if (params) {
@@ -270,6 +428,20 @@ export class ApiService {
       return this.fetchApi<ApiResponse<User>>(endpoint);
     }
     return this.fetchApi<ApiResponse<User>>('/api/v1/users');
+  }
+
+  async createUser(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
+    return this.fetchApi<User>('/api/v1/users', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  }
+
+  async updateUser(id: string, userData: Partial<User>): Promise<User> {
+    return this.fetchApi<User>(`/api/v1/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(userData),
+    });
   }
 
   // Clients
@@ -285,6 +457,24 @@ export class ApiService {
     return this.fetchApi<ApiResponse<Client>>('/api/v1/clients');
   }
 
+  async getClient(id: string): Promise<Client> {
+    return this.fetchApi<Client>(`/api/v1/clients/${id}`);
+  }
+
+  async createClient(clientData: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<Client> {
+    return this.fetchApi<Client>('/api/v1/clients', {
+      method: 'POST',
+      body: JSON.stringify(clientData),
+    });
+  }
+
+  async updateClient(id: string, clientData: Partial<Client>): Promise<Client> {
+    return this.fetchApi<Client>(`/api/v1/clients/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(clientData),
+    });
+  }
+
   // Get API entry point to discover available endpoints
   async getApiInfo(): Promise<Record<string, unknown>> {
     return this.fetchApi<Record<string, unknown>>('/api');
@@ -297,6 +487,24 @@ export class ApiService {
       return { status: 'healthy' };
     } catch (error) {
       return { status: 'unhealthy' };
+    }
+  }
+
+  // Check if user is authenticated
+  isAuthenticated(): boolean {
+    return !!this.authToken;
+  }
+
+  // Get user role from token (basic implementation)
+  getUserRole(): string | null {
+    if (!this.authToken) return null;
+    
+    try {
+      // Basic JWT payload extraction (for client-side use only)
+      const payload = JSON.parse(atob(this.authToken.split('.')[1]));
+      return payload.roles?.[0] || null;
+    } catch (error) {
+      return null;
     }
   }
 }
