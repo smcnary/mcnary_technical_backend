@@ -1,8 +1,13 @@
 "use client";
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { apiService, AuditSubmission } from '@/services/api';
 
 export default function AuditWizardPage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -32,6 +37,45 @@ export default function AuditWizardPage() {
 
   const next = () => setCurrentStep(Math.min(currentStep + 1, steps.length - 1));
   const back = () => setCurrentStep(Math.max(currentStep - 1, 0));
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
+    try {
+      const submission: AuditSubmission = {
+        account: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        },
+        audit: {
+          companyName: formData.companyName,
+          website: formData.website,
+          industry: formData.industry,
+          goals: formData.goals,
+          competitors: formData.competitors,
+          monthlyBudget: formData.monthlyBudget,
+          tier: formData.tier,
+          notes: formData.notes,
+        },
+      };
+
+      const result = await apiService.submitAuditWizard(submission);
+      
+      // Store the authentication token
+      apiService.setAuthToken(result.token);
+      
+      // Redirect to dashboard
+      router.push('/client');
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitError(error instanceof Error ? error.message : 'Failed to submit audit. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {
@@ -289,14 +333,22 @@ export default function AuditWizardPage() {
               </button>
             ) : (
               <button 
-                className="rounded-xl bg-emerald-600 px-6 py-2.5 font-medium shadow-lg shadow-emerald-600/20 hover:bg-emerald-500"
-                onClick={() => alert('Audit submitted! This is a demo version.')}
+                className="rounded-xl bg-emerald-600 px-6 py-2.5 font-medium shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
               >
-                Submit
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             )}
           </div>
         </div>
+
+        {/* Error message */}
+        {submitError && (
+          <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            {submitError}
+          </div>
+        )}
       </div>
     </div>
   );

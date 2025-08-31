@@ -2,6 +2,48 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
 // TypeScript interfaces matching your backend entities
+export interface AuditIntake {
+  id?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  websiteUrl: string;
+  subdomains?: string[];
+  stagingUrl?: string;
+  cms: string;
+  cmsVersion?: string;
+  hostingProvider?: string;
+  techStack?: Record<string, unknown>;
+  hasGoogleAnalytics: boolean;
+  hasSearchConsole: boolean;
+  hasGoogleBusinessProfile: boolean;
+  hasTagManager: boolean;
+  gaPropertyId?: string;
+  gscProperty?: string;
+  gbpLocationIds?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AuditSubmission {
+  account: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  };
+  audit: {
+    companyName: string;
+    website: string;
+    industry: string;
+    goals: string[];
+    competitors: string;
+    monthlyBudget: string;
+    tier: string;
+    notes: string;
+  };
+}
+
 export interface Lead {
   id: string;
   name: string;
@@ -493,6 +535,75 @@ export class ApiService {
     } catch (error) {
       return { status: 'unhealthy' };
     }
+  }
+
+  // Audit Intake methods
+  async createAuditIntake(auditData: Omit<AuditIntake, 'id' | 'createdAt' | 'updatedAt'>): Promise<AuditIntake> {
+    const response = await this.fetchApi<AuditIntake>('/api/v1/audits/intakes', {
+      method: 'POST',
+      body: JSON.stringify(auditData),
+    });
+    return response;
+  }
+
+  async getAuditIntake(id: string): Promise<AuditIntake> {
+    const response = await this.fetchApi<AuditIntake>(`/api/v1/audits/intakes/${id}`);
+    return response;
+  }
+
+  async updateAuditIntake(id: string, auditData: Partial<AuditIntake>): Promise<AuditIntake> {
+    const response = await this.fetchApi<AuditIntake>(`/api/v1/audits/intakes/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/merge-patch+json' },
+      body: JSON.stringify(auditData),
+    });
+    return response;
+  }
+
+  async submitAuditWizard(submission: AuditSubmission): Promise<{ auditIntake: AuditIntake; user: User; token: string }> {
+    // First, try to register the user using the client registration endpoint
+    const userResponse = await this.fetchApi<LoginResponse>('/api/v1/clients/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        organization_name: submission.audit.companyName,
+        organization_domain: submission.audit.website,
+        client_name: submission.audit.companyName,
+        client_website: submission.audit.website,
+        admin_email: submission.account.email,
+        admin_password: submission.account.password,
+        admin_first_name: submission.account.firstName,
+        admin_last_name: submission.account.lastName,
+      }),
+    });
+
+    // Then create the audit intake
+    const auditIntakeData: Omit<AuditIntake, 'id' | 'createdAt' | 'updatedAt'> = {
+      contactName: `${submission.account.firstName} ${submission.account.lastName}`,
+      contactEmail: submission.account.email,
+      websiteUrl: submission.audit.website,
+      cms: 'custom', // Default value
+      techStack: {
+        industry: submission.audit.industry,
+        goals: submission.audit.goals,
+        competitors: submission.audit.competitors,
+        budget: submission.audit.monthlyBudget,
+        tier: submission.audit.tier,
+        notes: submission.audit.notes,
+        companyName: submission.audit.companyName,
+      },
+      hasGoogleAnalytics: false,
+      hasSearchConsole: false,
+      hasGoogleBusinessProfile: false,
+      hasTagManager: false,
+    };
+
+    const auditIntake = await this.createAuditIntake(auditIntakeData);
+
+    return {
+      auditIntake,
+      user: userResponse.user,
+      token: userResponse.token,
+    };
   }
 
   // Check if user is authenticated
