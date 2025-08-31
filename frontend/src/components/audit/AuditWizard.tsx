@@ -47,6 +47,9 @@ type AuditState = {
   account: Account;
   form: AuditForm;
 
+  // Validation
+  validationErrors: ValidationErrors;
+
   // Actions
   setStep: (n: number) => void;
   next: () => void;
@@ -57,10 +60,32 @@ type AuditState = {
   markSaved: (auditId?: string) => void;
   setSaving: (flag: boolean) => void;
   setError: (msg: string | null) => void;
+  setValidationErrors: (errors: ValidationErrors) => void;
+  clearValidationErrors: () => void;
+  validateCurrentStep: () => boolean;
   reset: () => void;
 };
 
-const defaultState: Pick<AuditState, "account" | "form"> = {
+type ValidationErrors = {
+  account: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    password?: string;
+  };
+  form: {
+    companyName?: string;
+    website?: string;
+    industry?: string;
+    goals?: string;
+    competitors?: string;
+    monthlyBudget?: string;
+    tier?: string;
+    notes?: string;
+  };
+};
+
+const defaultState: Pick<AuditState, "account" | "form" | "validationErrors"> = {
   account: { email: "", password: "", firstName: "", lastName: "" },
   form: {
     companyName: "",
@@ -72,6 +97,7 @@ const defaultState: Pick<AuditState, "account" | "form"> = {
     tier: "",
     notes: "",
   },
+  validationErrors: { account: {}, form: {} },
 };
 
 const STORAGE_KEY = "tulsa-seo.audit-wizard.v1";
@@ -100,6 +126,16 @@ const useAuditStore = create<AuditState>((set, get) => ({
   markSaved: (id?: string) => set({ isSaving: false, saveError: null, lastSavedAt: Date.now(), auditId: id ?? get().auditId }),
   setSaving: (flag: boolean) => set({ isSaving: flag }),
   setError: (msg: string | null) => set({ saveError: msg, isSaving: false }),
+  setValidationErrors: (errors: ValidationErrors) => set({ validationErrors: errors }),
+  clearValidationErrors: () => set({ validationErrors: { account: {}, form: {} } }),
+  validateCurrentStep: () => {
+    const errors = validateStep(get().currentStep, get().account, get().form);
+    set({ validationErrors: errors });
+    // Check if there are any validation errors
+    const hasErrors = Object.values(errors.account).some(error => error) || 
+                     Object.values(errors.form).some(error => error);
+    return !hasErrors;
+  },
   reset: () => set({
     auditId: null,
     isSaving: false,
@@ -349,21 +385,59 @@ const steps = [
 type StepKey = typeof steps[number]["key"];
 
 function AccountStep() {
-  const { account, updateAccount } = useAuditStore();
+  const { account, updateAccount, validationErrors } = useAuditStore();
   return (
     <Card title="Create your account">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Field label="First name">
-          <input className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" value={account.firstName} onChange={(e) => updateAccount({ firstName: e.target.value })} />
+          <input 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+              validationErrors.account.firstName ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            value={account.firstName} 
+            onChange={(e) => updateAccount({ firstName: e.target.value })} 
+          />
+          {validationErrors.account.firstName && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.firstName}</p>
+          )}
         </Field>
         <Field label="Last name">
-          <input className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" value={account.lastName} onChange={(e) => updateAccount({ lastName: e.target.value })} />
+          <input 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+              validationErrors.account.lastName ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            value={account.lastName} 
+            onChange={(e) => updateAccount({ lastName: e.target.value })} 
+          />
+          {validationErrors.account.lastName && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.lastName}</p>
+          )}
         </Field>
         <Field label="Email">
-          <input type="email" className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={account.email} onChange={(e) => updateAccount({ email: e.target.value })} />
+          <input 
+            type="email" 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
+              validationErrors.account.email ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            value={account.email} 
+            onChange={(e) => updateAccount({ email: e.target.value })} 
+          />
+          {validationErrors.account.email && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.email}</p>
+          )}
         </Field>
         <Field label="Password">
-          <input type="password" className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={account.password} onChange={(e) => updateAccount({ password: e.target.value })} />
+          <input 
+            type="password" 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
+              validationErrors.account.password ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            value={account.password} 
+            onChange={(e) => updateAccount({ password: e.target.value })} 
+          />
+          {validationErrors.account.password && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.password}</p>
+          )}
         </Field>
       </div>
       <p className="mt-3 text-sm text-white/60">We&apos;ll create your portal login and connect this audit to your account.</p>
@@ -372,18 +446,46 @@ function AccountStep() {
 }
 
 function BusinessStep() {
-  const { form, updateForm } = useAuditStore();
+  const { form, updateForm, validationErrors } = useAuditStore();
   return (
     <Card title="Tell us about your business">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Field label="Company name">
-          <input className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={form.companyName} onChange={(e) => updateForm({ companyName: e.target.value })} />
+          <input 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
+              validationErrors.form.companyName ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            value={form.companyName} 
+            onChange={(e) => updateForm({ companyName: e.target.value })} 
+          />
+          {validationErrors.form.companyName && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.form.companyName}</p>
+          )}
         </Field>
         <Field label="Website URL">
-          <input className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" placeholder="https://" value={form.website} onChange={(e) => updateForm({ website: e.target.value })} />
+          <input 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
+              validationErrors.form.website ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            placeholder="https://" 
+            value={form.website} 
+            onChange={(e) => updateForm({ website: e.target.value })} 
+          />
+          {validationErrors.form.website && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.form.website}</p>
+          )}
         </Field>
         <Field label="Industry/Niche">
-          <input className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={form.industry} onChange={(e) => updateForm({ industry: e.target.value })} />
+          <input 
+            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
+              validationErrors.form.industry ? 'border-rose-500' : 'border-white/10'
+            }`} 
+            value={form.industry} 
+            onChange={(e) => updateForm({ industry: e.target.value })} 
+          />
+          {validationErrors.form.industry && (
+            <p className="text-xs text-rose-200 mt-1">{validationErrors.form.industry}</p>
+          )}
         </Field>
         <Field label="Approx. monthly budget (optional)">
           <input className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={form.monthlyBudget} onChange={(e) => updateForm({ monthlyBudget: e.target.value })} />
@@ -399,7 +501,7 @@ function BusinessStep() {
 }
 
 function GoalsStep() {
-  const { form, updateForm } = useAuditStore();
+  const { form, updateForm, validationErrors } = useAuditStore();
   const options = ["More calls/leads", "Rank locally", "E‑commerce sales", "Reputation/Reviews", "Content strategy", "Technical SEO"];
   const toggle = (g: string) => {
     const next = form.goals.includes(g) ? form.goals.filter((x: string) => x !== g) : [...form.goals, g];
@@ -416,6 +518,9 @@ function GoalsStep() {
           </button>
         ))}
       </div>
+      {validationErrors.form.goals && (
+        <p className="text-xs text-rose-200 mt-2">{validationErrors.form.goals}</p>
+      )}
       <div className="mt-4">
         <Field label="Notes (anything else we should know?)">
           <textarea rows={4} className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={form.notes} onChange={(e) => updateForm({ notes: e.target.value })} />
@@ -426,7 +531,7 @@ function GoalsStep() {
 }
 
 function PlanStep() {
-  const { form, setTier } = useAuditStore();
+  const { form, setTier, validationErrors } = useAuditStore();
   const [mode, setMode] = useState<"audit" | "subscription">("audit");
   
   const auditTiers: { key: AuditTier; price: string; features: string[] }[] = [
@@ -481,6 +586,9 @@ function PlanStep() {
           </Card>
         ))}
       </div>
+      {validationErrors.form.tier && (
+        <p className="text-xs text-rose-200 mt-2 text-center">{validationErrors.form.tier}</p>
+      )}
     </div>
   );
 }
@@ -567,7 +675,7 @@ const StepBody = ({ stepKey }: { stepKey: StepKey }) => {
 // -----------------------------
 
 export default function AuditWizard() {
-  const { currentStep, setStep, next, back, setSaving, markSaved, setError } = useAuditStore();
+  const { currentStep, setStep, next, back, setSaving, markSaved, setError, validateCurrentStep, clearValidationErrors } = useAuditStore();
   const state = useAuditStore();
   const { isAuthenticated } = useAuthStore();
 
@@ -604,6 +712,22 @@ export default function AuditWizard() {
       }
     }
   }, []);
+
+  // Handle next step with validation
+  const handleNext = () => {
+    if (validateCurrentStep()) {
+      clearValidationErrors();
+      next();
+    }
+  };
+
+  // Handle step navigation with validation
+  const handleStepClick = (stepIndex: number) => {
+    if (stepIndex <= state.maxStepVisited) {
+      clearValidationErrors();
+      setStep(stepIndex);
+    }
+  };
 
   // Autosave (sync to backend) — debounced on any change
   const payload = useMemo(() => ({
@@ -683,7 +807,7 @@ export default function AuditWizard() {
               index={i}
               active={i === currentStep}
               done={i < currentStep}
-              onClick={() => setStep(Math.min(i, state.maxStepVisited))}
+              onClick={() => handleStepClick(i)}
             >
               {s.label}
             </Crumb>
@@ -700,7 +824,7 @@ export default function AuditWizard() {
           <button onClick={back} disabled={currentStep === 0} className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-white/90 disabled:opacity-40">Back</button>
           <div className="flex items-center gap-3">
             {currentStep < steps.length - 1 ? (
-              <button onClick={next} className="rounded-xl bg-indigo-600 px-6 py-2.5 font-medium shadow-lg shadow-indigo-600/20 hover:bg-indigo-500">Continue</button>
+              <button onClick={handleNext} className="rounded-xl bg-indigo-600 px-6 py-2.5 font-medium shadow-lg shadow-indigo-600/20 hover:bg-indigo-500">Continue</button>
             ) : (
               <button className="rounded-xl bg-emerald-600 px-6 py-2.5 font-medium shadow-lg shadow-emerald-600/20 hover:bg-emerald-500">Submit</button>
             )}
@@ -713,3 +837,72 @@ export default function AuditWizard() {
     </div>
   );
 }
+
+// -----------------------------
+// Validation Functions
+// -----------------------------
+
+const validateEmail = (email: string): string | null => {
+  if (!email) return "Email is required";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return "Please enter a valid email address";
+  return null;
+};
+
+const validatePassword = (password: string): string | null => {
+  if (!password) return "Password is required";
+  if (password.length < 8) return "Password must be at least 8 characters long";
+  if (!/(?=.*[a-z])/.test(password)) return "Password must contain at least one lowercase letter";
+  if (!/(?=.*[A-Z])/.test(password)) return "Password must contain at least one uppercase letter";
+  if (!/(?=.*\d)/.test(password)) return "Password must contain at least one number";
+  return null;
+};
+
+const validateUrl = (url: string): string | null => {
+  if (!url) return "Website URL is required";
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
+    if (!urlObj.hostname) return "Please enter a valid website URL";
+  } catch {
+    return "Please enter a valid website URL";
+  }
+  return null;
+};
+
+const validateRequired = (value: string, fieldName: string): string | null => {
+  if (!value || value.trim() === "") return `${fieldName} is required`;
+  return null;
+};
+
+const validateStep = (step: number, account: Account, form: AuditForm): ValidationErrors => {
+  const errors: ValidationErrors = { account: {}, form: {} };
+
+  switch (step) {
+    case 0: // Account step
+      errors.account.firstName = validateRequired(account.firstName, "First name");
+      errors.account.lastName = validateRequired(account.lastName, "Last name");
+      errors.account.email = validateEmail(account.email);
+      errors.account.password = validatePassword(account.password);
+      break;
+    
+    case 1: // Business step
+      errors.form.companyName = validateRequired(form.companyName, "Company name");
+      errors.form.website = validateUrl(form.website);
+      errors.form.industry = validateRequired(form.industry, "Industry/Niche");
+      break;
+    
+    case 2: // Goals step
+      if (form.goals.length === 0) {
+        errors.form.goals = "Please select at least one goal";
+      }
+      break;
+    
+    case 3: // Plan step
+      if (!form.tier) {
+        errors.form.tier = "Please select a tier";
+      }
+      break;
+  }
+
+  return errors;
+};
