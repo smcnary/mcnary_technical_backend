@@ -55,6 +55,7 @@ export interface User {
   name?: string;
   firstName?: string;
   lastName?: string;
+  avatar?: string;
   roles: string[];
   clientId?: string;
   tenantId?: string;
@@ -349,7 +350,11 @@ export class ApiService {
 
   async getPage(slug: string): Promise<Page> {
     const response = await this.fetchApi<ApiResponse<Page>>(`/api/v1/pages?slug=${slug}`);
-    return response.data?.[0] || response['hydra:member']?.[0] || response.member?.[0];
+    const page = response.data?.[0] || response['hydra:member']?.[0] || response.member?.[0];
+    if (!page) {
+      throw new Error(`Page with slug '${slug}' not found`);
+    }
+    return page;
   }
 
   async getPageById(id: string): Promise<Page> {
