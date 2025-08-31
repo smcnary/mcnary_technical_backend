@@ -6,7 +6,7 @@ import { create } from "zustand";
 // Zustand store (autosave + persistence)
 // -----------------------------
 
-type AuditTier = "Starter" | "Growth" | "Pro" | "Enterprise";
+type AuditTier = "Growth" | "Pro" | "Enterprise";
 
 type Account = {
   email: string;
@@ -430,14 +430,12 @@ function PlanStep() {
   const [mode, setMode] = useState<"audit" | "subscription">("audit");
   
   const auditTiers: { key: AuditTier; price: string; features: string[] }[] = [
-    { key: "Starter", price: "$199", features: ["One-time audit report", "10 fixes prioritized", "Quick wins list"] },
     { key: "Growth", price: "$499", features: ["Full audit + roadmap", "Rank-tracking setup", "On-page fixes"] },
     { key: "Pro", price: "$999", features: ["Everything in Growth", "Technical crawl & schema", "Content plan (3 mo)"] },
     { key: "Enterprise", price: "Custom", features: ["Multi-location", "Dedicated strategist", "Custom integrations"] },
   ];
 
   const subscriptionTiers: { key: AuditTier; price: string; features: string[] }[] = [
-    { key: "Starter", price: "$299/mo", features: ["Implement audit fixes", "Basic monthly report", "Rank monitoring"] },
     { key: "Growth", price: "$799/mo", features: ["Content optimization", "Competitor tracking", "Monthly strategy call"] },
     { key: "Pro", price: "$1,499/mo", features: ["Technical monitoring", "Content production", "Bi-weekly strategy calls"] },
     { key: "Enterprise", price: "$3,000+/mo", features: ["Dedicated strategist", "PR + backlink campaigns", "Weekly reporting"] },
@@ -466,7 +464,7 @@ function PlanStep() {
       </div>
 
       {/* Tiers Grid */}
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         {tiers.map((t) => (
           <Card key={t.key} title={t.key} right={form.tier === t.key ? <span className="rounded-full bg-emerald-600/20 px-3 py-1 text-xs text-emerald-200">Selected</span> : null}>
             <div className="mb-2 text-2xl font-semibold">{t.price}<span className="text-sm text-white/60 ml-1">{mode === "audit" && t.key !== "Enterprise" ? "/ audit" : ""}</span></div>
@@ -492,13 +490,11 @@ function ReviewStep() {
   
   const getTierPrice = (tier: string) => {
     const auditPrices: Record<string, string> = {
-      "Starter": "$199",
       "Growth": "$499", 
       "Pro": "$999",
       "Enterprise": "Custom"
     };
     const subscriptionPrices: Record<string, string> = {
-      "Starter": "$299/mo",
       "Growth": "$799/mo",
       "Pro": "$1,499/mo", 
       "Enterprise": "$3,000+/mo"
@@ -582,7 +578,7 @@ export default function AuditWizard() {
       const tier = urlParams.get('tier') as AuditTier;
       const isSubscription = window.location.hash === '#subscribe';
       
-      if (tier && ['Starter', 'Growth', 'Pro', 'Enterprise'].includes(tier)) {
+      if (tier && ['Growth', 'Pro', 'Enterprise'].includes(tier)) {
         useAuditStore.getState().setTier(tier);
       }
       

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 // If you have Next.js, replace <a> with Link from "next/link"
 
-type TierKey = "Starter" | "Growth" | "Pro" | "Enterprise";
+type TierKey = "Growth" | "Pro" | "Enterprise";
 
 const AUDIT_TIERS: Array<{
   key: TierKey;
@@ -12,12 +12,6 @@ const AUDIT_TIERS: Array<{
   blurb: string;
   features: string[];
 }> = [
-  {
-    key: "Starter",
-    price: "$199",
-    blurb: "Quick scan + 10 prioritized fixes.",
-    features: ["On‑page scan", "10 prioritized fixes", "Quick wins checklist"],
-  },
   {
     key: "Growth",
     price: "$499",
@@ -60,12 +54,6 @@ const SUB_TIERS: Array<{
   blurb: string;
   features: string[];
 }> = [
-  {
-    key: "Starter",
-    price: "$299/mo",
-    blurb: "Implement audit fixes + basic reporting.",
-    features: ["1–2 fixes/week", "Basic monthly report", "Rank monitoring"],
-  },
   {
     key: "Growth",
     price: "$799/mo",
@@ -175,7 +163,7 @@ function tierGrid(
 ) {
   const highlightKey: TierKey = "Growth";
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mt-6">
+            <div className="grid gap-4 md:grid-cols-3 mt-6">
       {items.map((t) => (
         <Card
           key={t.key}
@@ -213,15 +201,7 @@ function tierGrid(
 const Comparison = () => (
   <div className="mt-14 rounded-2xl border border-white/10 bg-white/5 p-6">
     <h3 className="text-lg font-semibold text-white mb-4">What continues from Audit → Subscription?</h3>
-    <div className="grid md:grid-cols-3 gap-4 text-sm text-white/80">
-      <div>
-        <div className="font-medium text-white mb-2">Starter → Starter</div>
-        <ul className="space-y-2">
-          <li>Implement quick wins</li>
-          <li>Basic rank tracking</li>
-          <li>Monthly report</li>
-        </ul>
-      </div>
+    <div className="grid md:grid-cols-2 gap-4 text-sm text-white/80">
       <div>
         <div className="font-medium text-white mb-2">Growth → Growth</div>
         <ul className="space-y-2">
