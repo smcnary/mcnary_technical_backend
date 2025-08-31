@@ -41,6 +41,86 @@ class AuthController extends AbstractController
         private LoggerInterface $logger
     ) {}
 
+    #[Route('/register', name: 'api_v1_auth_register', methods: ['POST'])]
+    public function register(Request $request): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            
+            if (!$data) {
+                return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate input
+            $constraints = new Assert\Collection([
+                'email' => [new Assert\NotBlank(), new Assert\Email()],
+                'password' => [new Assert\NotBlank(), new Assert\Length(['min' => 8])],
+                'firstName' => [new Assert\Optional([new Assert\NotBlank()])],
+                'lastName' => [new Assert\Optional([new Assert\NotBlank()])]
+            ]);
+
+            $violations = $this->validator->validate($data, $constraints);
+            if (count($violations) > 0) {
+                $errors = [];
+                foreach ($violations as $violation) {
+                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+                return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
+            }
+
+            $email = $data['email'];
+            $password = $data['password'];
+            $firstName = $data['firstName'] ?? '';
+            $lastName = $data['lastName'] ?? '';
+
+            // Check if user already exists
+            $existingUser = $this->userRepository->findOneBy(['email' => $email]);
+            if ($existingUser) {
+                return $this->json(['error' => 'User with this email already exists'], Response::HTTP_CONFLICT);
+            }
+
+            // Get the default organization
+            $organization = $this->entityManager->getRepository(\App\Entity\Organization::class)->findOneBy([]);
+            if (!$organization) {
+                throw new \RuntimeException('No organization found. Please create an organization first.');
+            }
+
+            // Create user
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                new User($organization, $email, '', User::ROLE_CLIENT_USER),
+                $password
+            );
+
+            $user = new User($organization, $email, $hashedPassword, User::ROLE_CLIENT_USER);
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setStatus('active');
+
+            $this->userRepository->save($user, true);
+
+            // Generate JWT token
+            $token = $this->jwtManager->create($user);
+
+            // Return user data
+            $userData = [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'name' => $user->getName(),
+                'roles' => $user->getRoles(),
+                'status' => $user->getStatus(),
+                'created_at' => $user->getCreatedAt()->format('c')
+            ];
+
+            return $this->json([
+                'token' => $token,
+                'user' => $userData
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     #[Route('/login', name: 'api_v1_auth_login', methods: ['POST'])]
     public function login(Request $request): JsonResponse
     {
