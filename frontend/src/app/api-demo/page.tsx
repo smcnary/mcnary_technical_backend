@@ -21,7 +21,7 @@ import {
   LogIn,
   LogOut
 } from 'lucide-react';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import ProtectedRoute from '../../components/auth/ProtectedRoute';
 import LoginForm from '../../components/auth/LoginForm';
 
 export default function ApiDemoPage() {
