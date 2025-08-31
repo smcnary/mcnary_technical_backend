@@ -29,20 +29,12 @@ export default function SiteNav() {
 
         {/* Desktop links */}
         <div className="hidden items-center gap-6 md:flex">
-          <a href="#how" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">How it works</a>
-          <a href="/pricing" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Pricing</a>
-          <a href="/client" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Client Login</a>
+          <a href="/" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Home</a>
+          <a href="/services/audit" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Get an Audit</a>
+          <a href="/client" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Client Dashboard</a>
         </div>
 
-        {/* CTA */}
-        <div className="hidden md:block">
-          <a
-            href="/services/audit"
-            className="inline-flex items-center gap-2 rounded-xl bg-black px-4 py-2 text-sm font-medium text-white shadow hover:bg-zinc-900 dark:bg-white dark:text-black dark:hover:bg-zinc-100"
-          >
-            Start Free Audit <span aria-hidden>→</span>
-          </a>
-        </div>
+
 
         {/* Mobile toggle */}
         <button
@@ -63,10 +55,10 @@ export default function SiteNav() {
       {mobileOpen && (
         <div className="border-t border-black/10 bg-white/95 px-4 py-4 backdrop-blur dark:border-white/10 dark:bg-black/80 md:hidden">
           <div className="flex flex-col gap-3">
-            <a href="#how" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">How it works</a>
-            <a href="/pricing" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">Pricing</a>
-            <a href="/client" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">Client Login</a>
-            <a href="/services/audit" className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl bg-black px-4 py-2 text-sm font-medium text-white hover:bg-zinc-900 dark:bg-white dark:text-black dark:hover:bg-zinc-100">Start Free Audit →</a>
+            <a href="/" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">Home</a>
+            <a href="/services/audit" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-black/5">Get an Audit</a>
+            <a href="/client" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">Client Dashboard</a>
+
           </div>
         </div>
       )}
