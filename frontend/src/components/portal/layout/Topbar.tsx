@@ -108,7 +108,7 @@ export default function Topbar() {
               Reports
             </Link>
             <Link 
-              href="/services/audit" 
+              href="/audit-wizard" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <ClipboardCheck className="w-4 h-4" />
@@ -276,7 +276,7 @@ export default function Topbar() {
               Reports
             </Link>
             <Link 
-              href="/services/audit" 
+              href="/audit-wizard" 
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
               onClick={() => setMobileMenuOpen(false)}
             >
