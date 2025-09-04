@@ -409,6 +409,9 @@ type StepKey = typeof steps[number]["key"];
 
 function AccountStep() {
   const { account, updateAccount, validationErrors } = useAuditStore();
+  const { isAuthenticated } = useAuthStore();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isMicrosoftLoading, setIsMicrosoftLoading] = useState(false);
   return (
     <Card title="Create your account">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -457,13 +460,62 @@ function AccountStep() {
             }`} 
             value={account.password} 
             onChange={(e) => updateAccount({ password: e.target.value })} 
+            disabled={isAuthenticated}
           />
+          {isAuthenticated && (
+            <p className="text-xs text-white/60 mt-1">Authenticated via SSO — password entry disabled.</p>
+          )}
           {validationErrors.account.password && (
             <p className="text-xs text-rose-200 mt-1">{validationErrors.account.password}</p>
           )}
         </Field>
       </div>
       <p className="mt-3 text-sm text-white/60">We&apos;ll create your portal login and connect this audit to your account.</p>
+      {/* SSO Providers */}
+      <div className="mt-6 grid gap-3 md:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              setIsGoogleLoading(true);
+              window.location.href = GOOGLE_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
+            }
+          }}
+          disabled={isGoogleLoading || isAuthenticated}
+          className={`inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 px-4 py-3 text-white transition ${
+            isGoogleLoading || isAuthenticated ? 'opacity-60 cursor-not-allowed bg-white/10' : 'bg-white/5 hover:bg-white/10'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5" aria-hidden>
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303C33.813,31.345,29.277,34,24,34c-6.627,0-12-5.373-12-12 s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C33.64,4.224,28.991,2,24,2C12.955,2,4,10.955,4,22 s8.955,20,20,20c11.045,0,20-8.955,20-20C44,21.329,43.861,20.691,43.611,20.083z"/>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.818C14.655,16.108,18.961,14,24,14c3.059,0,5.842,1.154,7.961,3.039 l5.657-5.657C33.64,4.224,28.991,2,24,2C16.318,2,9.656,6.337,6.306,14.691z"/>
+            <path fill="#4CAF50" d="M24,42c5.166,0,9.86-1.977,13.409-5.197l-6.2-5.238C29.109,33.488,26.715,34,24,34 c-5.248,0-9.799-3.223-11.571-7.773l-6.56,5.049C7.201,37.556,15.017,42,24,42z"/>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-1.074,3.073-3.272,5.487-6.094,6.962 c0.002-0.001,0.003-0.001,0.005-0.002l6.2,5.238C34.955,40.338,44,34,44,22C44,21.329,43.861,20.691,43.611,20.083z"/>
+          </svg>
+          <span className="font-medium">{isGoogleLoading ? 'Redirecting…' : 'Continue with Google'}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              setIsMicrosoftLoading(true);
+              window.location.href = MICROSOFT_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
+            }
+          }}
+          disabled={isMicrosoftLoading || isAuthenticated}
+          className={`inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 px-4 py-3 text-white transition ${
+            isMicrosoftLoading || isAuthenticated ? 'opacity-60 cursor-not-allowed bg-white/10' : 'bg-white/5 hover:bg-white/10'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" className="h-5 w-5" aria-hidden>
+            <rect width="10" height="10" x="1" y="1" fill="#F35325"/>
+            <rect width="10" height="10" x="12" y="1" fill="#81BC06"/>
+            <rect width="10" height="10" x="1" y="12" fill="#05A6F0"/>
+            <rect width="10" height="10" x="12" y="12" fill="#FFBA08"/>
+          </svg>
+          <span className="font-medium">{isMicrosoftLoading ? 'Redirecting…' : 'Continue with Microsoft'}</span>
+        </button>
+      </div>
     </Card>
   );
 }
@@ -739,6 +791,7 @@ export default function AuditWizard() {
   const state = useAuditStore();
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
+  const [ssoError, setSsoError] = useState<string | null>(null);
 
   // Handle URL parameters for pre-selecting tier
   useEffect(() => {
@@ -781,8 +834,13 @@ export default function AuditWizard() {
         const email = url.searchParams.get('email');
         const firstName = url.searchParams.get('firstName');
         const lastName = url.searchParams.get('lastName');
+        const oauthError = url.searchParams.get('error') || url.searchParams.get('message') || url.searchParams.get('error_description');
 
-        if (token) {
+        if (oauthError) {
+          setSsoError(oauthError);
+          const cleanUrl = `${url.origin}${url.pathname}`;
+          window.history.replaceState({}, '', cleanUrl);
+        } else if (token) {
           useAuthStore.setState({ token, userId: null, isAuthenticated: true });
           localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token, userId: null, isAuthenticated: true }));
 
@@ -953,6 +1011,19 @@ export default function AuditWizard() {
             );
           })}
         </div>
+
+        {/* Toast: SSO error */}
+        {ssoError ? (
+          <div className="mb-4 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-rose-100 flex items-start justify-between">
+            <div className="pr-3">
+              <div className="font-medium">Single Sign-On failed</div>
+              <div className="text-sm opacity-90">{ssoError}</div>
+            </div>
+            <button onClick={() => setSsoError(null)} className="rounded-lg border border-rose-500/30 px-2 py-1 text-xs hover:bg-rose-500/20">
+              Dismiss
+            </button>
+          </div>
+        ) : null}
 
         {/* Step content */}
         <div className="mb-8">
