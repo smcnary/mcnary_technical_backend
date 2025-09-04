@@ -28,7 +28,7 @@ export default function TulsaSEOHero() {
             <span className="text-indigo-300">Scale with a Plan.</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-white/80 max-w-3xl mb-8 leading-relaxed">
+          <p className="text-lg md:text-xl text-white/90 max-w-3xl mb-8 leading-relaxed">
             Fill in your details, pick a tier, and watch your rankings improve with an AI‑assisted roadmap that
             auto‑saves as you go.
           </p>
@@ -36,15 +36,15 @@ export default function TulsaSEOHero() {
           {/* Wizard preview breadcrumb */}
           <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-5">
             {["Create Account","Business Details","Goals","Pick Tier","Review"].map((label, i) => (
-              <div key={label} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 hover:bg-white/10 transition-colors duration-200">
+              <div key={label} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 hover:bg-white/10 transition-colors duration-200">
                 <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-all duration-200 ${
                   i === 0 
                     ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25" 
-                    : "bg-white/10 text-white/80"
+                    : "bg-white/10 text-white/90"
                 }`}>
                   {i+1}
                 </span>
-                <span className="truncate font-medium">{label}</span>
+                <span className="truncate font-medium text-white">{label}</span>
               </div>
             ))}
           </div>
@@ -66,7 +66,7 @@ export default function TulsaSEOHero() {
             </a>
             
             <div className="sm:ml-4">
-              <label className="block text-sm text-white/70 mb-2 font-medium">Choose tier</label>
+              <label className="block text-sm text-white/90 mb-2 font-medium">Choose tier</label>
               <div className="relative">
                 <select
                   value={tier}
@@ -88,15 +88,15 @@ export default function TulsaSEOHero() {
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:bg-white/10 transition-all duration-200 hover:border-white/20">
               <div className="text-3xl font-bold text-white mb-2">+38%</div>
-              <div className="text-sm text-white/70 leading-relaxed">Avg. 90‑day organic uplift</div>
+              <div className="text-sm text-white/90 leading-relaxed">Avg. 90‑day organic uplift</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:bg-white/10 transition-all duration-200 hover:border-white/20">
               <div className="text-3xl font-bold text-white mb-2">500+</div>
-              <div className="text-sm text-white/70 leading-relaxed">Issues detected & prioritized</div>
+              <div className="text-sm text-white/90 leading-relaxed">Issues detected & prioritized</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:bg-white/10 transition-all duration-200 hover:border-white/20">
               <div className="text-3xl font-bold text-white mb-2">Autosave</div>
-              <div className="text-sm text-white/70 leading-relaxed">Progress kept while you explore</div>
+              <div className="text-sm text-white/90 leading-relaxed">Progress kept while you explore</div>
             </div>
           </div>
         </div>

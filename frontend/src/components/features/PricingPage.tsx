@@ -93,7 +93,7 @@ const SUB_TIERS: Array<{
 const Section = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <div className="text-center">
     <h2 className="text-2xl md:text-3xl font-semibold text-white">{title}</h2>
-    {subtitle && <p className="mt-2 text-white/70 max-w-2xl mx-auto">{subtitle}</p>}
+    {subtitle && <p className="mt-2 text-white/90 max-w-2xl mx-auto">{subtitle}</p>}
   </div>
 );
 
@@ -127,9 +127,9 @@ const Card = ({
     <div className="mb-3">
       <div className="text-lg font-semibold text-white">{title}</div>
       <div className="text-3xl font-bold text-white mt-1">{price}</div>
-      <p className="text-white/70 mt-1">{blurb}</p>
+      <p className="text-white/90 mt-1">{blurb}</p>
     </div>
-    <ul className="text-sm text-white/80 space-y-2 mb-6">
+    <ul className="text-sm text-white/90 space-y-2 mb-6">
       {children}
     </ul>
     {cta}
@@ -143,13 +143,13 @@ const Feature = ({ children }: { children: React.ReactNode }) => (
 const Toggle = ({ mode, setMode }: { mode: "audit" | "subscription"; setMode: (m: "audit" | "subscription") => void }) => (
   <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 text-sm">
     <button
-      className={`rounded-lg px-4 py-2 ${mode === "audit" ? "bg-indigo-600 text-white" : "text-white/80"}`}
+      className={`rounded-lg px-4 py-2 ${mode === "audit" ? "bg-indigo-600 text-white" : "text-white/90"}`}
       onClick={() => setMode("audit")}
     >
       Audit Pricing
     </button>
     <button
-      className={`rounded-lg px-4 py-2 ${mode === "subscription" ? "bg-indigo-600 text-white" : "text-white/80"}`}
+      className={`rounded-lg px-4 py-2 ${mode === "subscription" ? "bg-indigo-600 text-white" : "text-white/90"}`}
       onClick={() => setMode("subscription")}
     >
       Subscription Plans
@@ -201,7 +201,7 @@ function tierGrid(
 const Comparison = () => (
   <div className="mt-14 rounded-2xl border border-white/10 bg-white/5 p-6">
     <h3 className="text-lg font-semibold text-white mb-4">What continues from Audit → Subscription?</h3>
-    <div className="grid md:grid-cols-2 gap-4 text-sm text-white/80">
+    <div className="grid md:grid-cols-2 gap-4 text-sm text-white/90">
       <div>
         <div className="font-medium text-white mb-2">Growth → Growth</div>
         <ul className="space-y-2">
@@ -223,7 +223,7 @@ const Comparison = () => (
 );
 
 const FAQ = () => (
-  <div className="mt-14 grid md:grid-cols-2 gap-6 text-white/80">
+  <div className="mt-14 grid md:grid-cols-2 gap-6 text-white/90">
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
       <div className="font-medium text-white mb-1">Can I apply my audit fee to a subscription?</div>
       <p>Yes—subscribe within 14 days and your audit fee becomes a credit on month one.</p>
@@ -257,8 +257,8 @@ export default function PricingPage() {
         {/* Hero */}
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold">Pricing</h1>
-            <p className="text-white/70">Audit first. Then subscribe to scale. Built to pair with your Audit Wizard flow.</p>
+            <h1 className="text-3xl font-semibold text-white">Pricing</h1>
+            <p className="text-white/90">Audit first. Then subscribe to scale. Built to pair with your Audit Wizard flow.</p>
           </div>
           <Toggle mode={mode} setMode={setMode} />
         </div>
@@ -280,7 +280,7 @@ export default function PricingPage() {
             Start an Audit
             <span aria-hidden>→</span>
           </Link>
-          <p className="text-xs text-white/60 mt-3">Your progress autosaves. You can switch tiers on the Review step.</p>
+          <p className="text-xs text-white/80 mt-3">Your progress autosaves. You can switch tiers on the Review step.</p>
         </div>
       </div>
     </div>
