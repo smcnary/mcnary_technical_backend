@@ -22,6 +22,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints\DomainOrUrl;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -911,20 +912,20 @@ class ClientController extends AbstractController
             // Validate input
             $constraints = new Assert\Collection([
                 'organization_name' => [new Assert\NotBlank()],
-                'organization_domain' => [new Assert\Optional([new Assert\Url()])],
+                'organization_domain' => [new Assert\Optional([new DomainOrUrl()])],
                 'client_name' => [new Assert\NotBlank()],
                 'client_slug' => [new Assert\Optional([new Assert\NotBlank()])],
                 'client_description' => [new Assert\Optional([new Assert\NotBlank()])],
-                'client_website' => [new Assert\Optional([new Assert\Url()])],
+                'client_website' => [new Assert\Optional([new DomainOrUrl()])],
                 'client_phone' => [new Assert\Optional([new Assert\NotBlank()])],
                 'client_address' => [new Assert\Optional([new Assert\NotBlank()])],
                 'client_city' => [new Assert\Optional([new Assert\NotBlank()])],
                 'client_state' => [new Assert\Optional([new Assert\NotBlank()])],
                 'client_zip_code' => [new Assert\Optional([new Assert\NotBlank()])],
                 'client_country' => [new Assert\Optional([new Assert\NotBlank()])],
-                'client_industry' => [new Assert\Optional([new Assert\Choice(['law', 'healthcare', 'real_estate', 'finance', 'other'])])],
+                'client_industry' => [new Assert\Optional([new Assert\Choice(choices: ['law', 'healthcare', 'real_estate', 'finance', 'other'])])],
                 'admin_email' => [new Assert\NotBlank(), new Assert\Email()],
-                'admin_password' => [new Assert\NotBlank(), new Assert\Length(['min' => 8])],
+                'admin_password' => [new Assert\NotBlank(), new Assert\Length(min: 8)],
                 'admin_first_name' => [new Assert\Optional([new Assert\NotBlank()])],
                 'admin_last_name' => [new Assert\Optional([new Assert\NotBlank()])],
                 'tenant_name' => [new Assert\Optional([new Assert\NotBlank()])],

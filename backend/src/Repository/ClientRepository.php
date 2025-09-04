@@ -122,4 +122,9 @@ class ClientRepository extends ServiceEntityRepository
     {
         return $this->findBy(['tenantId' => $tenantId], ['name' => 'ASC']);
     }
+
+    public function findByEmail(string $email): ?Client
+    {
+        return $this->findOneBy(['email' => $email]);
+    }
 }

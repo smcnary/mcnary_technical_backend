@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable static export for S3 hosting
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-    domains: [],
-  },
+  // Enable static export for S3 hosting only in production
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    trailingSlash: true,
+    images: {
+      unoptimized: true,
+      domains: [],
+    },
+  }),
   // Exclude API routes from static export
   experimental: {
     appDir: true,

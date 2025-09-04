@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\AuditIntakeClient;
 
 #[ORM\Entity(repositoryClass: AuditIntakeRepository::class)]
 #[ORM\Table(name: 'audit_intake')]
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     security: "is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_ADMIN')"
 )]
+#[AuditIntakeClient]
 class AuditIntake
 {
     #[ORM\Id]

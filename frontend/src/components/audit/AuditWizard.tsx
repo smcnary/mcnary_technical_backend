@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { create } from "zustand";
+import { useRouter } from "next/navigation";
 
 // -----------------------------
 // Zustand store (autosave + persistence)
@@ -63,6 +64,8 @@ type AuditState = {
   setValidationErrors: (errors: ValidationErrors) => void;
   clearValidationErrors: () => void;
   validateCurrentStep: () => boolean;
+  isStepComplete: (stepIndex: number) => boolean;
+  arePreviousStepsComplete: () => boolean;
   reset: () => void;
 };
 
@@ -136,6 +139,20 @@ const useAuditStore = create<AuditState>((set, get) => ({
                      Object.values(errors.form).some(error => error);
     return !hasErrors;
   },
+  isStepComplete: (stepIndex: number) => {
+    const errors = validateStep(stepIndex, get().account, get().form);
+    const hasErrors = Object.values(errors.account).some(error => error) || 
+                     Object.values(errors.form).some(error => error);
+    return !hasErrors;
+  },
+  arePreviousStepsComplete: () => {
+    for (let i = 0; i < get().currentStep; i++) {
+      if (!get().isStepComplete(i)) {
+        return false;
+      }
+    }
+    return true;
+  },
   reset: () => set({
     auditId: null,
     isSaving: false,
@@ -188,7 +205,7 @@ useAuditStore.subscribe(persistToStorage);
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 async function loginUser(email: string, password: string): Promise<{ token: string; userId: string }> {
-  const response = await fetch(`${API_BASE}/api/auth/login`, {
+  const response = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -204,7 +221,7 @@ async function loginUser(email: string, password: string): Promise<{ token: stri
 }
 
 async function registerUser(account: Account): Promise<{ token: string; userId: string }> {
-  const response = await fetch(`${API_BASE}/api/auth/register`, {
+  const response = await fetch(`${API_BASE}/api/v1/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -244,7 +261,7 @@ async function upsertAudit(payload: AuditPayload): Promise<{ id: string }> {
 
   if (payload.id) {
     // Update existing audit
-    const response = await fetch(`${API_BASE}/api/v1/audits/intakes/${payload.id}`, {
+    const response = await fetch(`${API_BASE}/api/v1/audit-intakes/${payload.id}`, {
       method: 'PATCH',
       headers: { ...headers, 'Content-Type': 'application/merge-patch+json' },
       body: JSON.stringify({
@@ -270,7 +287,7 @@ async function upsertAudit(payload: AuditPayload): Promise<{ id: string }> {
     return { id: payload.id };
   } else {
     // Create new audit
-    const response = await fetch(`${API_BASE}/api/v1/audits/intakes`, {
+    const response = await fetch(`${API_BASE}/api/v1/audit-intakes`, {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -303,38 +320,42 @@ async function upsertAudit(payload: AuditPayload): Promise<{ id: string }> {
 // UI Building Blocks
 // -----------------------------
 
-const Crumb = ({ active, done, onClick, children, index }: { 
+const Crumb = ({ active, done, onClick, children, index, isClickable }: { 
   active: boolean; 
   done: boolean; 
   onClick: () => void; 
   children: React.ReactNode; 
   index: number; 
+  isClickable: boolean;
 }) => (
   <button
     onClick={onClick}
+    disabled={!isClickable}
     className={`group flex items-center gap-3 px-4 py-2 rounded-xl border transition ${
       active
         ? "border-indigo-500 bg-indigo-500/10 text-indigo-200"
         : done
         ? "border-emerald-600/40 bg-emerald-600/10 text-emerald-200 hover:bg-emerald-600/20"
-        : "border-white/10 text-white/60 hover:bg-white/5"
+        : isClickable
+        ? "border-white/10 text-white/90 hover:bg-white/5"
+        : "border-white/5 text-white/50 cursor-not-allowed opacity-50"
     }`}
   >
     <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-      active ? "bg-indigo-500 text-white" : done ? "bg-emerald-600/80 text-white" : "bg-white/10 text-white/70"
+      active ? "bg-indigo-500 text-white" : done ? "bg-emerald-600/80 text-white" : isClickable ? "bg-white/10 text-white/90" : "bg-white/5 text-white/50"
     }`}>
       {index + 1}
     </span>
     <span className="text-left">
-      <div className="text-xs uppercase tracking-wide opacity-70">Step {index + 1}</div>
-      <div className="font-medium">{children}</div>
+      <div className="text-xs uppercase tracking-wide opacity-90">Step {index + 1}</div>
+      <div className="font-medium text-white">{children}</div>
     </span>
   </button>
 );
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <label className="block space-y-2">
-    <span className="text-sm text-white/80">{label}</span>
+    <span className="text-sm text-white/90">{label}</span>
     {children}
   </label>
 );
@@ -512,7 +533,7 @@ function GoalsStep() {
       <div className="flex flex-wrap gap-2">
         {options.map((g) => (
           <button key={g} onClick={() => toggle(g)} className={`rounded-full px-4 py-2 text-sm transition border ${
-            form.goals.includes(g) ? "bg-indigo-600 text-white border-indigo-500" : "bg-white/5 text-white/80 border-white/10 hover:bg-white/10"
+            form.goals.includes(g) ? "bg-indigo-600 text-white border-indigo-500" : "bg-white/5 text-white/90 border-white/10 hover:bg-white/10"
           }`}>
             {g}
           </button>
@@ -554,13 +575,13 @@ function PlanStep() {
       <div className="mb-6 flex justify-center">
         <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 text-sm">
           <button
-            className={`rounded-lg px-4 py-2 ${mode === "audit" ? "bg-indigo-600 text-white" : "text-white/80"}`}
+            className={`rounded-lg px-4 py-2 ${mode === "audit" ? "bg-indigo-600 text-white" : "text-white/90"}`}
             onClick={() => setMode("audit")}
           >
             Audit Pricing
           </button>
           <button
-            className={`rounded-lg px-4 py-2 ${mode === "subscription" ? "bg-indigo-600 text-white" : "text-white/80"}`}
+            className={`rounded-lg px-4 py-2 ${mode === "subscription" ? "bg-indigo-600 text-white" : "text-white/90"}`}
             onClick={() => setMode("subscription")}
           >
             Subscription Plans
@@ -572,14 +593,14 @@ function PlanStep() {
       <div className="grid gap-4 md:grid-cols-3">
         {tiers.map((t) => (
           <Card key={t.key} title={t.key} right={form.tier === t.key ? <span className="rounded-full bg-emerald-600/20 px-3 py-1 text-xs text-emerald-200">Selected</span> : null}>
-            <div className="mb-2 text-2xl font-semibold">{t.price}<span className="text-sm text-white/60 ml-1">{mode === "audit" && t.key !== "Enterprise" ? "/ audit" : ""}</span></div>
-            <ul className="mb-4 space-y-1 text-sm text-white/80">
+            <div className="mb-2 text-2xl font-semibold text-white">{t.price}<span className="text-sm text-white/90 ml-1">{mode === "audit" && t.key !== "Enterprise" ? "/ audit" : ""}</span></div>
+            <ul className="mb-4 space-y-1 text-sm text-white/90">
               {t.features.map((f) => (
                 <li key={f} className="flex items-start gap-2"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-white/50" />{f}</li>
               ))}
             </ul>
             <button onClick={() => setTier(t.key)} className={`w-full rounded-xl border px-4 py-2 font-medium transition ${
-              form.tier === t.key ? "border-emerald-500 bg-emerald-600/20 text-emerald-100" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
+              form.tier === t.key ? "border-emerald-500 bg-emerald-600/20 text-emerald-100" : "border-white/10 bg-white/5 text-white/90 hover:bg-white/10"
             }`}>
               {form.tier === t.key ? "Selected" : "Choose"}
             </button>
@@ -678,6 +699,7 @@ export default function AuditWizard() {
   const { currentStep, setStep, next, back, setSaving, markSaved, setError, validateCurrentStep, clearValidationErrors } = useAuditStore();
   const state = useAuditStore();
   const { isAuthenticated } = useAuthStore();
+  const router = useRouter();
 
   // Handle URL parameters for pre-selecting tier
   useEffect(() => {
@@ -723,9 +745,39 @@ export default function AuditWizard() {
 
   // Handle step navigation with validation
   const handleStepClick = (stepIndex: number) => {
-    if (stepIndex <= state.maxStepVisited) {
+    // Only allow navigation to steps that are complete or the current step
+    // Check if all steps up to the target step are complete
+    let canNavigate = true;
+    for (let i = 0; i < stepIndex; i++) {
+      if (!state.isStepComplete(i)) {
+        canNavigate = false;
+        break;
+      }
+    }
+    
+    if (canNavigate && stepIndex <= state.maxStepVisited) {
       clearValidationErrors();
       setStep(stepIndex);
+    }
+  };
+
+  // Handle submit
+  const handleSubmit = async () => {
+    if (validateCurrentStep()) {
+      try {
+        setSaving(true);
+        const res = await upsertAudit({
+          id: state.auditId,
+          account: state.account,
+          form: state.form,
+        });
+        markSaved(res.id);
+        // Redirect to client dashboard
+        router.push('/client');
+      } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : "Failed to submit";
+        setError(errorMessage);
+      }
     }
   };
 
@@ -793,25 +845,38 @@ export default function AuditWizard() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold">SEO Audit Wizard</h1>
-            <p className="text-white/70">Create your account, tell us about your business, and pick the audit tier. Autosaves as you type.</p>
+            <h1 className="text-2xl font-semibold text-white">SEO Audit Wizard</h1>
+            <p className="text-white/90">Create your account, tell us about your business, and pick the audit tier. Autosaves as you type.</p>
           </div>
           <SaveBadge />
         </div>
 
         {/* Breadcrumb */}
         <div className="mb-8 grid gap-3 md:grid-cols-5">
-          {steps.map((s, i) => (
-            <Crumb
-              key={s.key}
-              index={i}
-              active={i === currentStep}
-              done={i < currentStep}
-              onClick={() => handleStepClick(i)}
-            >
-              {s.label}
-            </Crumb>
-          ))}
+          {steps.map((s, i) => {
+            const isStepComplete = state.isStepComplete(i);
+            // Check if all previous steps are complete
+            let canNavigate = true;
+            for (let j = 0; j < i; j++) {
+              if (!state.isStepComplete(j)) {
+                canNavigate = false;
+                break;
+              }
+            }
+            const isClickable = i <= state.maxStepVisited && canNavigate;
+            return (
+              <Crumb
+                key={s.key}
+                index={i}
+                active={i === currentStep}
+                done={i < currentStep && isStepComplete}
+                isClickable={isClickable}
+                onClick={() => handleStepClick(i)}
+              >
+                {s.label}
+              </Crumb>
+            );
+          })}
         </div>
 
         {/* Step content */}
@@ -819,20 +884,48 @@ export default function AuditWizard() {
           <StepBody stepKey={steps[currentStep].key} />
         </div>
 
+        {/* Validation error display */}
+        {Object.values(state.validationErrors.account).some(error => error) || 
+         Object.values(state.validationErrors.form).some(error => error) ? (
+          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl">
+            <h3 className="text-rose-200 font-medium mb-2">Please complete the following:</h3>
+            <ul className="text-sm text-rose-200 space-y-1">
+              {Object.values(state.validationErrors.account).map((error, index) => 
+                error ? <li key={`account-${index}`}>• {error}</li> : null
+              )}
+              {Object.values(state.validationErrors.form).map((error, index) => 
+                error ? <li key={`form-${index}`}>• {error}</li> : null
+              )}
+            </ul>
+          </div>
+        ) : null}
+
         {/* Nav Buttons */}
         <div className="flex items-center justify-between">
           <button onClick={back} disabled={currentStep === 0} className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-white/90 disabled:opacity-40">Back</button>
           <div className="flex items-center gap-3">
             {currentStep < steps.length - 1 ? (
-              <button onClick={handleNext} className="rounded-xl bg-indigo-600 px-6 py-2.5 font-medium shadow-lg shadow-indigo-600/20 hover:bg-indigo-500">Continue</button>
+              <button 
+                onClick={handleNext} 
+                disabled={!state.validateCurrentStep()}
+                className="rounded-xl px-6 py-2.5 font-medium shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed bg-indigo-600 shadow-indigo-600/20 hover:bg-indigo-500"
+              >
+                Continue
+              </button>
             ) : (
-              <button className="rounded-xl bg-emerald-600 px-6 py-2.5 font-medium shadow-lg shadow-emerald-600/20 hover:bg-emerald-500">Submit</button>
+              <button 
+                onClick={handleSubmit} 
+                disabled={!state.validateCurrentStep()}
+                className="rounded-xl px-6 py-2.5 font-medium shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 shadow-emerald-600/20 hover:bg-emerald-500"
+              >
+                Submit
+              </button>
             )}
           </div>
         </div>
 
         {/* Footer helper */}
-        <p className="mt-6 text-center text-xs text-white/50">Autosaving locally and to API. If you leave, your progress will be here when you return.</p>
+        <p className="mt-6 text-center text-xs text-white/80">Autosaving locally and to API. If you leave, your progress will be here when you return.</p>
       </div>
     </div>
   );
@@ -879,16 +972,16 @@ const validateStep = (step: number, account: Account, form: AuditForm): Validati
 
   switch (step) {
     case 0: // Account step
-      errors.account.firstName = validateRequired(account.firstName, "First name");
-      errors.account.lastName = validateRequired(account.lastName, "Last name");
-      errors.account.email = validateEmail(account.email);
-      errors.account.password = validatePassword(account.password);
+      errors.account.firstName = validateRequired(account.firstName, "First name") || undefined;
+      errors.account.lastName = validateRequired(account.lastName, "Last name") || undefined;
+      errors.account.email = validateEmail(account.email) || undefined;
+      errors.account.password = validatePassword(account.password) || undefined;
       break;
     
     case 1: // Business step
-      errors.form.companyName = validateRequired(form.companyName, "Company name");
-      errors.form.website = validateUrl(form.website);
-      errors.form.industry = validateRequired(form.industry, "Industry/Niche");
+      errors.form.companyName = validateRequired(form.companyName, "Company name") || undefined;
+      errors.form.website = validateUrl(form.website) || undefined;
+      errors.form.industry = validateRequired(form.industry, "Industry/Niche") || undefined;
       break;
     
     case 2: // Goals step
