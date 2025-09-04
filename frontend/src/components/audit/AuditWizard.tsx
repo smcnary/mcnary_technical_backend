@@ -203,6 +203,8 @@ useAuditStore.subscribe(persistToStorage);
 // -----------------------------
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const GOOGLE_OAUTH_URL = `${API_BASE}/api/v1/auth/google`;
+const MICROSOFT_OAUTH_URL = `${API_BASE}/api/v1/auth/microsoft`;
 
 async function loginUser(email: string, password: string): Promise<{ token: string; userId: string }> {
   const response = await fetch(`${API_BASE}/api/v1/auth/login`, {
@@ -547,6 +549,43 @@ function GoalsStep() {
           <textarea rows={4} className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={form.notes} onChange={(e) => updateForm({ notes: e.target.value })} />
         </Field>
       </div>
+      {/* SSO Providers */}
+      <div className="mt-6 grid gap-3 md:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = GOOGLE_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
+            }
+          }}
+          className="inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white hover:bg-white/10 transition"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5" aria-hidden>
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303C33.813,31.345,29.277,34,24,34c-6.627,0-12-5.373-12-12 s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C33.64,4.224,28.991,2,24,2C12.955,2,4,10.955,4,22 s8.955,20,20,20c11.045,0,20-8.955,20-20C44,21.329,43.861,20.691,43.611,20.083z"/>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.818C14.655,16.108,18.961,14,24,14c3.059,0,5.842,1.154,7.961,3.039 l5.657-5.657C33.64,4.224,28.991,2,24,2C16.318,2,9.656,6.337,6.306,14.691z"/>
+            <path fill="#4CAF50" d="M24,42c5.166,0,9.86-1.977,13.409-5.197l-6.2-5.238C29.109,33.488,26.715,34,24,34 c-5.248,0-9.799-3.223-11.571-7.773l-6.56,5.049C7.201,37.556,15.017,42,24,42z"/>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-1.074,3.073-3.272,5.487-6.094,6.962 c0.002-0.001,0.003-0.001,0.005-0.002l6.2,5.238C34.955,40.338,44,34,44,22C44,21.329,43.861,20.691,43.611,20.083z"/>
+          </svg>
+          <span className="font-medium">Continue with Google</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = MICROSOFT_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
+            }
+          }}
+          className="inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white hover:bg-white/10 transition"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" className="h-5 w-5" aria-hidden>
+            <rect width="10" height="10" x="1" y="1" fill="#F35325"/>
+            <rect width="10" height="10" x="12" y="1" fill="#81BC06"/>
+            <rect width="10" height="10" x="1" y="12" fill="#05A6F0"/>
+            <rect width="10" height="10" x="12" y="12" fill="#FFBA08"/>
+          </svg>
+          <span className="font-medium">Continue with Microsoft</span>
+        </button>
+      </div>
     </Card>
   );
 }
@@ -732,6 +771,42 @@ export default function AuditWizard() {
       } catch (e) {
         // ignore
       }
+    }
+
+    // Handle OAuth callback params (?token=...&email=...)
+    try {
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        const token = url.searchParams.get('token');
+        const email = url.searchParams.get('email');
+        const firstName = url.searchParams.get('firstName');
+        const lastName = url.searchParams.get('lastName');
+
+        if (token) {
+          useAuthStore.setState({ token, userId: null, isAuthenticated: true });
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token, userId: null, isAuthenticated: true }));
+
+          // Pre-fill account info when available; set sentinel password to satisfy validation
+          if (email) {
+            useAuditStore.setState({ account: { ...useAuditStore.getState().account, email } });
+          }
+          if (firstName) {
+            useAuditStore.setState({ account: { ...useAuditStore.getState().account, firstName } });
+          }
+          if (lastName) {
+            useAuditStore.setState({ account: { ...useAuditStore.getState().account, lastName } });
+          }
+          useAuditStore.setState({ account: { ...useAuditStore.getState().account, password: 'SSO_AUTH' } });
+
+          // Clean URL and move to next step
+          const cleanUrl = `${url.origin}${url.pathname}`;
+          window.history.replaceState({}, '', cleanUrl);
+          clearValidationErrors();
+          setStep(1);
+        }
+      }
+    } catch (_) {
+      // ignore
     }
   }, []);
 
