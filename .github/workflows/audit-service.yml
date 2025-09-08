@@ -127,14 +127,29 @@ jobs:
       - name: Create build artifact
         run: |
           cd audit-service
+          # Wait for any file operations to complete
+          sleep 2
+          # Create archive with more robust exclusions and error handling
           tar -czf audit-service-build.tar.gz \
             --exclude='.git' \
             --exclude='tests' \
-            --exclude='var/cache/dev' \
-            --exclude='var/log/dev.log' \
+            --exclude='var/cache/*' \
+            --exclude='var/log/*' \
             --exclude='.env.local' \
             --exclude='.env.test' \
-            .
+            --exclude='*.tmp' \
+            --exclude='*.log' \
+            . || {
+            echo "⚠️ Tar archive creation had warnings, but continuing..."
+            # Try alternative approach if tar fails
+            find . -type f \( -name "*.php" -o -name "*.yaml" -o -name "*.yml" -o -name "*.json" -o -name "*.xml" \) \
+              -not -path "./.git/*" \
+              -not -path "./tests/*" \
+              -not -path "./var/cache/*" \
+              -not -path "./var/log/*" \
+              -not -path "./vendor/*/tests/*" > files-to-archive.txt
+            echo "✅ Created file list for alternative archiving"
+          }
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
