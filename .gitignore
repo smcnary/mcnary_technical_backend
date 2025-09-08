@@ -35,3 +35,4 @@ backend/config/bundles_prod.php
 staging_key
 staging_key.pub
 *.pem
+backend/config/jwt/*.pem

@@ -43,6 +43,7 @@ security:
         - { path: ^/api/v1/pages, roles: PUBLIC_ACCESS } # Allow public page access
         - { path: ^/api/v1/media-assets, roles: PUBLIC_ACCESS } # Allow public media access
         - { path: ^/api/v1/packages, roles: PUBLIC_ACCESS } # Allow public package viewing
+        - { path: ^/api/v1/monitoring/(health|ready|live), roles: PUBLIC_ACCESS } # Allow public monitoring endpoints
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

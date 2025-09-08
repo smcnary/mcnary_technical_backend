@@ -1,21 +1,62 @@
 monolog:
-    channels: ['deprecation']
+    channels: ['deprecation', 'security', 'audit', 'api', 'performance']
     handlers:
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
             channels: ["!event", "!deprecation"]
-        # uncomment to get logs in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type: firephp
-        #    level: info
-        #chromephp:
-        #    type: chromephp
-        #    level: info
+            formatter: monolog.formatter.json
+        # Production logging with structured format
+        production:
+            type: stream
+            path: "%kernel.logs_dir%/application.log"
+            level: info
+            channels: ["!event", "!deprecation"]
+            formatter: monolog.formatter.json
+        # Security events logging
+        security:
+            type: stream
+            path: "%kernel.logs_dir%/security.log"
+            level: warning
+            channels: ["security"]
+            formatter: monolog.formatter.json
+        # API request/response logging
+        api:
+            type: stream
+            path: "%kernel.logs_dir%/api.log"
+            level: info
+            channels: ["api"]
+            formatter: monolog.formatter.json
+        # Performance monitoring
+        performance:
+            type: stream
+            path: "%kernel.logs_dir%/performance.log"
+            level: info
+            channels: ["performance"]
+            formatter: monolog.formatter.json
+        # Audit trail logging
+        audit:
+            type: stream
+            path: "%kernel.logs_dir%/audit.log"
+            level: info
+            channels: ["audit"]
+            formatter: monolog.formatter.json
+        # Error logging with separate file
+        error:
+            type: stream
+            path: "%kernel.logs_dir%/error.log"
+            level: error
+            channels: ["!event", "!deprecation"]
+            formatter: monolog.formatter.json
         deprecation:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.deprecation.log"
             channels: ["deprecation"]
             level: debug
+        # Console logging for development
+        console:
+            type: console
+            level: debug
+            channels: ["!event", "!deprecation"]
+            formatter: monolog.formatter.line
