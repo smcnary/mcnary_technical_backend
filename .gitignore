@@ -25,3 +25,8 @@ Thumbs.db
 dev.log
 server.log
 *.log
+
+# System files
+AWSCLIV2.pkg
+*.pem
+backend/config/bundles_prod.php
