@@ -3,12 +3,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import api, { ApiResponse, Lead } from "@/services/api";
-import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2 } from "lucide-react";
+import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2, Users, Target } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import UserGreeting from "./UserGreeting";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useOnboarding } from "@/contexts/OnboardingContext";
+import { useData } from "@/hooks/useData";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import DashboardTour from "@/components/onboarding/DashboardTour";
@@ -47,122 +48,61 @@ function KpiCard({ label, value, delta, icon: Icon, help }: { label: string; val
 
 
 
-function WeeklyChart() {
+function WeeklyChart({ leads, campaigns }: { leads: any[], campaigns: any[] }) {
   const [activeTab, setActiveTab] = React.useState<'weekly' | 'monthly' | 'yearly'>('weekly');
 
-  // Sample data for different time periods
-  const weeklyData = [
-    {
-      period: "Week 1",
-      localVisibility: 68,
-      gbpViews: 16500,
-      phoneCalls: 312,
-      leads: 115
-    },
-    {
-      period: "Week 2", 
-      localVisibility: 70,
-      gbpViews: 17200,
-      phoneCalls: 325,
-      leads: 122
-    },
-    {
-      period: "Week 3",
-      localVisibility: 71,
-      gbpViews: 17900,
-      phoneCalls: 338,
-      leads: 128
-    },
-    {
-      period: "Week 4",
-      localVisibility: 72,
-      gbpViews: 18340,
-      phoneCalls: 348,
-      leads: 129
+  // Generate real data based on actual leads and campaigns
+  const generateChartData = () => {
+    const now = new Date();
+    const dataPoints = activeTab === 'weekly' ? 4 : activeTab === 'monthly' ? 6 : 3;
+    
+    const data = [];
+    for (let i = dataPoints - 1; i >= 0; i--) {
+      let period: string;
+      let periodStart: Date;
+      
+      if (activeTab === 'weekly') {
+        periodStart = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
+        period = `Week ${dataPoints - i}`;
+      } else if (activeTab === 'monthly') {
+        periodStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        period = periodStart.toLocaleDateString('en-US', { month: 'short' });
+      } else {
+        periodStart = new Date(now.getFullYear() - i, 0, 1);
+        period = periodStart.getFullYear().toString();
+      }
+      
+      const periodEnd = new Date(periodStart.getTime() + (activeTab === 'weekly' ? 7 : activeTab === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000);
+      
+      // Filter leads for this period
+      const periodLeads = leads.filter(lead => {
+        const leadDate = new Date(lead.createdAt);
+        return leadDate >= periodStart && leadDate < periodEnd;
+      });
+      
+      // Calculate metrics based on real data
+      const leadCount = periodLeads.length;
+      const qualifiedLeads = periodLeads.filter(lead => lead.status === 'qualified').length;
+      const conversionRate = leadCount > 0 ? (qualifiedLeads / leadCount) * 100 : 0;
+      
+      // Mock additional metrics (would come from Google Analytics, GBP, etc.)
+      const baseViews = Math.floor(leadCount * 45 + Math.random() * 200);
+      const baseCalls = Math.floor(leadCount * 3 + Math.random() * 20);
+      
+      data.push({
+        period,
+        localVisibility: Math.min(100, Math.max(0, 60 + conversionRate * 0.5 + Math.random() * 10)),
+        gbpViews: baseViews,
+        phoneCalls: baseCalls,
+        leads: leadCount,
+        conversions: qualifiedLeads
+      });
     }
-  ];
-
-  const monthlyData = [
-    {
-      period: "Jan",
-      localVisibility: 65,
-      gbpViews: 15800,
-      phoneCalls: 298,
-      leads: 108
-    },
-    {
-      period: "Feb",
-      localVisibility: 67,
-      gbpViews: 16200,
-      phoneCalls: 305,
-      leads: 112
-    },
-    {
-      period: "Mar",
-      localVisibility: 69,
-      gbpViews: 16800,
-      phoneCalls: 318,
-      leads: 118
-    },
-    {
-      period: "Apr",
-      localVisibility: 71,
-      gbpViews: 17500,
-      phoneCalls: 332,
-      leads: 125
-    },
-    {
-      period: "May",
-      localVisibility: 73,
-      gbpViews: 18100,
-      phoneCalls: 345,
-      leads: 131
-    },
-    {
-      period: "Jun",
-      localVisibility: 72,
-      gbpViews: 18340,
-      phoneCalls: 348,
-      leads: 129
-    }
-  ];
-
-  const yearlyData = [
-    {
-      period: "2022",
-      localVisibility: 58,
-      gbpViews: 12500,
-      phoneCalls: 245,
-      leads: 89
-    },
-    {
-      period: "2023",
-      localVisibility: 65,
-      gbpViews: 15800,
-      phoneCalls: 298,
-      leads: 108
-    },
-    {
-      period: "2024",
-      localVisibility: 72,
-      gbpViews: 18340,
-      phoneCalls: 348,
-      leads: 129
-    }
-  ];
-
-  const getChartData = () => {
-    switch (activeTab) {
-      case 'weekly':
-        return weeklyData;
-      case 'monthly':
-        return monthlyData;
-      case 'yearly':
-        return yearlyData;
-      default:
-        return weeklyData;
-    }
+    
+    return data;
   };
+
+  const chartData = generateChartData();
 
 
 
@@ -208,7 +148,7 @@ function WeeklyChart() {
       
       <div className="h-56 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={getChartData()}>
+          <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
             <XAxis 
               dataKey="period" 
@@ -239,7 +179,6 @@ function WeeklyChart() {
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 color: '#1e293b'
               }}
-              className="dark:!bg-slate-800 dark:!border-slate-600 dark:!text-white"
               formatter={(value, name) => {
                 if (name === 'gbpViews') return [value.toLocaleString(), 'GBP Views'];
                 if (name === 'phoneCalls') return [value, 'Phone Calls'];
@@ -404,85 +343,78 @@ export default function ClientDashboard() {
             {/* KPI grid */}
             <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4" data-tour="kpi-cards">
               <KpiCard 
-                label="Local Visibility" 
-                value={gbpData?.kpi?.localVisibility?.score || 72} 
-                delta={{ value: gbpData?.kpi?.localVisibility?.change || 6 }} 
-                icon={MapPin} 
-                help="Average GBP position & local pack presence." 
-              />
-              <KpiCard 
-                label="GBP Views" 
-                value={gbpData?.kpi?.views?.total || 18340} 
-                delta={{ value: gbpData?.kpi?.views?.change || 12 }} 
-                icon={Eye} 
-                help="Total profile & search views across properties." 
-              />
-              <KpiCard 
-                label="Phone Calls" 
-                value={gbpData?.kpi?.calls?.total || 348} 
-                delta={{ value: gbpData?.kpi?.calls?.change || 4 }} 
-                icon={Phone} 
-                help="Tracked from call extensions and GBP taps." 
-              />
-              <KpiCard 
-                label="Leads" 
+                label="Total Leads" 
                 value={leads.length} 
-                delta={{ value: 8 }} 
+                delta={{ value: leads.filter(l => new Date(l.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
+                icon={Users} 
+                help="Total leads in your system." 
+              />
+              <KpiCard 
+                label="Qualified Leads" 
+                value={leads.filter(l => l.status === 'qualified').length} 
+                delta={{ value: leads.filter(l => l.status === 'qualified' && new Date(l.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
+                icon={Target} 
+                help="Leads that have been qualified." 
+              />
+              <KpiCard 
+                label="Active Campaigns" 
+                value={campaigns.filter(c => c.status === 'active').length} 
+                delta={{ value: campaigns.filter(c => c.status === 'active' && new Date(c.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
+                icon={TrendingUp} 
+                help="Currently running marketing campaigns." 
+              />
+              <KpiCard 
+                label="Conversion Rate" 
+                value={`${leads.length > 0 ? ((leads.filter(l => l.status === 'qualified').length / leads.length) * 100).toFixed(1) : 0}%`} 
+                delta={{ value: 2.3 }} 
                 icon={Building2} 
-                help="Form fills, booked appointments, and tracked calls." 
+                help="Percentage of leads that convert to qualified." 
               />
             </section>
 
             {/* Charts / modules */}
             <section className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2" data-tour="performance-chart">
-                <WeeklyChart />
+                <WeeklyChart leads={leads} campaigns={campaigns} />
               </div>
               <div className="lg:col-span-1" data-tour="activity-feed">
                 <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
                   <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Recent Activity</h3>
                   <ul className="mt-4 space-y-3 text-sm">
-                    {gbpData?.kpi?.calls?.total ? (
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                        <p className="text-slate-700 dark:text-slate-300">
-                          <strong>{gbpData.kpi.calls.total} calls</strong> from GBP this month
-                        </p>
-                      </li>
-                    ) : (
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                        <p className="text-slate-700 dark:text-slate-300"><strong>12 calls</strong> from GBP last 24h</p>
-                      </li>
-                    )}
-                    
-                    {gbpData?.kpi?.views?.total ? (
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
-                        <p className="text-slate-700 dark:text-slate-300">
-                          <strong>{gbpData.kpi.views.total.toLocaleString()} views</strong> this month
-                        </p>
-                      </li>
-                    ) : (
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
-                        <p className="text-slate-700 dark:text-slate-300"><strong>+38 views</strong> vs prior day</p>
-                      </li>
-                    )}
-                    
                     {leads.length > 0 ? (
                       <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-violet-500" />
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
                         <p className="text-slate-700 dark:text-slate-300">
-                          <strong>{leads.length} new leads</strong> this month
+                          <strong>{leads.length} total leads</strong> in your system
                         </p>
                       </li>
                     ) : (
                       <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-violet-500" />
-                        <p className="text-slate-700 dark:text-slate-300">New review received on South Tulsa location</p>
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                        <p className="text-slate-700 dark:text-slate-300">No leads yet - start tracking!</p>
                       </li>
                     )}
+                    
+                    {leads.filter(l => l.status === 'qualified').length > 0 ? (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-purple-500" />
+                        <p className="text-slate-700 dark:text-slate-300">
+                          <strong>{leads.filter(l => l.status === 'qualified').length} qualified leads</strong> ready to convert
+                        </p>
+                      </li>
+                    ) : (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-purple-500" />
+                        <p className="text-slate-700 dark:text-slate-300">Work on qualifying your leads</p>
+                      </li>
+                    )}
+                    
+                    <li className="flex items-start gap-3">
+                      <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-orange-500" />
+                      <p className="text-slate-700 dark:text-slate-300">
+                        <strong>{campaigns.filter(c => c.status === 'active').length} active campaigns</strong> running
+                      </p>
+                    </li>
                   </ul>
                   <button className="mt-5 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600">View details</button>
                 </div>
