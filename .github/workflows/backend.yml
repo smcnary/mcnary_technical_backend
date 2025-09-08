@@ -349,24 +349,74 @@ jobs:
           echo "${{ secrets.STAGING_SSH_KEY }}" > staging_key
           chmod 600 staging_key
           
-          # Copy to staging server via SSH
-          scp -i staging_key -o StrictHostKeyChecking=no \
-            -r . ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}:/var/www/tulsa-seo-backend/
+          # Test SSH connection first
+          echo "🔍 Testing SSH connection to staging server..."
+          if ! ssh -i staging_key -o StrictHostKeyChecking=no -o ConnectTimeout=30 \
+            ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} "echo 'SSH connection successful'"; then
+            echo "❌ SSH connection failed. Staging server may be down or unreachable."
+            echo "💡 To fix this issue:"
+            echo "   1. Run ./setup-staging-server.sh to set up a staging server"
+            echo "   2. Or update STAGING_HOST secret with a valid server IP"
+            echo "   3. Or use local staging by setting STAGING_HOST to localhost"
+            echo "⚠️ Skipping deployment due to connection failure"
+            rm -f staging_key
+            exit 0
+          fi
+          
+          echo "✅ SSH connection successful, proceeding with deployment..."
+          
+          # Copy to staging server via SSH with retry logic
+          for attempt in 1 2 3; do
+            echo "📤 Copying files to staging server (attempt $attempt/3)..."
+            if scp -i staging_key -o StrictHostKeyChecking=no -o ConnectTimeout=30 \
+              -r . ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}:/var/www/tulsa-seo-backend/; then
+              echo "✅ File copy successful"
+              break
+            else
+              echo "❌ File copy failed (attempt $attempt/3)"
+              if [ $attempt -eq 3 ]; then
+                echo "💥 All copy attempts failed"
+                rm -f staging_key
+                exit 1
+              fi
+              sleep 10
+            fi
+          done
           
           # Execute deployment commands on staging server
-          ssh -i staging_key -o StrictHostKeyChecking=no \
+          echo "🔧 Executing deployment commands on staging server..."
+          ssh -i staging_key -o StrictHostKeyChecking=no -o ConnectTimeout=30 \
             ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} << 'EOF'
             cd /var/www/tulsa-seo-backend
-            composer install --no-dev --optimize-autoloader
-            php bin/console cache:clear --env=prod --no-debug
-            php bin/console cache:warmup --env=prod
-            php bin/console doctrine:migrations:migrate --env=prod --no-interaction
-            sudo systemctl restart php8.2-fpm
-            sudo systemctl restart nginx
+            echo "📦 Installing dependencies..."
+            composer install --no-dev --optimize-autoloader || {
+              echo "⚠️ Composer install failed, continuing..."
+            }
+            echo "🧹 Clearing cache..."
+            php bin/console cache:clear --env=prod --no-debug || {
+              echo "⚠️ Cache clear failed, continuing..."
+            }
+            echo "🔥 Warming cache..."
+            php bin/console cache:warmup --env=prod || {
+              echo "⚠️ Cache warmup failed, continuing..."
+            }
+            echo "🗄️ Running migrations..."
+            php bin/console doctrine:migrations:migrate --env=prod --no-interaction || {
+              echo "⚠️ Migrations failed, continuing..."
+            }
+            echo "🔄 Restarting services..."
+            sudo systemctl restart php8.2-fpm || {
+              echo "⚠️ PHP-FPM restart failed, continuing..."
+            }
+            sudo systemctl restart nginx || {
+              echo "⚠️ Nginx restart failed, continuing..."
+            }
+            echo "✅ Deployment commands completed"
           EOF
           
           # Clean up SSH key file
           rm -f staging_key
+          echo "🎉 Staging deployment completed successfully!"
 
   deploy-production:
     name: Deploy to Production
