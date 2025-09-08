@@ -223,6 +223,56 @@ export interface ApiError {
   message?: string;
 }
 
+export interface AuditRun {
+  id: string;
+  status: 'DRAFT' | 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED';
+  startedAt?: string;
+  finishedAt?: string;
+  healthScore?: number;
+  pagesCrawled?: number;
+  issuesFound?: number;
+  createdAt: string;
+  websiteUrl: string;
+  maxPages?: number;
+  includeLighthouse?: boolean;
+}
+
+export interface AuditIssue {
+  id: string;
+  title: string;
+  description: string;
+  severity: 'P1' | 'P2' | 'P3';
+  category: 'TECHNICAL' | 'ON_PAGE' | 'LOCAL' | 'CONTENT';
+  affectedPages: number;
+  status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'IGNORED';
+  fixHint: string;
+  createdAt: string;
+  updatedAt?: string;
+  resolvedAt?: string;
+  pages?: string[];
+}
+
+export interface QuickWin {
+  id: string;
+  title: string;
+  description: string;
+  impact: 'HIGH' | 'MEDIUM' | 'LOW';
+  effort: 'LOW' | 'MEDIUM' | 'HIGH';
+  category: 'TECHNICAL' | 'ON_PAGE' | 'LOCAL' | 'CONTENT';
+  affectedPages: number;
+  estimatedTime: string;
+}
+
+export interface AuditMetrics {
+  healthScore: number;
+  previousScore?: number;
+  scoreChange?: number;
+  totalIssues: number;
+  criticalIssues: number;
+  pagesAnalyzed: number;
+  lastAuditDate: string;
+}
+
 // API service class
 export class ApiService {
   private baseUrl: string;
@@ -638,6 +688,77 @@ export class ApiService {
       user: userResponse.user,
       token: userResponse.token,
     };
+  }
+
+  // Audit Run methods
+  async getAuditRuns(params?: Record<string, string | number | boolean>): Promise<ApiResponse<AuditRun>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/audits/runs?${queryString}` : '/api/v1/audits/runs';
+      return this.fetchApi<ApiResponse<AuditRun>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<AuditRun>>('/api/v1/audits/runs');
+  }
+
+  async getAuditRun(id: string): Promise<AuditRun> {
+    return this.fetchApi<AuditRun>(`/api/v1/audits/runs/${id}`);
+  }
+
+  async startAuditRun(auditData: {
+    websiteUrl: string;
+    maxPages?: number;
+    includeLighthouse?: boolean;
+    keywords?: string[];
+  }): Promise<AuditRun> {
+    return this.fetchApi<AuditRun>('/api/v1/audits/runs', {
+      method: 'POST',
+      body: JSON.stringify(auditData),
+    });
+  }
+
+  async getAuditIssues(auditRunId: string, params?: Record<string, string | number | boolean>): Promise<ApiResponse<AuditIssue>> {
+    const baseEndpoint = `/api/v1/audits/runs/${auditRunId}/issues`;
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `${baseEndpoint}?${queryString}` : baseEndpoint;
+      return this.fetchApi<ApiResponse<AuditIssue>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<AuditIssue>>(baseEndpoint);
+  }
+
+  async updateAuditIssue(issueId: string, updates: Partial<AuditIssue>): Promise<AuditIssue> {
+    return this.fetchApi<AuditIssue>(`/api/v1/audits/issues/${issueId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async getAuditQuickWins(auditRunId: string): Promise<QuickWin[]> {
+    return this.fetchApi<QuickWin[]>(`/api/v1/audits/runs/${auditRunId}/quick-wins`);
+  }
+
+  async getAuditMetrics(auditRunId: string): Promise<AuditMetrics> {
+    return this.fetchApi<AuditMetrics>(`/api/v1/audits/runs/${auditRunId}/metrics`);
+  }
+
+  async exportAuditReport(auditRunId: string, format: 'pdf' | 'csv' | 'json' = 'pdf'): Promise<Blob> {
+    const response = await fetch(`${this.baseUrl}/api/v1/audits/runs/${auditRunId}/export?format=${format}`, {
+      headers: {
+        'Authorization': `Bearer ${this.authToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to export audit report: ${response.status}`);
+    }
+
+    return response.blob();
   }
 
   // Check if user is authenticated
