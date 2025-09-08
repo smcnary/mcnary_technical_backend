@@ -55,6 +55,9 @@ class Tenant
     #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: Credential::class)]
     private Collection $credentials;
 
+    #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: AuditRun::class)]
+    private Collection $auditRuns;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -63,6 +66,7 @@ class Tenant
         $this->projects = new ArrayCollection();
         $this->audits = new ArrayCollection();
         $this->credentials = new ArrayCollection();
+        $this->auditRuns = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -134,5 +138,10 @@ class Tenant
     public function getCredentials(): Collection
     {
         return $this->credentials;
+    }
+
+    public function getAuditRuns(): Collection
+    {
+        return $this->auditRuns;
     }
 }
