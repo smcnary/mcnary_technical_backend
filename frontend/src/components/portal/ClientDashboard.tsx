@@ -8,7 +8,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import UserGreeting from "./UserGreeting";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import DashboardTour from "@/components/onboarding/DashboardTour";
 
 function cx(...cls: (string | false | null | undefined)[]) {
   return cls.filter(Boolean).join(" ");
@@ -294,6 +297,7 @@ function WeeklyChart() {
 export default function ClientDashboard() {
   const { user } = useAuth();
   const { theme } = useTheme();
+  const { isOnboardingActive } = useOnboarding();
   const { 
     leads, 
     campaigns, 
@@ -309,6 +313,8 @@ export default function ClientDashboard() {
   const [gbpData, setGbpData] = useState<any>(null);
   const [isLoadingGbp, setIsLoadingGbp] = useState<boolean>(false);
   const [gbpError, setGbpError] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showTour, setShowTour] = useState(false);
 
   const getUserInitials = (name?: string) => {
     if (!name) return 'U';
@@ -359,13 +365,32 @@ export default function ClientDashboard() {
     };
   }, [user?.clientId, getLeads, getCampaigns, getCaseStudies]);
 
+  // Handle onboarding flow
+  useEffect(() => {
+    if (isOnboardingActive) {
+      setShowOnboarding(true);
+    }
+  }, [isOnboardingActive]);
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    // Show tour after onboarding completion
+    setTimeout(() => {
+      setShowTour(true);
+    }, 1000);
+  };
+
+  const handleTourComplete = () => {
+    setShowTour(false);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100/70 dark:bg-slate-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex gap-6">
           <main className="flex-1 py-8">
             {/* Header with theme toggle */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6" data-tour="dashboard-header">
               <UserGreeting 
                 fallbackData={{
                   userName: "John Doe",
@@ -377,7 +402,7 @@ export default function ClientDashboard() {
             </div>
 
             {/* KPI grid */}
-            <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4" data-tour="kpi-cards">
               <KpiCard 
                 label="Local Visibility" 
                 value={gbpData?.kpi?.localVisibility?.score || 72} 
@@ -410,10 +435,10 @@ export default function ClientDashboard() {
 
             {/* Charts / modules */}
             <section className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2" data-tour="performance-chart">
                 <WeeklyChart />
               </div>
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1" data-tour="activity-feed">
                 <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
                   <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Recent Activity</h3>
                   <ul className="mt-4 space-y-3 text-sm">
@@ -465,7 +490,7 @@ export default function ClientDashboard() {
             </section>
 
             {/* Leads table */}
-            <section className="mt-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+            <section className="mt-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm" data-tour="leads-table">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Leads</h3>
                 <button className="rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600">Manage columns</button>
@@ -523,6 +548,19 @@ export default function ClientDashboard() {
           </main>
         </div>
       </div>
+
+      {/* Onboarding Modal */}
+      <OnboardingModal 
+        isOpen={showOnboarding} 
+        onClose={handleOnboardingComplete} 
+      />
+
+      {/* Dashboard Tour */}
+      <DashboardTour 
+        isOpen={showTour} 
+        onClose={handleTourComplete}
+        onComplete={handleTourComplete}
+      />
     </div>
   );
 }
