@@ -345,12 +345,16 @@ jobs:
           cd backend
           tar -xzf backend-build.tar.gz
           
+          # Create SSH key file from secret
+          echo "${{ secrets.STAGING_SSH_KEY }}" > staging_key
+          chmod 600 staging_key
+          
           # Copy to staging server via SSH
-          scp -i ${{ secrets.STAGING_SSH_KEY }} -o StrictHostKeyChecking=no \
+          scp -i staging_key -o StrictHostKeyChecking=no \
             -r . ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}:/var/www/tulsa-seo-backend/
           
           # Execute deployment commands on staging server
-          ssh -i ${{ secrets.STAGING_SSH_KEY }} -o StrictHostKeyChecking=no \
+          ssh -i staging_key -o StrictHostKeyChecking=no \
             ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} << 'EOF'
             cd /var/www/tulsa-seo-backend
             composer install --no-dev --optimize-autoloader
@@ -360,6 +364,9 @@ jobs:
             sudo systemctl restart php8.2-fpm
             sudo systemctl restart nginx
           EOF
+          
+          # Clean up SSH key file
+          rm -f staging_key
 
   deploy-production:
     name: Deploy to Production
@@ -391,12 +398,16 @@ jobs:
           cd backend
           tar -xzf backend-build.tar.gz
           
+          # Create SSH key file from secret
+          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > production_key
+          chmod 600 production_key
+          
           # Copy to production server via SSH
-          scp -i ${{ secrets.PRODUCTION_SSH_KEY }} -o StrictHostKeyChecking=no \
+          scp -i production_key -o StrictHostKeyChecking=no \
             -r . ${{ secrets.PRODUCTION_USER }}@${{ secrets.PRODUCTION_HOST }}:/var/www/tulsa-seo-backend/
           
           # Execute deployment commands on production server
-          ssh -i ${{ secrets.PRODUCTION_SSH_KEY }} -o StrictHostKeyChecking=no \
+          ssh -i production_key -o StrictHostKeyChecking=no \
             ${{ secrets.PRODUCTION_USER }}@${{ secrets.PRODUCTION_HOST }} << 'EOF'
             cd /var/www/tulsa-seo-backend
             composer install --no-dev --optimize-autoloader
@@ -406,3 +417,6 @@ jobs:
             sudo systemctl restart php8.2-fpm
             sudo systemctl restart nginx
           EOF
+          
+          # Clean up SSH key file
+          rm -f production_key
