@@ -112,17 +112,24 @@ export default function Topbar() {
               Analytics
             </Link>
             <Link 
-              href="/client/cases" 
+              href="/client/audit" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <Target className="w-4 h-4" />
+              SEO Audit
+            </Link>
+            <Link 
+              href="/client/cases" 
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
+            >
+              <FileText className="w-4 h-4" />
               Campaigns
             </Link>
             <Link 
               href="/client/billing" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
-              <FileText className="w-4 h-4" />
+              <ClipboardCheck className="w-4 h-4" />
               Reports
             </Link>
             <Link 
@@ -130,7 +137,7 @@ export default function Topbar() {
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <ClipboardCheck className="w-4 h-4" />
-              Audits
+              New Audit
             </Link>
             {isAdmin() && (
               <Link 
