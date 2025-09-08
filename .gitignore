@@ -30,3 +30,8 @@ server.log
 AWSCLIV2.pkg
 *.pem
 backend/config/bundles_prod.php
+
+# SSH keys for deployment
+staging_key
+staging_key.pub
+*.pem
