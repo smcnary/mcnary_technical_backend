@@ -4,74 +4,52 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-enum FindingStatus: string
-{
-    case PASS = 'pass';
-    case FAIL = 'fail';
-    case WARN = 'warn';
-    case NA = 'na';
-}
-
-enum FindingSeverity: string
-{
-    case INFO = 'info';
-    case LOW = 'low';
-    case MED = 'med';
-    case HIGH = 'high';
-    case CRITICAL = 'critical';
-}
-
 final class FindingResult
 {
     public function __construct(
         public readonly string $checkCode,
-        public readonly FindingStatus $status,
-        public readonly FindingSeverity $severity,
-        public readonly array $evidence,
-        public readonly ?float $scoreDelta = null,
-        public readonly ?string $message = null
+        public readonly string $category,
+        public readonly string $severity,
+        public readonly string $title,
+        public readonly string $description,
+        public readonly ?string $recommendation = null,
+        public readonly array $evidence = [],
+        public readonly float $impactScore = 0.0,
+        public readonly string $effort = 'medium'
     ) {}
 
-    public function isPass(): bool
+    public function isCritical(): bool
     {
-        return $this->status === FindingStatus::PASS;
+        return $this->severity === 'critical';
     }
 
-    public function isFail(): bool
+    public function isHigh(): bool
     {
-        return $this->status === FindingStatus::FAIL;
+        return $this->severity === 'high';
     }
 
-    public function isWarning(): bool
+    public function isMedium(): bool
     {
-        return $this->status === FindingStatus::WARN;
+        return $this->severity === 'medium';
     }
 
-    public function isNotApplicable(): bool
+    public function isLow(): bool
     {
-        return $this->status === FindingStatus::NA;
-    }
-
-    public function getSeverityWeight(): float
-    {
-        return match($this->severity) {
-            FindingSeverity::INFO => 0.1,
-            FindingSeverity::LOW => 0.3,
-            FindingSeverity::MED => 0.6,
-            FindingSeverity::HIGH => 0.8,
-            FindingSeverity::CRITICAL => 1.0,
-        };
+        return $this->severity === 'low';
     }
 
     public function toArray(): array
     {
         return [
-            'checkCode' => $this->checkCode,
-            'status' => $this->status->value,
-            'severity' => $this->severity->value,
+            'check_code' => $this->checkCode,
+            'category' => $this->category,
+            'severity' => $this->severity,
+            'title' => $this->title,
+            'description' => $this->description,
+            'recommendation' => $this->recommendation,
             'evidence' => $this->evidence,
-            'scoreDelta' => $this->scoreDelta,
-            'message' => $this->message,
+            'impact_score' => $this->impactScore,
+            'effort' => $this->effort,
         ];
     }
 }
