@@ -30,10 +30,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Topbar() {
   const { user, isAuthenticated, logout, isAdmin, isClientAdmin } = useAuth();
+  const { theme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [notifications] = useState(3); // Mock notification count
 
   const handleLogout = async () => {
@@ -57,10 +68,17 @@ export default function Topbar() {
     return 'User';
   };
 
+  // Mock notifications data
+  const mockNotifications = [
+    { id: 1, title: 'New lead received', message: 'John Doe submitted a contact form', time: '2 minutes ago', unread: true },
+    { id: 2, title: 'Campaign updated', message: 'SEO campaign "Local Growth" has new data', time: '1 hour ago', unread: true },
+    { id: 3, title: 'Review received', message: 'New 5-star review on Google Business Profile', time: '3 hours ago', unread: true },
+  ];
+
   return (
     <>
       {/* Desktop Topbar */}
-      <div className="h-16 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      <div className={`h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 shadow-sm sticky top-0 z-50 ${theme === 'dark' ? 'dark' : ''}`}>
         <div className="h-full px-4 lg:px-6 flex items-center justify-between">
           {/* Left Section - Logo and Brand */}
           <div className="flex items-center gap-4">
@@ -69,10 +87,10 @@ export default function Topbar() {
                 <span className="text-white font-bold text-lg">TS</span>
               </div>
               <div className="hidden sm:block">
-                <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                   Tulsa SEO
                 </span>
-                <p className="text-xs text-gray-500 -mt-1">Digital Marketing Platform</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">Digital Marketing Platform</p>
               </div>
             </Link>
           </div>
@@ -80,28 +98,28 @@ export default function Topbar() {
           {/* Center Section - Navigation (Desktop) */}
           <div className="hidden md:flex items-center gap-1">
             <Link 
-              href="/dashboard" 
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
+              href="/client" 
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200 font-medium"
             >
               <Home className="w-4 h-4" />
               Dashboard
             </Link>
             <Link 
-              href="/analytics" 
+              href="/client/leads" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <BarChart3 className="w-4 h-4" />
               Analytics
             </Link>
             <Link 
-              href="/campaigns" 
+              href="/client/cases" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <Target className="w-4 h-4" />
               Campaigns
             </Link>
             <Link 
-              href="/reports" 
+              href="/client/billing" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <FileText className="w-4 h-4" />
@@ -112,7 +130,7 @@ export default function Topbar() {
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
             >
               <ClipboardCheck className="w-4 h-4" />
-              Get an Audit
+              Audits
             </Link>
             {isAdmin() && (
               <Link 
@@ -128,34 +146,89 @@ export default function Topbar() {
           {/* Right Section - Search, Notifications, User Menu */}
           <div className="flex items-center gap-3">
             {/* Search */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden sm:flex items-center gap-2 px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            >
-              <Search className="w-4 h-4" />
-              <span className="text-sm">Search...</span>
-            </Button>
+            <Sheet open={searchOpen} onOpenChange={setSearchOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden sm:flex items-center gap-2 px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                >
+                  <Search className="w-4 h-4" />
+                  <span className="text-sm">Search...</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="top" className="h-[400px]">
+                <SheetHeader>
+                  <SheetTitle>Search</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search campaigns, leads, reports..."
+                      className="pl-10 h-12 text-lg"
+                      autoFocus
+                    />
+                  </div>
+                  <div className="mt-4 text-sm text-gray-500">
+                    <p>Search across all your data including campaigns, leads, reports, and more.</p>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
 
             {/* Notifications */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            >
-              <Bell className="w-5 h-5" />
-              {notifications > 0 && (
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                 >
-                  {notifications}
-                </Badge>
-              )}
-            </Button>
+                  <Bell className="w-5 h-5" />
+                  {notifications > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                    >
+                      {notifications}
+                    </Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuLabel>
+                  <div className="flex items-center justify-between">
+                    <span>Notifications</span>
+                    <Button variant="ghost" size="sm" className="h-auto p-0 text-xs">
+                      Mark all read
+                    </Button>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {mockNotifications.map((notification) => (
+                  <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3">
+                    <div className="flex items-start gap-3 w-full">
+                      <div className={`w-2 h-2 rounded-full mt-2 ${notification.unread ? 'bg-blue-500' : 'bg-gray-300'}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{notification.title}</p>
+                        <p className="text-xs text-gray-600 mt-1">{notification.message}</p>
+                        <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/notifications" className="text-center w-full">
+                    View all notifications
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* User Menu */}
-            {isAuthenticated && user ? (
+            {isAuthenticated && user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -190,15 +263,15 @@ export default function Topbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className="flex items-center gap-2">
+                    <Link href="/user-preferences" className="flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      Profile
+                      User Preferences
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/settings" className="flex items-center gap-2">
+                    <Link href="/account-settings" className="flex items-center gap-2">
                       <Settings className="w-4 h-4" />
-                      Settings
+                      Account Settings
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -207,19 +280,10 @@ export default function Topbar() {
                     className="flex items-center gap-2 text-red-600 focus:text-red-600"
                   >
                     <LogOut className="w-4 h-4" />
-                    Sign out
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" asChild>
-                  <Link href="/login">Sign in</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/register">Get Started</Link>
-                </Button>
-              </div>
             )}
 
             {/* Mobile Menu Button */}
@@ -244,7 +308,7 @@ export default function Topbar() {
         <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
           <div className="px-4 py-3 space-y-2">
             <Link 
-              href="/dashboard" 
+              href="/client" 
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -252,7 +316,7 @@ export default function Topbar() {
               Dashboard
             </Link>
             <Link 
-              href="/analytics" 
+              href="/client/leads" 
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -260,7 +324,7 @@ export default function Topbar() {
               Analytics
             </Link>
             <Link 
-              href="/campaigns" 
+              href="/client/cases" 
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -268,7 +332,7 @@ export default function Topbar() {
               Campaigns
             </Link>
             <Link 
-              href="/reports" 
+              href="/client/billing" 
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -281,7 +345,7 @@ export default function Topbar() {
               onClick={() => setMobileMenuOpen(false)}
             >
               <ClipboardCheck className="w-4 h-4" />
-              Get an Audit
+              Audits
             </Link>
             {isAdmin() && (
               <Link 
@@ -296,13 +360,18 @@ export default function Topbar() {
             
             {/* Mobile Search */}
             <div className="pt-2 border-t border-gray-200">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-              >
-                <Search className="w-4 h-4 mr-2" />
-                Search...
-              </Button>
+              <Sheet open={searchOpen} onOpenChange={setSearchOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Search...
+                  </Button>
+                </SheetTrigger>
+              </Sheet>
             </div>
 
             {/* Mobile User Actions */}
@@ -323,20 +392,20 @@ export default function Topbar() {
                   </div>
                 </div>
                 <Link 
-                  href="/profile" 
+                  href="/user-preferences" 
                   className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <User className="w-4 h-4" />
-                  Profile
+                  User Preferences
                 </Link>
                 <Link 
-                  href="/settings" 
+                  href="/account-settings" 
                   className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Settings className="w-4 h-4" />
-                  Settings
+                  Account Settings
                 </Link>
                 <button 
                   onClick={() => {
@@ -346,7 +415,7 @@ export default function Topbar() {
                   className="flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200 w-full text-left"
                 >
                   <LogOut className="w-4 h-4" />
-                  Sign out
+                  Logout
                 </button>
               </div>
             )}

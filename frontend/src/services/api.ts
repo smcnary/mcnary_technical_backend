@@ -527,6 +527,40 @@ export class ApiService {
     return this.fetchApi<Record<string, unknown>>('/api');
   }
 
+  // Google Business Profile KPI methods
+  async getGbpKpi(clientId: string): Promise<{
+    connected: boolean;
+    profileId?: string;
+    kpi?: {
+      views: { total: number; change: number; period: string };
+      calls: { total: number; change: number; period: string };
+      reviews: { average: number; total: number; change: number; period: string };
+      localVisibility: { score: number; change: number; period: string };
+      actions: { website_clicks: number; direction_requests: number; period: string };
+    };
+    lastUpdated?: string;
+  }> {
+    return this.fetchApi<{
+      connected: boolean;
+      profileId?: string;
+      kpi?: {
+        views: { total: number; change: number; period: string };
+        calls: { total: number; change: number; period: string };
+        reviews: { average: number; total: number; change: number; period: string };
+        localVisibility: { score: number; change: number; period: string };
+        actions: { website_clicks: number; direction_requests: number; period: string };
+      };
+      lastUpdated?: string;
+    }>(`/api/v1/gbp/kpi/${clientId}`);
+  }
+
+  async connectGbp(clientId: string, profileId: string): Promise<{ message: string; profileId: string }> {
+    return this.fetchApi<{ message: string; profileId: string }>(`/api/v1/gbp/connect/${clientId}`, {
+      method: 'POST',
+      body: JSON.stringify({ profileId }),
+    });
+  }
+
   // Health check
   async healthCheck(): Promise<{ status: string }> {
     try {
