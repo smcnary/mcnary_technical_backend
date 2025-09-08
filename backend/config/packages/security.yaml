@@ -11,7 +11,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
-            pattern: ^/api/auth/login
+            pattern: ^/api/v1/auth/login
             stateless: true
             security: false
         public_api:
@@ -34,7 +34,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/auth/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/auth/google, roles: PUBLIC_ACCESS } # Allow Google OAuth endpoints
         - { path: ^/api/v1/auth/microsoft, roles: PUBLIC_ACCESS } # Allow Microsoft OAuth endpoints
         - { path: ^/api/v1/clients/register, roles: PUBLIC_ACCESS } # Allow public client registration
