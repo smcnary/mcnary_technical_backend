@@ -10,9 +10,14 @@ final class Scorecard
         public readonly string $runId,
         public readonly float $overallScore,
         public readonly array $categoryScores,
-        public readonly array $findings,
         public readonly array $metrics,
-        public readonly \DateTimeImmutable $generatedAt
+        public readonly int $totalFindings,
+        public readonly int $criticalFindings,
+        public readonly int $highFindings,
+        public readonly int $mediumFindings,
+        public readonly int $lowFindings,
+        public readonly array $topIssues = [],
+        public readonly array $quickWins = []
     ) {}
 
     public function getCategoryScore(string $category): float
@@ -20,77 +25,41 @@ final class Scorecard
         return $this->categoryScores[$category] ?? 0.0;
     }
 
-    public function getTechnicalScore(): float
+    public function getMetric(string $name): mixed
     {
-        return $this->getCategoryScore('technical');
+        return $this->metrics[$name] ?? null;
     }
 
-    public function getContentScore(): float
+    public function getTotalIssues(): int
     {
-        return $this->getCategoryScore('content');
+        return $this->criticalFindings + $this->highFindings + $this->mediumFindings + $this->lowFindings;
     }
 
-    public function getAuthorityScore(): float
+    public function getIssuesBySeverity(string $severity): int
     {
-        return $this->getCategoryScore('authority');
-    }
-
-    public function getUxScore(): float
-    {
-        return $this->getCategoryScore('ux');
-    }
-
-    public function getFindingsByCategory(string $category): array
-    {
-        return array_filter($this->findings, fn($finding) => $finding['category'] === $category);
-    }
-
-    public function getFindingsBySeverity(string $severity): array
-    {
-        return array_filter($this->findings, fn($finding) => $finding['severity'] === $severity);
-    }
-
-    public function getCriticalFindings(): array
-    {
-        return $this->getFindingsBySeverity('critical');
-    }
-
-    public function getHighFindings(): array
-    {
-        return $this->getFindingsBySeverity('high');
-    }
-
-    public function getTotalFindings(): int
-    {
-        return count($this->findings);
-    }
-
-    public function getPassedChecks(): int
-    {
-        return count(array_filter($this->findings, fn($finding) => $finding['status'] === 'pass'));
-    }
-
-    public function getFailedChecks(): int
-    {
-        return count(array_filter($this->findings, fn($finding) => $finding['status'] === 'fail'));
+        return match ($severity) {
+            'critical' => $this->criticalFindings,
+            'high' => $this->highFindings,
+            'medium' => $this->mediumFindings,
+            'low' => $this->lowFindings,
+            default => 0,
+        };
     }
 
     public function toArray(): array
     {
         return [
-            'runId' => $this->runId,
-            'overallScore' => $this->overallScore,
-            'categoryScores' => $this->categoryScores,
-            'findings' => $this->findings,
+            'run_id' => $this->runId,
+            'overall_score' => $this->overallScore,
+            'category_scores' => $this->categoryScores,
             'metrics' => $this->metrics,
-            'generatedAt' => $this->generatedAt->format('c'),
-            'summary' => [
-                'totalFindings' => $this->getTotalFindings(),
-                'passedChecks' => $this->getPassedChecks(),
-                'failedChecks' => $this->getFailedChecks(),
-                'criticalFindings' => count($this->getCriticalFindings()),
-                'highFindings' => count($this->getHighFindings()),
-            ]
+            'total_findings' => $this->totalFindings,
+            'critical_findings' => $this->criticalFindings,
+            'high_findings' => $this->highFindings,
+            'medium_findings' => $this->mediumFindings,
+            'low_findings' => $this->lowFindings,
+            'top_issues' => $this->topIssues,
+            'quick_wins' => $this->quickWins,
         ];
     }
 }
