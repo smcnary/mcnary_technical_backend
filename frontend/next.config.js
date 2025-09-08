@@ -10,9 +10,9 @@ const nextConfig = {
     },
   }),
   // Exclude API routes from static export
-  experimental: {
-    appDir: true,
-  },
+  // experimental: {
+  //   appDir: true, // This is now default in Next.js 13+
+  // },
   // Exclude API routes from build
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   // Remove rewrites for static export
