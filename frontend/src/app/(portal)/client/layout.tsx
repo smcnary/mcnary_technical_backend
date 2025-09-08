@@ -1,14 +1,17 @@
 import ClientSidebar from '@/components/portal/navigation/ClientSidebar'
 import Topbar from '@/components/portal/layout/Topbar'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen grid grid-cols-[240px_1fr]">
-      <ClientSidebar />
-      <div className="flex flex-col">
-        <Topbar />
-        <main className="p-6">{children}</main>
+    <ThemeProvider>
+      <div className="min-h-screen grid grid-cols-[240px_1fr]">
+        <ClientSidebar />
+        <div className="flex flex-col">
+          <Topbar />
+          <main className="p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   )
 }

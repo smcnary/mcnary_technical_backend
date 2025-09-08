@@ -1,9 +1,14 @@
 "use client";
 
 import React from "react";
+import { useEffect, useState } from "react";
+import api, { ApiResponse, Lead } from "@/services/api";
 import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import UserGreeting from "./UserGreeting";
+import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/contexts/ThemeContext";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 function cx(...cls: (string | false | null | undefined)[]) {
   return cls.filter(Boolean).join(" ");
@@ -12,26 +17,26 @@ function cx(...cls: (string | false | null | undefined)[]) {
 function KpiCard({ label, value, delta, icon: Icon, help }: { label: string; value: string | number; delta?: { value: number }; icon: React.ElementType; help?: string; }) {
   const isUp = (delta?.value ?? 0) >= 0;
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow h-full">
       <div className="p-5 flex h-full flex-col justify-between">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-slate-500">{label}</p>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{label}</p>
             <div className="mt-2 flex items-baseline gap-3">
-              <h3 className="text-3xl font-semibold tracking-tight text-slate-900">{value}</h3>
+              <h3 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">{value}</h3>
               {typeof delta?.value === "number" && (
-                <span className={cx("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", isUp ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700")}>
+                <span className={cx("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", isUp ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400" : "bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400")}>
                   {isUp ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
                   {isUp ? `+${delta!.value}%` : `-${Math.abs(delta!.value)}%`}
                 </span>
               )}
             </div>
           </div>
-          <div className="rounded-xl bg-slate-50 p-3 text-slate-500">
+          <div className="rounded-xl bg-slate-50 dark:bg-slate-700 p-3 text-slate-500 dark:text-slate-400">
             <Icon className="h-5 w-5" />
           </div>
         </div>
-        {help && <p className="mt-3 text-xs text-slate-500">{help}</p>}
+        {help && <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{help}</p>}
       </div>
     </div>
   );
@@ -159,18 +164,18 @@ function WeeklyChart() {
 
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-900">Performance Trends</h3>
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Performance Trends</h3>
         
         {/* Tabs */}
-        <div className="flex rounded-lg bg-slate-100 p-1">
+        <div className="flex rounded-lg bg-slate-100 dark:bg-slate-700 p-1">
           <button
             onClick={() => setActiveTab('weekly')}
             className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
               activeTab === 'weekly'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Weekly
@@ -179,8 +184,8 @@ function WeeklyChart() {
             onClick={() => setActiveTab('monthly')}
             className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
               activeTab === 'monthly'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Monthly
@@ -189,8 +194,8 @@ function WeeklyChart() {
             onClick={() => setActiveTab('yearly')}
             className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
               activeTab === 'yearly'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Yearly
@@ -201,16 +206,18 @@ function WeeklyChart() {
       <div className="h-56 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={getChartData()}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-600" />
             <XAxis 
               dataKey="period" 
               stroke="#64748b"
+              className="dark:stroke-slate-400"
               fontSize={12}
               tickLine={false}
               axisLine={false}
             />
             <YAxis 
               stroke="#64748b"
+              className="dark:stroke-slate-400"
               fontSize={12}
               tickLine={false}
               axisLine={false}
@@ -226,8 +233,10 @@ function WeeklyChart() {
                 backgroundColor: 'white',
                 border: '1px solid #e2e8f0',
                 borderRadius: '8px',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                color: '#1e293b'
               }}
+              className="dark:!bg-slate-800 dark:!border-slate-600 dark:!text-white"
               formatter={(value, name) => {
                 if (name === 'gbpViews') return [value.toLocaleString(), 'GBP Views'];
                 if (name === 'phoneCalls') return [value, 'Phone Calls'];
@@ -241,6 +250,7 @@ function WeeklyChart() {
                 paddingTop: '10px',
                 fontSize: '12px'
               }}
+              className="dark:text-white"
             />
             <Line 
               type="monotone" 
@@ -282,13 +292,80 @@ function WeeklyChart() {
 }
 
 export default function ClientDashboard() {
+  const { user } = useAuth();
+  const { theme } = useTheme();
+  const { 
+    leads, 
+    campaigns, 
+    caseStudies,
+    getLeads, 
+    getCampaigns, 
+    getCaseStudies,
+    getLoadingState, 
+    getErrorState, 
+    clearError 
+  } = useData();
+  
+  const [gbpData, setGbpData] = useState<any>(null);
+  const [isLoadingGbp, setIsLoadingGbp] = useState<boolean>(false);
+  const [gbpError, setGbpError] = useState<string | null>(null);
+
+  const getUserInitials = (name?: string) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const isLoadingLeads = getLoadingState('leads');
+  const leadsError = getErrorState('leads');
+  const isLoadingCampaigns = getLoadingState('campaigns');
+  const isLoadingCaseStudies = getLoadingState('caseStudies');
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    async function loadDashboardData() {
+      try {
+        // Load leads, campaigns, and case studies in parallel
+        await Promise.all([
+          getLeads({ per_page: 5, page: 1, sort: "-createdAt" }),
+          getCampaigns({ per_page: 3, page: 1, sort: "-createdAt" }),
+          getCaseStudies()
+        ]);
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+      }
+    }
+
+    async function loadGbpData() {
+      if (!user?.clientId) return;
+      
+      setIsLoadingGbp(true);
+      setGbpError(null);
+      try {
+        const gbpResponse = await api.getGbpKpi(user.clientId);
+        if (isMounted) setGbpData(gbpResponse);
+      } catch (err: any) {
+        if (isMounted) setGbpError(err?.message || "Failed to load GBP data");
+      } finally {
+        if (isMounted) setIsLoadingGbp(false);
+      }
+    }
+
+    loadDashboardData();
+    loadGbpData();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.clientId, getLeads, getCampaigns, getCaseStudies]);
+
   return (
-    <div className="min-h-screen bg-slate-100/70">
+    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex gap-6">
           <main className="flex-1 py-8">
-            {/* User Greeting */}
-            <div className="mb-6">
+            {/* Header with theme toggle */}
+            <div className="flex items-center justify-between mb-6">
               <UserGreeting 
                 fallbackData={{
                   userName: "John Doe",
@@ -296,14 +373,39 @@ export default function ClientDashboard() {
                   userRole: "Client Admin"
                 }}
               />
+              <ThemeToggle />
             </div>
 
             {/* KPI grid */}
             <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-              <KpiCard label="Local Visibility" value={72} delta={{ value: 6 }} icon={MapPin} help="Average GBP position & local pack presence." />
-              <KpiCard label="GBP Views" value={18340} delta={{ value: 12 }} icon={Eye} help="Total profile & search views across properties." />
-              <KpiCard label="Phone Calls" value={348} delta={{ value: 4 }} icon={Phone} help="Tracked from call extensions and GBP taps." />
-              <KpiCard label="Leads" value={129} delta={{ value: -3 }} icon={Building2} help="Form fills, booked appointments, and tracked calls." />
+              <KpiCard 
+                label="Local Visibility" 
+                value={gbpData?.kpi?.localVisibility?.score || 72} 
+                delta={{ value: gbpData?.kpi?.localVisibility?.change || 6 }} 
+                icon={MapPin} 
+                help="Average GBP position & local pack presence." 
+              />
+              <KpiCard 
+                label="GBP Views" 
+                value={gbpData?.kpi?.views?.total || 18340} 
+                delta={{ value: gbpData?.kpi?.views?.change || 12 }} 
+                icon={Eye} 
+                help="Total profile & search views across properties." 
+              />
+              <KpiCard 
+                label="Phone Calls" 
+                value={gbpData?.kpi?.calls?.total || 348} 
+                delta={{ value: gbpData?.kpi?.calls?.change || 4 }} 
+                icon={Phone} 
+                help="Tracked from call extensions and GBP taps." 
+              />
+              <KpiCard 
+                label="Leads" 
+                value={leads.length} 
+                delta={{ value: 8 }} 
+                icon={Building2} 
+                help="Form fills, booked appointments, and tracked calls." 
+              />
             </section>
 
             {/* Charts / modules */}
@@ -312,64 +414,109 @@ export default function ClientDashboard() {
                 <WeeklyChart />
               </div>
               <div className="lg:col-span-1">
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <h3 className="text-sm font-semibold text-slate-900">Recent Activity</h3>
+                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Recent Activity</h3>
                   <ul className="mt-4 space-y-3 text-sm">
-                    <li className="flex items-start gap-3">
-                      <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                      <p className="text-slate-700"><strong>12 calls</strong> from GBP last 24h</p>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
-                      <p className="text-slate-700"><strong>+38 views</strong> vs prior day</p>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-violet-500" />
-                      <p className="text-slate-700">New review received on South Tulsa location</p>
-                    </li>
+                    {gbpData?.kpi?.calls?.total ? (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                        <p className="text-slate-700 dark:text-slate-300">
+                          <strong>{gbpData.kpi.calls.total} calls</strong> from GBP this month
+                        </p>
+                      </li>
+                    ) : (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                        <p className="text-slate-700 dark:text-slate-300"><strong>12 calls</strong> from GBP last 24h</p>
+                      </li>
+                    )}
+                    
+                    {gbpData?.kpi?.views?.total ? (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
+                        <p className="text-slate-700 dark:text-slate-300">
+                          <strong>{gbpData.kpi.views.total.toLocaleString()} views</strong> this month
+                        </p>
+                      </li>
+                    ) : (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
+                        <p className="text-slate-700 dark:text-slate-300"><strong>+38 views</strong> vs prior day</p>
+                      </li>
+                    )}
+                    
+                    {leads.length > 0 ? (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-violet-500" />
+                        <p className="text-slate-700 dark:text-slate-300">
+                          <strong>{leads.length} new leads</strong> this month
+                        </p>
+                      </li>
+                    ) : (
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-violet-500" />
+                        <p className="text-slate-700 dark:text-slate-300">New review received on South Tulsa location</p>
+                      </li>
+                    )}
                   </ul>
-                  <button className="mt-5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white">View details</button>
+                  <button className="mt-5 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600">View details</button>
                 </div>
               </div>
             </section>
 
-            {/* Table placeholder */}
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            {/* Leads table */}
+            <section className="mt-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-slate-900">Leads</h3>
-                <button className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white">Manage columns</button>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Leads</h3>
+                <button className="rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600">Manage columns</button>
               </div>
 
               <div className="mt-4 overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-200 text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600">Date</th>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600">Source</th>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600">Channel</th>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600">Status</th>
-                      <th scope="col" className="px-4 py-3 text-right font-medium text-slate-600">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {[1,2,3,4,5].map((i) => (
-                      <tr key={i} className="hover:bg-slate-50/60">
-                        <td className="px-4 py-3 text-slate-700">2025-08-1{i}</td>
-                        <td className="px-4 py-3 text-slate-700">Google Business Profile</td>
-                        <td className="px-4 py-3 text-slate-700">Call</td>
-                        <td className="px-4 py-3"><span className="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">Qualified</span></td>
-                        <td className="px-4 py-3 text-right font-medium text-slate-900">$450</td>
+                {isLoadingLeads ? (
+                  <div className="py-8 text-center text-slate-500 dark:text-slate-400 text-sm">Loading leads…</div>
+                ) : leadsError ? (
+                  <div className="py-8 text-center text-rose-600 dark:text-rose-400 text-sm">{leadsError}</div>
+                ) : (
+                  <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-sm">
+                    <thead className="bg-slate-50 dark:bg-slate-700">
+                      <tr>
+                        <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600 dark:text-slate-300">Date</th>
+                        <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600 dark:text-slate-300">Name</th>
+                        <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600 dark:text-slate-300">Channel</th>
+                        <th scope="col" className="px-4 py-3 text-left font-medium text-slate-600 dark:text-slate-300">Status</th>
+                        <th scope="col" className="px-4 py-3 text-right font-medium text-slate-600 dark:text-slate-300">Email</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                      {leads.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="px-4 py-6 text-center text-slate-500 dark:text-slate-400">No leads yet</td>
+                        </tr>
+                      ) : (
+                        leads.map((lead) => (
+                          <tr key={lead.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-700/60">
+                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{new Date(lead.createdAt).toLocaleDateString()}</td>
+                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{lead.name || '—'}</td>
+                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{lead.practiceAreas?.[0] || '—'}</td>
+                            <td className="px-4 py-3">
+                              <span className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 capitalize">
+                                {lead.status}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-right font-medium text-slate-900 dark:text-white">{lead.email}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                )}
               </div>
 
-              <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
+              <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
                 <p>Showing 1–5 of 42</p>
                 <div className="flex items-center gap-2">
-                  <button className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 hover:bg-slate-50">Prev</button>
-                  <button className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 hover:bg-slate-50">Next</button>
+                  <button className="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300">Prev</button>
+                  <button className="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300">Next</button>
                 </div>
               </div>
             </section>

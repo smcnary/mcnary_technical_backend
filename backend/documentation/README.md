@@ -15,6 +15,7 @@ Welcome to the comprehensive documentation for the CounselRank.legal platform. T
 - **[API_ENDPOINTS.md](./API_ENDPOINTS.md)** - Detailed API endpoint specifications
 - **[API_JSON_EXAMPLES.md](./API_JSON_EXAMPLES.md)** - JSON request/response examples
 - **[COUNSELRANK_DB_SETUP.md](./COUNSELRANK_DB_SETUP.md)** - Database setup for CounselRank
+- **[AUDIT_INTAKE_VALIDATION.md](./AUDIT_INTAKE_VALIDATION.md)** - Audit intake rules, validation, and testing
 
 ### **🎨 Frontend & Client**
 - **[FRONTEND_SETUP.md](./FRONTEND_SETUP.md)** - Frontend development setup and configuration

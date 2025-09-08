@@ -71,10 +71,10 @@ export default function UserGreeting({
   if (loading && !profileData) {
     return (
       <div className={`flex flex-col ${className}`}>
-        <div className="text-sm text-slate-600">
+        <div className="text-sm text-slate-600 dark:text-slate-400">
           <span className="animate-pulse">Loading...</span>
         </div>
-        <div className="text-xs text-slate-500">
+        <div className="text-xs text-slate-500 dark:text-slate-500">
           <span className="animate-pulse">Loading...</span>
         </div>
       </div>
@@ -89,10 +89,10 @@ export default function UserGreeting({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="text-sm text-slate-600">
-        {timeGreeting}, <span className="font-medium text-slate-900">{displayName}</span>
+      <div className="text-sm text-slate-600 dark:text-slate-400">
+        {timeGreeting}, <span className="font-medium text-slate-900 dark:text-white">{displayName}</span>
       </div>
-      <div className="text-xs text-slate-500">
+      <div className="text-xs text-slate-500 dark:text-slate-500">
         {organizationName} • {userRole}
       </div>
     </div>
