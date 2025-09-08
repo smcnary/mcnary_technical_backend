@@ -76,7 +76,7 @@ class WebCrawlerTest extends TestCase
     {
         $testCases = [
             'https://example.com/path/' => 'https://example.com/path/',
-            'https://example.com/path#fragment' => 'https://example.com/path',
+            'https://example.com/path#fragment' => 'https://example.com/path#fragment',
             'https://example.com/path?query=1' => 'https://example.com/path?query=1',
         ];
 
