@@ -33,9 +33,13 @@ class OAuthToken
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tokens')]
+    #[ORM\ManyToOne(targetEntity: OAuthConnection::class, inversedBy: 'tokens')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private OAuthConnection $connection;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tokens')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $user = null;
 
     #[ORM\Column(type: 'text')]
     private string $accessToken;
@@ -63,6 +67,17 @@ class OAuthToken
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function getConnection(): OAuthConnection

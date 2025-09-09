@@ -35,11 +35,11 @@ class UserClientAccess
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'clientAccess')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAccess')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAccess')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'userAccess')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Client $client;
 

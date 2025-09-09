@@ -37,9 +37,13 @@ class OAuthConnection
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'oauthConnections')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'oauthConnections')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Client $client;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'oauthConnections')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $user = null;
 
     #[ORM\Column]
     private string $provider; // google_gbp, google_sc, google_analytics, stripe
@@ -73,6 +77,17 @@ class OAuthConnection
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function getClient(): Client

@@ -67,7 +67,7 @@ class Lead
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Client $client = null;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'leads')]
+    #[ORM\ManyToOne(targetEntity: LeadSource::class, inversedBy: 'leads')]
     #[ORM\JoinColumn(nullable: true)]
     private ?LeadSource $source = null;
 

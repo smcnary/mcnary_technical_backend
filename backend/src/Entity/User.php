@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(name: 'organization_id', nullable: false)]
     private Organization $organization;
 
-    #[ORM\ManyToOne(targetEntity: Agency::class)]
+    #[ORM\ManyToOne(targetEntity: Agency::class, inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'agency_id', nullable: true)]
     private ?Agency $agency = null;
 
@@ -76,10 +76,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 32)]
     private string $role; // 'AGENCY_ADMIN','AGENCY_STAFF','CLIENT_ADMIN','CLIENT_STAFF'
 
-    /** @var Collection<int,UserClientAccess> */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserClientAccess::class, cascade: ['persist'], orphanRemoval: true)]
-    private Collection $clientAccess;
-
     /** @var Collection<int,AuditIntake> */
     #[ORM\OneToMany(mappedBy: 'requestedBy', targetEntity: AuditIntake::class)]
     private Collection $requestedAuditIntakes;
@@ -87,6 +83,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /** @var Collection<int,AuditRun> */
     #[ORM\OneToMany(mappedBy: 'initiatedBy', targetEntity: AuditRun::class)]
     private Collection $initiatedAuditRuns;
+
+    /** @var Collection<int,OAuthConnection> */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: OAuthConnection::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $oauthConnections;
+
+    /** @var Collection<int,OAuthToken> */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: OAuthToken::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $tokens;
+
+    /** @var Collection<int,UserClientAccess> */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserClientAccess::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $userAccess;
 
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $metadata = [];
@@ -98,9 +106,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
         $this->passwordHash = $hash;
         $this->role = $role;
-        $this->clientAccess = new ArrayCollection();
         $this->requestedAuditIntakes = new ArrayCollection();
         $this->initiatedAuditRuns = new ArrayCollection();
+        $this->oauthConnections = new ArrayCollection();
+        $this->tokens = new ArrayCollection();
+        $this->userAccess = new ArrayCollection();
         $this->metadata = [];
     }
 
@@ -283,25 +293,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getClientAccess(): Collection
+    public function getUserAccess(): Collection
     {
-        return $this->clientAccess;
+        return $this->userAccess;
     }
 
-    public function addClientAccess(UserClientAccess $clientAccess): self
+    public function addUserAccess(UserClientAccess $userAccess): self
     {
-        if (!$this->clientAccess->contains($clientAccess)) {
-            $this->clientAccess->add($clientAccess);
-            $clientAccess->setUser($this);
+        if (!$this->userAccess->contains($userAccess)) {
+            $this->userAccess->add($userAccess);
+            $userAccess->setUser($this);
         }
         return $this;
     }
 
-    public function removeClientAccess(UserClientAccess $clientAccess): self
+    public function removeUserAccess(UserClientAccess $userAccess): self
     {
-        if ($this->clientAccess->removeElement($clientAccess)) {
-            if ($clientAccess->getUser() === $this) {
-                $clientAccess->setUser(null);
+        if ($this->userAccess->removeElement($userAccess)) {
+            if ($userAccess->getUser() === $this) {
+                $userAccess->setUser(null);
             }
         }
         return $this;
