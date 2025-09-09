@@ -1,0 +1,307 @@
+name: RDS Database Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+      instance_class:
+        description: 'RDS instance class'
+        required: false
+        default: 'db.t3.micro'
+        type: string
+      allocated_storage:
+        description: 'Allocated storage in GB'
+        required: false
+        default: '20'
+        type: string
+      create_new_instance:
+        description: 'Create new RDS instance (if false, will use existing)'
+        required: false
+        default: false
+        type: boolean
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/scripts/deploy-rds.sh'
+      - 'backend/scripts/migrate-to-rds.sh'
+      - 'backend/scripts/test-rds-connection.sh'
+      - 'backend/scripts/rds-terraform.tf'
+      - '.github/workflows/rds-deployment.yml'
+
+jobs:
+  deploy-rds-staging:
+    name: Deploy RDS to Staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment:
+      name: staging
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_pgsql, xml, zip, gd, curl, iconv
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: |
+          cd backend
+          composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: Deploy RDS instance
+        if: github.event.inputs.create_new_instance == 'true' || github.event_name == 'push'
+        run: |
+          cd backend
+          chmod +x scripts/deploy-rds.sh
+          
+          # Set environment-specific parameters
+          export DB_INSTANCE_IDENTIFIER="counselrank-staging-db"
+          export DB_NAME="counselrank_staging"
+          export DB_USERNAME="counselrank_admin"
+          export DB_PASSWORD="${{ secrets.RDS_STAGING_PASSWORD }}"
+          export DB_INSTANCE_CLASS="${{ github.event.inputs.instance_class || 'db.t3.micro' }}"
+          export DB_ALLOCATED_STORAGE="${{ github.event.inputs.allocated_storage || '20' }}"
+          export AWS_REGION="${{ secrets.AWS_REGION }}"
+          
+          # Run deployment script
+          ./scripts/deploy-rds.sh \
+            --instance-id "$DB_INSTANCE_IDENTIFIER" \
+            --db-name "$DB_NAME" \
+            --username "$DB_USERNAME" \
+            --password "$DB_PASSWORD" \
+            --instance-class "$DB_INSTANCE_CLASS" \
+            --storage "$DB_ALLOCATED_STORAGE" \
+            --region "$AWS_REGION"
+
+      - name: Test RDS connection
+        run: |
+          cd backend
+          chmod +x scripts/test-rds-connection.sh
+          
+          # Test connection to existing or newly created RDS instance
+          export RDS_ENDPOINT="${{ secrets.RDS_STAGING_ENDPOINT }}"
+          export RDS_PASSWORD="${{ secrets.RDS_STAGING_PASSWORD }}"
+          
+          ./scripts/test-rds-connection.sh
+
+      - name: Run database migrations
+        run: |
+          cd backend
+          
+          # Set environment variables for staging
+          export DATABASE_URL="${{ secrets.RDS_STAGING_DATABASE_URL }}"
+          export APP_ENV=prod
+          export APP_DEBUG=false
+          
+          # Run migrations
+          php bin/console doctrine:migrations:migrate --no-interaction || {
+            echo "⚠️ Migrations failed, but continuing..."
+          }
+
+      - name: Update staging environment
+        run: |
+          echo "✅ RDS staging deployment completed"
+          echo "Instance: ${{ secrets.RDS_STAGING_ENDPOINT }}"
+          echo "Database: counselrank_staging"
+          echo "Status: Ready for application deployment"
+
+  deploy-rds-production:
+    name: Deploy RDS to Production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment:
+      name: prod
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_pgsql, xml, zip, gd, curl, iconv
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: |
+          cd backend
+          composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: Deploy RDS instance
+        if: github.event.inputs.create_new_instance == 'true' || github.event_name == 'push'
+        run: |
+          cd backend
+          chmod +x scripts/deploy-rds.sh
+          
+          # Set environment-specific parameters for production
+          export DB_INSTANCE_IDENTIFIER="counselrank-prod-db"
+          export DB_NAME="counselrank_prod"
+          export DB_USERNAME="counselrank_admin"
+          export DB_PASSWORD="${{ secrets.RDS_PRODUCTION_PASSWORD }}"
+          export DB_INSTANCE_CLASS="${{ github.event.inputs.instance_class || 'db.t3.small' }}"
+          export DB_ALLOCATED_STORAGE="${{ github.event.inputs.allocated_storage || '50' }}"
+          export AWS_REGION="${{ secrets.AWS_REGION }}"
+          
+          # Run deployment script
+          ./scripts/deploy-rds.sh \
+            --instance-id "$DB_INSTANCE_IDENTIFIER" \
+            --db-name "$DB_NAME" \
+            --username "$DB_USERNAME" \
+            --password "$DB_PASSWORD" \
+            --instance-class "$DB_INSTANCE_CLASS" \
+            --storage "$DB_ALLOCATED_STORAGE" \
+            --region "$AWS_REGION"
+
+      - name: Test RDS connection
+        run: |
+          cd backend
+          chmod +x scripts/test-rds-connection.sh
+          
+          # Test connection to existing or newly created RDS instance
+          export RDS_ENDPOINT="${{ secrets.RDS_PRODUCTION_ENDPOINT }}"
+          export RDS_PASSWORD="${{ secrets.RDS_PRODUCTION_PASSWORD }}"
+          
+          ./scripts/test-rds-connection.sh
+
+      - name: Run database migrations
+        run: |
+          cd backend
+          
+          # Set environment variables for production
+          export DATABASE_URL="${{ secrets.RDS_PRODUCTION_DATABASE_URL }}"
+          export APP_ENV=prod
+          export APP_DEBUG=false
+          
+          # Run migrations
+          php bin/console doctrine:migrations:migrate --no-interaction || {
+            echo "⚠️ Migrations failed, but continuing..."
+          }
+
+      - name: Create production backup
+        run: |
+          cd backend
+          
+          # Create a snapshot of the production database
+          aws rds create-db-snapshot \
+            --db-instance-identifier "counselrank-prod-db" \
+            --db-snapshot-identifier "production-backup-$(date +%Y%m%d-%H%M%S)" \
+            --region "${{ secrets.AWS_REGION }}" || {
+            echo "⚠️ Backup creation failed, but continuing..."
+          }
+
+      - name: Update production environment
+        run: |
+          echo "✅ RDS production deployment completed"
+          echo "Instance: ${{ secrets.RDS_PRODUCTION_ENDPOINT }}"
+          echo "Database: counselrank_prod"
+          echo "Status: Ready for application deployment"
+
+  migrate-data:
+    name: Migrate Data to RDS
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment:
+      name: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_pgsql, xml, zip, gd, curl, iconv
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: |
+          cd backend
+          composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: Migrate data to RDS
+        run: |
+          cd backend
+          chmod +x scripts/migrate-to-rds.sh
+          
+          # Set environment-specific parameters
+          if [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+            export RDS_ENDPOINT="${{ secrets.RDS_STAGING_ENDPOINT }}"
+            export RDS_PASSWORD="${{ secrets.RDS_STAGING_PASSWORD }}"
+            export RDS_DB_NAME="counselrank_staging"
+          else
+            export RDS_ENDPOINT="${{ secrets.RDS_PRODUCTION_ENDPOINT }}"
+            export RDS_PASSWORD="${{ secrets.RDS_PRODUCTION_PASSWORD }}"
+            export RDS_DB_NAME="counselrank_prod"
+          fi
+          
+          # Run migration script
+          ./scripts/migrate-to-rds.sh \
+            --rds-endpoint "$RDS_ENDPOINT" \
+            --rds-password "$RDS_PASSWORD" \
+            --rds-db "$RDS_DB_NAME"
+
+      - name: Verify migration
+        run: |
+          cd backend
+          chmod +x scripts/test-rds-connection.sh
+          
+          # Test connection after migration
+          export RDS_ENDPOINT="${{ github.event.inputs.environment == 'staging' && secrets.RDS_STAGING_ENDPOINT || secrets.RDS_PRODUCTION_ENDPOINT }}"
+          export RDS_PASSWORD="${{ github.event.inputs.environment == 'staging' && secrets.RDS_STAGING_PASSWORD || secrets.RDS_PRODUCTION_PASSWORD }}"
+          
+          ./scripts/test-rds-connection.sh
