@@ -1,0 +1,137 @@
+# RDS Configuration Template
+# This file contains the configuration for deploying PostgreSQL to AWS RDS
+
+# Database Configuration
+database:
+  instance_identifier: "counselrank-prod-db"
+  name: "counselrank_prod"
+  username: "counselrank_admin"
+  password: "CHANGE_THIS_PASSWORD_IN_PRODUCTION"
+  engine: "postgres"
+  engine_version: "16.1"
+  instance_class: "db.t3.micro"  # For production, consider db.t3.small or larger
+  allocated_storage: 20  # GB
+  storage_type: "gp2"
+  storage_encrypted: true
+  multi_az: true
+  backup_retention_period: 7  # days
+  backup_window: "03:00-04:00"  # UTC
+  maintenance_window: "sun:04:00-sun:05:00"  # UTC
+
+# Security Configuration
+security:
+  security_group_name: "counselrank-db-sg"
+  vpc_id: "default"  # Change to your VPC ID
+  subnet_group: "default"  # Change to your subnet group
+  port: 5432
+  ssl_required: true
+  publicly_accessible: false  # Set to true only for development/testing
+
+# Network Configuration
+network:
+  region: "us-east-1"
+  availability_zones:
+    - "us-east-1a"
+    - "us-east-1b"
+  cidr_blocks:
+    - "10.0.0.0/16"  # Adjust based on your VPC
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  performance_insights: true
+  enhanced_monitoring: true
+  log_exports:
+    - "postgresql"
+    - "upgrade"
+
+# Parameter Group Configuration
+parameter_group:
+  name: "counselrank-postgres-16"
+  family: "postgres16"
+  parameters:
+    shared_preload_libraries: "pg_stat_statements"
+    log_statement: "all"
+    log_min_duration_statement: 1000
+    log_checkpoints: "1"
+    log_connections: "1"
+    log_disconnections: "1"
+    log_lock_waits: "1"
+    log_temp_files: "0"
+    log_autovacuum_min_duration: "0"
+    log_error_verbosity: "default"
+    log_line_prefix: "%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h"
+    timezone: "UTC"
+    default_text_search_config: "pg_catalog.english"
+    shared_buffers: "256MB"
+    effective_cache_size: "1GB"
+    work_mem: "4MB"
+    maintenance_work_mem: "64MB"
+    checkpoint_completion_target: "0.9"
+    wal_buffers: "16MB"
+    default_statistics_target: "100"
+    random_page_cost: "1.1"
+    effective_io_concurrency: "200"
+    max_worker_processes: "8"
+    max_parallel_workers_per_gather: "2"
+    max_parallel_workers: "8"
+    max_parallel_maintenance_workers: "2"
+
+# Environment-specific configurations
+environments:
+  development:
+    instance_class: "db.t3.micro"
+    allocated_storage: 20
+    multi_az: false
+    backup_retention_period: 1
+    publicly_accessible: true
+    monitoring:
+      performance_insights: false
+      enhanced_monitoring: false
+
+  staging:
+    instance_class: "db.t3.small"
+    allocated_storage: 50
+    multi_az: false
+    backup_retention_period: 3
+    publicly_accessible: false
+    monitoring:
+      performance_insights: true
+      enhanced_monitoring: true
+
+  production:
+    instance_class: "db.t3.medium"  # Adjust based on load
+    allocated_storage: 100
+    multi_az: true
+    backup_retention_period: 7
+    publicly_accessible: false
+    monitoring:
+      performance_insights: true
+      enhanced_monitoring: true
+
+# Connection Pooling Configuration
+connection_pooling:
+  enabled: true
+  max_connections: 100
+  min_connections: 5
+  connection_timeout: 30
+  idle_timeout: 300
+
+# Backup Configuration
+backup:
+  automated_backups: true
+  backup_retention_period: 7
+  backup_window: "03:00-04:00"
+  copy_tags_to_snapshot: true
+  delete_automated_backups: false
+  final_snapshot_identifier: "counselrank-final-snapshot"
+
+# Tags
+tags:
+  Environment: "production"
+  Project: "CounselRank"
+  Application: "Legal Marketing Platform"
+  Owner: "Sean McNary"
+  CostCenter: "Engineering"
+  Backup: "Required"
+  Compliance: "SOC2"
