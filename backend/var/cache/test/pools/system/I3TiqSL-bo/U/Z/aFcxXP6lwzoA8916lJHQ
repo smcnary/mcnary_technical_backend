@@ -1,0 +1,181 @@
+<?php //App.Entity.ContentItem
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\ContentItem',
+                'title',
+                3 => 'slug',
+                5 => 'content',
+                7 => 'type',
+                9 => 'status',
+            ],
+            'defaultGroup' => [
+                'ContentItem',
+            ],
+            'members' => [
+                [
+                    'title' => [
+                        $o[1],
+                    ],
+                    'slug' => [
+                        $o[3],
+                    ],
+                    'content' => [
+                        $o[5],
+                    ],
+                    'type' => [
+                        $o[7],
+                    ],
+                    'status' => [
+                        $o[9],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'title' => $o[1],
+                    'slug' => $o[3],
+                    'content' => $o[5],
+                    'type' => $o[7],
+                    'status' => $o[9],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+                7 => [
+                    $o[8],
+                ],
+                9 => [
+                    $o[10],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'ContentItem' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'ContentItem' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'ContentItem' => [
+                        $o[6],
+                    ],
+                ],
+                7 => [
+                    'Default' => [
+                        $o[8],
+                    ],
+                    'ContentItem' => [
+                        $o[8],
+                    ],
+                ],
+                9 => [
+                    'Default' => [
+                        $o[10],
+                    ],
+                    'ContentItem' => [
+                        $o[10],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\ContentItem',
+                3 => 'App\\Entity\\ContentItem',
+                5 => 'App\\Entity\\ContentItem',
+                7 => 'App\\Entity\\ContentItem',
+                9 => 'App\\Entity\\ContentItem',
+            ],
+            'property' => [
+                1 => 'title',
+                3 => 'slug',
+                5 => 'content',
+                7 => 'type',
+                9 => 'status',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+                8 => null,
+                10 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'ContentItem',
+                ],
+                4 => [
+                    'Default',
+                    'ContentItem',
+                ],
+                6 => [
+                    'Default',
+                    'ContentItem',
+                ],
+                8 => [
+                    'Default',
+                    'ContentItem',
+                ],
+                10 => [
+                    'Default',
+                    'ContentItem',
+                ],
+            ],
+            'choices' => [
+                8 => [
+                    'blog',
+                    'article',
+                    'case_study',
+                    'landing_page',
+                    'service_page',
+                    'other',
+                ],
+                10 => [
+                    'draft',
+                    'review',
+                    'published',
+                    'archived',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

@@ -1,0 +1,90 @@
+<?php //App.Entity.Faq
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Faq',
+                'question',
+                3 => 'answerMd',
+            ],
+            'defaultGroup' => [
+                'Faq',
+            ],
+            'members' => [
+                [
+                    'question' => [
+                        $o[1],
+                    ],
+                    'answerMd' => [
+                        $o[3],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'question' => $o[1],
+                    'answerMd' => $o[3],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'Faq' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'Faq' => [
+                        $o[4],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\Faq',
+                3 => 'App\\Entity\\Faq',
+            ],
+            'property' => [
+                1 => 'question',
+                3 => 'answerMd',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'Faq',
+                ],
+                4 => [
+                    'Default',
+                    'Faq',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

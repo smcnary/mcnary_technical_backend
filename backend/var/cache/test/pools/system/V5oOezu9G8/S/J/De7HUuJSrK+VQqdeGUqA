@@ -1,0 +1,26 @@
+<?php //getType.a%253A3%253A%257Bi%253A0%253Bs%253A15%253A%2522App%255CEntity%255CLead%2522%253Bi%253A1%253Bs%253A7%253A%2522utmJson%2522%253Bi%253A2%253Ba%253A0%253A%257B%257D%257D
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\TypeInfo\\Type\\CollectionType'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\TypeInfo\\Type\\CollectionType')),
+        clone ($p['Symfony\\Component\\TypeInfo\\Type\\BuiltinType'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\TypeInfo\\Type\\BuiltinType')),
+    ],
+    null,
+    [
+        'Symfony\\Component\\TypeInfo\\Type\\CollectionType' => [
+            'type' => [
+                $o[1],
+            ],
+            'isList' => [
+                false,
+            ],
+        ],
+        'Symfony\\Component\\TypeInfo\\Type\\BuiltinType' => [
+            'typeIdentifier' => [
+                1 => \Symfony\Component\TypeInfo\TypeIdentifier::ARRAY,
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

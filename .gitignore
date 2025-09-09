@@ -1,15 +1,30 @@
-# Cache and build artifacts
-backend/var/cache/
-backend/var/log/
-backend/vendor/
-frontend/.next/
-frontend/node_modules/
-frontend/tsconfig.tsbuildinfo
+# Dependencies
+node_modules/
+vendor/
+
+# Build artifacts
+dist/
+build/
+*.tar.gz
 
 # Environment files
 .env
 .env.local
 .env.*.local
+
+# Logs
+*.log
+logs/
+var/log/
+var/cache/
+var/sessions/
+var/tmp/
+
+# Test artifacts
+test-results/
+test-screenshots/
+playwright-report/
+coverage/
 
 # IDE files
 .vscode/
@@ -21,18 +36,14 @@ frontend/tsconfig.tsbuildinfo
 .DS_Store
 Thumbs.db
 
-# Logs
-dev.log
-server.log
-*.log
+# Temporary files
+*.tmp
+*.temp
+*.pid
 
-# System files
-AWSCLIV2.pkg
-*.pem
-backend/config/bundles_prod.php
+# Compiled files
+*.tsbuildinfo
 
-# SSH keys for deployment
-staging_key
-staging_key.pub
-*.pem
-backend/config/jwt/*.pem
+# AWS and deployment artifacts
+*.pkg
+staging_key*

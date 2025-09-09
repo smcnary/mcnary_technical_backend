@@ -1,53 +1,98 @@
-# 🗄️ Database Guide
+# Complete Database Guide
 
-## 📋 Overview
+## Overview
 
-This guide covers everything you need to know about working with databases in the CounselRank.legal platform, including setup, connection, entity creation, and frontend integration.
+This comprehensive guide covers everything you need to know about working with databases in the CounselRank.legal platform, including setup, connection, entity creation, migrations, and management.
 
-## 🚀 Quick Start
+## Table of Contents
+
+1. [Quick Start](#quick-start)
+2. [Database Connections](#database-connections)
+3. [Entity Creation](#entity-creation)
+4. [Database Migrations](#database-migrations)
+5. [Database Schema](#database-schema)
+6. [Performance Optimization](#performance-optimization)
+7. [Backup and Recovery](#backup-and-recovery)
+8. [Troubleshooting](#troubleshooting)
+
+## Quick Start
 
 ### 1. Start the Database
+
+#### Using Docker Compose (Recommended for Development)
 ```bash
-# Using Docker Compose (recommended for development)
+# Start PostgreSQL database
 docker-compose up -d
 
-# Or connect to existing PostgreSQL server
-source connect-db.sh
+# Database will be available at:
+# Host: localhost
+# Port: 5434
+# Database: tulsa_seo
+# Username: smcnary
+# Password: TulsaSeo122
+```
+
+#### Using RDS (Production/Staging)
+```bash
+# Deploy RDS staging instance
+cd backend/scripts
+./deploy-rds.sh --staging
+
+# Test RDS connection
+./test-rds-connection.sh --staging
 ```
 
 ### 2. Run Migrations
 ```bash
 cd backend
-php bin/console doctrine:migrations:migrate
+php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
 ### 3. Verify Connection
 ```bash
 php bin/console doctrine:query:sql 'SELECT version()'
+php bin/console doctrine:schema:validate
 ```
 
-## 🔌 Database Connections
+## Database Connections
 
 ### Local Development (Docker)
 ```bash
 # Connection Details
-Host: 127.0.0.1:5433
-Database: mcnary_marketing
-Username: postgres
-Password: postgres
-Port: 5433 (mapped from container port 5432)
+Host: 127.0.0.1:5434
+Database: tulsa_seo
+Username: smcnary
+Password: TulsaSeo122
+Port: 5434 (mapped from container port 5432)
 
 # Environment Variable
-export DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:5433/mcnary_marketing?serverVersion=16&charset=utf8"
+DATABASE_URL="postgresql://smcnary:TulsaSeo122@127.0.0.1:5434/tulsa_seo?serverVersion=16&charset=utf8"
 ```
 
-### Remote Database (counselrank.legal)
+### RDS Staging
 ```bash
-# Update connect-counselrank-db.sh with your credentials
-export DATABASE_URL="postgresql://username:password@host:port/database_name?serverVersion=16&charset=utf8"
+# Connection Details
+Host: counselrank-staging-db.cstm2wakq0zs.us-east-1.rds.amazonaws.com
+Database: counselrank_staging
+Username: counselrank_admin
+Password: TulsaSeo122
+Port: 5432
 
-# Or create .env.local
-DATABASE_URL="postgresql://username:password@host:port/database_name?serverVersion=16&charset=utf8"
+# Environment Variable
+DATABASE_URL="postgresql://counselrank_admin:TulsaSeo122@counselrank-staging-db.cstm2wakq0zs.us-east-1.rds.amazonaws.com:5432/counselrank_staging?serverVersion=16&charset=utf8"
+```
+
+### RDS Production
+```bash
+# Connection Details
+Host: counselrank-production-db.cstm2wakq0zs.us-east-1.rds.amazonaws.com
+Database: counselrank_production
+Username: counselrank_admin
+Password: [SECURE_PASSWORD]
+Port: 5432
+
+# Environment Variable
+DATABASE_URL="postgresql://counselrank_admin:[SECURE_PASSWORD]@counselrank-production-db.cstm2wakq0zs.us-east-1.rds.amazonaws.com:5432/counselrank_production?serverVersion=16&charset=utf8"
 ```
 
 ### Docker Services Configuration
@@ -57,18 +102,23 @@ services:
   database:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: mcnary_marketing
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
+      POSTGRES_DB: tulsa_seo
+      POSTGRES_PASSWORD: TulsaSeo122
+      POSTGRES_USER: smcnary
     ports:
       - "5434:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "mcnary_marketing", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-d", "tulsa_seo", "-U", "smcnary"]
       timeout: 5s
       retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
 ```
 
-## 🏗️ Entity Creation
+## Entity Creation
 
 ### What Are Entities?
 
@@ -98,14 +148,12 @@ class Product
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private string $id;
 
     #[ORM\Column(name: 'tenant_id', type: 'uuid', nullable: true)]
     private ?string $tenantId = null;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
-    private string $name;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
@@ -113,424 +161,507 @@ class Product
     #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
     private \DateTimeImmutable $updatedAt;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private string $name;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    private string $price;
+
     public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $now = new \DateTimeImmutable();
-        $this->createdAt = $now;
-        $this->updatedAt = $now;
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
-    // Getters and setters for all properties
+    // Getters and setters
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    // ... other getters and setters
 }
 ```
 
-#### 2. Essential Annotations
-
-**Entity Declaration**
+#### 2. Entity Relationships
 ```php
-#[ORM\Entity]                                    // Marks class as entity
-#[ORM\Table(name: 'table_name')]                // Custom table name
-#[ORM\UniqueConstraint(columns: ['field1', 'field2'])]  // Unique constraints
+// One-to-Many relationship
+#[ORM\OneToMany(mappedBy: 'client', targetEntity: User::class, cascade: ['persist'], orphanRemoval: true)]
+private Collection $users;
+
+// Many-to-One relationship
+#[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'users')]
+#[ORM\JoinColumn(name: 'client_id', nullable: false)]
+private Client $client;
+
+// Many-to-Many relationship
+#[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'products')]
+#[ORM\JoinTable(name: 'product_tags')]
+private Collection $tags;
 ```
 
-**Field Types**
+#### 3. Entity Validation
 ```php
-#[ORM\Column(type: 'string', length: 255)]      // String with max length
-#[ORM\Column(type: 'text', nullable: true)]     // Text field, can be null
-#[ORM\Column(type: 'integer')]                  // Integer field
-#[ORM\Column(type: 'boolean', options: ['default' => false])]  // Boolean with default
-#[ORM\Column(type: 'datetime_immutable')]       // DateTime field
-#[ORM\Column(type: 'jsonb')]                    // JSON field (PostgreSQL)
-#[ORM\Column(type: 'uuid')]                     // UUID field
+#[ORM\Column(type: 'string', length: 255)]
+#[Assert\NotBlank(message: 'Name cannot be blank')]
+#[Assert\Length(min: 2, max: 255, minMessage: 'Name must be at least 2 characters', maxMessage: 'Name cannot exceed 255 characters')]
+private string $name;
+
+#[ORM\Column(type: 'string', length: 255)]
+#[Assert\Email(message: 'Please enter a valid email address')]
+private string $email;
+
+#[ORM\Column(type: 'string', length: 20)]
+#[Assert\Regex(pattern: '/^\+?[1-9]\d{1,14}$/', message: 'Please enter a valid phone number')]
+private string $phone;
 ```
 
-**API Platform Integration**
-```php
-#[ApiResource(
-    operations: [
-        new Get(security: "is_granted('ROLE_USER')"),
-        new GetCollection(security: "is_granted('ROLE_USER')"),
-        new Post(security: "is_granted('ROLE_ADMIN')"),
-        new Put(security: "is_granted('ROLE_ADMIN')"),
-        new Delete(security: "is_granted('ROLE_ADMIN')")
-    ]
-)]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
-#[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC'])]
+### Entity Best Practices
+
+1. **Always use UUIDs** for primary keys
+2. **Include tenant_id** for multi-tenancy support
+3. **Add timestamps** (created_at, updated_at)
+4. **Use proper validation** constraints
+5. **Define relationships** clearly
+6. **Add API Platform annotations** for REST endpoints
+
+## Database Migrations
+
+### Creating Migrations
+
+#### 1. Generate Migration
+```bash
+# Create a new migration
+php bin/console make:migration
+
+# Or create migration for specific entity
+php bin/console doctrine:migrations:diff
 ```
 
-**Validation Constraints**
+#### 2. Review Generated Migration
 ```php
-#[Assert\NotBlank]
-#[Assert\Length(min: 2, max: 255)]
-#[Assert\Email]
-#[Assert\Choice(['active', 'inactive'])]
-#[Assert\Range(min: 0, max: 100)]
-```
+<?php
 
-#### 3. Multi-Tenancy Support
-```php
-#[ORM\Column(name: 'tenant_id', type: 'uuid', nullable: true)]
-private ?string $tenantId = null;
+declare(strict_types=1);
 
-#[ORM\Column(name: 'client_id', type: 'uuid')]
-private string $clientId;
-```
+namespace DoctrineMigrations;
 
-#### 4. Timestamps and Lifecycle
-```php
-#[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-private \DateTimeImmutable $createdAt;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-#[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-private \DateTimeImmutable $updatedAt;
-
-#[ORM\PreUpdate]
-public function setUpdatedAt(): void
+final class Version20250115000000 extends AbstractMigration
 {
-    $this->updatedAt = new \DateTimeImmutable();
+    public function getDescription(): string
+    {
+        return 'Create products table';
+    }
+
+    public function up(Schema $schema): void
+    {
+        $this->addSql('CREATE TABLE products (
+            id UUID NOT NULL,
+            tenant_id UUID DEFAULT NULL,
+            created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+            updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            description TEXT DEFAULT NULL,
+            price NUMERIC(10, 2) NOT NULL,
+            PRIMARY KEY(id)
+        )');
+        
+        $this->addSql('CREATE INDEX IDX_PRODUCTS_TENANT_ID ON products (tenant_id)');
+        $this->addSql('CREATE INDEX IDX_PRODUCTS_CREATED_AT ON products (created_at)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        $this->addSql('DROP TABLE products');
+    }
 }
 ```
 
-## 🔄 Database Migration Workflow
+### Running Migrations
 
-### Development Environment
+#### 1. Check Migration Status
+```bash
+php bin/console doctrine:migrations:status
+```
 
-1. **Create a new migration:**
-   ```bash
-   php bin/console make:migration
-   ```
+#### 2. Run Migrations
+```bash
+# Run all pending migrations
+php bin/console doctrine:migrations:migrate --no-interaction
 
-2. **Review the generated migration file** in `migrations/` directory
+# Run specific migration
+php bin/console doctrine:migrations:execute --up Version20250115000000
 
-3. **Run migrations:**
-   ```bash
-   php bin/console doctrine:migrations:migrate
-   ```
+# Rollback last migration
+php bin/console doctrine:migrations:migrate prev
+```
 
-4. **Check migration status:**
-   ```bash
-   php bin/console doctrine:migrations:status
-   ```
-
-### Production Deployment
-
-1. **Generate production migration:**
-   ```bash
-   php bin/console make:migration --env=prod
-   ```
-
-2. **Deploy migration files** to production server
-
-3. **Run migrations safely:**
-   ```bash
-   php bin/console doctrine:migrations:migrate --env=prod --no-interaction
-   ```
-
-4. **Verify migration success:**
-   ```bash
-   php bin/console doctrine:migrations:status --env=prod
-   ```
+#### 3. Validate Schema
+```bash
+php bin/console doctrine:schema:validate
+```
 
 ### Migration Best Practices
 
-- **Always backup** production database before running migrations
-- **Test migrations** in staging environment first
-- **Use transactions** for complex migrations
-- **Version control** all migration files
-- **Document breaking changes** in migration files
+1. **Always review** generated migrations before running
+2. **Test migrations** on development database first
+3. **Backup database** before running migrations in production
+4. **Use transactions** for complex migrations
+5. **Add indexes** for performance-critical queries
 
-### Rollback Procedures
+## Database Schema
 
-1. **Check migration history:**
-   ```bash
-   php bin/console doctrine:migrations:list
-   ```
+### Core Tables
 
-2. **Rollback to specific version:**
-   ```bash
-   php bin/console doctrine:migrations:migrate prev
-   ```
-
-3. **Rollback to specific migration:**
-   ```bash
-   php bin/console doctrine:migrations:migrate VERSION_NUMBER
-   ```
-
-## 🔌 Frontend Database Integration
-
-### Overview
-
-The frontend doesn't directly connect to the database. Instead, it communicates with the Symfony backend API, which handles all database operations. This architecture provides:
-
-- **Security**: Database credentials are never exposed to the client
-- **Scalability**: Backend can handle multiple frontend instances
-- **Maintainability**: Database logic is centralized in the backend
-- **Performance**: Backend can implement caching and optimization
-
-### API Service Layer
-
-#### 1. Base API Configuration
-
-Create `src/services/api.ts`:
-
-```typescript
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-
-class ApiService {
-  private api: AxiosInstance;
-
-  constructor() {
-    this.api = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
-      timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    // Request interceptor for authentication
-    this.api.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('auth_token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    // Response interceptor for error handling
-    this.api.interceptors.response.use(
-      (response: AxiosResponse) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          // Handle unauthorized access
-          localStorage.removeItem('auth_token');
-          window.location.href = '/login';
-        }
-        return Promise.reject(error);
-      }
-    );
-  }
-
-  // Generic CRUD methods
-  async get<T>(endpoint: string): Promise<T> {
-    const response = await this.api.get<T>(endpoint);
-    return response.data;
-  }
-
-  async post<T>(endpoint: string, data: any): Promise<T> {
-    const response = await this.api.post<T>(endpoint, data);
-    return response.data;
-  }
-
-  async put<T>(endpoint: string, data: any): Promise<T> {
-    const response = await this.api.put<T>(endpoint, data);
-    return response.data;
-  }
-
-  async delete<T>(endpoint: string): Promise<T> {
-    const response = await this.api.delete<T>(endpoint);
-    return response.data;
-  }
-}
-
-export const apiService = new ApiService();
+#### Organizations
+```sql
+CREATE TABLE organizations (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    domain VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
 ```
 
-#### 2. Entity-Specific Services
-
-Create `src/services/leads.ts`:
-
-```typescript
-import { apiService } from './api';
-
-export interface Lead {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  message: string;
-  status: 'new' | 'contacted' | 'qualified' | 'converted';
-  createdAt: string;
-  updatedAt: string;
-}
-
-export class LeadService {
-  static async getLeads(params?: any): Promise<Lead[]> {
-    const queryString = new URLSearchParams(params).toString();
-    return apiService.get<Lead[]>(`/leads?${queryString}`);
-  }
-
-  static async getLead(id: string): Promise<Lead> {
-    return apiService.get<Lead>(`/leads/${id}`);
-  }
-
-  static async createLead(data: Partial<Lead>): Promise<Lead> {
-    return apiService.post<Lead>('/leads', data);
-  }
-
-  static async updateLead(id: string, data: Partial<Lead>): Promise<Lead> {
-    return apiService.put<Lead>(`/leads/${id}`, data);
-  }
-
-  static async deleteLead(id: string): Promise<void> {
-    return apiService.delete<void>(`/leads/${id}`);
-  }
-}
+#### Tenants
+```sql
+CREATE TABLE tenants (
+    id UUID PRIMARY KEY,
+    organization_id UUID REFERENCES organizations(id),
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
 ```
 
-#### 3. React Component Usage
-
-```typescript
-import React, { useState, useEffect } from 'react';
-import { LeadService, Lead } from '../services/leads';
-
-export const LeadsList: React.FC = () => {
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchLeads = async () => {
-      try {
-        const data = await LeadService.getLeads();
-        setLeads(data);
-      } catch (error) {
-        console.error('Failed to fetch leads:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLeads();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-
-  return (
-    <div>
-      {leads.map(lead => (
-        <div key={lead.id}>
-          <h3>{lead.name}</h3>
-          <p>{lead.email}</p>
-          <p>Status: {lead.status}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
+#### Clients
+```sql
+CREATE TABLE clients (
+    id UUID PRIMARY KEY,
+    agency_id UUID REFERENCES agencies(id),
+    tenant_id UUID REFERENCES tenants(id),
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    website VARCHAR(255),
+    phone VARCHAR(20),
+    address TEXT,
+    city VARCHAR(100),
+    state VARCHAR(50),
+    zip_code VARCHAR(20),
+    country VARCHAR(50),
+    industry VARCHAR(50),
+    status VARCHAR(20) DEFAULT 'active',
+    metadata JSONB,
+    google_business_profile JSONB,
+    google_search_console JSONB,
+    google_analytics JSONB,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
 ```
 
-## 🛠️ Useful Commands
+#### Users
+```sql
+CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    organization_id UUID REFERENCES organizations(id),
+    agency_id UUID REFERENCES agencies(id),
+    tenant_id UUID REFERENCES tenants(id),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    role VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'active',
+    last_login_at TIMESTAMP,
+    metadata JSONB,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+```
 
-### Database Management
+### Audit System Tables
+
+#### Audit Intakes
+```sql
+CREATE TABLE audit_intakes (
+    id UUID PRIMARY KEY,
+    client_id UUID REFERENCES clients(id),
+    requested_by UUID REFERENCES users(id),
+    website_url VARCHAR(255) NOT NULL,
+    business_name VARCHAR(255) NOT NULL,
+    industry VARCHAR(100),
+    target_keywords JSONB,
+    competitors JSONB,
+    goals JSONB,
+    budget_range VARCHAR(50),
+    timeline VARCHAR(50),
+    contact_email VARCHAR(255),
+    contact_phone VARCHAR(20),
+    status VARCHAR(20) DEFAULT 'pending',
+    metadata JSONB,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+```
+
+#### Audit Runs
+```sql
+CREATE TABLE audit_runs (
+    id UUID PRIMARY KEY,
+    audit_intake_id UUID REFERENCES audit_intakes(id),
+    client_id UUID REFERENCES clients(id),
+    initiated_by UUID REFERENCES users(id),
+    status VARCHAR(20) DEFAULT 'pending',
+    scheduled_at TIMESTAMP,
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    parameters JSONB,
+    results JSONB,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+```
+
+### Indexes for Performance
+
+```sql
+-- Client indexes
+CREATE INDEX idx_clients_agency_id ON clients(agency_id);
+CREATE INDEX idx_clients_tenant_id ON clients(tenant_id);
+CREATE INDEX idx_clients_status ON clients(status);
+CREATE INDEX idx_clients_created_at ON clients(created_at);
+
+-- User indexes
+CREATE INDEX idx_users_organization_id ON users(organization_id);
+CREATE INDEX idx_users_agency_id ON users(agency_id);
+CREATE INDEX idx_users_tenant_id ON users(tenant_id);
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_status ON users(status);
+
+-- Audit indexes
+CREATE INDEX idx_audit_intakes_client_id ON audit_intakes(client_id);
+CREATE INDEX idx_audit_intakes_status ON audit_intakes(status);
+CREATE INDEX idx_audit_runs_client_id ON audit_runs(client_id);
+CREATE INDEX idx_audit_runs_status ON audit_runs(status);
+```
+
+## Performance Optimization
+
+### Query Optimization
+
+#### 1. Use Proper Indexes
+```sql
+-- Add indexes for frequently queried columns
+CREATE INDEX idx_clients_name ON clients(name);
+CREATE INDEX idx_users_last_login ON users(last_login_at);
+CREATE INDEX idx_audit_runs_scheduled_at ON audit_runs(scheduled_at);
+```
+
+#### 2. Optimize Queries
+```php
+// Use DQL for complex queries
+$query = $entityManager->createQuery('
+    SELECT c, u 
+    FROM App\Entity\Client c 
+    JOIN c.users u 
+    WHERE c.status = :status 
+    AND u.role = :role
+');
+$query->setParameter('status', 'active');
+$query->setParameter('role', 'ROLE_CLIENT_ADMIN');
+```
+
+#### 3. Use Query Builder
+```php
+$qb = $entityManager->createQueryBuilder();
+$qb->select('c', 'u')
+   ->from(Client::class, 'c')
+   ->join('c.users', 'u')
+   ->where('c.status = :status')
+   ->andWhere('u.role = :role')
+   ->setParameter('status', 'active')
+   ->setParameter('role', 'ROLE_CLIENT_ADMIN');
+```
+
+### Connection Pooling
+
+#### 1. Configure Connection Pool
+```yaml
+# config/packages/doctrine.yaml
+doctrine:
+    dbal:
+        connections:
+            default:
+                url: '%env(DATABASE_URL)%'
+                options:
+                    pool_size: 10
+                    pool_timeout: 30
+```
+
+#### 2. Use Read Replicas
+```yaml
+# config/packages/doctrine.yaml
+doctrine:
+    dbal:
+        connections:
+            default:
+                url: '%env(DATABASE_URL)%'
+            read:
+                url: '%env(DATABASE_READ_URL)%'
+```
+
+## Backup and Recovery
+
+### Automated Backups
+
+#### 1. RDS Automated Backups
 ```bash
-# Check database status
-docker-compose ps
-
-# View logs
-docker-compose logs database
-
-# Stop database
-docker-compose down
-
-# Reset database
-docker-compose down -v && docker-compose up -d
-
-# Check schema
-php bin/console doctrine:schema:validate
-
-# Update schema
-php bin/console doctrine:schema:update --dump-sql
+# Enable automated backups for RDS
+aws rds modify-db-instance \
+    --db-instance-identifier counselrank-staging-db \
+    --backup-retention-period 7 \
+    --preferred-backup-window "03:00-04:00" \
+    --preferred-maintenance-window "sun:04:00-sun:05:00"
 ```
 
-### Entity Management
+#### 2. Manual Backup Script
 ```bash
-# Validate entities
-php bin/console doctrine:schema:validate
+#!/bin/bash
+# backup-database.sh
 
-# Clear cache
-php bin/console cache:clear
+DB_HOST="localhost"
+DB_NAME="tulsa_seo"
+DB_USER="smcnary"
+BACKUP_DIR="/backups"
+DATE=$(date +%Y%m%d_%H%M%S)
 
-# Debug routes
-php bin/console debug:router
+# Create backup
+pg_dump -h $DB_HOST -U $DB_USER -d $DB_NAME > $BACKUP_DIR/backup_$DATE.sql
 
-# Check entity mapping
-php bin/console doctrine:mapping:info
+# Compress backup
+gzip $BACKUP_DIR/backup_$DATE.sql
+
+# Remove old backups (keep last 7 days)
+find $BACKUP_DIR -name "backup_*.sql.gz" -mtime +7 -delete
 ```
 
-## 🔒 Security Considerations
+### Recovery Procedures
 
-### Multi-Tenancy
-- All entities include `tenant_id` and `client_id` fields
-- API endpoints enforce client scoping
-- Users can only access data from their assigned client
+#### 1. Restore from Backup
+```bash
+# Restore from backup
+gunzip backup_20250115_120000.sql.gz
+psql -h localhost -U smcnary -d tulsa_seo < backup_20250115_120000.sql
+```
 
-### API Security
-- JWT authentication required for all endpoints
-- Role-based access control (RBAC) enforced
-- CORS configured for authorized origins only
+#### 2. Point-in-Time Recovery (RDS)
+```bash
+# Restore to specific time
+aws rds restore-db-instance-to-point-in-time \
+    --source-db-instance-identifier counselrank-staging-db \
+    --target-db-instance-identifier counselrank-staging-db-restored \
+    --restore-time 2025-01-15T12:00:00Z
+```
 
-### Database Security
-- Use environment variables for sensitive data
-- Implement proper user permissions
-- Regular security updates and backups
-
-## 🆘 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-1. **Connection refused:**
-   - Check if Docker container is running
-   - Verify port mapping in `compose.yaml`
+#### 1. Connection Issues
+```bash
+# Test database connection
+php bin/console doctrine:query:sql 'SELECT 1'
 
-2. **Migration fails:**
-   - Check database connection
-   - Verify entity annotations
-   - Check for syntax errors in migration files
+# Check database status
+php bin/console doctrine:schema:validate
 
-3. **Schema validation errors:**
-   - Run `php bin/console doctrine:schema:validate`
-   - Check entity mapping annotations
-   - Verify database table structure
+# Test specific connection
+php bin/console doctrine:query:sql 'SELECT version()'
+```
 
-4. **Frontend API errors:**
-   - Verify backend server is running
-   - Check CORS configuration
-   - Verify authentication tokens
+#### 2. Migration Issues
+```bash
+# Check migration status
+php bin/console doctrine:migrations:status
 
-### Performance Optimization
+# Reset migrations (development only)
+php bin/console doctrine:migrations:version --delete --all
+php bin/console doctrine:migrations:migrate --no-interaction
 
-1. **Database Indexes**
-   - Add indexes for frequently queried fields
-   - Use composite indexes for complex queries
-   - Monitor query performance
+# Fix migration conflicts
+php bin/console doctrine:migrations:sync-metadata-storage
+```
 
-2. **Caching**
-   - Implement Redis caching for frequently accessed data
-   - Use Symfony cache for API responses
-   - Frontend caching for static data
+#### 3. Performance Issues
+```bash
+# Analyze slow queries
+php bin/console doctrine:query:sql 'SELECT * FROM pg_stat_activity WHERE state = '\''active'\'''
 
-3. **Query Optimization**
-   - Use Doctrine query builder for complex queries
-   - Implement pagination for large datasets
-   - Use eager loading to avoid N+1 queries
+# Check table sizes
+php bin/console doctrine:query:sql 'SELECT schemaname,tablename,pg_size_pretty(pg_total_relation_size(schemaname||'\''.'\''||tablename)) as size FROM pg_tables ORDER BY pg_total_relation_size(schemaname||'\''.'\''||tablename) DESC;'
+```
 
-## 📚 Next Steps
+#### 4. Schema Validation Issues
+```bash
+# Validate schema
+php bin/console doctrine:schema:validate
 
-After setting up your database and entities:
+# Update schema from entities
+php bin/console doctrine:schema:update --dump-sql
+php bin/console doctrine:schema:update --force
+```
 
-1. **Test API endpoints** using the new entities
-2. **Create sample data** for development and testing
-3. **Set up proper indexes** for performance optimization
-4. **Configure backup and monitoring** for production
-5. **Implement caching strategies** for better performance
+### Debug Commands
 
-For more detailed information, refer to:
-- **[API_REFERENCE.md](./API_REFERENCE.md)** - Complete API documentation
-- **[QUICK_START.md](./QUICK_START.md)** - Development setup guide
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Production deployment
+```bash
+# Database information
+php bin/console doctrine:query:sql 'SELECT current_database(), current_user, version()'
+
+# Table information
+php bin/console doctrine:query:sql 'SELECT table_name FROM information_schema.tables WHERE table_schema = '\''public'\'' ORDER BY table_name'
+
+# Index information
+php bin/console doctrine:query:sql 'SELECT indexname, tablename FROM pg_indexes WHERE schemaname = '\''public'\'' ORDER BY tablename, indexname'
+
+# Connection information
+php bin/console doctrine:query:sql 'SELECT * FROM pg_stat_activity WHERE datname = current_database()'
+```
+
+## Related Documentation
+
+- [Setup Guide](./SETUP_GUIDE.md) - Development environment setup
+- [API Documentation](./API_DOCUMENTATION.md) - Complete API reference
+- [Authentication Guide](./AUTHENTICATION_GUIDE.md) - Authentication system
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Production deployment
+
+---
+
+**Last Updated:** September 9, 2025  
+**Maintained By:** Development Team  
+**Status:** Complete and consolidated ✅

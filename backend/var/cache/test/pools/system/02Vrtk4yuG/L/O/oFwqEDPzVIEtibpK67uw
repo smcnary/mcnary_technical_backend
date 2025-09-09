@@ -1,0 +1,170 @@
+<?php //App_Entity_Subscription
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Subscription',
+                'id',
+                'tenantId',
+                'clientId',
+                'packageId',
+                'name',
+                'description',
+                'status',
+                'amount',
+                'currency',
+                'billingCycle',
+                'startDate',
+                'nextBillingDate',
+                'cancelledAt',
+                'stripeSubscriptionId',
+                'stripeCustomerId',
+                'quantity',
+                'autoRenew',
+                'notes',
+                'features',
+                'metadata',
+                'createdAt',
+                'updatedAt',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'tenantId' => $o[2],
+                    'clientId' => $o[3],
+                    'packageId' => $o[4],
+                    'name' => $o[5],
+                    'description' => $o[6],
+                    'status' => $o[7],
+                    'amount' => $o[8],
+                    'currency' => $o[9],
+                    'billingCycle' => $o[10],
+                    'startDate' => $o[11],
+                    'nextBillingDate' => $o[12],
+                    'cancelledAt' => $o[13],
+                    'stripeSubscriptionId' => $o[14],
+                    'stripeCustomerId' => $o[15],
+                    'quantity' => $o[16],
+                    'autoRenew' => $o[17],
+                    'notes' => $o[18],
+                    'features' => $o[19],
+                    'metadata' => $o[20],
+                    'createdAt' => $o[21],
+                    'updatedAt' => $o[22],
+                ],
+            ],
+            'groups' => [
+                1 => [
+                    'subscription:read',
+                ],
+                3 => [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                    'subscription:write',
+                ],
+                [
+                    'subscription:read',
+                ],
+                [
+                    'subscription:read',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

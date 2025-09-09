@@ -1,0 +1,128 @@
+<?php //App_Entity_Ranking
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Ranking',
+                'id',
+                'tenantId',
+                'clientId',
+                'keywordId',
+                'date',
+                'searchEngine',
+                'location',
+                'device',
+                'position',
+                'url',
+                'title',
+                'snippet',
+                'features',
+                'metadata',
+                'createdAt',
+                'updatedAt',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'tenantId' => $o[2],
+                    'clientId' => $o[3],
+                    'keywordId' => $o[4],
+                    'date' => $o[5],
+                    'searchEngine' => $o[6],
+                    'location' => $o[7],
+                    'device' => $o[8],
+                    'position' => $o[9],
+                    'url' => $o[10],
+                    'title' => $o[11],
+                    'snippet' => $o[12],
+                    'features' => $o[13],
+                    'metadata' => $o[14],
+                    'createdAt' => $o[15],
+                    'updatedAt' => $o[16],
+                ],
+            ],
+            'groups' => [
+                1 => [
+                    'ranking:read',
+                ],
+                3 => [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                    'ranking:write',
+                ],
+                [
+                    'ranking:read',
+                ],
+                [
+                    'ranking:read',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

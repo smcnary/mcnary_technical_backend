@@ -1,0 +1,156 @@
+<?php //App_Entity_Recommendation
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Recommendation',
+                'id',
+                'tenantId',
+                'clientId',
+                'title',
+                'description',
+                'category',
+                'priority',
+                'status',
+                'rationale',
+                'implementation',
+                'expectedOutcome',
+                'dueDate',
+                'completedAt',
+                'assignedTo',
+                'estimatedEffort',
+                'estimatedCost',
+                'tags',
+                'metadata',
+                'createdAt',
+                'updatedAt',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'tenantId' => $o[2],
+                    'clientId' => $o[3],
+                    'title' => $o[4],
+                    'description' => $o[5],
+                    'category' => $o[6],
+                    'priority' => $o[7],
+                    'status' => $o[8],
+                    'rationale' => $o[9],
+                    'implementation' => $o[10],
+                    'expectedOutcome' => $o[11],
+                    'dueDate' => $o[12],
+                    'completedAt' => $o[13],
+                    'assignedTo' => $o[14],
+                    'estimatedEffort' => $o[15],
+                    'estimatedCost' => $o[16],
+                    'tags' => $o[17],
+                    'metadata' => $o[18],
+                    'createdAt' => $o[19],
+                    'updatedAt' => $o[20],
+                ],
+            ],
+            'groups' => [
+                1 => [
+                    'recommendation:read',
+                ],
+                3 => [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                    'recommendation:write',
+                ],
+                [
+                    'recommendation:read',
+                ],
+                [
+                    'recommendation:read',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];
