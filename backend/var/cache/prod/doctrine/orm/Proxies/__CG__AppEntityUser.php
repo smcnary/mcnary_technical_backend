@@ -23,7 +23,6 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".parent::class."\0".'agency' => [parent::class, 'agency', null, 16],
-        "\0".parent::class."\0".'clientAccess' => [parent::class, 'clientAccess', null, 16],
         "\0".parent::class."\0".'clientId' => [parent::class, 'clientId', null, 16],
         "\0".parent::class."\0".'createdAt' => [parent::class, 'createdAt', null, 16],
         "\0".parent::class."\0".'email' => [parent::class, 'email', null, 16],
@@ -33,15 +32,17 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         "\0".parent::class."\0".'lastLoginAt' => [parent::class, 'lastLoginAt', null, 16],
         "\0".parent::class."\0".'lastName' => [parent::class, 'lastName', null, 16],
         "\0".parent::class."\0".'metadata' => [parent::class, 'metadata', null, 16],
+        "\0".parent::class."\0".'oauthConnections' => [parent::class, 'oauthConnections', null, 16],
         "\0".parent::class."\0".'organization' => [parent::class, 'organization', null, 16],
         "\0".parent::class."\0".'passwordHash' => [parent::class, 'passwordHash', null, 16],
         "\0".parent::class."\0".'requestedAuditIntakes' => [parent::class, 'requestedAuditIntakes', null, 16],
         "\0".parent::class."\0".'role' => [parent::class, 'role', null, 16],
         "\0".parent::class."\0".'status' => [parent::class, 'status', null, 16],
         "\0".parent::class."\0".'tenant' => [parent::class, 'tenant', null, 16],
+        "\0".parent::class."\0".'tokens' => [parent::class, 'tokens', null, 16],
         "\0".parent::class."\0".'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        "\0".parent::class."\0".'userAccess' => [parent::class, 'userAccess', null, 16],
         'agency' => [parent::class, 'agency', null, 16],
-        'clientAccess' => [parent::class, 'clientAccess', null, 16],
         'clientId' => [parent::class, 'clientId', null, 16],
         'createdAt' => [parent::class, 'createdAt', null, 16],
         'email' => [parent::class, 'email', null, 16],
@@ -51,13 +52,16 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         'lastLoginAt' => [parent::class, 'lastLoginAt', null, 16],
         'lastName' => [parent::class, 'lastName', null, 16],
         'metadata' => [parent::class, 'metadata', null, 16],
+        'oauthConnections' => [parent::class, 'oauthConnections', null, 16],
         'organization' => [parent::class, 'organization', null, 16],
         'passwordHash' => [parent::class, 'passwordHash', null, 16],
         'requestedAuditIntakes' => [parent::class, 'requestedAuditIntakes', null, 16],
         'role' => [parent::class, 'role', null, 16],
         'status' => [parent::class, 'status', null, 16],
         'tenant' => [parent::class, 'tenant', null, 16],
+        'tokens' => [parent::class, 'tokens', null, 16],
         'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        'userAccess' => [parent::class, 'userAccess', null, 16],
     ];
 
     public function __isInitialized(): bool

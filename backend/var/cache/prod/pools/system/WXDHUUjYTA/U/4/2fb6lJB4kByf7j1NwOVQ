@@ -23,7 +23,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
         ],
         'Symfony\\Component\\TypeInfo\\Type\\ObjectType' => [
             'className' => [
-                1 => 'App\\Entity\\Client',
+                1 => 'App\\Entity\\LeadSource',
             ],
         ],
         'Symfony\\Component\\TypeInfo\\Type\\BuiltinType' => [

@@ -2,6 +2,7 @@
 
 return [PHP_INT_MAX, [
     'id',
+    'user',
     'client',
     'provider',
     'externalAccountId',

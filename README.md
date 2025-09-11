@@ -71,10 +71,26 @@ cd audit-service && composer install && symfony serve
 4. Run migrations: `./scripts/database/migrate.sh`
 
 ## Documentation
-- [Architecture Overview](docs/architecture/README.md)
-- [API Reference](docs/api/README.md)
-- [Deployment Guide](docs/deployment/README.md)
-- [Development Setup](docs/development/README.md)
+
+### Core Documentation (Essential Reading)
+- **[Setup Guide](docs/SETUP_GUIDE.md)** - Complete development setup guide
+- **[Authentication Guide](docs/AUTHENTICATION_GUIDE.md)** - Complete authentication system
+- **[API Documentation](docs/API_DOCUMENTATION.md)** - Complete API reference with examples
+- **[Database Guide](docs/DATABASE_GUIDE.md)** - Database setup and management
+- **[Frontend Guide](docs/FRONTEND_GUIDE.md)** - Frontend development and integration
+- **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)** - Complete deployment guide (local, RDS, production)
+
+### Reference Documentation (Detailed References)
+- **[Database Schema](docs/DATABASE_SCHEMA.md)** - Complete database schema reference
+- **[Entity Relationship Diagram](docs/ENTITY_RELATIONSHIP_DIAGRAM.md)** - Visual relationship mappings
+- **[OAuth Setup](docs/OAUTH_SETUP.md)** - OAuth provider configuration (Google, Microsoft)
+- **[Technical Specification](docs/TECHNICAL_SPECIFICATION.md)** - Technical specifications and requirements
+
+### Specialized Documentation (Advanced Topics)
+- **[Error Handling Improvements](docs/ERROR_HANDLING_IMPROVEMENTS.md)** - Error handling patterns
+- **[Audit Intake Integration](docs/AUDIT_INTAKE_INTEGRATION.md)** - Audit system integration
+- **[Audit Intake Validation](docs/AUDIT_INTAKE_VALIDATION.md)** - Audit validation processes
+- **[New Role and Tenancy System](docs/NEW_ROLE_AND_TENANCY_SYSTEM.md)** - Role system details
 
 ## Contributing
 1. Follow the established directory structure

@@ -252,6 +252,7 @@ export default function ClientDashboard() {
   const [gbpData, setGbpData] = useState<any>(null);
   const [isLoadingGbp, setIsLoadingGbp] = useState<boolean>(false);
   const [gbpError, setGbpError] = useState<string | null>(null);
+  const [isConnectingGbp, setIsConnectingGbp] = useState<boolean>(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showTour, setShowTour] = useState(false);
 
@@ -290,7 +291,16 @@ export default function ClientDashboard() {
         const gbpResponse = await api.getGbpKpi(user.clientId);
         if (isMounted) setGbpData(gbpResponse);
       } catch (err: any) {
-        if (isMounted) setGbpError(err?.message || "Failed to load GBP data");
+        if (isMounted) {
+          // Handle specific GBP not connected error
+          if (err?.message?.includes('Google Business Profile not connected') || 
+              err?.message?.includes('connected: false')) {
+            setGbpData({ connected: false });
+            setGbpError(null); // Don't show this as an error
+          } else {
+            setGbpError(err?.message || "Failed to load GBP data");
+          }
+        }
       } finally {
         if (isMounted) setIsLoadingGbp(false);
       }
@@ -321,6 +331,25 @@ export default function ClientDashboard() {
 
   const handleTourComplete = () => {
     setShowTour(false);
+  };
+
+  const handleConnectGbp = async () => {
+    if (!user?.clientId) return;
+    
+    setIsConnectingGbp(true);
+    try {
+      // For now, we'll use a mock profile ID
+      // In a real implementation, this would redirect to Google OAuth
+      const mockProfileId = `gbp_${user.clientId}_${Date.now()}`;
+      await api.connectGbp(user.clientId, mockProfileId);
+      
+      // Reload GBP data after connection
+      await loadGbpData();
+    } catch (err: any) {
+      setGbpError(err?.message || "Failed to connect Google Business Profile");
+    } finally {
+      setIsConnectingGbp(false);
+    }
   };
 
   return (
@@ -371,6 +400,81 @@ export default function ClientDashboard() {
                 help="Percentage of leads that convert to qualified." 
               />
             </section>
+
+            {/* GBP Connection Prompt */}
+            {gbpData && !gbpData.connected && (
+              <section className="mt-8">
+                <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-6 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-xl bg-amber-100 dark:bg-amber-800/40 p-3">
+                      <MapPin className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                        Connect Your Google Business Profile
+                      </h3>
+                      <p className="text-amber-700 dark:text-amber-300 mb-4">
+                        Connect your Google Business Profile to see real-time insights about your local visibility, 
+                        customer actions, and review performance directly in your dashboard.
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={handleConnectGbp}
+                          disabled={isConnectingGbp}
+                          className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {isConnectingGbp ? (
+                            <>
+                              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                              Connecting...
+                            </>
+                          ) : (
+                            <>
+                              <MapPin className="h-4 w-4" />
+                              Connect Google Business Profile
+                            </>
+                          )}
+                        </button>
+                        <span className="text-xs text-amber-600 dark:text-amber-400">
+                          This will open Google's authorization flow
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* GBP Error Display */}
+            {gbpError && (
+              <section className="mt-8">
+                <div className="rounded-2xl border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-900/20 p-6 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-xl bg-rose-100 dark:bg-rose-800/40 p-3">
+                      <Eye className="h-6 w-6 text-rose-600 dark:text-rose-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-rose-900 dark:text-rose-100 mb-2">
+                        Google Business Profile Error
+                      </h3>
+                      <p className="text-rose-700 dark:text-rose-300 mb-4">
+                        {gbpError}
+                      </p>
+                      <button
+                        onClick={() => {
+                          setGbpError(null);
+                          loadGbpData();
+                        }}
+                        className="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700 transition-colors"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Retry Connection
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* Charts / modules */}
             <section className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">

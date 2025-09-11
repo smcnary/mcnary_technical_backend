@@ -32,6 +32,7 @@ class OAuthConnection extends \App\Entity\OAuthConnection implements \Doctrine\O
         "\0".parent::class."\0".'status' => [parent::class, 'status', null, 16],
         "\0".parent::class."\0".'tokens' => [parent::class, 'tokens', null, 16],
         "\0".parent::class."\0".'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        "\0".parent::class."\0".'user' => [parent::class, 'user', null, 16],
         'client' => [parent::class, 'client', null, 16],
         'createdAt' => [parent::class, 'createdAt', null, 16],
         'externalAccountId' => [parent::class, 'externalAccountId', null, 16],
@@ -42,6 +43,7 @@ class OAuthConnection extends \App\Entity\OAuthConnection implements \Doctrine\O
         'status' => [parent::class, 'status', null, 16],
         'tokens' => [parent::class, 'tokens', null, 16],
         'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        'user' => [parent::class, 'user', null, 16],
     ];
 
     public function __isInitialized(): bool

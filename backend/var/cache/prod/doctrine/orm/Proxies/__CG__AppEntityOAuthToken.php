@@ -31,6 +31,7 @@ class OAuthToken extends \App\Entity\OAuthToken implements \Doctrine\ORM\Proxy\I
         "\0".parent::class."\0".'refreshToken' => [parent::class, 'refreshToken', null, 16],
         "\0".parent::class."\0".'status' => [parent::class, 'status', null, 16],
         "\0".parent::class."\0".'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        "\0".parent::class."\0".'user' => [parent::class, 'user', null, 16],
         'accessToken' => [parent::class, 'accessToken', null, 16],
         'connection' => [parent::class, 'connection', null, 16],
         'createdAt' => [parent::class, 'createdAt', null, 16],
@@ -40,6 +41,7 @@ class OAuthToken extends \App\Entity\OAuthToken implements \Doctrine\ORM\Proxy\I
         'refreshToken' => [parent::class, 'refreshToken', null, 16],
         'status' => [parent::class, 'status', null, 16],
         'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        'user' => [parent::class, 'user', null, 16],
     ];
 
     public function __isInitialized(): bool

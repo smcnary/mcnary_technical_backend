@@ -2,6 +2,7 @@
 
 return [PHP_INT_MAX, [
     'id',
+    'user',
     'connection',
     'accessToken',
     'refreshToken',

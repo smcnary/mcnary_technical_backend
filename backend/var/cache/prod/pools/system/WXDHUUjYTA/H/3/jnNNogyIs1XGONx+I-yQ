@@ -21,7 +21,7 @@ return [PHP_INT_MAX, [
     'lastName',
     'status',
     'lastLoginAt',
-    'clientAccess',
+    'userAccess',
     'metadata',
     'requestedAuditIntakes',
     'initiatedAuditRuns',

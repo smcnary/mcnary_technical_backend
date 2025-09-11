@@ -20,7 +20,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 true,
             ],
             'class' => [
-                'App\\Entity\\Client',
+                'App\\Entity\\LeadSource',
             ],
             'collection' => [
                 false,

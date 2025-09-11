@@ -3,6 +3,7 @@
 return [PHP_INT_MAX, [
     'id',
     'client',
+    'user',
     'provider',
     'externalAccountId',
     'scopes',

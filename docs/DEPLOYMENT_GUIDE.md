@@ -1,14 +1,36 @@
-# 🚀 Deployment Guide
+# Complete Deployment Guide
 
-## 📋 Overview
+This comprehensive guide covers deploying the CounselRank.legal application to production, including server setup, database configuration, RDS deployment, build optimization, and deployment best practices.
 
-This guide covers deploying both the Symfony backend and React frontend applications to production, including server setup, database configuration, build optimization, and deployment best practices.
+## Table of Contents
 
-## 🏗️ Prerequisites
+1. [Overview](#overview)
+2. [Prerequisites](#prerequisites)
+3. [Server Setup](#server-setup)
+4. [Backend Deployment](#backend-deployment)
+5. [Frontend Deployment](#frontend-deployment)
+6. [RDS Database Deployment](#rds-database-deployment)
+7. [SSL Configuration](#ssl-configuration)
+8. [Continuous Deployment](#continuous-deployment)
+9. [Monitoring & Maintenance](#monitoring--maintenance)
+10. [Troubleshooting](#troubleshooting)
+
+## Overview
+
+This guide covers deploying both the Symfony backend and React frontend applications to production, including:
+
+- **Server Setup**: PHP, Node.js, web server configuration
+- **Database Deployment**: Local PostgreSQL and AWS RDS options
+- **Application Deployment**: Backend and frontend build processes
+- **Security Configuration**: SSL, CORS, authentication
+- **Monitoring**: Logs, performance, alerts
+- **Maintenance**: Backups, updates, scaling
+
+## Prerequisites
 
 ### Backend Requirements
 - Production server with PHP 8.2+ and required extensions
-- PostgreSQL database server
+- PostgreSQL database server (local or AWS RDS)
 - Web server (Nginx/Apache)
 - Git access to your repository
 - SSH access to production server
@@ -19,7 +41,21 @@ This guide covers deploying both the Symfony backend and React frontend applicat
 - Access to your backend API
 - Domain name and SSL certificate (recommended)
 
-## 🖥️ Server Setup
+### Required Tools
+- **AWS CLI** - Configured with appropriate permissions (for RDS)
+- **PostgreSQL Client Tools** - `pg_dump`, `psql`
+- **Terraform** (optional) - For infrastructure as code deployment
+- **PHP 8.3+** - For running Symfony migrations
+- **Composer** - For PHP dependencies
+
+### AWS Permissions (for RDS)
+Your AWS user/role needs the following permissions:
+- `rds:*` - RDS instance management
+- `ec2:*` - Security groups and VPC management
+- `iam:*` - IAM roles for monitoring
+- `cloudwatch:*` - CloudWatch alarms and logs
+
+## Server Setup
 
 ### 1. Install Required Software
 
@@ -138,7 +174,7 @@ server {
 </VirtualHost>
 ```
 
-## 🚀 Backend Deployment
+## Backend Deployment
 
 ### 1. Initial Deployment
 
@@ -199,7 +235,7 @@ sudo chmod -R 775 /var/www/mcnary_backend/var/log
 sudo chmod -R 775 /var/www/mcnary_backend/config/jwt
 ```
 
-## 🎨 Frontend Deployment
+## Frontend Deployment
 
 ### 1. Build Configuration
 
@@ -274,7 +310,157 @@ scp -r dist/* user@your-server:/var/www/mcnary_frontend/dist/
 rsync -avz --delete dist/ user@your-server:/var/www/mcnary_frontend/dist/
 ```
 
-## 🔒 SSL Configuration
+## RDS Database Deployment
+
+### Deployment Options
+
+#### Option 1: Automated Script Deployment (Recommended)
+
+The `deploy-rds.sh` script provides a fully automated deployment process.
+
+```bash
+# Navigate to the backend directory
+cd backend
+
+# Run the deployment script
+./scripts/deploy-rds.sh
+
+# Or with custom parameters
+./scripts/deploy-rds.sh \
+  --instance-id "counselrank-prod-db" \
+  --db-name "counselrank_prod" \
+  --username "counselrank_admin" \
+  --password "your-secure-password" \
+  --instance-class "db.t3.small" \
+  --storage 50 \
+  --region "us-east-1"
+```
+
+#### Script Features
+- ✅ Creates security groups
+- ✅ Provisions RDS PostgreSQL 16 instance
+- ✅ Configures parameter groups
+- ✅ Sets up monitoring and alarms
+- ✅ Runs database migrations
+- ✅ Updates environment configuration
+- ✅ Creates initial backup
+
+#### Option 2: Terraform Infrastructure as Code
+
+For production environments, use Terraform for infrastructure management.
+
+```bash
+# Navigate to scripts directory
+cd backend/scripts
+
+# Copy and configure variables
+cp rds-terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your values
+
+# Initialize Terraform
+terraform init
+
+# Plan deployment
+terraform plan
+
+# Apply deployment
+terraform apply
+```
+
+#### Terraform Features
+- ✅ Infrastructure as Code
+- ✅ State management
+- ✅ Resource tagging
+- ✅ CloudWatch monitoring
+- ✅ Security group management
+- ✅ Parameter group configuration
+- ✅ Output values for integration
+
+### RDS Configuration
+
+#### Instance Classes
+| Environment | Instance Class | Use Case |
+|-------------|----------------|----------|
+| Development | `db.t3.micro` | Testing, development |
+| Staging | `db.t3.small` | Pre-production testing |
+| Production | `db.t3.medium+` | Production workloads |
+
+#### Storage Configuration
+- **Storage Type**: General Purpose SSD (gp2)
+- **Initial Storage**: 20GB (development) to 100GB+ (production)
+- **Auto-scaling**: Enabled (up to 2x initial storage)
+- **Encryption**: Enabled at rest
+
+#### High Availability
+- **Multi-AZ**: Enabled for production
+- **Backup Retention**: 7 days (production), 1 day (development)
+- **Backup Window**: 03:00-04:00 UTC
+- **Maintenance Window**: Sunday 04:00-05:00 UTC
+
+### Data Migration
+
+#### From Local Development Database
+
+If you have existing data in your local PostgreSQL database:
+
+```bash
+# Run the migration script
+./scripts/migrate-to-rds.sh \
+  --rds-endpoint "your-rds-endpoint.region.rds.amazonaws.com" \
+  --rds-password "your-rds-password"
+```
+
+#### Migration Process
+1. **Backup Local Database** - Creates SQL dump of local data
+2. **Test RDS Connection** - Verifies connectivity
+3. **Run Migrations** - Applies schema to RDS
+4. **Restore Data** - Imports data from local backup
+5. **Verify Migration** - Confirms data integrity
+6. **Update Configuration** - Updates environment files
+
+#### From Existing RDS Instance
+
+For migrating from one RDS instance to another:
+
+```bash
+# Create snapshot of source instance
+aws rds create-db-snapshot \
+  --db-instance-identifier "source-instance" \
+  --db-snapshot-identifier "migration-snapshot-$(date +%Y%m%d)"
+
+# Restore from snapshot
+aws rds restore-db-instance-from-db-snapshot \
+  --db-instance-identifier "target-instance" \
+  --db-snapshot-identifier "migration-snapshot-$(date +%Y%m%d)"
+```
+
+### Security Configuration
+
+#### Network Security
+
+##### Security Groups
+The deployment creates a security group with:
+- **Inbound**: PostgreSQL (port 5432) from your application servers
+- **Outbound**: All traffic (for updates and monitoring)
+
+##### VPC Configuration
+- **Public Access**: Disabled for production
+- **Subnet Groups**: Uses default or custom subnets
+- **VPC Peering**: Recommended for cross-region access
+
+#### Database Security
+
+##### Authentication
+- **Master Username**: `counselrank_admin`
+- **Password**: Auto-generated secure password
+- **SSL/TLS**: Required for all connections
+
+##### Access Control
+- **IAM Database Authentication**: Available
+- **Parameter Groups**: Optimized for security
+- **Encryption**: Enabled at rest and in transit
+
+## SSL Configuration
 
 ### 1. Let's Encrypt Setup
 
@@ -328,7 +514,7 @@ server {
 }
 ```
 
-## 🔄 Continuous Deployment
+## Continuous Deployment
 
 ### 1. Deployment Script
 
@@ -385,7 +571,7 @@ jobs:
             ./deploy.sh
 ```
 
-## 📊 Monitoring & Maintenance
+## Monitoring & Maintenance
 
 ### 1. Log Monitoring
 
@@ -428,7 +614,101 @@ psql -h localhost -U username -d database_name -c "SELECT pg_size_pretty(pg_data
 psql -h localhost -U username -d database_name -c "ANALYZE;"
 ```
 
-## 🆘 Troubleshooting
+### 4. CloudWatch Integration (RDS)
+
+The deployment automatically configures:
+
+#### Metrics
+- **CPU Utilization** - Alert at 80%
+- **Freeable Memory** - Alert below 100MB
+- **Free Storage Space** - Alert below 2GB
+- **Database Connections** - Monitor active connections
+- **Read/Write IOPS** - Performance monitoring
+
+#### Logs
+- **PostgreSQL Logs** - Query and error logs
+- **Performance Insights** - Query performance analysis
+- **Enhanced Monitoring** - OS-level metrics
+
+### 5. Custom Monitoring
+
+```bash
+# Check database performance
+php bin/console doctrine:query:sql "
+SELECT 
+  schemaname,
+  tablename,
+  indexname,
+  idx_scan,
+  idx_tup_read,
+  idx_tup_fetch
+FROM pg_stat_user_indexes 
+ORDER BY idx_scan DESC;
+"
+
+# Monitor slow queries
+php bin/console doctrine:query:sql "
+SELECT 
+  query,
+  calls,
+  total_time,
+  mean_time,
+  rows
+FROM pg_stat_statements 
+ORDER BY mean_time DESC 
+LIMIT 10;
+"
+```
+
+### 6. Backup Management
+
+#### Automated Backups
+- **Retention**: 7 days (configurable)
+- **Window**: 03:00-04:00 UTC
+- **Point-in-time Recovery**: Available
+
+#### Manual Snapshots
+```bash
+# Create manual snapshot
+aws rds create-db-snapshot \
+  --db-instance-identifier "counselrank-prod-db" \
+  --db-snapshot-identifier "manual-backup-$(date +%Y%m%d-%H%M%S)"
+
+# List snapshots
+aws rds describe-db-snapshots \
+  --db-instance-identifier "counselrank-prod-db"
+```
+
+### 7. Performance Tuning
+
+#### Parameter Group Optimization
+```bash
+# Update parameter group
+aws rds modify-db-parameter-group \
+  --db-parameter-group-name "counselrank-postgres-16" \
+  --parameters "ParameterName=shared_buffers,ParameterValue=512MB,ApplyMethod=pending-reboot"
+```
+
+#### Connection Pooling
+Consider implementing connection pooling for high-traffic applications:
+- **PgBouncer** - Lightweight connection pooler
+- **AWS RDS Proxy** - Managed connection pooling
+
+### 8. Scaling Operations
+
+#### Vertical Scaling (Instance Class)
+```bash
+# Modify instance class
+aws rds modify-db-instance \
+  --db-instance-identifier "counselrank-prod-db" \
+  --db-instance-class "db.t3.large" \
+  --apply-immediately
+```
+
+#### Storage Scaling
+Storage automatically scales up to the maximum allocated storage.
+
+## Troubleshooting
 
 ### Common Issues
 
@@ -452,6 +732,49 @@ psql -h localhost -U username -d database_name -c "ANALYZE;"
    - Configure Nginx caching
    - Optimize database queries
 
+5. **Connection Issues (RDS)**
+   ```bash
+   # Test connection
+   psql -h your-rds-endpoint.region.rds.amazonaws.com \
+        -p 5432 \
+        -U counselrank_admin \
+        -d counselrank_prod
+   
+   # Check security groups
+   aws ec2 describe-security-groups \
+     --group-names "counselrank-db-sg"
+   ```
+
+6. **Performance Issues (RDS)**
+   ```bash
+   # Check slow queries
+   php bin/console doctrine:query:sql "
+   SELECT 
+     query,
+     calls,
+     total_time,
+     mean_time
+   FROM pg_stat_statements 
+   WHERE mean_time > 1000
+   ORDER BY mean_time DESC;
+   "
+   
+   # Analyze table statistics
+   php bin/console doctrine:query:sql "ANALYZE;"
+   ```
+
+7. **Migration Issues**
+   ```bash
+   # Check migration status
+   php bin/console doctrine:migrations:status
+   
+   # Rollback last migration
+   php bin/console doctrine:migrations:migrate prev
+   
+   # Force migration
+   php bin/console doctrine:migrations:migrate --no-interaction
+   ```
+
 ### Debug Commands
 
 ```bash
@@ -468,7 +791,67 @@ php-fpm8.2 -t
 php bin/console doctrine:query:sql 'SELECT version()' --env=prod
 ```
 
-## 🔒 Security Checklist
+### Log Analysis
+
+#### RDS Logs
+```bash
+# Download PostgreSQL logs
+aws rds download-db-log-file-portion \
+  --db-instance-identifier "counselrank-prod-db" \
+  --log-file-name "postgresql.log" \
+  --starting-token 0 \
+  --max-items 1000
+```
+
+#### Application Logs
+```bash
+# Check Symfony logs
+tail -f var/log/prod.log
+
+# Check Doctrine query logs
+tail -f var/log/doctrine.log
+```
+
+## Cost Optimization
+
+### Instance Right-sizing
+- **Monitor CPU/Memory usage** for 2-4 weeks
+- **Use CloudWatch metrics** to identify optimal instance class
+- **Consider Reserved Instances** for production workloads
+
+### Storage Optimization
+- **Enable storage autoscaling** to avoid over-provisioning
+- **Monitor storage usage** and adjust accordingly
+- **Use General Purpose SSD** for most workloads
+
+### Backup Optimization
+- **Adjust retention period** based on compliance requirements
+- **Use automated backups** instead of manual snapshots for regular backups
+- **Delete old snapshots** to reduce storage costs
+
+## Disaster Recovery
+
+### Backup Strategy
+1. **Automated Backups** - Daily backups with 7-day retention
+2. **Manual Snapshots** - Before major changes
+3. **Cross-region Snapshots** - For disaster recovery
+4. **Point-in-time Recovery** - Restore to any point within retention period
+
+### Recovery Procedures
+```bash
+# Restore from snapshot
+aws rds restore-db-instance-from-db-snapshot \
+  --db-instance-identifier "counselrank-recovery-db" \
+  --db-snapshot-identifier "backup-snapshot-20250101"
+
+# Point-in-time recovery
+aws rds restore-db-instance-to-point-in-time \
+  --source-db-instance-identifier "counselrank-prod-db" \
+  --target-db-instance-identifier "counselrank-recovery-db" \
+  --restore-time "2025-01-01T12:00:00Z"
+```
+
+## Security Checklist
 
 - [ ] SSL certificates installed and auto-renewing
 - [ ] Firewall configured (UFW)
@@ -481,7 +864,7 @@ php bin/console doctrine:query:sql 'SELECT version()' --env=prod
 - [ ] Regular security updates applied
 - [ ] Database backups automated
 
-## 📚 Next Steps
+## Next Steps
 
 After successful deployment:
 
@@ -491,7 +874,15 @@ After successful deployment:
 4. **Set up monitoring tools** (New Relic, DataDog, etc.)
 5. **Document deployment procedures** for team members
 
-For more detailed information, refer to:
-- **[DATABASE_GUIDE.md](./DATABASE_GUIDE.md)** - Database setup and management
-- **[API_REFERENCE.md](./API_REFERENCE.md)** - API documentation and testing
-- **[QUICK_START.md](./QUICK_START.md)** - Development setup guide
+## Related Documentation
+
+- [Authentication Guide](./AUTHENTICATION_GUIDE.md) - Complete authentication system
+- [API Documentation](./API_DOCUMENTATION.md) - Complete API reference
+- [Database Guide](./DATABASE_GUIDE.md) - Database setup and management
+- [Setup Guide](./SETUP_GUIDE.md) - Development setup guide
+
+---
+
+**Last Updated:** January 2025  
+**Maintained By:** Development Team  
+**Status:** Complete and consolidated ✅

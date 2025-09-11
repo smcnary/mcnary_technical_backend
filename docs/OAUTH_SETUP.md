@@ -1,18 +1,32 @@
 # OAuth Provider Setup Guide
 
-## Overview
-
-This guide covers the complete setup for OAuth providers (Google and Microsoft) for the CounselRank.legal authentication system.
+This comprehensive guide covers setting up OAuth authentication providers for CounselRank.legal, including Google OAuth and Microsoft OAuth SSO.
 
 ## Table of Contents
 
-1. [Google OAuth Setup](#google-oauth-setup)
-2. [Microsoft OAuth Setup](#microsoft-oauth-setup)
-3. [Environment Configuration](#environment-configuration)
-4. [API Endpoints](#api-endpoints)
-5. [Security Considerations](#security-considerations)
-6. [Troubleshooting](#troubleshooting)
-7. [Production Deployment](#production-deployment)
+1. [Overview](#overview)
+2. [Google OAuth Setup](#google-oauth-setup)
+3. [Microsoft OAuth Setup](#microsoft-oauth-setup)
+4. [Environment Configuration](#environment-configuration)
+5. [API Endpoints](#api-endpoints)
+6. [Security Considerations](#security-considerations)
+7. [Troubleshooting](#troubleshooting)
+8. [Production Deployment](#production-deployment)
+
+## Overview
+
+The OAuth system supports multiple providers to give users flexible authentication options:
+
+- **Google OAuth**: For Google Business Profile, Search Console, Analytics integration
+- **Microsoft OAuth**: For Microsoft 365, Azure AD integration
+
+### OAuth Flow
+1. User initiates OAuth connection
+2. Redirect to provider authorization
+3. Provider returns authorization code
+4. Exchange code for access/refresh tokens
+5. Store tokens securely
+6. Use tokens for API access
 
 ## Google OAuth Setup
 
@@ -86,8 +100,8 @@ This guide covers the complete setup for OAuth providers (Google and Microsoft) 
 2. Under "Platform configurations", click "Add a platform"
 3. Select "Web"
 4. Add your redirect URIs:
-   - `http://localhost:8000/api/v1/auth/google/callback`
-   - `https://yourdomain.com/api/v1/auth/google/callback`
+   - `http://localhost:8000/api/v1/auth/microsoft/callback`
+   - `https://yourdomain.com/api/v1/auth/microsoft/callback`
 5. Under "Implicit grant and hybrid flows", ensure these are **unchecked**:
    - Access tokens
    - ID tokens
@@ -118,7 +132,6 @@ This guide covers the complete setup for OAuth providers (Google and Microsoft) 
 ## Environment Configuration
 
 ### Backend Configuration
-
 Add these variables to your `backend/.env.local` file:
 
 ```bash
@@ -137,7 +150,6 @@ APP_FRONTEND_URL="http://localhost:3000"
 ```
 
 ### Frontend Configuration
-
 The frontend will automatically use the backend URL from `NEXT_PUBLIC_API_BASE_URL`.
 
 ```typescript
@@ -149,6 +161,18 @@ const MICROSOFT_OAUTH_URL = 'http://localhost:8000/api/v1/auth/microsoft';
 ## API Endpoints
 
 ### Google OAuth Endpoints
+- `GET /api/v1/auth/google` - Initiate Google OAuth flow
+- `GET /api/v1/auth/google/callback` - Handle Google OAuth callback
+- `POST /api/v1/auth/google/link` - Link Google account to existing user
+- `POST /api/v1/auth/google/unlink` - Unlink Google account
+
+### Microsoft OAuth Endpoints
+- `GET /api/v1/auth/microsoft` - Initiate Microsoft OAuth flow
+- `GET /api/v1/auth/microsoft/callback` - Handle Microsoft OAuth callback
+- `POST /api/v1/auth/microsoft/link` - Link Microsoft account to existing user
+- `POST /api/v1/auth/microsoft/unlink` - Unlink Microsoft account
+
+### OAuth Flow Details
 
 #### Google OAuth Login Initiation
 - **URL**: `GET /api/v1/auth/google`
@@ -161,19 +185,6 @@ const MICROSOFT_OAUTH_URL = 'http://localhost:8000/api/v1/auth/microsoft';
 - **Parameters**: `code`, `state` (from Google)
 - **Response**: Redirects to frontend with JWT token
 
-#### Link Google Account
-- **URL**: `POST /api/v1/auth/google/link`
-- **Description**: Links existing Google account to current user
-- **Headers**: `Authorization: Bearer <jwt_token>`
-- **Body**: `{"access_token": "google_access_token"}`
-
-#### Unlink Google Account
-- **URL**: `POST /api/v1/auth/google/unlink`
-- **Description**: Unlinks Google account from current user
-- **Headers**: `Authorization: Bearer <jwt_token>`
-
-### Microsoft OAuth Endpoints
-
 #### Microsoft OAuth Login Initiation
 - **URL**: `GET /api/v1/auth/microsoft`
 - **Description**: Initiates Microsoft OAuth flow
@@ -185,62 +196,90 @@ const MICROSOFT_OAUTH_URL = 'http://localhost:8000/api/v1/auth/microsoft';
 - **Parameters**: `code`, `state` (from Microsoft)
 - **Response**: Redirects to frontend with JWT token
 
-#### Link Microsoft Account
-- **URL**: `POST /api/v1/auth/microsoft/link`
-- **Description**: Links existing Microsoft account to current user
-- **Headers**: `Authorization: Bearer <jwt_token>`
-- **Body**: `{"access_token": "microsoft_access_token"}`
-
-#### Unlink Microsoft Account
-- **URL**: `POST /api/v1/auth/microsoft/unlink`
-- **Description**: Unlinks Microsoft account from current user
-- **Headers**: `Authorization: Bearer <jwt_token>`
-
 ## Security Considerations
 
 ### General Security
 1. **State Parameter**: The OAuth flow includes a state parameter to prevent CSRF attacks
 2. **HTTPS**: Always use HTTPS in production
-3. **Client Secrets**: Never expose the client secret in frontend code
+3. **Client Secret**: Never expose the client secret in frontend code
 4. **Token Storage**: Store OAuth tokens securely in the database
 5. **Scope Limitation**: Only request necessary scopes
 
-### Google-Specific Security
-1. **Domain Verification**: For production, verify your domain ownership
-2. **CORS Configuration**: Ensure proper CORS configuration for cross-origin requests
-3. **Redirect URI Validation**: Ensure redirect URIs match exactly
+### Google OAuth Security
+- Use secure redirect URIs
+- Implement proper state parameter validation
+- Monitor for suspicious OAuth activity
+- Regularly rotate client secrets
 
-### Microsoft-Specific Security
-1. **Client Secrets**: Never commit client secrets to version control
-2. **Redirect URIs**: Use HTTPS in production and restrict to your domains
-3. **Permissions**: Only request the minimum permissions needed
-4. **Token Storage**: JWT tokens are stored securely in localStorage
+### Microsoft OAuth Security
+- Use HTTPS in production
+- Implement proper redirect URI validation
+- Monitor Azure AD sign-in logs
+- Use strong client secrets
+
+## Testing the Integration
+
+### Start the Servers
+```bash
+# Backend (from backend/ directory)
+php -S localhost:8000 -t public/
+
+# Frontend (from frontend/ directory)
+npm run dev
+```
+
+### Test Google OAuth
+1. Navigate to `http://localhost:8000/api/v1/auth/google`
+2. You should be redirected to Google's OAuth consent screen
+3. After authorization, you'll be redirected back with a JWT token
+
+### Test Microsoft OAuth
+1. Go to `http://localhost:3000/login`
+2. Click "Sign in with Microsoft"
+3. You should be redirected to Microsoft's login page
+4. After successful authentication, you'll be redirected to the client dashboard
 
 ## Troubleshooting
 
-### Common Issues
+### Google OAuth Issues
 
-#### Google OAuth Issues
-1. **Invalid Redirect URI**: Ensure the redirect URI in Google Cloud Console matches exactly
-2. **Missing Scopes**: Verify all required scopes are enabled in OAuth consent screen
-3. **Domain Verification**: For production, verify your domain ownership
-4. **CORS Issues**: Ensure proper CORS configuration for cross-origin requests
+#### 1. "Invalid Redirect URI" Error
+- Ensure the redirect URI in Google Cloud Console matches exactly
+- Check for trailing slashes or protocol mismatches
 
-#### Microsoft OAuth Issues
-1. **Invalid client Error**: Verify your `MICROSOFT_OAUTH_CLIENT_ID` is correct
-2. **Redirect URI mismatch Error**: Ensure the redirect URI in Azure matches exactly
-3. **Insufficient permissions Error**: Verify you've granted admin consent for required permissions
-4. **AADSTS50011 Error**: Usually means the redirect URI doesn't match exactly
+#### 2. "Missing Scopes" Error
+- Verify all required scopes are enabled in OAuth consent screen
+- Check that `openid`, `email`, and `profile` scopes are added
+
+#### 3. "Domain Verification" Error
+- For production, verify your domain ownership in Google Cloud Console
+- Ensure the domain matches your production URL
+
+### Microsoft OAuth Issues
+
+#### 1. "Invalid client" Error
+- Verify your `MICROSOFT_OAUTH_CLIENT_ID` is correct
+- Check that the client secret hasn't expired
+
+#### 2. "Redirect URI mismatch" Error
+- Ensure the redirect URI in Azure matches exactly what's in your environment variables
+- Check for trailing slashes or protocol mismatches
+
+#### 3. "Insufficient permissions" Error
+- Verify you've granted admin consent for the required permissions
+- Check that `User.Read`, `email`, and `profile` permissions are added
+
+#### 4. "AADSTS50011" Error
+- This usually means the redirect URI doesn't match exactly
+- Double-check both Azure configuration and environment variables
 
 ### Debug Steps
 1. Check backend logs for detailed error messages
 2. Verify environment variables are loaded correctly
 3. Test the OAuth provider API endpoints manually
-4. Check OAuth provider configuration (Google Cloud Console / Azure Portal)
-5. Enable debug logging in Symfony application
+4. Check OAuth provider configuration in their respective consoles
 
 ### Debug Mode
-
 Enable debug logging in your Symfony application to troubleshoot OAuth issues:
 
 ```yaml
@@ -269,43 +308,41 @@ MICROSOFT_OAUTH_REDIRECT_URI="https://yourdomain.com/api/v1/auth/microsoft/callb
 APP_FRONTEND_URL="https://yourdomain.com"
 ```
 
-### Production Checklist
-1. **Domain Verification**: Verify your domain in OAuth provider consoles
+### Security Checklist
+1. **Domain Verification**: Verify your domain in both Google Cloud Console and Azure Portal
 2. **HTTPS**: Ensure all OAuth endpoints use HTTPS
 3. **Environment Variables**: Set production environment variables securely
 4. **Monitoring**: Monitor OAuth authentication logs
 5. **Rate Limiting**: Implement rate limiting for OAuth endpoints
-6. **Client Secrets**: Rotate client secrets regularly
-7. **Redirect URIs**: Update redirect URIs for production domains
+6. **Client Secret Rotation**: Regularly rotate OAuth client secrets
 
-## Testing
+### Performance Optimization
+- Implement OAuth token caching
+- Use Redis for session storage
+- Monitor OAuth endpoint response times
+- Implement proper error handling and retry logic
 
-### Manual Testing
-1. Test Google OAuth flow end-to-end
-2. Test Microsoft OAuth flow end-to-end
-3. Test account linking functionality
-4. Test account unlinking functionality
-5. Test error handling for invalid credentials
-6. Test redirect URI validation
+## Next Steps
 
-### Automated Testing
-```bash
-# Test OAuth endpoints
-curl -X GET "http://localhost:8000/api/v1/auth/google"
-curl -X GET "http://localhost:8000/api/v1/auth/microsoft"
+After successful OAuth setup:
 
-# Test OAuth callbacks (with valid code)
-curl -X GET "http://localhost:8000/api/v1/auth/google/callback?code=valid_code&state=valid_state"
-```
+1. **Test Integration**: Verify both Google and Microsoft OAuth flows work correctly
+2. **User Experience**: Implement seamless OAuth login in your frontend
+3. **Account Linking**: Allow users to link multiple OAuth providers
+4. **Token Management**: Implement refresh token logic for long-term access
+5. **Analytics**: Track OAuth usage and success rates
+6. **Admin Interface**: Add OAuth configuration to admin dashboard
 
-## Related Documentation
+## Support
 
-- [Authentication Guide](./AUTHENTICATION_GUIDE.md) - Complete authentication system
-- [API Documentation](./API_DOCUMENTATION.md) - Complete API reference
-- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Production deployment
+For issues related to:
+- **Google OAuth setup**: Check [Google Cloud Console documentation](https://developers.google.com/identity/protocols/oauth2)
+- **Microsoft OAuth setup**: Check [Microsoft Graph documentation](https://docs.microsoft.com/en-us/graph/auth/)
+- **Backend implementation**: Check Symfony logs and API responses
+- **Frontend integration**: Verify redirect URIs and error handling
 
 ---
 
-**Last Updated:** September 9, 2025  
+**Last Updated:** January 2025  
 **Maintained By:** Development Team  
 **Status:** Complete and consolidated ✅

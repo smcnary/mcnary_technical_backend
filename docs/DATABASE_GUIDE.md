@@ -1,10 +1,19 @@
-# 🗄️ Database Guide
+# Complete Database Guide
 
-## 📋 Overview
+This comprehensive guide covers everything you need to know about working with databases in the CounselRank.legal platform, including setup, connection, entity creation, migrations, and frontend integration.
 
-This guide covers everything you need to know about working with databases in the CounselRank.legal platform, including setup, connection, entity creation, and frontend integration.
+## Table of Contents
 
-## 🚀 Quick Start
+1. [Quick Start](#quick-start)
+2. [Database Connections](#database-connections)
+3. [Entity Creation](#entity-creation)
+4. [Database Migration Workflow](#database-migration-workflow)
+5. [Frontend Database Integration](#frontend-database-integration)
+6. [Useful Commands](#useful-commands)
+7. [Security Considerations](#security-considerations)
+8. [Troubleshooting](#troubleshooting)
+
+## Quick Start
 
 ### 1. Start the Database
 ```bash
@@ -26,7 +35,7 @@ php bin/console doctrine:migrations:migrate
 php bin/console doctrine:query:sql 'SELECT version()'
 ```
 
-## 🔌 Database Connections
+## Database Connections
 
 ### Local Development (Docker)
 ```bash
@@ -50,6 +59,18 @@ export DATABASE_URL="postgresql://username:password@host:port/database_name?serv
 DATABASE_URL="postgresql://username:password@host:port/database_name?serverVersion=16&charset=utf8"
 ```
 
+### RDS Staging Database
+```bash
+# RDS Staging Database
+DATABASE_URL="postgresql://counselrank_admin:TulsaSeo122@counselrank-staging-db.cstm2wakq0zs.us-east-1.rds.amazonaws.com:5432/counselrank_staging?serverVersion=16&charset=utf8"
+```
+
+### RDS Production Database
+```bash
+# RDS Production Database
+DATABASE_URL="postgresql://counselrank_admin:YOUR_PASSWORD@your-rds-endpoint.region.rds.amazonaws.com:5432/counselrank_prod?serverVersion=16&charset=utf8"
+```
+
 ### Docker Services Configuration
 ```yaml
 # compose.yaml
@@ -68,7 +89,7 @@ services:
       retries: 5
 ```
 
-## 🏗️ Entity Creation
+## Entity Creation
 
 ### What Are Entities?
 
@@ -193,7 +214,7 @@ public function setUpdatedAt(): void
 }
 ```
 
-## 🔄 Database Migration Workflow
+## Database Migration Workflow
 
 ### Development Environment
 
@@ -258,7 +279,36 @@ public function setUpdatedAt(): void
    php bin/console doctrine:migrations:migrate VERSION_NUMBER
    ```
 
-## 🔌 Frontend Database Integration
+### New Entities That Will Be Created
+
+The following new database tables will be created when you run the migrations:
+
+#### Core Business Entities
+- **campaigns** - Marketing campaigns for clients
+- **keywords** - SEO keywords and their metrics
+- **rankings** - Search engine rankings for keywords
+- **reviews** - Customer reviews from various platforms
+- **citations** - Business directory citations
+- **content_items** - Blog posts, articles, and other content
+- **content_briefs** - Content creation briefs
+- **audit_runs** - SEO and technical audit runs
+- **audit_findings** - Individual findings from audits
+- **recommendations** - Actionable recommendations for clients
+- **backlinks** - Incoming links to client websites
+- **subscriptions** - Client subscription plans
+- **invoices** - Billing invoices
+
+#### Existing Entities (Already in Database)
+- **users** - System users and staff
+- **clients** - Client companies
+- **pages** - Website pages
+- **faqs** - Frequently asked questions
+- **packages** - Service packages
+- **media_assets** - Images and other media files
+- **leads** - Lead information
+- **posts** - Blog posts (legacy)
+
+## Frontend Database Integration
 
 ### Overview
 
@@ -425,7 +475,7 @@ export const LeadsList: React.FC = () => {
 };
 ```
 
-## 🛠️ Useful Commands
+## Useful Commands
 
 ### Database Management
 ```bash
@@ -463,7 +513,22 @@ php bin/console debug:router
 php bin/console doctrine:mapping:info
 ```
 
-## 🔒 Security Considerations
+### Migration Commands
+```bash
+# Check migration status
+php bin/console doctrine:migrations:status
+
+# Run migrations
+php bin/console doctrine:migrations:migrate
+
+# Generate new migration
+php bin/console make:migration
+
+# List migration history
+php bin/console doctrine:migrations:list
+```
+
+## Security Considerations
 
 ### Multi-Tenancy
 - All entities include `tenant_id` and `client_id` fields
@@ -480,7 +545,26 @@ php bin/console doctrine:mapping:info
 - Implement proper user permissions
 - Regular security updates and backups
 
-## 🆘 Troubleshooting
+### SSL/TLS Configuration
+```bash
+# SSL/TLS Configuration for RDS
+DATABASE_SSL_MODE=require
+DATABASE_SSL_CERT_PATH=/path/to/rds-ca-2019-root.pem
+
+# Connection Pooling
+DATABASE_POOL_SIZE=10
+DATABASE_POOL_TIMEOUT=30
+
+# Performance Monitoring
+DATABASE_LOGGING=true
+DATABASE_PROFILING=false
+
+# Backup Configuration
+DATABASE_BACKUP_ENABLED=true
+DATABASE_BACKUP_RETENTION_DAYS=7
+```
+
+## Troubleshooting
 
 ### Common Issues
 
@@ -503,6 +587,16 @@ php bin/console doctrine:mapping:info
    - Check CORS configuration
    - Verify authentication tokens
 
+5. **Connection Issues:**
+   - Verify the host IP address is correct
+   - Check if the database server allows connections from your IP
+   - Ensure the database name, username, and password are correct
+   - Check if the database server is running and accessible
+
+6. **Permission Issues:**
+   - Ensure your database user has CREATE, ALTER, and DROP permissions
+   - Check if the database exists and is accessible
+
 ### Performance Optimization
 
 1. **Database Indexes**
@@ -520,7 +614,29 @@ php bin/console doctrine:mapping:info
    - Implement pagination for large datasets
    - Use eager loading to avoid N+1 queries
 
-## 📚 Next Steps
+### Debug Steps
+
+1. **Test Database Connection:**
+   ```bash
+   php bin/console doctrine:query:sql 'SELECT version()'
+   ```
+
+2. **Check Migration Status:**
+   ```bash
+   php bin/console doctrine:migrations:status
+   ```
+
+3. **Verify Tables Created:**
+   ```bash
+   php bin/console doctrine:query:sql "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name;"
+   ```
+
+4. **Clear Symfony Cache:**
+   ```bash
+   php bin/console cache:clear
+   ```
+
+## Next Steps
 
 After setting up your database and entities:
 
@@ -530,7 +646,16 @@ After setting up your database and entities:
 4. **Configure backup and monitoring** for production
 5. **Implement caching strategies** for better performance
 
-For more detailed information, refer to:
-- **[API_REFERENCE.md](./API_REFERENCE.md)** - Complete API documentation
-- **[QUICK_START.md](./QUICK_START.md)** - Development setup guide
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Production deployment
+## Related Documentation
+
+- [Database Schema](./DATABASE_SCHEMA.md) - Complete database schema reference
+- [Entity Relationship Diagram](./ENTITY_RELATIONSHIP_DIAGRAM.md) - Visual relationship mappings
+- [API Documentation](./API_DOCUMENTATION.md) - Complete API reference
+- [Setup Guide](./SETUP_GUIDE.md) - Development setup guide
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Production deployment
+
+---
+
+**Last Updated:** January 2025  
+**Maintained By:** Development Team  
+**Status:** Complete and consolidated ✅

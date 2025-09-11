@@ -1,19 +1,32 @@
 # Complete API Documentation
 
-## Overview
-
-This comprehensive guide covers the complete CounselRank.legal REST API v1, including all endpoints, authentication, role-based access control, security implementation, and practical examples.
+This comprehensive guide provides complete documentation for the CounselRank.legal REST API v1, including all endpoints, authentication, role-based access control, security implementation, and practical examples.
 
 ## Table of Contents
 
-1. [Authentication](#authentication)
-2. [Role-Based Access Control](#role-based-access-control)
-3. [Common Query Parameters](#common-query-parameters)
-4. [API Endpoints](#api-endpoints)
-5. [Request/Response Examples](#requestresponse-examples)
-6. [Error Handling](#error-handling)
-7. [Rate Limiting](#rate-limiting)
-8. [Testing](#testing)
+1. [Overview](#overview)
+2. [Authentication](#authentication)
+3. [Role-Based Access Control](#role-based-access-control)
+4. [Common Query Parameters](#common-query-parameters)
+5. [API Endpoints](#api-endpoints)
+6. [Request/Response Examples](#requestresponse-examples)
+7. [Security Implementation](#security-implementation)
+8. [API Platform Features](#api-platform-features)
+9. [Testing the API](#testing-the-api)
+10. [Rate Limiting & Performance](#rate-limiting--performance)
+11. [Troubleshooting](#troubleshooting)
+
+## Overview
+
+The CounselRank.legal API is built on Symfony with API Platform, providing a comprehensive REST API for managing clients, users, campaigns, SEO data, and more. The API follows RESTful principles and includes automatic documentation, pagination, filtering, and sorting capabilities.
+
+### Base URL
+- **Development**: `http://localhost:8000`
+- **Production**: `https://yourdomain.com`
+
+### API Version
+- **Current Version**: v1
+- **API Prefix**: `/api/v1`
 
 ## Authentication
 
@@ -28,37 +41,9 @@ Authorization: Bearer <your-jwt-token>
 
 ### Getting a Token
 
-#### General Login
+#### Client Login
 ```bash
-POST /api/v1/auth/login
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "userpassword123"
-}
-```
-
-**Response:**
-```json
-{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
-  "user": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "email": "user@example.com",
-    "name": "John Doe",
-    "roles": ["ROLE_CLIENT_ADMIN"],
-    "client_id": "550e8400-e29b-41d4-a716-446655440001",
-    "tenant_id": "550e8400-e29b-41d4-a716-446655440002",
-    "status": "active",
-    "created_at": "2024-01-15T10:30:00+00:00",
-    "last_login_at": "2024-01-15T10:30:00+00:00"
-  }
-}
-```
-
-#### Client-Specific Login
-```bash
+# Client login endpoint
 POST /api/v1/clients/login
 Content-Type: application/json
 
@@ -66,18 +51,14 @@ Content-Type: application/json
   "email": "admin@acmelaw.com",
   "password": "securepassword123"
 }
-```
 
-**Response:**
-```json
+# Response
 {
   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
   "user": {
     "id": "uuid",
     "email": "admin@acmelaw.com",
     "name": "John Doe",
-    "first_name": "John",
-    "last_name": "Doe",
     "role": "ROLE_CLIENT_ADMIN",
     "status": "active",
     "client_id": "uuid",
@@ -104,6 +85,34 @@ Content-Type: application/json
 }
 ```
 
+#### General Login
+```bash
+# General login endpoint
+POST /api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "userpassword123"
+}
+
+# Response
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "roles": ["ROLE_CLIENT_ADMIN"],
+    "client_id": "uuid",
+    "tenant_id": "uuid",
+    "status": "active",
+    "created_at": "2024-01-15T10:30:00+00:00",
+    "last_login_at": "2024-01-15T10:30:00+00:00"
+  }
+}
+```
+
 ### Token Refresh
 
 ```bash
@@ -119,11 +128,9 @@ Content-Type: application/json
 
 ```bash
 POST /api/v1/auth/logout
-Authorization: Bearer <your-jwt-token>
-```
+Authorization: Bearer <token>
 
-**Response:**
-```json
+# Response
 {
   "message": "Logged out successfully"
 }
@@ -135,11 +142,11 @@ Authorization: Bearer <your-jwt-token>
 
 | Role | Description | Access Level |
 |------|-------------|--------------|
-| `ROLE_SYSTEM_ADMIN` | System administrator | Full access to all data and operations |
 | `ROLE_AGENCY_ADMIN` | Agency administrator | Full access to all data and operations |
 | `ROLE_AGENCY_STAFF` | Agency staff member | Read access to all data, limited write access |
 | `ROLE_CLIENT_ADMIN` | Client administrator | Access only to their client's data |
 | `ROLE_CLIENT_STAFF` | Client staff member | Limited access to their client's data |
+| `ROLE_SYSTEM_ADMIN` | System administrator | Full system access |
 | `PUBLIC_ACCESS` | Public endpoints | No authentication required |
 
 ### Access Control Patterns
@@ -154,6 +161,16 @@ security: "is_granted('ROLE_CLIENT_ADMIN') and object.getClientId() == user.getC
 // Public access (no authentication required)
 security: "PUBLIC_ACCESS"
 ```
+
+### Access Control Matrix
+
+| Role | Client Dashboard | Agency Dashboard | System Admin | Client Management |
+|------|------------------|------------------|--------------|-------------------|
+| ROLE_CLIENT_ADMIN | ✅ Full | ❌ | ❌ | ❌ |
+| ROLE_CLIENT_STAFF | ✅ Limited | ❌ | ❌ | ❌ |
+| ROLE_AGENCY_ADMIN | ❌ | ✅ Full | ❌ | ✅ Full |
+| ROLE_AGENCY_STAFF | ❌ | ✅ Limited | ❌ | ✅ View |
+| ROLE_SYSTEM_ADMIN | ✅ Full | ✅ Full | ✅ Full | ✅ Full |
 
 ## Common Query Parameters
 
@@ -174,492 +191,666 @@ security: "PUBLIC_ACCESS"
 ?created_at[gte]=2025-01-01&created_at[lte]=2025-01-31
 ```
 
+### Field Selection
+```bash
+?fields=id,name,status
+```
+
 ## API Endpoints
 
 ### Authentication Endpoints
 
-#### POST /api/v1/auth/login
-- **Description**: Authenticate user and receive JWT token
-- **Access**: Public
-- **Request Body**:
-  ```json
-  {
-    "email": "user@example.com",
-    "password": "userpassword123"
-  }
-  ```
+#### Get Current User
+```http
+GET /api/v1/me
+Authorization: Bearer <token>
+```
 
-#### POST /api/v1/clients/login
-- **Description**: Client-specific authentication with enhanced response
-- **Access**: Public
-- **Request Body**:
-  ```json
-  {
-    "email": "admin@acmelaw.com",
-    "password": "securepassword123"
-  }
-  ```
-
-#### POST /api/v1/clients/register
-- **Description**: Register new client with organization, tenant, and admin user
-- **Access**: Public
-- **Request Body**:
-  ```json
-  {
-    "organization_name": "Acme Law Firm",
-    "organization_domain": "acmelaw.com",
-    "client_name": "Acme Law Firm",
-    "client_description": "Premier legal services in downtown",
-    "client_website": "https://acmelaw.com",
-    "client_phone": "+1-555-0123",
-    "client_address": "123 Main Street",
-    "client_city": "Downtown",
-    "client_state": "CA",
-    "client_zip_code": "90210",
-    "client_country": "USA",
-    "client_industry": "law",
-    "admin_email": "admin@acmelaw.com",
-    "admin_password": "securepassword123",
-    "admin_first_name": "John",
-    "admin_last_name": "Doe"
-  }
-  ```
+**Response:**
+```json
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "roles": ["ROLE_CLIENT_ADMIN"],
+  "client_id": "uuid",
+  "tenant_id": "uuid",
+  "status": "active",
+  "created_at": "2024-01-15T10:30:00+00:00",
+  "last_login_at": "2024-01-15T10:30:00+00:00"
+}
+```
 
 ### Client Management Endpoints
 
-#### POST /api/v1/clients
-- **Description**: Create a new client
-- **Access**: Agency Admin/Staff
-- **Request Body**:
-  ```json
-  {
-    "name": "Acme Corporation",
-    "slug": "acme-corporation",
-    "description": "A leading technology company specializing in innovative solutions",
-    "website": "https://www.acme.com",
-    "phone": "+1-555-123-4567",
-    "address": "123 Business Street",
-    "city": "San Francisco",
-    "state": "CA",
-    "zip_code": "94105",
-    "tenant_id": "550e8400-e29b-41d4-a716-446655440002"
+#### List Clients
+```http
+GET /api/v1/clients?page=1&per_page=25&sort=name&order=asc
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF
+```
+
+#### Create Client
+```http
+POST /api/v1/clients
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN
+Content-Type: application/json
+
+{
+  "name": "Acme Corporation",
+  "slug": "acme-corporation",
+  "description": "A leading technology company specializing in innovative solutions",
+  "website": "https://www.acme.com",
+  "phone": "+1-555-123-4567",
+  "address": "123 Business Street",
+  "city": "San Francisco",
+  "state": "CA",
+  "zip_code": "94105",
+  "tenant_id": "550e8400-e29b-41d4-a716-446655440002"
+}
+```
+
+**Minimal Request:**
+```json
+{
+  "name": "Acme Corporation"
+}
+```
+
+#### Update Client
+```http
+PATCH /api/v1/clients/{id}
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN
+Content-Type: application/json
+
+{
+  "name": "Acme Corporation Updated",
+  "description": "Updated description for Acme Corporation",
+  "status": "active",
+  "metadata": {
+    "industry": "Technology",
+    "founded": "1995",
+    "employees": "1000+"
+  },
+  "google_business_profile": {
+    "profile_id": "gcid:123456789",
+    "rating": 4.8,
+    "reviews_count": 150
+  },
+  "google_search_console": {
+    "property": "https://www.acme.com",
+    "verification_status": "verified"
+  },
+  "google_analytics": {
+    "property_id": "GA4-123456789",
+    "tracking_id": "G-XXXXXXXXXX"
   }
-  ```
+}
+```
 
-#### GET /api/v1/clients
-- **Description**: List all clients
-- **Access**: Agency Admin/Staff
-- **Query Parameters**: `page`, `per_page`, `sort`, `order`, `status`
-
-#### GET /api/v1/clients/{id}
-- **Description**: Get specific client
-- **Access**: Agency Admin/Staff, Client Admin (own client only)
-
-#### PATCH /api/v1/clients/{id}
-- **Description**: Update an existing client
-- **Access**: Agency Admin/Staff, Client Admin (own client only)
-- **Request Body**:
-  ```json
-  {
-    "name": "Acme Corporation Updated",
-    "description": "Updated description for Acme Corporation",
-    "status": "active",
-    "metadata": {
-      "industry": "Technology",
-      "founded": "1995",
-      "employees": "1000+"
-    },
-    "google_business_profile": {
-      "profile_id": "gcid:123456789",
-      "rating": 4.8,
-      "reviews_count": 150
-    },
-    "google_search_console": {
-      "property": "https://www.acme.com",
-      "verification_status": "verified"
-    },
-    "google_analytics": {
-      "property_id": "GA4-123456789",
-      "tracking_id": "G-XXXXXXXXXX"
-    }
-  }
-  ```
-
-#### DELETE /api/v1/clients/{id}
-- **Description**: Delete a client
-- **Access**: Agency Admin only
+#### Get Client Locations
+```http
+GET /api/v1/clients/{id}/locations
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN (own client)
+```
 
 ### User Management Endpoints
 
-#### POST /api/v1/users
-- **Description**: Create a new user
-- **Access**: Agency Admin/Staff, Client Admin (own client only)
-- **Request Body**:
-  ```json
-  {
-    "email": "newuser@example.com",
-    "name": "Jane Smith",
-    "role": "ROLE_CLIENT_STAFF",
-    "client_id": "550e8400-e29b-41d4-a716-446655440001",
-    "tenant_id": "550e8400-e29b-41d4-a716-446655440002",
-    "status": "invited"
+#### List Users
+```http
+GET /api/v1/users?page=1&per_page=25&sort=createdAt&order=desc
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_CLIENT_ADMIN
+```
+
+#### Create User
+```http
+POST /api/v1/users
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_CLIENT_ADMIN
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "name": "Jane Smith",
+  "role": "ROLE_CLIENT_STAFF",
+  "client_id": "550e8400-e29b-41d4-a716-446655440001",
+  "tenant_id": "550e8400-e29b-41d4-a716-446655440002",
+  "status": "invited"
+}
+```
+
+**Minimal Request:**
+```json
+{
+  "email": "newuser@example.com",
+  "name": "Jane Smith",
+  "role": "ROLE_CLIENT_STAFF"
+}
+```
+
+#### Update User
+```http
+PATCH /api/v1/users/{id}
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_CLIENT_ADMIN
+Content-Type: application/json
+
+{
+  "name": "Jane Smith Updated",
+  "role": "ROLE_CLIENT_ADMIN",
+  "client_id": "550e8400-e29b-41d4-a716-446655440001",
+  "status": "active",
+  "metadata": {
+    "department": "Marketing",
+    "phone_extension": "1234",
+    "hire_date": "2024-01-15"
   }
-  ```
+}
+```
 
-#### GET /api/v1/users
-- **Description**: List all users
-- **Access**: Agency Admin/Staff, Client Admin (own client users only)
+### Public Content Endpoints
 
-#### GET /api/v1/users/{id}
-- **Description**: Get specific user
-- **Access**: Agency Admin/Staff, Client Admin (own client users only), Self
+#### Get Page by Slug
+```http
+GET /api/v1/pages?slug=about
+Authorization: Bearer <token>
+Required Role: PUBLIC_ACCESS
+```
 
-#### PATCH /api/v1/users/{id}
-- **Description**: Update an existing user
-- **Access**: Agency Admin/Staff, Client Admin (own client users only), Self
-- **Request Body**:
-  ```json
-  {
-    "name": "Jane Smith Updated",
-    "role": "ROLE_CLIENT_ADMIN",
-    "client_id": "550e8400-e29b-41d4-a716-446655440001",
-    "status": "active",
-    "metadata": {
-      "department": "Marketing",
-      "phone_extension": "1234",
-      "hire_date": "2024-01-15"
-    }
-  }
-  ```
+#### List Pages
+```http
+GET /api/v1/pages?page=1&per_page=15&type=blog&status=published
+Authorization: Bearer <token>
+Required Role: PUBLIC_ACCESS
+```
 
-#### DELETE /api/v1/users/{id}
-- **Description**: Delete a user
-- **Access**: Agency Admin only
+#### List FAQs
+```http
+GET /api/v1/faqs?isActive=true&sort=sort&order=asc
+Authorization: Bearer <token>
+Required Role: PUBLIC_ACCESS
+```
 
-### Audit Management Endpoints
+**Query Parameters:**
+- `page`: Page number (default: 1)
+- `per_page`: Items per page (default: 20, max: 100)
+- `sort`: Sort field with direction (e.g., "sort_order", "-created_at")
+- `category`: Filter by category
+- `search`: Search in question/answer text
+- `client_id`: Filter by client ID
 
-#### POST /api/v1/audit_intakes
-- **Description**: Create a new audit intake
-- **Access**: Agency Admin/Staff, Client Admin (own client only)
-- **Request Body**:
-  ```json
-  {
-    "client_id": "550e8400-e29b-41d4-a716-446655440001",
-    "website_url": "https://example.com",
-    "business_name": "Example Business",
-    "industry": "Technology",
-    "target_keywords": ["SEO", "marketing", "digital"],
-    "competitors": ["competitor1.com", "competitor2.com"],
-    "goals": ["Increase organic traffic", "Improve rankings"],
-    "budget_range": "5000-10000",
-    "timeline": "3-6 months",
-    "contact_email": "contact@example.com",
-    "contact_phone": "+1-555-123-4567"
-  }
-  ```
+#### List Packages
+```http
+GET /api/v1/packages?status=active&sort=name&order=asc
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN, ROLE_CLIENT_STAFF
+```
 
-#### GET /api/v1/audit_intakes
-- **Description**: List all audit intakes
-- **Access**: Agency Admin/Staff, Client Admin (own client intakes only)
+#### Get Media Asset
+```http
+GET /api/v1/media-assets/{id}
+Authorization: Bearer <token>
+Required Role: PUBLIC_ACCESS
+```
 
-#### GET /api/v1/audit_intakes/{id}
-- **Description**: Get specific audit intake
-- **Access**: Agency Admin/Staff, Client Admin (own client intakes only)
+#### List Media Assets
+```http
+GET /api/v1/media-assets?page=1&per_page=20&type=image&status=active
+Authorization: Bearer <token>
+Required Role: PUBLIC_ACCESS
+```
 
-#### PATCH /api/v1/audit_intakes/{id}
-- **Description**: Update an existing audit intake
-- **Access**: Agency Admin/Staff, Client Admin (own client intakes only)
+### Campaign Management Endpoints
 
-#### DELETE /api/v1/audit_intakes/{id}
-- **Description**: Delete an audit intake
-- **Access**: Agency Admin only
+#### List Campaigns
+```http
+GET /api/v1/campaigns?client_id=uuid&status=active&type=seo
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-### Audit Run Endpoints
+#### Create Campaign
+```http
+POST /api/v1/campaigns
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_CLIENT_ADMIN
+Content-Type: application/json
 
-#### POST /api/v1/audit_runs
-- **Description**: Create a new audit run
-- **Access**: Agency Admin/Staff
-- **Request Body**:
-  ```json
-  {
-    "audit_intake_id": "550e8400-e29b-41d4-a716-446655440001",
-    "client_id": "550e8400-e29b-41d4-a716-446655440002",
-    "status": "pending",
-    "scheduled_at": "2025-01-15T10:00:00Z",
-    "parameters": {
-      "crawl_depth": 3,
-      "max_pages": 1000,
-      "include_subdomains": true
-    }
-  }
-  ```
+{
+  "name": "Q1 SEO Campaign",
+  "description": "Focus on local SEO and content marketing",
+  "type": "seo",
+  "status": "draft",
+  "clientId": "550e8400-e29b-41d4-a716-446655440000",
+  "startDate": "2025-01-01T00:00:00Z",
+  "endDate": "2025-03-31T23:59:59Z",
+  "budget": 7500.00,
+  "goals": ["increase_rankings", "generate_leads"],
+  "metrics": ["organic_traffic", "conversion_rate"]
+}
+```
 
-#### GET /api/v1/audit_runs
-- **Description**: List all audit runs
-- **Access**: Agency Admin/Staff, Client Admin (own client runs only)
+### SEO Tools Endpoints
 
-#### GET /api/v1/audit_runs/{id}
-- **Description**: Get specific audit run
-- **Access**: Agency Admin/Staff, Client Admin (own client runs only)
+#### List Keywords
+```http
+GET /api/v1/keywords?client_id=uuid&status=active&difficulty=medium
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-#### PATCH /api/v1/audit_runs/{id}
-- **Description**: Update an existing audit run
-- **Access**: Agency Admin/Staff
+#### List Rankings
+```http
+GET /api/v1/rankings?keyword_id=uuid&from=2025-01-01&to=2025-01-31
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-#### DELETE /api/v1/audit_runs/{id}
-- **Description**: Delete an audit run
-- **Access**: Agency Admin only
+#### Get Rankings Summary
+```http
+GET /api/v1/rankings/summary?client_id=uuid&date_from=2025-01-01&date_to=2025-01-31
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-### OAuth Endpoints
+#### List Backlinks
+```http
+GET /api/v1/backlinks?client_id=uuid&status=active&domain_authority[gte]=50
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-#### GET /api/v1/auth/google
-- **Description**: Initiate Google OAuth flow
-- **Access**: Public
+### Business Intelligence Endpoints
 
-#### GET /api/v1/auth/google/callback
-- **Description**: Handle Google OAuth callback
-- **Access**: Public
+#### List Reviews
+```http
+GET /api/v1/reviews?client_id=uuid&platform=google&status=approved
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-#### GET /api/v1/auth/microsoft
-- **Description**: Initiate Microsoft OAuth flow
-- **Access**: Public
+#### List Citations
+```http
+GET /api/v1/citations?client_id=uuid&platform=google&status=claimed
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-#### GET /api/v1/auth/microsoft/callback
-- **Description**: Handle Microsoft OAuth callback
-- **Access**: Public
+### Content Management Endpoints
 
-#### POST /api/v1/oauth/google/link
-- **Description**: Link Google account to current user
-- **Access**: Authenticated users
+#### List Content Items
+```http
+GET /api/v1/content-items?client_id=uuid&status=review&type=blog
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
 
-#### POST /api/v1/oauth/microsoft/link
-- **Description**: Link Microsoft account to current user
-- **Access**: Authenticated users
+#### List Content Briefs
+```http
+GET /api/v1/content-briefs?content_item_id=uuid&status=approved
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
+
+### Audit & Recommendations Endpoints
+
+#### List Audit Runs
+```http
+GET /api/v1/audit-runs?client_id=uuid&type=seo&status=completed
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
+
+#### List Audit Findings
+```http
+GET /api/v1/audit-findings?audit_run_id=uuid&severity=high
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
+
+#### List Recommendations
+```http
+GET /api/v1/recommendations?client_id=uuid&status=todo&priority=high
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
+
+### Billing & Subscriptions Endpoints
+
+#### List Subscriptions
+```http
+GET /api/v1/subscriptions?client_id=uuid&status=active
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
+
+#### List Invoices
+```http
+GET /api/v1/invoices?subscription_id=uuid&status=paid
+Authorization: Bearer <token>
+Required Role: ROLE_AGENCY_ADMIN, ROLE_AGENCY_STAFF, ROLE_CLIENT_ADMIN
+```
+
+### Lead Management Endpoints
+
+#### List Leads
+```http
+GET /api/v1/leads?client_id=uuid&status=new&page=1&per_page=25
+Authorization: Bearer <token>
+Required Role: ROLE_ADMIN
+```
+
+#### Create Lead
+```http
+POST /api/v1/leads
+Content-Type: application/json
+Required Role: PUBLIC_ACCESS
+
+{
+  "name": "John Smith",
+  "email": "john@example.com",
+  "phone": "+1-555-123-4567",
+  "company": "Acme Corp",
+  "message": "Interested in your SEO services"
+}
+```
 
 ## Request/Response Examples
 
-### Complete Client Creation Example
+### Creating a Campaign
 
-```bash
-curl -X POST "http://localhost:8000/api/v1/clients" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Tech Startup Inc",
-    "slug": "tech-startup-inc",
-    "description": "Innovative technology solutions for modern businesses",
-    "website": "https://techstartup.com",
-    "phone": "+1-555-987-6543",
-    "address": "456 Innovation Drive",
-    "city": "Austin",
-    "state": "TX",
-    "zip_code": "73301",
-    "country": "USA",
-    "industry": "technology",
-    "metadata": {
-      "founded": "2020",
-      "employees": "50-100",
-      "funding_round": "Series A"
-    }
-  }'
-```
+#### Request
+```http
+POST /api/v1/campaigns
+Authorization: Bearer <token>
+Content-Type: application/json
 
-**Response:**
-```json
 {
-  "id": "550e8400-e29b-41d4-a716-446655440003",
-  "name": "Tech Startup Inc",
-  "slug": "tech-startup-inc",
-  "description": "Innovative technology solutions for modern businesses",
-  "website": "https://techstartup.com",
-  "phone": "+1-555-987-6543",
-  "address": "456 Innovation Drive",
-  "city": "Austin",
-  "state": "TX",
-  "zip_code": "73301",
-  "country": "USA",
-  "industry": "technology",
-  "status": "active",
-  "metadata": {
-    "founded": "2020",
-    "employees": "50-100",
-    "funding_round": "Series A"
-  },
-  "created_at": "2025-01-15T10:30:00Z",
-  "updated_at": "2025-01-15T10:30:00Z"
+  "name": "Q1 SEO Campaign",
+  "description": "Focus on local SEO and content marketing",
+  "type": "seo",
+  "status": "draft",
+  "clientId": "550e8400-e29b-41d4-a716-446655440000",
+  "startDate": "2025-01-01T00:00:00Z",
+  "endDate": "2025-03-31T23:59:59Z",
+  "budget": 7500.00,
+  "goals": ["increase_rankings", "generate_leads"],
+  "metrics": ["organic_traffic", "conversion_rate"]
 }
 ```
 
-### Paginated List Example
-
-```bash
-curl -X GET "http://localhost:8000/api/v1/clients?page=1&per_page=10&sort=created_at&order=desc" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-**Response:**
+#### Response
 ```json
 {
-  "data": [
-    {
-      "id": "550e8400-e29b-41d4-a716-446655440003",
-      "name": "Tech Startup Inc",
-      "slug": "tech-startup-inc",
-      "status": "active",
-      "created_at": "2025-01-15T10:30:00Z"
-    }
-  ],
+  "id": "550e8400-e29b-41d4-a716-446655440001",
+  "name": "Q1 SEO Campaign",
+  "description": "Focus on local SEO and content marketing",
+  "type": "seo",
+  "status": "draft",
+  "clientId": "550e8400-e29b-41d4-a716-446655440000",
+  "startDate": "2025-01-01T00:00:00Z",
+  "endDate": "2025-03-31T23:59:59Z",
+  "budget": 7500.00,
+  "goals": ["increase_rankings", "generate_leads"],
+  "metrics": ["organic_traffic", "conversion_rate"],
+  "createdAt": "2025-01-15T10:30:00Z",
+  "updatedAt": "2025-01-15T10:30:00Z"
+}
+```
+
+### Common Response Formats
+
+#### Success Response with Pagination
+```json
+{
+  "data": [...],
   "pagination": {
     "page": 1,
-    "per_page": 10,
-    "total": 1,
-    "total_pages": 1
+    "per_page": 20,
+    "total": 100,
+    "pages": 5
   }
 }
 ```
 
-## Error Handling
-
-### HTTP Status Codes
-
-| Code | Description |
-|------|-------------|
-| 200 | OK - Request successful |
-| 201 | Created - Resource created successfully |
-| 400 | Bad Request - Invalid request data |
-| 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found - Resource not found |
-| 409 | Conflict - Resource already exists |
-| 422 | Unprocessable Entity - Validation failed |
-| 500 | Internal Server Error - Server error |
-
-### Error Response Format
-
+#### Error Response
 ```json
 {
-  "error": "Error message",
+  "error": "Access Denied",
+  "message": "You don't have permission to access this resource",
+  "code": 403,
   "details": {
-    "field_name": "Specific field error"
-  },
-  "code": "ERROR_CODE",
-  "timestamp": "2025-01-15T10:30:00Z"
+    "required_role": "ROLE_AGENCY_ADMIN",
+    "user_role": "ROLE_CLIENT_ADMIN"
+  }
 }
 ```
 
-### Common Error Examples
-
-#### Validation Error (400)
+#### Validation Error Response
 ```json
 {
   "error": "Validation failed",
   "details": {
-    "email": "This value should not be blank.",
-    "password": "This value is too short. It should have 8 characters or more."
+    "email": "This value should be a valid email address.",
+    "password": "This value should not be blank."
   }
 }
 ```
 
-#### Authentication Error (401)
-```json
-{
-  "error": "Invalid credentials"
-}
-```
+## Security Implementation
 
-#### Authorization Error (403)
-```json
-{
-  "error": "Access denied. Insufficient permissions."
-}
-```
+### JWT Configuration
 
-#### Not Found Error (404)
-```json
-{
-  "error": "Resource not found",
-  "details": {
-    "resource": "Client",
-    "id": "550e8400-e29b-41d4-a716-446655440000"
-  }
-}
-```
-
-## Rate Limiting
-
-### Current Implementation
-- No rate limiting currently implemented
-- Recommended for production: 100 requests per minute per IP
-- Consider implementing for authentication endpoints
-
-### Recommended Rate Limits
 ```yaml
-# config/packages/rate_limiter.yaml
-rate_limiter:
-  auth_limiter:
-    policy: 'token_bucket'
-    limit: 10
-    interval: '1 minute'
-  
-  api_limiter:
-    policy: 'token_bucket'
-    limit: 100
-    interval: '1 minute'
+# config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
+    secret_key: '%kernel.project_dir%/config/jwt/private.pem'
+    public_key: '%kernel.project_dir%/config/jwt/public.pem'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    token_ttl: 3600 # 1 hour
+    refresh_token_ttl: 2592000 # 30 days
 ```
 
-## Testing
+### CORS Configuration
 
-### Manual Testing
+```yaml
+# config/packages/nelmio_cors.yaml
+nelmio_cors:
+    defaults:
+        origin_regex: true
+        allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
+        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+        allow_headers: ['Content-Type', 'Authorization']
+        expose_headers: ['Link']
+        max_age: 3600
+```
 
-#### Test Authentication
+### Multi-Tenancy Filter
+
+```php
+// src/EventSubscriber/TenantFilterSubscriber.php
+class TenantFilterSubscriber implements EventSubscriberInterface
+{
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        $request = $event->getRequest();
+        $user = $this->security->getUser();
+        
+        if ($user && $this->isClientUser($user)) {
+            // Filter data by client_id for client users
+            $this->applyClientFilter($request);
+        }
+    }
+}
+```
+
+## API Platform Features
+
+### Automatic Documentation
+
+- **Interactive API Docs**: Available at `/api`
+- **OpenAPI Specification**: Available at `/api/docs.json`
+- **Hydra Documentation**: Available at `/api/docs.jsonld`
+
+### Built-in Features
+
+- **Pagination**: Automatic pagination for collection endpoints
+- **Filtering**: Search, date range, and custom filters
+- **Sorting**: Multi-field sorting with order control
+- **Validation**: Automatic input validation and error handling
+- **Serialization**: Configurable data serialization with groups
+
+### Custom Controllers
+
+For complex business logic, custom controllers are used alongside API Platform:
+
+```php
+#[Route('/api/v1')]
+class CampaignController extends AbstractController
+{
+    #[Route('/campaigns/summary', name: 'api_v1_campaigns_summary', methods: ['GET'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function getCampaignSummary(Request $request): JsonResponse
+    {
+        // Custom business logic here
+    }
+}
+```
+
+## Testing the API
+
+### Using cURL
+
 ```bash
-# Test login
-curl -X POST "http://localhost:8000/api/v1/auth/login" \
-  -H "Content-Type: application/json" \
-  -d '{"email": "test@example.com", "password": "password123"}'
+# Get campaigns
+curl -H "Authorization: Bearer <token>" \
+     "http://localhost:8000/api/v1/campaigns?client_id=uuid"
 
-# Test client login
-curl -X POST "http://localhost:8000/api/v1/clients/login" \
-  -H "Content-Type: application/json" \
-  -d '{"email": "admin@acmelaw.com", "password": "securepassword123"}'
+# Create campaign
+curl -X POST \
+     -H "Authorization: Bearer <token>" \
+     -H "Content-Type: application/json" \
+     -d '{"name":"Test Campaign","clientId":"uuid"}' \
+     "http://localhost:8000/api/v1/campaigns"
 ```
 
-#### Test Client Management
+### Using Postman
+
+1. **Set Base URL**: `http://localhost:8000`
+2. **Add Authorization Header**: `Authorization: Bearer <token>`
+3. **Use Collection**: Import the provided Postman collection
+4. **Environment Variables**: Set up environment variables for tokens and IDs
+
+### Using the Interactive API Docs
+
+1. Navigate to `http://localhost:8000/api`
+2. Click "Authorize" and enter your JWT token
+3. Test endpoints directly from the browser
+4. View request/response examples
+
+## Rate Limiting & Performance
+
+### Rate Limits
+
+- **Authentication**: 5 requests per minute
+- **API Endpoints**: 100 requests per minute per user
+- **File Uploads**: 10 requests per minute per user
+
+### Performance Tips
+
+1. **Use Pagination**: Always paginate large collections
+2. **Filter Early**: Apply filters at the database level
+3. **Selective Fields**: Use `?fields=id,name,status` to limit response size
+4. **Caching**: Implement appropriate caching strategies
+
+## Troubleshooting
+
+### Common Issues
+
+1. **401 Unauthorized**
+   - Check JWT token is valid and not expired
+   - Verify token format: `Bearer <token>`
+   - Regenerate token if needed
+
+2. **403 Forbidden**
+   - Verify user has required role
+   - Check client scoping for client users
+   - Review RBAC configuration
+
+3. **422 Validation Error**
+   - Check required fields are provided
+   - Verify data types and formats
+   - Review validation constraints
+
+4. **500 Internal Server Error**
+   - Check backend logs
+   - Verify database connection
+   - Check entity annotations
+
+### Debug Commands
+
 ```bash
-# Create client
-curl -X POST "http://localhost:8000/api/v1/clients" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Test Client"}'
+# Check API routes
+php bin/console debug:router | grep api
 
-# List clients
-curl -X GET "http://localhost:8000/api/v1/clients" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+# Validate entities
+php bin/console doctrine:schema:validate
+
+# Check cache
+php bin/console cache:clear
+php bin/console cache:warmup
+
+# Debug security
+php bin/console debug:security
 ```
 
-### Automated Testing
+### Available Roles
+- `ROLE_AGENCY_ADMIN`
+- `ROLE_AGENCY_STAFF`
+- `ROLE_CLIENT_ADMIN`
+- `ROLE_CLIENT_STAFF`
+- `ROLE_SYSTEM_ADMIN`
 
-#### PHPUnit Tests
-```bash
-cd backend
-php bin/phpunit tests/
+### Available Statuses
+- `invited`
+- `active`
+- `inactive`
+- `archived`
+
+### UUID Format
+All UUIDs should be in the format: `550e8400-e29b-41d4-a716-446655440000`
+
+### Headers
+For authenticated endpoints:
+```
+Authorization: Bearer {JWT_TOKEN}
+Content-Type: application/json
 ```
 
-#### API Testing Script
-```bash
-# Test all endpoints
-php bin/console app:test-api-endpoints
-```
+## Next Steps
+
+After understanding the API:
+
+1. **Set up authentication** in your frontend application
+2. **Implement error handling** for API responses
+3. **Add request/response logging** for debugging
+4. **Implement retry logic** for failed requests
+5. **Set up monitoring** for API performance
 
 ## Related Documentation
 
 - [Authentication Guide](./AUTHENTICATION_GUIDE.md) - Complete authentication system
 - [OAuth Setup](./OAUTH_SETUP.md) - OAuth provider configuration
-- [Setup Guide](./SETUP_GUIDE.md) - Development environment setup
-- [Database Guide](./DATABASE_GUIDE.md) - Database setup and management
+- [Setup Guide](./SETUP_GUIDE.md) - Development setup guide
+- [Database Guide](./DATABASE_GUIDE.md) - Database setup and entity management
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Production deployment
 
 ---
 
-**Last Updated:** September 9, 2025  
+**Last Updated:** January 2025  
 **Maintained By:** Development Team  
 **Status:** Complete and consolidated ✅
