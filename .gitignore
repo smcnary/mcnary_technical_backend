@@ -46,4 +46,5 @@ Thumbs.db
 
 # AWS and deployment artifacts
 *.pkg
-staging_key*
+staging_key*frontend/.next/
+backend/var/cache/
