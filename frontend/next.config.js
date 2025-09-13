@@ -16,12 +16,12 @@ const nextConfig = {
   // Exclude API routes from build
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   // Ensure proper hydration in development
-  reactStrictMode: true,
-  swcMinify: true,
-  // Experimental features for better hydration
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-  },
+  reactStrictMode: false,
+  swcMinify: false,
+  // Disable experimental features that might cause hydration issues
+  // experimental: {
+  //   optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  // },
 }
 
 module.exports = nextConfig
