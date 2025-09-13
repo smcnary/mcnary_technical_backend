@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import PageHeader from '@/components/portal/PageHeader';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -11,18 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Bell, 
   Search, 
-  Filter, 
-  MarkAsRead, 
   Trash2, 
-  Settings,
-  Mail,
-  Phone,
   AlertCircle,
   CheckCircle,
   Info,
   Loader2,
   Calendar,
-  User
+  User,
+  Phone,
+  Settings
 } from 'lucide-react';
 
 interface Notification {
@@ -235,7 +232,7 @@ export default function NotificationsPage() {
         
         {unreadCount > 0 && (
           <Button onClick={markAllAsRead} variant="outline" size="sm">
-            <MarkAsRead className="h-4 w-4 mr-2" />
+            <CheckCircle className="h-4 w-4 mr-2" />
             Mark All Read
           </Button>
         )}

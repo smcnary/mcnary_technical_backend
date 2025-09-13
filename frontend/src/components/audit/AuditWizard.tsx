@@ -477,8 +477,18 @@ function AccountStep() {
         </Field>
       </div>
       <p className="mt-3 text-sm text-white/60">We&apos;ll create your portal login and connect this audit to your account.</p>
+      
       {/* SSO Providers */}
-      <div className="mt-6 grid gap-3 md:grid-cols-2">
+      <div className="mt-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-white/10" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-gray-900 px-2 text-white/60">Or continue with</span>
+          </div>
+        </div>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
         <button
           type="button"
           onClick={() => {
@@ -488,8 +498,10 @@ function AccountStep() {
             }
           }}
           disabled={isGoogleLoading || isAuthenticated}
-          className={`inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 px-4 py-3 text-white transition ${
-            isGoogleLoading || isAuthenticated ? 'opacity-60 cursor-not-allowed bg-white/10' : 'bg-white/5 hover:bg-white/10'
+          className={`inline-flex items-center justify-center gap-3 rounded-xl border px-4 py-3 font-medium transition-all duration-200 ${
+            isGoogleLoading || isAuthenticated 
+              ? 'opacity-60 cursor-not-allowed bg-gray-800 border-gray-600 text-gray-400' 
+              : 'bg-white border-white/20 text-gray-900 hover:bg-gray-100 hover:border-white/30 hover:shadow-lg'
           }`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5" aria-hidden>
@@ -509,8 +521,10 @@ function AccountStep() {
             }
           }}
           disabled={isMicrosoftLoading || isAuthenticated}
-          className={`inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 px-4 py-3 text-white transition ${
-            isMicrosoftLoading || isAuthenticated ? 'opacity-60 cursor-not-allowed bg-white/10' : 'bg-white/5 hover:bg-white/10'
+          className={`inline-flex items-center justify-center gap-3 rounded-xl border px-4 py-3 font-medium transition-all duration-200 ${
+            isMicrosoftLoading || isAuthenticated 
+              ? 'opacity-60 cursor-not-allowed bg-gray-800 border-gray-600 text-gray-400' 
+              : 'bg-white border-white/20 text-gray-900 hover:bg-gray-100 hover:border-white/30 hover:shadow-lg'
           }`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" className="h-5 w-5" aria-hidden>
@@ -519,8 +533,9 @@ function AccountStep() {
             <rect width="10" height="10" x="1" y="12" fill="#05A6F0"/>
             <rect width="10" height="10" x="12" y="12" fill="#FFBA08"/>
           </svg>
-          <span className="font-medium">{isMicrosoftLoading ? 'Redirecting…' : 'Continue with Microsoft'}</span>
+          <span>{isMicrosoftLoading ? 'Redirecting…' : 'Continue with Microsoft'}</span>
         </button>
+        </div>
       </div>
     </Card>
   );
@@ -606,43 +621,6 @@ function GoalsStep() {
         <Field label="Notes (anything else we should know?)">
           <textarea rows={4} className="w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white" value={form.notes} onChange={(e) => updateForm({ notes: e.target.value })} />
         </Field>
-      </div>
-      {/* SSO Providers */}
-      <div className="mt-6 grid gap-3 md:grid-cols-2">
-        <button
-          type="button"
-          onClick={() => {
-            if (typeof window !== 'undefined') {
-              window.location.href = GOOGLE_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
-            }
-          }}
-          className="inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white hover:bg-white/10 transition"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5" aria-hidden>
-            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303C33.813,31.345,29.277,34,24,34c-6.627,0-12-5.373-12-12 s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C33.64,4.224,28.991,2,24,2C12.955,2,4,10.955,4,22 s8.955,20,20,20c11.045,0,20-8.955,20-20C44,21.329,43.861,20.691,43.611,20.083z"/>
-            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.818C14.655,16.108,18.961,14,24,14c3.059,0,5.842,1.154,7.961,3.039 l5.657-5.657C33.64,4.224,28.991,2,24,2C16.318,2,9.656,6.337,6.306,14.691z"/>
-            <path fill="#4CAF50" d="M24,42c5.166,0,9.86-1.977,13.409-5.197l-6.2-5.238C29.109,33.488,26.715,34,24,34 c-5.248,0-9.799-3.223-11.571-7.773l-6.56,5.049C7.201,37.556,15.017,42,24,42z"/>
-            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-1.074,3.073-3.272,5.487-6.094,6.962 c0.002-0.001,0.003-0.001,0.005-0.002l6.2,5.238C34.955,40.338,44,34,44,22C44,21.329,43.861,20.691,43.611,20.083z"/>
-          </svg>
-          <span className="font-medium">Continue with Google</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (typeof window !== 'undefined') {
-              window.location.href = MICROSOFT_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
-            }
-          }}
-          className="inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white hover:bg-white/10 transition"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" className="h-5 w-5" aria-hidden>
-            <rect width="10" height="10" x="1" y="1" fill="#F35325"/>
-            <rect width="10" height="10" x="12" y="1" fill="#81BC06"/>
-            <rect width="10" height="10" x="1" y="12" fill="#05A6F0"/>
-            <rect width="10" height="10" x="12" y="12" fill="#FFBA08"/>
-          </svg>
-          <span className="font-medium">Continue with Microsoft</span>
-        </button>
       </div>
     </Card>
   );
@@ -814,7 +792,7 @@ function SuccessStep() {
             </div>
             <div>
               <h4 className="font-semibold text-white mb-1">Initial Analysis (Day 1-2)</h4>
-              <p className="text-white/80 text-sm">We'll crawl your website and analyze your current SEO performance, technical issues, and competitive landscape.</p>
+              <p className="text-white/80 text-sm">We&apos;ll crawl your website and analyze your current SEO performance, technical issues, and competitive landscape.</p>
             </div>
           </div>
           <div className="flex items-start gap-4">
@@ -832,13 +810,13 @@ function SuccessStep() {
             </div>
             <div>
               <h4 className="font-semibold text-white mb-1">Final Report (Day 5)</h4>
-              <p className="text-white/80 text-sm">You'll receive your comprehensive audit report with actionable recommendations and priority rankings.</p>
+              <p className="text-white/80 text-sm">You&apos;ll receive your comprehensive audit report with actionable recommendations and priority rankings.</p>
             </div>
           </div>
         </div>
         <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
           <p className="text-blue-200 text-sm">
-            <strong>Typical timeline:</strong> 3-5 business days. You'll receive email updates at <span className="font-semibold">{account.email}</span> throughout the process.
+            <strong>Typical timeline:</strong> 3-5 business days. You&apos;ll receive email updates at <span className="font-semibold">{account.email}</span> throughout the process.
           </p>
         </div>
       </Card>
@@ -860,7 +838,7 @@ function SuccessStep() {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                Don't have a GBP?
+                Don&apos;t have a GBP?
               </h4>
               <p className="text-white/70 text-sm mb-3">Create a free Google Business Profile to get started with local SEO.</p>
               <a 
@@ -952,7 +930,6 @@ export default function AuditWizard() {
   const { currentStep, setStep, next, back, setSaving, markSaved, setError, validateCurrentStep, clearValidationErrors } = useAuditStore();
   const state = useAuditStore();
   const { isAuthenticated } = useAuthStore();
-  const router = useRouter();
   const [ssoError, setSsoError] = useState<string | null>(null);
 
   // Handle URL parameters for pre-selecting tier
@@ -1109,7 +1086,7 @@ export default function AuditWizard() {
           } catch (loginError) {
             // If login fails, try to register
             try {
-              const authResult = await registerUser(state.account, state.form);
+              await registerUser(state.account, state.form);
               // After registration, login to get a proper token
               const loginResult = await loginUser(state.account.email, state.account.password);
               useAuthStore.setState({
