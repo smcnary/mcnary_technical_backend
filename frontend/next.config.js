@@ -13,21 +13,15 @@ const nextConfig = {
       domains: [],
     },
   }),
-  // Exclude API routes from static export
-  // experimental: {
-  //   appDir: true, // This is now default in Next.js 13+
-  // },
   // Exclude API routes from build
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  // Remove rewrites for static export
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/api/:path*',
-  //       destination: 'http://localhost:8000/api/:path*',
-  //     },
-  //   ];
-  // },
+  // Ensure proper hydration in development
+  reactStrictMode: true,
+  swcMinify: true,
+  // Experimental features for better hydration
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
 }
 
 module.exports = nextConfig
