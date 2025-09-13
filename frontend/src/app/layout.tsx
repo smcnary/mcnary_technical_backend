@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ThemeProvider } from '@/contexts/ThemeContext'
+// import { ThemeProvider } from '@/contexts/ThemeContext'
 import '../index.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -38,9 +38,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   )

@@ -414,66 +414,50 @@ const steps = [
 type StepKey = typeof steps[number]["key"];
 
 function AccountStep() {
-  const { account, updateAccount, validationErrors } = useAuditStore();
-  const { isAuthenticated } = useAuthStore();
+  // Simple test component without Zustand
+  const [localFirstName, setLocalFirstName] = useState('');
+  const [localLastName, setLocalLastName] = useState('');
+  const [localEmail, setLocalEmail] = useState('');
+  const [localPassword, setLocalPassword] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isMicrosoftLoading, setIsMicrosoftLoading] = useState(false);
+
   return (
     <Card title="Create your account">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Field label="First name">
           <input 
-            className={`w-full rounded-xl border bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-              validationErrors.account.firstName ? 'border-rose-500' : 'border-white/10'
-            }`} 
-            value={account.firstName} 
-            onChange={(e) => updateAccount({ firstName: e.target.value })} 
+            className="w-full rounded-xl border bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 border-white/10"
+            value={localFirstName} 
+            onChange={(e) => setLocalFirstName(e.target.value)} 
+            placeholder="Enter your first name"
           />
-          {validationErrors.account.firstName && (
-            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.firstName}</p>
-          )}
         </Field>
         <Field label="Last name">
           <input 
-            className={`w-full rounded-xl border bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-              validationErrors.account.lastName ? 'border-rose-500' : 'border-white/10'
-            }`} 
-            value={account.lastName} 
-            onChange={(e) => updateAccount({ lastName: e.target.value })} 
+            className="w-full rounded-xl border bg-black/40 p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 border-white/10"
+            value={localLastName} 
+            onChange={(e) => setLocalLastName(e.target.value)} 
+            placeholder="Enter your last name"
           />
-          {validationErrors.account.lastName && (
-            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.lastName}</p>
-          )}
         </Field>
         <Field label="Email">
           <input 
             type="email" 
-            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
-              validationErrors.account.email ? 'border-rose-500' : 'border-white/10'
-            }`} 
-            value={account.email} 
-            onChange={(e) => updateAccount({ email: e.target.value })} 
+            className="w-full rounded-xl border bg-black/40 p-3 text-white border-white/10"
+            value={localEmail} 
+            onChange={(e) => setLocalEmail(e.target.value)} 
+            placeholder="Enter your email"
           />
-          {validationErrors.account.email && (
-            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.email}</p>
-          )}
         </Field>
         <Field label="Password">
           <input 
             type="password" 
-            className={`w-full rounded-xl border bg-black/40 p-3 text-white ${
-              validationErrors.account.password ? 'border-rose-500' : 'border-white/10'
-            }`} 
-            value={account.password} 
-            onChange={(e) => updateAccount({ password: e.target.value })} 
-            disabled={isAuthenticated}
+            className="w-full rounded-xl border bg-black/40 p-3 text-white border-white/10"
+            value={localPassword} 
+            onChange={(e) => setLocalPassword(e.target.value)} 
+            placeholder="Enter your password"
           />
-          {isAuthenticated && (
-            <p className="text-xs text-white/60 mt-1">Authenticated via SSO — password entry disabled.</p>
-          )}
-          {validationErrors.account.password && (
-            <p className="text-xs text-rose-200 mt-1">{validationErrors.account.password}</p>
-          )}
         </Field>
       </div>
       <p className="mt-3 text-sm text-white/60">We&apos;ll create your portal login and connect this audit to your account.</p>
@@ -497,9 +481,9 @@ function AccountStep() {
               window.location.href = GOOGLE_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
             }
           }}
-          disabled={isGoogleLoading || isAuthenticated}
+          disabled={isGoogleLoading}
           className={`inline-flex items-center justify-center gap-3 rounded-xl border px-4 py-3 font-medium transition-all duration-200 ${
-            isGoogleLoading || isAuthenticated 
+            isGoogleLoading 
               ? 'opacity-60 cursor-not-allowed bg-gray-800 border-gray-600 text-gray-400' 
               : 'bg-white border-white/20 text-gray-900 hover:bg-gray-100 hover:border-white/30 hover:shadow-lg'
           }`}
@@ -520,9 +504,9 @@ function AccountStep() {
               window.location.href = MICROSOFT_OAUTH_URL + `?redirect=${encodeURIComponent(window.location.href)}`;
             }
           }}
-          disabled={isMicrosoftLoading || isAuthenticated}
+          disabled={isMicrosoftLoading}
           className={`inline-flex items-center justify-center gap-3 rounded-xl border px-4 py-3 font-medium transition-all duration-200 ${
-            isMicrosoftLoading || isAuthenticated 
+            isMicrosoftLoading 
               ? 'opacity-60 cursor-not-allowed bg-gray-800 border-gray-600 text-gray-400' 
               : 'bg-white border-white/20 text-gray-900 hover:bg-gray-100 hover:border-white/30 hover:shadow-lg'
           }`}
