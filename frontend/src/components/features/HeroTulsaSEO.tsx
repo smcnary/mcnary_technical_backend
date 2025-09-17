@@ -15,7 +15,14 @@ export default function TulsaSEOHero() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#0c0a17] to-black text-white">
+      <section 
+        className="relative overflow-hidden bg-gradient-to-b from-[#0c0a17] to-black text-white min-h-screen"
+        style={{
+          background: 'linear-gradient(to bottom, #0c0a17, #000000)',
+          color: 'white',
+          minHeight: '100vh'
+        }}
+      >
         {/* soft grid + glow */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_70%_10%,rgba(99,102,241,0.15),transparent_60%),radial-gradient(50%_50%_at_20%_20%,rgba(16,185,129,0.10),transparent_60%)]" />
         
