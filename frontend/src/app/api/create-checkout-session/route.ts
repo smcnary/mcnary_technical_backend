@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!serviceType || !price || !customerEmail) {
+    if (!serviceType || !price) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: serviceType and price are required' },
         { status: 400 }
       );
     }
@@ -40,17 +40,17 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: serviceType === "audit" ? "SEO Audit" : "Full SEO Service",
             description: serviceType === "audit" 
-              ? `Comprehensive SEO audit for ${companyName}` 
-              : `Complete SEO transformation for ${companyName}`,
+              ? `Comprehensive SEO audit for ${companyName || 'your business'}` 
+              : `Complete SEO transformation for ${companyName || 'your business'}`,
             metadata: {
               serviceType,
-              companyName,
-              website,
-              industry,
-              goals: JSON.stringify(goals),
-              competitors,
-              monthlyBudget,
-              notes,
+              companyName: companyName || '',
+              website: website || '',
+              industry: industry || '',
+              goals: JSON.stringify(goals || []),
+              competitors: competitors || '',
+              monthlyBudget: monthlyBudget || '',
+              notes: notes || '',
             },
           },
             unit_amount: price * 100, // Convert to cents
@@ -59,19 +59,18 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'payment',
-      customer_email: customerEmail,
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/audit-wizard?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/audit-wizard?canceled=true`,
       metadata: {
         serviceType,
-        customerName,
-        companyName,
-        website,
-        industry,
-        goals: JSON.stringify(goals),
-        competitors,
-        monthlyBudget,
-        notes,
+        customerName: customerName || '',
+        companyName: companyName || '',
+        website: website || '',
+        industry: industry || '',
+        goals: JSON.stringify(goals || []),
+        competitors: competitors || '',
+        monthlyBudget: monthlyBudget || '',
+        notes: notes || '',
       },
       shipping_address_collection: {
         allowed_countries: ['US', 'CA'],
