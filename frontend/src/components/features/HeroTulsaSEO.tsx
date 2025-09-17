@@ -99,7 +99,7 @@ export default function TulsaSEOHero() {
                 </>
               ) : (
                 <>
-                  Get Your $799 SEO Audit <span aria-hidden className="text-xl">→</span>
+                  Start the Process <span aria-hidden className="text-xl">→</span>
                 </>
               )}
             </button>
