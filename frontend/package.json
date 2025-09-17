@@ -13,7 +13,8 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:quick": "playwright test quick-dev.spec.ts",
-    "test:audit-wizard": "playwright test audit-wizard.spec.ts"
+    "test:audit-wizard": "playwright test audit-wizard.spec.ts",
+    "test:stripe": "node scripts/test-stripe.js"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
@@ -26,6 +27,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@stripe/stripe-js": "^7.9.0",
     "axios": "^1.6.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -35,6 +37,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^3.1.2",
+    "stripe": "^18.5.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.8"
@@ -48,7 +51,7 @@
     "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.32",
+    "eslint-config-next": "^14.0.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.5.6",
