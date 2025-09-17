@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import { headers } from 'next/headers';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-08-27.basil',
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -29,14 +29,14 @@ export async function POST(request: NextRequest) {
         // Extract metadata
         const {
           serviceType,
-          customerName,
+          customerName: _customerName, // Renamed to indicate it's intentionally unused
           companyName,
           website,
-          industry,
-          goals,
-          competitors,
-          monthlyBudget,
-          notes,
+          industry: _industry, // Renamed to indicate it's intentionally unused
+          goals: _goals, // Renamed to indicate it's intentionally unused
+          competitors: _competitors, // Renamed to indicate it's intentionally unused
+          monthlyBudget: _monthlyBudget, // Renamed to indicate it's intentionally unused
+          notes: _notes, // Renamed to indicate it's intentionally unused
         } = session.metadata || {};
 
         // Here you would typically:
