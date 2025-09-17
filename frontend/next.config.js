@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable ESLint during development to avoid blocking the server
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // Enable static export for S3 hosting only in production
   ...(process.env.NODE_ENV === 'production' && {
     output: 'export',
@@ -13,14 +9,23 @@ const nextConfig = {
       domains: [],
     },
   }),
-  // Exclude API routes from build
-  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  // Ensure proper hydration in development
+  // Fix hydration issues
   reactStrictMode: false,
   swcMinify: false,
-  // Disable experimental features that might cause hydration issues
+  // Exclude API routes from static export
   // experimental: {
-  //   optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  //   appDir: true, // This is now default in Next.js 13+
+  // },
+  // Exclude API routes from build
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  // Remove rewrites for static export
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*',
+  //       destination: 'http://localhost:8000/api/:path*',
+  //     },
+  //   ];
   // },
 }
 
