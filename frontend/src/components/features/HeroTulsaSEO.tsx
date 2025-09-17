@@ -1,13 +1,7 @@
 "use client";
-import { useMemo, useState } from "react";
-
-type Tier = "Growth" | "Pro" | "Enterprise";
-const TIERS: Tier[] = ["Growth", "Pro", "Enterprise"];
 
 export default function TulsaSEOHero() {
-  const [tier, setTier] = useState<Tier>("Growth");
-
-  const auditHref = useMemo(() => `/services/audit?tier=${encodeURIComponent(tier)}`, [tier]);
+  const auditHref = "/audit-wizard";
 
   return (
     <>
@@ -50,38 +44,13 @@ export default function TulsaSEOHero() {
           </div>
 
           {/* Controls */}
-          <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end">
+          <div className="mb-12 flex justify-center">
             <a
               href={auditHref}
               className="inline-flex items-center justify-center gap-3 rounded-xl bg-indigo-600 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500 hover:shadow-xl hover:shadow-indigo-600/30 transition-all duration-200 transform hover:-translate-y-0.5"
             >
-              Start Your {tier} Audit <span aria-hidden className="text-xl">→</span>
+              Start Your Growth Audit <span aria-hidden className="text-xl">→</span>
             </a>
-            
-            <a
-              href="/pricing"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-4 text-base font-medium text-white/90 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
-            >
-              View Pricing
-            </a>
-            
-            <div className="sm:ml-4">
-              <label className="block text-sm text-white/90 mb-2 font-medium">Choose tier</label>
-              <div className="relative">
-                <select
-                  value={tier}
-                  onChange={(e) => setTier(e.target.value as Tier)}
-                  className="w-full appearance-none rounded-xl border border-white/20 bg-black/40 px-4 py-3 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                >
-                  {TIERS.map((t) => (
-                    <option key={t} value={t} className="bg-[#0c0a17] text-white">
-                      {t}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">▾</span>
-              </div>
-            </div>
           </div>
 
           {/* Trust bar */}
