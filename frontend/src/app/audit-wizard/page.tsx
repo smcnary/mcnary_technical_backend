@@ -31,12 +31,50 @@ export default function AuditWizardPage() {
     { key: "account", label: "Create Account" },
     { key: "business", label: "Business Details" },
     { key: "goals", label: "Goals & Competition" },
-    { key: "plan", label: "Choose Your Package" },
-    { key: "review", label: "Confirm & Submit" },
+    { key: "checkout", label: "Submit & Checkout" },
   ];
 
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleStripeCheckout = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      // Create checkout session for $799 audit
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serviceType: 'audit',
+          price: 799,
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+          companyName: formData.companyName,
+          website: formData.website,
+          industry: formData.industry,
+          goals: formData.goals,
+          competitors: formData.competitors,
+          monthlyBudget: formData.monthlyBudget,
+          notes: formData.notes,
+        }),
+      });
+
+      const { sessionId } = await response.json();
+      
+      if (sessionId) {
+        // Redirect to Stripe checkout
+        window.location.href = `https://checkout.stripe.com/pay/${sessionId}`;
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      setSubmitError('Failed to start checkout. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const validateCurrentStep = () => {
@@ -53,8 +91,8 @@ export default function AuditWizardPage() {
                formData.industry.trim();
       case 2: // Goals validation
         return formData.goals.length > 0;
-      case 3: // Package validation
-        return formData.tier.trim();
+      case 3: // Checkout validation (no validation needed)
+        return true;
       default:
         return true;
     }
@@ -74,8 +112,8 @@ export default function AuditWizardPage() {
                formData.industry.trim();
       case 2: // Goals validation
         return formData.goals.length > 0;
-      case 3: // Package validation
-        return formData.tier.trim();
+      case 3: // Checkout validation (no validation needed)
+        return true;
       default:
         return true;
     }
@@ -316,50 +354,17 @@ export default function AuditWizardPage() {
             </div>
           </div>
         );
-      case 3: // Plan
+      case 3: // Checkout
         return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Choose Your Package</h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {[
-                { key: "Audit", price: "$3,000", features: ["Comprehensive SEO audit", "Technical analysis", "Competitive research", "Actionable roadmap", "Priority support"] },
-                { key: "Audit + Retainer", price: "$5,000", features: ["Full $3,000 audit", "$1,500 credit applied", "3-month implementation", "Ongoing optimization", "Monthly reporting"] },
-              ].map((tier) => (
-                <button
-                  key={tier.key}
-                  onClick={() => updateFormData('tier', tier.key)}
-                  className={`p-6 rounded-xl border transition ${
-                    formData.tier === tier.key
-                      ? "border-indigo-500 bg-indigo-500/10"
-                      : "border-white/10 bg-white/5 hover:bg-white/10"
-                  }`}
-                >
-                  <h3 className="text-lg font-semibold text-white mb-2">{tier.key}</h3>
-                  <p className="text-2xl font-bold text-white mb-4">{tier.price}</p>
-                  <ul className="space-y-2 text-sm text-white/90">
-                    {tier.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <span className="text-green-400">✓</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-      case 4: // Review
-        return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Confirm & Submit</h2>
-            <div className="bg-white/5 rounded-xl p-6 space-y-4">
-              <div>
+          <div className="space-y-6">
+            {/* Review Section */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="bg-white/5 rounded-xl p-6">
                 <h3 className="font-medium mb-2 text-white">Account Details</h3>
                 <p className="text-white/90">Name: {formData.firstName} {formData.lastName}</p>
                 <p className="text-white/90">Email: {formData.email}</p>
               </div>
-              <div>
+              <div className="bg-white/5 rounded-xl p-6">
                 <h3 className="font-medium mb-2 text-white">Business Details</h3>
                 <p className="text-white/90">Company: {formData.companyName}</p>
                 <p className="text-white/90">Website: {formData.website}</p>
@@ -367,20 +372,56 @@ export default function AuditWizardPage() {
                 <p className="text-white/90">Budget: {formData.monthlyBudget}</p>
                 <p className="text-white/90">Competitors: {formData.competitors}</p>
               </div>
-              <div>
-                <h3 className="font-medium mb-2 text-white">Goals</h3>
-                <p className="text-white/90">{formData.goals.join(', ')}</p>
-              </div>
-              <div>
-                <h3 className="font-medium mb-2 text-white">Selected Tier</h3>
-                <p className="text-white/90">{formData.tier}</p>
-              </div>
-              {formData.notes && (
-                <div>
-                  <h3 className="font-medium mb-2 text-white">Notes</h3>
-                  <p className="text-white/90">{formData.notes}</p>
+            </div>
+            
+            <div className="bg-white/5 rounded-xl p-6">
+              <h3 className="font-medium mb-2 text-white">Goals & Notes</h3>
+              <p className="text-white/90">Goals: {formData.goals.join(', ') || 'None selected'}</p>
+              {formData.notes && <p className="text-white/90">Notes: {formData.notes}</p>}
+            </div>
+
+            {/* Order Summary & Checkout */}
+            <div className="bg-white/5 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Order Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-white/80">SEO Audit</span>
+                  <span className="text-white font-semibold">$799</span>
                 </div>
-              )}
+                <div className="flex justify-between items-center text-sm text-white/60">
+                  <span>Company: {formData.companyName}</span>
+                  <span>Website: {formData.website}</span>
+                </div>
+              </div>
+              <div className="border-t border-white/10 mt-4 pt-4">
+                <div className="flex justify-between items-center text-lg font-semibold">
+                  <span className="text-white">Total</span>
+                  <span className="text-white">$799</span>
+                </div>
+              </div>
+              
+              <button
+                onClick={handleStripeCheckout}
+                disabled={isSubmitting}
+                className="w-full mt-6 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center gap-3"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processing Payment...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Complete Payment - $799
+                  </>
+                )}
+              </button>
             </div>
           </div>
         );
@@ -403,7 +444,7 @@ export default function AuditWizardPage() {
         </div>
 
         {/* Breadcrumb */}
-        <div className="mb-8 grid gap-3 md:grid-cols-5">
+        <div className="mb-8 grid gap-3 md:grid-cols-4">
           {steps.map((step, i) => {
             const stepComplete = isStepComplete(i);
             const canNavigate = canNavigateToStep(i);
