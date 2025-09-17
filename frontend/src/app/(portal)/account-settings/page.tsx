@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import PageHeader from '@/components/portal/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +13,9 @@ import {
   User, 
   Shield, 
   Key,
+  Mail,
+  Phone,
+  MapPin,
   Loader2,
   AlertCircle,
   CheckCircle,
