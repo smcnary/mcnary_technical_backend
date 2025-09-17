@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { apiService, AuditSubmission } from '@/services/api';
@@ -37,6 +37,63 @@ export default function AuditWizardPage() {
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  // Browser back button safety
+  const handleBeforeUnload = useCallback((e: BeforeUnloadEvent) => {
+    // Only show warning if user has entered data
+    const hasData = formData.firstName || formData.lastName || formData.email || 
+                   formData.companyName || formData.website || formData.industry || 
+                   formData.goals.length > 0 || formData.notes;
+    
+    if (hasData && currentStep < steps.length - 1) {
+      e.preventDefault();
+      e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      return 'You have unsaved changes. Are you sure you want to leave?';
+    }
+  }, [formData, currentStep]);
+
+  const handlePopState = useCallback((_e: PopStateEvent) => {
+    // Prevent browser back navigation if user has unsaved data
+    const hasData = formData.firstName || formData.lastName || formData.email || 
+                   formData.companyName || formData.website || formData.industry || 
+                   formData.goals.length > 0 || formData.notes;
+    
+    if (hasData && currentStep < steps.length - 1) {
+      // Push the current state back to prevent navigation
+      window.history.pushState(null, '', window.location.href);
+      
+      // Show confirmation dialog
+      const confirmed = window.confirm(
+        'You have unsaved changes. Are you sure you want to leave? Your progress will be lost.'
+      );
+      
+      if (confirmed) {
+        // User confirmed, allow navigation
+        window.history.back();
+      }
+    }
+  }, [formData, currentStep]);
+
+  // Set up browser navigation safety
+  useEffect(() => {
+    // Add event listeners
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    
+    // Push initial state to enable back button detection
+    window.history.pushState(null, '', window.location.href);
+    
+    return () => {
+      // Cleanup event listeners
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [handleBeforeUnload, handlePopState]);
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = formData.firstName || formData.lastName || formData.email || 
+                            formData.companyName || formData.website || formData.industry || 
+                            formData.goals.length > 0 || formData.notes;
 
   const handleStripeCheckout = async () => {
     setIsSubmitting(true);
@@ -441,6 +498,14 @@ export default function AuditWizardPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-white">SEO Audit Wizard</h1>
           <p className="text-white/90">Create your account, tell us about your business, and choose your audit package.</p>
+          {hasUnsavedChanges && currentStep < steps.length - 1 && (
+            <div className="mt-2 flex items-center gap-2 text-amber-400 text-sm">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              Unsaved changes - use browser back button carefully
+            </div>
+          )}
         </div>
 
         {/* Breadcrumb */}
