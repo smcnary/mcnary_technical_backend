@@ -67,8 +67,8 @@ export default function TulsaSEOHero() {
           </p>
 
           {/* Wizard preview breadcrumb */}
-          <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-5">
-            {["Create Account","Business Details","Goals","Pick Tier","Review"].map((label, i) => (
+          <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-4">
+            {["Create Account","Business Details","Goals","Submit & Checkout"].map((label, i) => (
               <div key={label} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90 hover:bg-white/10 transition-colors duration-200">
                 <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-all duration-200 ${
                   i === 0 

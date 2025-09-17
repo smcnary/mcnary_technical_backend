@@ -98,7 +98,7 @@ const defaultState: Pick<AuditState, "account" | "form" | "validationErrors"> = 
     goals: [],
     competitors: "",
     monthlyBudget: "",
-    serviceType: "",
+    serviceType: "audit", // Default to audit service
     notes: "",
   },
   validationErrors: { account: {}, form: {} },
@@ -409,9 +409,7 @@ const steps = [
   { key: "account", label: "Create Account" },
   { key: "business", label: "Business Details" },
   { key: "goals", label: "Goals & Competition" },
-  { key: "service", label: "Choose Service" },
-  { key: "checkout", label: "Payment" },
-  { key: "review", label: "Confirm & Submit" },
+  { key: "checkout", label: "Submit & Checkout" },
   { key: "success", label: "Audit Submitted" },
 ] as const;
 
@@ -647,172 +645,6 @@ function GoalsStep() {
   );
 }
 
-function ServiceStep() {
-  const { form, setServiceType, validationErrors } = useAuditStore();
-  
-  const services = [
-    {
-      key: "audit" as ServiceType,
-      name: "SEO Audit",
-      price: "$799",
-      description: "Comprehensive analysis of your current SEO performance",
-      features: [
-        "Complete website SEO audit",
-        "Technical SEO analysis",
-        "Keyword research & analysis",
-        "Competitor analysis",
-        "Detailed recommendations report",
-        "Priority action plan"
-      ],
-      duration: "5-7 business days"
-    },
-    {
-      key: "full-service" as ServiceType,
-      name: "Full SEO Service",
-      price: "$6,000",
-      description: "Complete SEO transformation with ongoing implementation",
-      features: [
-        "Everything in SEO Audit",
-        "Complete technical SEO fixes",
-        "Content optimization & creation",
-        "Link building campaign",
-        "Local SEO optimization",
-        "Monthly reporting & strategy calls",
-        "6 months of ongoing support"
-      ],
-      duration: "3-6 months"
-    }
-  ];
-
-  return (
-    <div>
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-semibold text-white mb-2">Choose Your Service</h2>
-        <p className="text-white/80">Select the service that best fits your needs</p>
-      </div>
-
-      {/* Services Grid */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {services.map((service) => (
-          <Card 
-            key={service.key} 
-            title={service.name}
-            right={form.serviceType === service.key ? (
-              <span className="rounded-full bg-emerald-600/20 px-3 py-1 text-xs text-emerald-200">Selected</span>
-            ) : null}
-          >
-            <div className="mb-4">
-              <div className="mb-2 text-3xl font-bold text-white">{service.price}</div>
-              <p className="text-white/80 text-sm mb-3">{service.description}</p>
-              <div className="text-blue-200 text-sm mb-4">
-                <strong>Duration:</strong> {service.duration}
-              </div>
-            </div>
-            
-            <ul className="mb-6 space-y-2 text-sm text-white/90">
-              {service.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            
-            <button 
-              onClick={() => setServiceType(service.key)} 
-              className={`w-full rounded-xl border px-4 py-3 font-medium transition ${
-                form.serviceType === service.key 
-                  ? "border-emerald-500 bg-emerald-600/20 text-emerald-100" 
-                  : "border-white/10 bg-white/5 text-white/90 hover:bg-white/10"
-              }`}
-            >
-              {form.serviceType === service.key ? "Selected" : "Select This Service"}
-            </button>
-          </Card>
-        ))}
-      </div>
-
-      {/* Validation Error */}
-      {validationErrors.form.serviceType && (
-        <div className="mt-6 text-center text-rose-200 text-sm">
-          {validationErrors.form.serviceType}
-        </div>
-      )}
-
-      {/* Additional Info */}
-      <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-blue-200 font-medium mb-1">Need Help Choosing?</h4>
-            <p className="text-blue-200/80 text-sm">
-              Start with our SEO Audit to understand your current situation, then upgrade to Full SEO Service for complete transformation.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReviewStep() {
-  const { account, form, auditId } = useAuditStore();
-  
-  const getServicePrice = (serviceType: string) => {
-    const prices: Record<string, string> = {
-      "audit": "$799",
-      "full-service": "$6,000"
-    };
-    return prices[serviceType] || "$799";
-  };
-
-  return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <Card title="Account">
-        <div className="space-y-1 text-white/80">
-          <div><span className="text-white/60">Name:</span> {account.firstName} {account.lastName}</div>
-          <div><span className="text-white/60">Email:</span> {account.email}</div>
-        </div>
-      </Card>
-      <Card title="Business">
-        <div className="space-y-1 text-white/80">
-          <div><span className="text-white/60">Company:</span> {form.companyName}</div>
-          <div><span className="text-white/60">Website:</span> {form.website}</div>
-          <div><span className="text-white/60">Industry:</span> {form.industry}</div>
-          <div><span className="text-white/60">Budget:</span> {form.monthlyBudget || "—"}</div>
-        </div>
-      </Card>
-      <Card title="Goals & Notes">
-        <div className="text-white/80">
-          <div className="mb-2"><span className="text-white/60">Goals:</span> {form.goals.length ? form.goals.join(", ") : "—"}</div>
-          <div className="whitespace-pre-wrap"><span className="text-white/60">Notes:</span> {form.notes || "—"}</div>
-        </div>
-      </Card>
-      <Card title="Selected Service">
-        <div className="text-white/80">
-          <div className="font-medium">
-            {form.serviceType === "audit" ? "SEO Audit" : 
-             form.serviceType === "full-service" ? "Full SEO Service" : "—"}
-          </div>
-          {form.serviceType && (
-            <div className="text-lg font-semibold text-emerald-400 mt-1">
-              {getServicePrice(form.serviceType)}
-            </div>
-          )}
-          <div className="text-sm text-white/60 mt-2">
-            {form.serviceType === "audit" ? "One-time Audit" : "Complete SEO Service"}
-          </div>
-        </div>
-        {auditId && <div className="mt-2 text-xs text-white/50">Audit ID: {auditId}</div>}
-      </Card>
-    </div>
-  );
-}
-
 function SuccessStep() {
   const { account, form, auditId } = useAuditStore();
   const router = useRouter();
@@ -1035,7 +867,34 @@ function CheckoutStep() {
   };
 
   return (
-    <Card title="Complete Your Payment">
+    <div className="space-y-6">
+      {/* Review Section */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card title="Account Information">
+          <div className="text-white/80">
+            <div className="mb-2"><span className="text-white/60">Name:</span> {account.firstName} {account.lastName}</div>
+            <div><span className="text-white/60">Email:</span> {account.email}</div>
+          </div>
+        </Card>
+        <Card title="Business Information">
+          <div className="text-white/80">
+            <div className="mb-2"><span className="text-white/60">Company:</span> {form.companyName}</div>
+            <div className="mb-2"><span className="text-white/60">Website:</span> {form.website}</div>
+            <div className="mb-2"><span className="text-white/60">Industry:</span> {form.industry}</div>
+            <div><span className="text-white/60">Budget:</span> {form.monthlyBudget || "—"}</div>
+          </div>
+        </Card>
+      </div>
+      
+      <Card title="Goals & Notes">
+        <div className="text-white/80">
+          <div className="mb-2"><span className="text-white/60">Goals:</span> {form.goals.length ? form.goals.join(", ") : "—"}</div>
+          <div className="whitespace-pre-wrap"><span className="text-white/60">Notes:</span> {form.notes || "—"}</div>
+        </div>
+      </Card>
+
+      {/* Payment Section */}
+      <Card title="Complete Your Payment">
       <div className="space-y-6">
         {/* Order Summary */}
         <div className="bg-white/5 rounded-xl p-6 border border-white/10">
@@ -1123,6 +982,7 @@ function CheckoutStep() {
         </p>
       </div>
     </Card>
+    </div>
   );
 }
 
@@ -1134,12 +994,8 @@ const StepBody = ({ stepKey }: { stepKey: StepKey }) => {
       return <BusinessStep />;
     case "goals":
       return <GoalsStep />;
-    case "service":
-      return <ServiceStep />;
     case "checkout":
       return <CheckoutStep />;
-    case "review":
-      return <ReviewStep />;
     case "success":
       return <SuccessStep />;
     default:
@@ -1335,7 +1191,7 @@ export default function AuditWizard() {
         </div>
 
         {/* Breadcrumb */}
-        <div className="mb-8 grid gap-3 md:grid-cols-5">
+        <div className="mb-8 grid gap-3 md:grid-cols-4">
           {steps.map((s, i) => {
             const isStepComplete = state.isStepComplete(i);
             // Check if all previous steps are complete
@@ -1490,10 +1346,7 @@ const validateStep = (step: number, account: Account, form: AuditForm): Validati
       }
       break;
     
-    case 3: // Service step
-      if (!form.serviceType) {
-        errors.form.serviceType = "Please select a service";
-      }
+    case 3: // Checkout step (no validation needed as serviceType defaults to "audit")
       break;
   }
 
