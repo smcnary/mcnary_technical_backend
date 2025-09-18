@@ -2,11 +2,27 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Client Dashboard', () => {
   test.beforeEach(async ({ page }) => {
-    // Mock authentication by setting localStorage
+    // Mock authentication by setting localStorage and cookies
     await page.goto('/login');
     await page.evaluate(() => {
       localStorage.setItem('auth_token', 'mock-jwt-token-' + Date.now());
     });
+    
+    // Set the cookies that middleware expects
+    await page.context().addCookies([
+      {
+        name: 'auth',
+        value: 'mock-jwt-token-' + Date.now(),
+        domain: 'localhost',
+        path: '/'
+      },
+      {
+        name: 'role',
+        value: 'ROLE_CLIENT_USER',
+        domain: 'localhost',
+        path: '/'
+      }
+    ]);
   });
 
   test('should load dashboard after login', async ({ page }) => {
@@ -413,7 +429,7 @@ test.describe('Client Dashboard', () => {
     await page.waitForLoadState('networkidle');
     
     // Check for dashboard metrics/cards - use more specific selectors
-    await expect(page.locator('text=Total Leads')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('text=Active Campaigns')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('p:has-text("Total Leads")').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('p:has-text("Active Campaigns")').first()).toBeVisible({ timeout: 10000 });
   });
 });
