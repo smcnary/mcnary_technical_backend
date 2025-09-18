@@ -1,0 +1,142 @@
+/* Custom styles for User Preferences page */
+
+/* Toggle Switch Styling */
+.user-preferences .switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.user-preferences .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.user-preferences .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.user-preferences .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-preferences input:checked + .slider {
+  background-color: #374151;
+}
+
+.user-preferences input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Dark mode toggle switches */
+.dark .user-preferences .slider {
+  background-color: #4b5563;
+}
+
+.dark .user-preferences input:checked + .slider {
+  background-color: #1f2937;
+}
+
+/* Input field focus states */
+.user-preferences input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Card hover effects */
+.user-preferences .card-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.user-preferences .card-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Sticky button animation */
+.user-preferences .sticky-button {
+  transition: all 0.3s ease-in-out;
+}
+
+.user-preferences .sticky-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Success message animation */
+.user-preferences .success-message {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-preferences .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .user-preferences .flex.justify-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .user-preferences .switch {
+    align-self: flex-end;
+  }
+}
+
+/* Loading state */
+.user-preferences .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Form validation styles */
+.user-preferences .error-field {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.user-preferences .error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}

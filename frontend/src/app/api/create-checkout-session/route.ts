@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
     const {
       serviceType,
       price,
-      customerEmail: _customerEmail, // Renamed to indicate it's intentionally unused
       customerName,
       companyName,
       website,
@@ -37,7 +36,7 @@ export async function POST(request: NextRequest) {
         {
           price_data: {
             currency: 'usd',
-          product_data: {
+            product_data: {
             name: serviceType === "audit" ? "SEO Audit" : "Full SEO Service",
             description: serviceType === "audit" 
               ? `Comprehensive SEO audit for ${companyName || 'your business'}` 

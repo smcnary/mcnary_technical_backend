@@ -26,12 +26,6 @@ export interface AuditIntake {
 }
 
 export interface AuditSubmission {
-  account: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  };
   audit: {
     companyName: string;
     website: string;
@@ -46,7 +40,7 @@ export interface AuditSubmission {
 
 export interface Lead {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   phone?: string;
   firm?: string;
@@ -57,10 +51,12 @@ export interface Lead {
   budget?: string;
   timeline?: string;
   notes?: string;
-  consent: boolean;
-  status: 'pending' | 'contacted' | 'qualified' | 'disqualified';
-  createdAt: string;
-  updatedAt: string;
+  message?: string;
+  consent?: boolean;
+  status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'closed_won' | 'closed_lost';
+  utmJson?: any[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CaseStudy {
@@ -321,6 +317,7 @@ export class ApiService {
 
     const response = await fetch(url, {
       headers,
+      credentials: 'include',
       ...options,
     });
 
@@ -357,12 +354,13 @@ export class ApiService {
       const response = await this.fetchApi<{ message: string }>('/api/v1/auth/logout', {
         method: 'POST',
       });
+      
       this.clearAuthToken();
       return response;
     } catch (error) {
       // Even if logout fails, clear local token
       this.clearAuthToken();
-      throw error;
+      return { message: 'Logged out successfully' };
     }
   }
 
@@ -391,10 +389,10 @@ export class ApiService {
         Object.entries(params).map(([key, value]) => [key, String(value)])
       );
       const queryString = new URLSearchParams(stringParams).toString();
-      const endpoint = queryString ? `/api/v1/leads?${queryString}` : '/api/v1/leads';
+      const endpoint = queryString ? `/api/leads?${queryString}` : '/api/leads';
       return this.fetchApi<ApiResponse<Lead>>(endpoint);
     }
-    return this.fetchApi<ApiResponse<Lead>>('/api/v1/leads');
+    return this.fetchApi<ApiResponse<Lead>>('/api/leads');
   }
 
   async getLead(id: string): Promise<Lead> {
@@ -403,11 +401,11 @@ export class ApiService {
 
   // Case Studies
   async getCaseStudies(): Promise<ApiResponse<CaseStudy>> {
-    return this.fetchApi<ApiResponse<CaseStudy>>('/api/v1/case-studies');
+    return this.fetchApi<ApiResponse<CaseStudy>>('/api/case_studies');
   }
 
   async getCaseStudy(id: string): Promise<CaseStudy> {
-    return this.fetchApi<CaseStudy>(`/api/v1/case-studies/${id}`);
+    return this.fetchApi<CaseStudy>(`/api/case_studies/${id}`);
   }
 
   // FAQs
@@ -494,10 +492,10 @@ export class ApiService {
         Object.entries(params).map(([key, value]) => [key, String(value)])
       );
       const queryString = new URLSearchParams(stringParams).toString();
-      const endpoint = queryString ? `/api/v1/campaigns?${queryString}` : '/api/v1/campaigns';
+      const endpoint = queryString ? `/api/campaigns?${queryString}` : '/api/campaigns';
       return this.fetchApi<ApiResponse<Campaign>>(endpoint);
     }
-    return this.fetchApi<ApiResponse<Campaign>>('/api/v1/campaigns');
+    return this.fetchApi<ApiResponse<Campaign>>('/api/campaigns');
   }
 
   async createCampaign(campaignData: Omit<Campaign, 'id' | 'createdAt' | 'updatedAt'>): Promise<Campaign> {
@@ -609,6 +607,11 @@ export class ApiService {
       method: 'POST',
       body: JSON.stringify({ profileId }),
     });
+  }
+
+  async initiateGbpAuth(clientId: string): Promise<void> {
+    // Redirect to OAuth flow - this will be handled by the backend
+    window.location.href = `${this.baseUrl}/api/v1/gbp/auth/${clientId}`;
   }
 
   // Health check

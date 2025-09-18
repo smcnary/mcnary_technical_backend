@@ -39,22 +39,28 @@ class AuthService {
   private async initializeAuth(): Promise<void> {
     const token = apiService.getAuthToken();
     if (token) {
-      try {
-        this.state.isLoading = true;
-        this.notifyListeners();
-        
-        const user = await apiService.getCurrentUser();
-        this.state.user = user;
-        this.state.token = token;
-        this.state.isAuthenticated = true;
-        this.state.error = null;
-      } catch (error) {
-        console.error('Failed to restore authentication:', error);
-        this.logout();
-      } finally {
-        this.state.isLoading = false;
-        this.notifyListeners();
-      }
+      // Set the token in state but don't validate it immediately
+      // This prevents the circular dependency issue
+      this.state.token = token;
+      this.state.isAuthenticated = true;
+      this.state.isLoading = false;
+      this.notifyListeners();
+      
+      // Optionally validate the token in the background
+      this.validateTokenInBackground(token);
+    }
+  }
+
+  // Validate token in background without blocking initialization
+  private async validateTokenInBackground(token: string): Promise<void> {
+    try {
+      const user = await apiService.getCurrentUser();
+      this.state.user = user;
+      this.state.error = null;
+      this.notifyListeners();
+    } catch (error) {
+      console.warn('Token validation failed, clearing auth state:', error);
+      this.logout();
     }
   }
 

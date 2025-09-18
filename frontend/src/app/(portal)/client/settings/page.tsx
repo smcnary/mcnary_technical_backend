@@ -21,9 +21,12 @@ import {
   Mail,
   Loader2,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  ExternalLink,
+  RefreshCw
 } from 'lucide-react';
 import { Client } from '@/services/api';
+import api from '@/services/api';
 
 export default function ClientSettingsPage() {
   const { user, isClientAdmin } = useAuth();
@@ -40,6 +43,8 @@ export default function ClientSettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isConnectingGbp, setIsConnectingGbp] = useState(false);
+  const [gbpConnectionStatus, setGbpConnectionStatus] = useState<'connected' | 'disconnected' | 'unknown'>('unknown');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -104,10 +109,38 @@ export default function ClientSettingsPage() {
           trackingId: client.googleAnalytics?.trackingId || ''
         }
       });
+      
+      // Check GBP connection status
+      await checkGbpConnectionStatus();
     } catch (err) {
       console.error('Failed to load client data:', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const checkGbpConnectionStatus = async () => {
+    if (!user?.clientId) return;
+    
+    try {
+      const gbpData = await api.getGbpKpi(user.clientId);
+      setGbpConnectionStatus(gbpData.connected ? 'connected' : 'disconnected');
+    } catch (error) {
+      setGbpConnectionStatus('disconnected');
+    }
+  };
+
+  const handleConnectGbp = async () => {
+    if (!user?.clientId) return;
+    
+    setIsConnectingGbp(true);
+    try {
+      await api.initiateGbpAuth(user.clientId);
+    } catch (error) {
+      console.error('Failed to initiate GBP connection:', error);
+      setSaveMessage({ type: 'error', text: 'Failed to initiate Google Business Profile connection' });
+    } finally {
+      setIsConnectingGbp(false);
     }
   };
 
@@ -337,6 +370,47 @@ export default function ClientSettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Connection Status */}
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                <div className="flex items-center gap-3">
+                  {gbpConnectionStatus === 'connected' ? (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <AlertCircle className="h-5 w-5 text-orange-500" />
+                  )}
+                  <div>
+                    <p className="font-medium">
+                      {gbpConnectionStatus === 'connected' ? 'Connected' : 'Not Connected'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {gbpConnectionStatus === 'connected' 
+                        ? 'Google Business Profile is connected and syncing data'
+                        : 'Connect your Google Business Profile to enable local SEO tracking'
+                      }
+                    </p>
+                  </div>
+                </div>
+                {gbpConnectionStatus === 'disconnected' && (
+                  <Button
+                    onClick={handleConnectGbp}
+                    disabled={isConnectingGbp}
+                    size="sm"
+                  >
+                    {isConnectingGbp ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                        Connecting...
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Connect
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="gbp-profile-id">Profile ID</Label>
                 <Input
@@ -344,7 +418,14 @@ export default function ClientSettingsPage() {
                   value={formData.googleBusinessProfile.profileId}
                   onChange={(e) => handleNestedInputChange('googleBusinessProfile', 'profileId', e.target.value)}
                   placeholder="gcid:123456789"
+                  disabled={gbpConnectionStatus === 'connected'}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {gbpConnectionStatus === 'connected' 
+                    ? 'Profile ID is automatically managed when connected via OAuth'
+                    : 'Enter your Google Business Profile ID manually or connect via OAuth above'
+                  }
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">

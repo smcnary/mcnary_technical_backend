@@ -77,7 +77,7 @@ export default function ClientLeadsPage() {
 
   const filteredLeads = leads.filter(lead => {
     const matchesSearch = !searchTerm || 
-      lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.firm?.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -102,13 +102,25 @@ export default function ClientLeadsPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    if (!dateString) return '—';
+    
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return '—';
+      }
+      
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.warn('Invalid date format:', dateString);
+      return '—';
+    }
   };
 
   const totalPages = Math.ceil(totalLeads / leadsPerPage);
@@ -259,7 +271,7 @@ export default function ClientLeadsPage() {
                     filteredLeads.map((lead) => (
                       <TableRow key={lead.id}>
                         <TableCell className="font-medium">
-                          {lead.name || '—'}
+                          {lead.fullName || '—'}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -304,7 +316,7 @@ export default function ClientLeadsPage() {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-muted-foreground" />
-                            {formatDate(lead.createdAt)}
+                            {lead.createdAt ? formatDate(lead.createdAt) : '—'}
                           </div>
                         </TableCell>
                         <TableCell className="text-right">

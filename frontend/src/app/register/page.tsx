@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import { RegistrationLoadingModal } from "../../components/common/LoadingModal";
 
 const pwScore = (v: string) => {
@@ -24,6 +25,8 @@ export default function RegisterPage() {
   const [confirm, setConfirm] = useState("");
   const [agree, setAgree] = useState(true);
   const [marketing, setMarketing] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -291,13 +294,30 @@ export default function RegisterPage() {
                     <label className="text-sm text-white/80" htmlFor="password">Password</label>
                     <span className="text-xs text-white/60">8+ chars, mix of cases &amp; symbol</span>
                   </div>
-                  <input
-                    id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className={`w-full rounded-xl border bg-black/40 px-3.5 py-2.5 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:ring-2 ${
-                      fieldErrors.password ? "border-rose-500/60 focus:ring-rose-400/40" : "border-white/10 focus:ring-indigo-500/40"
-                    }`}
-                  />
+                  <div className="relative">
+                    <input
+                      id="password" 
+                      type={showPassword ? "text" : "password"} 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className={`w-full rounded-xl border bg-black/40 px-3.5 py-2.5 pr-12 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:ring-2 ${
+                        fieldErrors.password ? "border-rose-500/60 focus:ring-rose-400/40" : "border-white/10 focus:ring-indigo-500/40"
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                   {/* Strength meter */}
                   <div className="mt-1 h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
                     <div
@@ -316,13 +336,30 @@ export default function RegisterPage() {
 
                 <div className="space-y-1.5">
                   <label className="text-sm text-white/80" htmlFor="confirm">Confirm password</label>
-                  <input
-                    id="confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)}
-                    placeholder="••••••••"
-                    className={`w-full rounded-xl border bg-black/40 px-3.5 py-2.5 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:ring-2 ${
-                      fieldErrors.confirm ? "border-rose-500/60 focus:ring-rose-400/40" : "border-white/10 focus:ring-indigo-500/40"
-                    }`}
-                  />
+                  <div className="relative">
+                    <input
+                      id="confirm" 
+                      type={showConfirmPassword ? "text" : "password"} 
+                      value={confirm} 
+                      onChange={(e) => setConfirm(e.target.value)}
+                      placeholder="••••••••"
+                      className={`w-full rounded-xl border bg-black/40 px-3.5 py-2.5 pr-12 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:ring-2 ${
+                        fieldErrors.confirm ? "border-rose-500/60 focus:ring-rose-400/40" : "border-white/10 focus:ring-indigo-500/40"
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors"
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                   {fieldErrors.confirm && <p className="text-xs text-rose-300">{fieldErrors.confirm}</p>}
                 </div>
               </div>

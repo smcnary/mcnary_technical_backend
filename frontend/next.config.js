@@ -11,7 +11,7 @@ const nextConfig = {
   }),
   // Fix hydration issues
   reactStrictMode: false,
-  swcMinify: false,
+  swcMinify: true,
   // Exclude API routes from static export
   // experimental: {
   //   appDir: true, // This is now default in Next.js 13+

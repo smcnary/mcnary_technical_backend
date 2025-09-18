@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import { AuthLoadingModal } from "../../components/common/LoadingModal";
+import { ApiService } from "../../services/api";
 
 export default function LoginPage() {
   const firstRef = useRef<HTMLInputElement>(null);
@@ -10,6 +12,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
@@ -41,32 +44,25 @@ export default function LoginPage() {
     setFormError(null);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password, remember }),
-      });
-
-      if (!res.ok) {
-        let msg = "Login failed. Please check your credentials.";
-        try {
-          const j = await res.json();
-          if (j?.message) msg = j.message;
-        } catch {
-          /* ignore */
-        }
-        setFormError(msg);
-      } else {
+      const apiService = new ApiService();
+      const response = await apiService.login(email, password);
+      
+      if (response.token) {
+        // Store token in localStorage for persistence
+        localStorage.setItem('auth_token', response.token);
+        
         // Redirect to next (preserve tier if heading back to audit)
         const url = new URL(redirectNext, window.location.origin);
         if (tierParam && (redirectNext.startsWith("/services/audit") || redirectNext === "/client")) {
           url.searchParams.set("tier", tierParam);
         }
         window.location.href = url.toString();
+      } else {
+        setFormError("Login failed. Please check your credentials.");
       }
-    } catch {
-      setFormError("Network error. Please try again.");
+    } catch (error) {
+      console.error("Login error:", error);
+      setFormError(error instanceof Error ? error.message : "Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -168,16 +164,30 @@ export default function LoginPage() {
 
                 <div className="space-y-1.5">
                   <label className="text-sm text-white/80" htmlFor="password">Password</label>
-                  <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className={`w-full rounded-xl border bg-black/40 px-3.5 py-2.5 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:ring-2 ${
-                      fieldErrors.password ? "border-rose-500/60 focus:ring-rose-400/40" : "border-white/10 focus:ring-indigo-500/40"
-                    }`}
-                  />
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className={`w-full rounded-xl border bg-black/40 px-3.5 py-2.5 pr-12 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:ring-2 ${
+                        fieldErrors.password ? "border-rose-500/60 focus:ring-rose-400/40" : "border-white/10 focus:ring-indigo-500/40"
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                   {fieldErrors.password && <p className="text-xs text-rose-300">{fieldErrors.password}</p>}
                 </div>
 

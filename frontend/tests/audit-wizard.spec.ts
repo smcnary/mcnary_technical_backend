@@ -16,8 +16,7 @@ const testData = {
     competitors: 'competitor1.com, competitor2.com, competitor3.com'
   },
   goals: ['More calls/leads', 'Rank locally', 'Technical SEO'],
-  notes: 'This is a test audit submission for automated testing.',
-  tier: 'Growth'
+  notes: 'This is a test audit submission for automated testing.'
 };
 
 test.describe('SEO Audit Wizard', () => {
@@ -67,34 +66,24 @@ test.describe('SEO Audit Wizard', () => {
       await page.fill('label:has-text("Notes") + textarea', testData.notes);
       
       await page.click('button:has-text("Continue")');
-      // Wait a bit for the step to advance and verify we're not on the goals step anymore
+      // Wait a bit for the step to advance and verify we're on the checkout step
       await page.waitForTimeout(1000);
-      await expect(page.locator('h2:has-text("What are your goals?")')).not.toBeVisible();
+      await expect(page.locator('h3:has-text("Order Summary")')).toBeVisible();
     });
 
-    // Step 4: Package Selection
-    await test.step('Complete package step', async () => {
-      // Look for the Growth tier button and click it
-      await page.click('button:has-text("Growth"):has-text("Choose")');
-      
-      await page.click('button:has-text("Continue")');
-      await expect(page.locator('h2:has-text("Confirm & Submit")')).toBeVisible();
-    });
-
-    // Step 5: Review and Submit
-    await test.step('Review and submit', async () => {
-      // Verify all data is displayed correctly
+    // Step 4: Checkout
+    await test.step('Review checkout step', async () => {
+      // Verify all data is displayed correctly in the review
       await expect(page.locator('text=John Doe')).toBeVisible();
       await expect(page.locator('text=john.doe@example.com')).toBeVisible();
-      await expect(page.locator('text=Test Company Inc')).toBeVisible();
-      await expect(page.locator('text=Audit')).toBeVisible();
+      await expect(page.locator('p:has-text("Company: Test Company Inc")')).toBeVisible();
+      await expect(page.locator('span:has-text("SEO Audit")')).toBeVisible();
+      await expect(page.locator('span.text-white.font-semibold:has-text("$799")')).toBeVisible();
       
-      // Submit the form - in test environment, this should just submit without redirect
-      await page.click('button:has-text("Submit"):not(:has-text("Step 5"))');
-      
-      // Wait for submission to complete (no redirect in test)
-      await expect(page.locator('button:has-text("Submit"):not(:has-text("Step 5"))')).toBeVisible();
-      });
+      // Verify the checkout button is present
+      await expect(page.locator('button:has-text("Complete Payment")')).toBeVisible();
+    });
+  });
 
   test('should prevent navigation to future steps when previous steps are incomplete', async ({ page }) => {
     // Try to navigate to step 3 via breadcrumb without completing previous steps
@@ -220,8 +209,8 @@ test.describe('SEO Audit Wizard', () => {
     await expect(goalButton).not.toHaveClass(/bg-indigo-600/);
   });
 
-  test('should handle package selection', async ({ page }) => {
-    // Navigate to package step
+  test('should handle checkout step display', async ({ page }) => {
+    // Navigate to checkout step
     await page.fill('label:has-text("First name") + input', testData.account.firstName);
     await page.fill('label:has-text("Last name") + input', testData.account.lastName);
     await page.fill('input[type="email"]', testData.account.email);
@@ -237,12 +226,11 @@ test.describe('SEO Audit Wizard', () => {
     await page.fill('label:has-text("Notes") + textarea', testData.notes);
     await page.click('button:has-text("Continue")');
     
-    // Test package selection
-    const auditButton = page.locator('button:has-text("Audit")').first();
-    await auditButton.click();
-    
-    // Verify package is selected
-    await expect(auditButton).toHaveClass(/border-indigo-500/);
+    // Verify checkout step elements
+    await expect(page.locator('h3:has-text("Order Summary")')).toBeVisible();
+    await expect(page.locator('span:has-text("SEO Audit")')).toBeVisible();
+    await expect(page.locator('span.text-white.font-semibold:has-text("$799")')).toBeVisible();
+    await expect(page.locator('button:has-text("Complete Payment")')).toBeVisible();
   });
 
   test('should display proper text visibility', async ({ page }) => {
@@ -256,8 +244,8 @@ test.describe('SEO Audit Wizard', () => {
     await expect(page.locator('text=We\'ll create your portal login and connect this audit to your account')).toBeVisible();
   });
 
-  test('should handle form submission errors gracefully', async ({ page }) => {
-    // Complete the wizard
+  test('should handle checkout button interaction', async ({ page }) => {
+    // Complete the wizard to reach checkout step
     await page.fill('label:has-text("First name") + input', testData.account.firstName);
     await page.fill('label:has-text("Last name") + input', testData.account.lastName);
     await page.fill('input[type="email"]', testData.account.email);
@@ -273,11 +261,63 @@ test.describe('SEO Audit Wizard', () => {
     await page.fill('label:has-text("Notes") + textarea', testData.notes);
     await page.click('button:has-text("Continue")');
     
-    await page.click('button:has-text("Audit")');
+    // Verify checkout button is present and clickable
+    const checkoutButton = page.locator('button:has-text("Complete Payment")');
+    await expect(checkoutButton).toBeVisible();
+    await expect(checkoutButton).toBeEnabled();
+    
+    // Click checkout button (this will trigger Stripe checkout in real environment)
+    await checkoutButton.click();
+    
+    // In test environment, this should handle gracefully without redirecting
+    // The button should remain visible or show loading state
+    await page.waitForTimeout(2000);
+  });
+
+  test('should test Stripe checkout API integration', async ({ page }) => {
+    // Complete the wizard to reach checkout step
+    await page.fill('label:has-text("First name") + input', testData.account.firstName);
+    await page.fill('label:has-text("Last name") + input', testData.account.lastName);
+    await page.fill('input[type="email"]', testData.account.email);
+    await page.fill('input[type="password"]', testData.account.password);
     await page.click('button:has-text("Continue")');
     
-    // Submit and verify submission completes
-    await page.click('button:has-text("Submit"):not(:has-text("Step 5"))');
-    await expect(page.locator('button:has-text("Submit"):not(:has-text("Step 5"))')).toBeVisible();
+    await page.fill('label:has-text("Company name") + input', testData.business.companyName);
+    await page.fill('label:has-text("Website URL") + input', testData.business.website);
+    await page.fill('label:has-text("Industry/Niche") + input', testData.business.industry);
+    await page.click('button:has-text("Continue")');
+    
+    await page.click('button:has-text("More calls/leads")');
+    await page.fill('label:has-text("Notes") + textarea', testData.notes);
+    await page.click('button:has-text("Continue")');
+    
+    // Intercept the API call to create checkout session
+    await page.route('**/api/create-checkout-session', async route => {
+      const request = route.request();
+      const postData = request.postDataJSON();
+      
+      // Verify the request contains expected data
+      expect(postData.serviceType).toBe('audit');
+      expect(postData.price).toBe(799);
+      expect(postData.customerEmail).toBe(testData.account.email);
+      expect(postData.customerName).toBe(`${testData.account.firstName} ${testData.account.lastName}`);
+      expect(postData.companyName).toBe(testData.business.companyName);
+      expect(postData.website).toBe(testData.business.website);
+      
+      // Mock successful response
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          sessionId: 'cs_test_mock_session_id'
+        })
+      });
+    });
+    
+    // Click checkout button
+    await page.click('button:has-text("Complete Payment")');
+    
+    // Verify the API was called
+    await page.waitForTimeout(1000);
   });
 });

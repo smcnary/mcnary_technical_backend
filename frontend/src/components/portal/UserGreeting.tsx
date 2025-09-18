@@ -5,20 +5,10 @@ import { fetchUserProfile, UserProfileData } from "../../services/userProfile";
 
 interface UserGreetingProps {
   className?: string;
-  fallbackData?: {
-    userName?: string;
-    organizationName?: string;
-    userRole?: string;
-  };
 }
 
 export default function UserGreeting({ 
-  className = "",
-  fallbackData = {
-    userName: "User",
-    organizationName: "Organization",
-    userRole: "User"
-  }
+  className = ""
 }: UserGreetingProps) {
   const [profileData, setProfileData] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +32,6 @@ export default function UserGreeting({
         setProfileData(data);
       } catch (err) {
         console.error('Failed to load user profile:', err);
-        // Use fallback data on error
         setProfileData(null);
       } finally {
         setLoading(false);
@@ -81,10 +70,10 @@ export default function UserGreeting({
     );
   }
 
-  // Use API data if available, otherwise use fallback
-  const displayName = profileData?.greeting?.displayName || fallbackData.userName || "User";
-  const organizationName = profileData?.greeting?.organizationName || fallbackData.organizationName || "Organization";
-  const userRole = profileData?.greeting?.userRole || fallbackData.userRole || "User";
+  // Use API data if available, otherwise use defaults
+  const displayName = profileData?.greeting?.displayName || "User";
+  const organizationName = profileData?.greeting?.organizationName || "Organization";
+  const userRole = profileData?.greeting?.userRole || "User";
   const timeGreeting = profileData?.greeting?.timeBasedGreeting || getTimeBasedGreeting(currentTime);
 
   return (

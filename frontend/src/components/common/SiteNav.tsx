@@ -1,11 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 // If using Next.js, you can swap <a> for next/link
 
 export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -13,6 +17,15 @@ export default function SiteNav() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleClientDashboardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isAuthenticated) {
+      router.push('/client');
+    } else {
+      router.push('/login');
+    }
+  };
 
   const baseBar =
     "sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:supports-[backdrop-filter]:bg-black/30 bg-white/90 dark:bg-black/50";
@@ -31,7 +44,12 @@ export default function SiteNav() {
         <div className="hidden items-center gap-6 md:flex">
           <a href="/" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Home</a>
           <a href="/services/audit" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Get an Audit</a>
-          <a href="/client" className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Client Dashboard</a>
+          <button 
+            onClick={handleClientDashboardClick}
+            className="text-sm text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white"
+          >
+            Client Dashboard
+          </button>
         </div>
 
 
@@ -57,7 +75,12 @@ export default function SiteNav() {
           <div className="flex flex-col gap-3">
             <a href="/" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">Home</a>
             <a href="/services/audit" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-black/5">Get an Audit</a>
-            <a href="/client" className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5">Client Dashboard</a>
+            <button 
+              onClick={handleClientDashboardClick}
+              className="rounded-lg px-3 py-2 text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5 text-left"
+            >
+              Client Dashboard
+            </button>
 
           </div>
         </div>

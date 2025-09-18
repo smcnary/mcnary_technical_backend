@@ -45,7 +45,7 @@ export default function Topbar() {
   const { theme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [notifications] = useState(3); // Mock notification count
+  const [notifications] = useState(0); // Real notification count from API
 
   const handleLogout = async () => {
     try {
@@ -68,12 +68,15 @@ export default function Topbar() {
     return 'User';
   };
 
-  // Mock notifications data
-  const mockNotifications = [
-    { id: 1, title: 'New lead received', message: 'John Doe submitted a contact form', time: '2 minutes ago', unread: true },
-    { id: 2, title: 'Campaign updated', message: 'SEO campaign "Local Growth" has new data', time: '1 hour ago', unread: true },
-    { id: 3, title: 'Review received', message: 'New 5-star review on Google Business Profile', time: '3 hours ago', unread: true },
-  ];
+  // Real notifications will be loaded from API
+  interface Notification {
+    id: number;
+    title: string;
+    message: string;
+    time: string;
+    unread: boolean;
+  }
+  const notificationsData: Notification[] = []; // Will be populated from real API data
 
   return (
     <>
@@ -213,18 +216,24 @@ export default function Topbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {mockNotifications.map((notification) => (
-                  <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3">
-                    <div className="flex items-start gap-3 w-full">
-                      <div className={`w-2 h-2 rounded-full mt-2 ${notification.unread ? 'bg-blue-500' : 'bg-gray-300'}`} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">{notification.title}</p>
-                        <p className="text-xs text-gray-600 mt-1">{notification.message}</p>
-                        <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+                {notificationsData.length > 0 ? (
+                  notificationsData.map((notification) => (
+                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3">
+                      <div className="flex items-start gap-3 w-full">
+                        <div className={`w-2 h-2 rounded-full mt-2 ${notification.unread ? 'bg-blue-500' : 'bg-gray-300'}`} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{notification.title}</p>
+                          <p className="text-xs text-gray-600 mt-1">{notification.message}</p>
+                          <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+                        </div>
                       </div>
-                    </div>
+                    </DropdownMenuItem>
+                  ))
+                ) : (
+                  <DropdownMenuItem disabled className="text-center text-gray-500">
+                    No notifications
                   </DropdownMenuItem>
-                ))}
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href="/notifications" className="text-center w-full">

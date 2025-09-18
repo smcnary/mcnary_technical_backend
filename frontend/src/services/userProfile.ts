@@ -73,13 +73,12 @@ export async function testApiConnection(): Promise<boolean> {
  */
 export async function fetchUserProfile(): Promise<UserProfileData> {
   try {
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
 
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const response = await fetch(`${API_BASE}/api/v1/user-profile/greeting`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api/v1/user-profile/greeting`, {
       method: 'GET',
       headers,
       credentials: 'include',
@@ -172,19 +171,19 @@ export function clearUserProfileCache(): void {
 export async function logoutUser(): Promise<{ success: boolean; redirectUrl?: string }> {
   try {
     // Call backend logout endpoint
-    const response = await fetch('/api/v1/auth/logout', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api/v1/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${typeof window !== 'undefined' ? document.cookie.split('auth_token=')[1]?.split(';')[0] : null}`,
+        'Authorization': `Bearer ${typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null}`,
       },
     });
 
     if (response.ok) {
       const data = await response.json();
-      // Clear auth token cookie
+      // Clear auth token from localStorage
       if (typeof window !== 'undefined') {
-        document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        localStorage.removeItem('auth_token');
       }
       
       // Clear profile cache
@@ -201,7 +200,7 @@ export async function logoutUser(): Promise<{ success: boolean; redirectUrl?: st
     console.error('Error during logout:', error);
     // Even if logout fails, clear local data
     if (typeof window !== 'undefined') {
-      document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      localStorage.removeItem('auth_token');
     }
     clearUserProfileCache();
     

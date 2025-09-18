@@ -13,6 +13,7 @@ import { useData } from "@/hooks/useData";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import DashboardTour from "@/components/onboarding/DashboardTour";
+import GoogleBusinessProfileDashboard from "./GoogleBusinessProfileDashboard";
 
 function cx(...cls: (string | false | null | undefined)[]) {
   return cls.filter(Boolean).join(" ");
@@ -85,15 +86,12 @@ function WeeklyChart({ leads, campaigns }: { leads: any[], campaigns: any[] }) {
       const qualifiedLeads = periodLeads.filter(lead => lead.status === 'qualified').length;
       const conversionRate = leadCount > 0 ? (qualifiedLeads / leadCount) * 100 : 0;
       
-      // Mock additional metrics (would come from Google Analytics, GBP, etc.)
-      const baseViews = Math.floor(leadCount * 45 + Math.random() * 200);
-      const baseCalls = Math.floor(leadCount * 3 + Math.random() * 20);
-      
+      // Use real data only - no mock metrics
       data.push({
         period,
-        localVisibility: Math.min(100, Math.max(0, 60 + conversionRate * 0.5 + Math.random() * 10)),
-        gbpViews: baseViews,
-        phoneCalls: baseCalls,
+        localVisibility: conversionRate, // Use actual conversion rate instead of mock data
+        gbpViews: 0, // Will be populated from real GBP data
+        phoneCalls: 0, // Will be populated from real phone tracking data
         leads: leadCount,
         conversions: qualifiedLeads
       });
@@ -338,15 +336,14 @@ export default function ClientDashboard() {
     
     setIsConnectingGbp(true);
     try {
-      // For now, we'll use a mock profile ID
-      // In a real implementation, this would redirect to Google OAuth
-      const mockProfileId = `gbp_${user.clientId}_${Date.now()}`;
-      await api.connectGbp(user.clientId, mockProfileId);
+      // Redirect to Google OAuth for real GBP connection
+      // This would open Google's authorization flow in a new window/tab
+      window.open(`/api/auth/google-business-profile?clientId=${user.clientId}`, '_blank');
       
-      // Reload GBP data after connection
-      await loadGbpData();
+      // Note: In a real implementation, the connection status would be updated
+      // via webhook or polling after the OAuth flow completes
     } catch (err: any) {
-      setGbpError(err?.message || "Failed to connect Google Business Profile");
+      setGbpError(err?.message || "Failed to initiate Google Business Profile connection");
     } finally {
       setIsConnectingGbp(false);
     }
@@ -359,13 +356,7 @@ export default function ClientDashboard() {
           <main className="flex-1 py-8">
             {/* Header with theme toggle */}
             <div className="flex items-center justify-between mb-6" data-tour="dashboard-header">
-              <UserGreeting 
-                fallbackData={{
-                  userName: "John Doe",
-                  organizationName: "McNary SEO Services",
-                  userRole: "Client Admin"
-                }}
-              />
+              <UserGreeting />
               <ThemeToggle />
             </div>
 
@@ -395,7 +386,6 @@ export default function ClientDashboard() {
               <KpiCard 
                 label="Conversion Rate" 
                 value={`${leads.length > 0 ? ((leads.filter(l => l.status === 'qualified').length / leads.length) * 100).toFixed(1) : 0}%`} 
-                delta={{ value: 2.3 }} 
                 icon={Building2} 
                 help="Percentage of leads that convert to qualified." 
               />
@@ -525,6 +515,11 @@ export default function ClientDashboard() {
               </div>
             </section>
 
+            {/* Google Business Profile Dashboard */}
+            <section className="mt-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm" data-tour="gbp-dashboard">
+              <GoogleBusinessProfileDashboard />
+            </section>
+
             {/* Leads table */}
             <section className="mt-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm" data-tour="leads-table">
               <div className="flex items-center justify-between">
@@ -574,10 +569,20 @@ export default function ClientDashboard() {
               </div>
 
               <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
-                <p>Showing 1–5 of 42</p>
+                <p>Showing {leads.length > 0 ? `1–${Math.min(leads.length, 5)}` : '0'} of {leads.length} leads</p>
                 <div className="flex items-center gap-2">
-                  <button className="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300">Prev</button>
-                  <button className="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300">Next</button>
+                  <button 
+                    className="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={true}
+                  >
+                    Prev
+                  </button>
+                  <button 
+                    className="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={true}
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </section>

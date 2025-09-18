@@ -13,10 +13,6 @@ export default function AuditWizardPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [auditId, setAuditId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
     companyName: '',
     website: '',
     industry: '',
@@ -28,7 +24,6 @@ export default function AuditWizardPage() {
   });
 
   const steps = [
-    { key: "account", label: "Create Account" },
     { key: "business", label: "Business Details" },
     { key: "goals", label: "Goals & Competition" },
     { key: "checkout", label: "Submit & Checkout" },
@@ -41,8 +36,7 @@ export default function AuditWizardPage() {
   // Browser back button safety
   const handleBeforeUnload = useCallback((e: BeforeUnloadEvent) => {
     // Only show warning if user has entered data
-    const hasData = formData.firstName || formData.lastName || formData.email || 
-                   formData.companyName || formData.website || formData.industry || 
+    const hasData = formData.companyName || formData.website || formData.industry || 
                    formData.goals.length > 0 || formData.notes;
     
     if (hasData && currentStep < steps.length - 1) {
@@ -54,8 +48,7 @@ export default function AuditWizardPage() {
 
   const handlePopState = useCallback((_e: PopStateEvent) => {
     // Prevent browser back navigation if user has unsaved data
-    const hasData = formData.firstName || formData.lastName || formData.email || 
-                   formData.companyName || formData.website || formData.industry || 
+    const hasData = formData.companyName || formData.website || formData.industry || 
                    formData.goals.length > 0 || formData.notes;
     
     if (hasData && currentStep < steps.length - 1) {
@@ -91,8 +84,7 @@ export default function AuditWizardPage() {
   }, [handleBeforeUnload, handlePopState]);
 
   // Check if there are unsaved changes
-  const hasUnsavedChanges = formData.firstName || formData.lastName || formData.email || 
-                            formData.companyName || formData.website || formData.industry || 
+  const hasUnsavedChanges = formData.companyName || formData.website || formData.industry || 
                             formData.goals.length > 0 || formData.notes;
 
   const handleStripeCheckout = async () => {
@@ -108,8 +100,8 @@ export default function AuditWizardPage() {
         body: JSON.stringify({
           serviceType: 'audit',
           price: 799,
-          customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName}`,
+          customerEmail: 'customer@example.com', // Default email since no account creation
+          customerName: 'Customer', // Default name since no account creation
           companyName: formData.companyName,
           website: formData.website,
           industry: formData.industry,
@@ -136,19 +128,13 @@ export default function AuditWizardPage() {
 
   const validateCurrentStep = () => {
     switch (currentStep) {
-      case 0: // Account validation
-        return formData.firstName.trim() && 
-               formData.lastName.trim() && 
-               formData.email.trim() && 
-               formData.password.trim() &&
-               formData.email.includes('@');
-      case 1: // Business validation
+      case 0: // Business validation
         return formData.companyName.trim() && 
                formData.website.trim() && 
                formData.industry.trim();
-      case 2: // Goals validation
+      case 1: // Goals validation
         return formData.goals.length > 0;
-      case 3: // Checkout validation (no validation needed)
+      case 2: // Checkout validation (no validation needed)
         return true;
       default:
         return true;
@@ -157,19 +143,13 @@ export default function AuditWizardPage() {
 
   const isStepComplete = (stepIndex: number) => {
     switch (stepIndex) {
-      case 0: // Account validation
-        return formData.firstName.trim() && 
-               formData.lastName.trim() && 
-               formData.email.trim() && 
-               formData.password.trim() &&
-               formData.email.includes('@');
-      case 1: // Business validation
+      case 0: // Business validation
         return formData.companyName.trim() && 
                formData.website.trim() && 
                formData.industry.trim();
-      case 2: // Goals validation
+      case 1: // Goals validation
         return formData.goals.length > 0;
-      case 3: // Checkout validation (no validation needed)
+      case 2: // Checkout validation (no validation needed)
         return true;
       default:
         return true;
@@ -220,12 +200,6 @@ export default function AuditWizardPage() {
 
       // Prepare submission data
       const submission: AuditSubmission = {
-        account: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-        },
         audit: {
           companyName: formData.companyName,
           website: formData.website,
@@ -269,58 +243,7 @@ export default function AuditWizardPage() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 0: // Account
-        return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Create your account</h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-white">First name *</label>
-                <input 
-                  className={`w-full rounded-xl border p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    formData.firstName.trim() ? 'border-white/10 bg-black/40' : 'border-yellow-500/50 bg-black/40'
-                  }`}
-                  value={formData.firstName}
-                  onChange={(e) => updateFormData('firstName', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2 text-white">Last name *</label>
-                <input 
-                  className={`w-full rounded-xl border p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    formData.lastName.trim() ? 'border-white/10 bg-black/40' : 'border-yellow-500/50 bg-black/40'
-                  }`}
-                  value={formData.lastName}
-                  onChange={(e) => updateFormData('lastName', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2 text-white">Email *</label>
-                <input 
-                  type="email"
-                  className={`w-full rounded-xl border p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    formData.email.trim() && formData.email.includes('@') ? 'border-white/10 bg-black/40' : 'border-yellow-500/50 bg-black/40'
-                  }`}
-                  value={formData.email}
-                  onChange={(e) => updateFormData('email', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2 text-white">Password *</label>
-                <input 
-                  type="password"
-                  className={`w-full rounded-xl border p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    formData.password.trim() ? 'border-white/10 bg-black/40' : 'border-yellow-500/50 bg-black/40'
-                  }`}
-                  value={formData.password}
-                  onChange={(e) => updateFormData('password', e.target.value)}
-                />
-              </div>
-            </div>
-            <p className="text-sm text-white/90">We'll create your portal login and connect this audit to your account.</p>
-          </div>
-        );
-      case 1: // Business
+      case 0: // Business
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white">Tell us about your business</h2>
@@ -376,7 +299,7 @@ export default function AuditWizardPage() {
             </div>
           </div>
         );
-      case 2: // Goals
+      case 1: // Goals
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white">What are your goals?</h2>
@@ -411,16 +334,11 @@ export default function AuditWizardPage() {
             </div>
           </div>
         );
-      case 3: // Checkout
+      case 2: // Checkout
         return (
           <div className="space-y-6">
             {/* Review Section */}
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="bg-white/5 rounded-xl p-6">
-                <h3 className="font-medium mb-2 text-white">Account Details</h3>
-                <p className="text-white/90">Name: {formData.firstName} {formData.lastName}</p>
-                <p className="text-white/90">Email: {formData.email}</p>
-              </div>
               <div className="bg-white/5 rounded-xl p-6">
                 <h3 className="font-medium mb-2 text-white">Business Details</h3>
                 <p className="text-white/90">Company: {formData.companyName}</p>
@@ -429,12 +347,11 @@ export default function AuditWizardPage() {
                 <p className="text-white/90">Budget: {formData.monthlyBudget}</p>
                 <p className="text-white/90">Competitors: {formData.competitors}</p>
               </div>
-            </div>
-            
-            <div className="bg-white/5 rounded-xl p-6">
-              <h3 className="font-medium mb-2 text-white">Goals & Notes</h3>
-              <p className="text-white/90">Goals: {formData.goals.join(', ') || 'None selected'}</p>
-              {formData.notes && <p className="text-white/90">Notes: {formData.notes}</p>}
+              <div className="bg-white/5 rounded-xl p-6">
+                <h3 className="font-medium mb-2 text-white">Goals & Notes</h3>
+                <p className="text-white/90">Goals: {formData.goals.join(', ') || 'None selected'}</p>
+                {formData.notes && <p className="text-white/90">Notes: {formData.notes}</p>}
+              </div>
             </div>
 
             {/* Order Summary & Checkout */}
@@ -497,7 +414,7 @@ export default function AuditWizardPage() {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-white">SEO Audit Wizard</h1>
-          <p className="text-white/90">Create your account, tell us about your business, and choose your audit package.</p>
+          <p className="text-white/90">Tell us about your business, choose your goals, and complete your audit order.</p>
           {hasUnsavedChanges && currentStep < steps.length - 1 && (
             <div className="mt-2 flex items-center gap-2 text-amber-400 text-sm">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -509,7 +426,7 @@ export default function AuditWizardPage() {
         </div>
 
         {/* Breadcrumb */}
-        <div className="mb-8 grid gap-3 md:grid-cols-4">
+        <div className="mb-8 grid gap-3 md:grid-cols-3">
           {steps.map((step, i) => {
             const stepComplete = isStepComplete(i);
             const canNavigate = canNavigateToStep(i);
@@ -542,23 +459,30 @@ export default function AuditWizardPage() {
           {/* Validation message */}
           {currentStep < steps.length - 1 && !validateCurrentStep() && (
             <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-400 text-sm">
-              {currentStep === 0 && "Please complete all account fields to continue."}
-              {currentStep === 1 && "Please fill in all business details to continue."}
-              {currentStep === 2 && "Please select at least one goal to continue."}
-              {currentStep === 3 && "Please select a package to continue."}
+              {currentStep === 0 && "Please fill in all business details to continue."}
+              {currentStep === 1 && "Please select at least one goal to continue."}
+              {currentStep === 2 && "Please select a package to continue."}
             </div>
           )}
         </div>
 
         {/* Nav Buttons */}
         <div className="flex items-center justify-between">
-          <button 
-            onClick={back} 
-            disabled={currentStep === 0} 
-            className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-white/90 disabled:opacity-40"
-          >
-            Back
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => router.push('/client')}
+              className="rounded-xl border border-red-500/50 bg-red-500/10 px-5 py-2.5 text-red-400 hover:bg-red-500/20 hover:border-red-500 transition-colors"
+            >
+              Cancel Audit
+            </button>
+            <button 
+              onClick={back} 
+              disabled={currentStep === 0} 
+              className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-white/90 disabled:opacity-40"
+            >
+              Back
+            </button>
+          </div>
           <div className="flex items-center gap-3">
             {currentStep < steps.length - 1 ? (
               <button 
