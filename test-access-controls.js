@@ -61,7 +61,7 @@ async function testAccess(token, user, path) {
   console.log(`\n🔍 Testing access to ${path} for ${user.email}`);
   
   try {
-    const response = await fetch(`http://localhost:3000${path}`, {
+    const response = await fetch(`http://localhost:3002${path}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -132,7 +132,7 @@ async function runTests() {
   console.log(`${'='.repeat(50)}`);
   
   console.log('\n📝 Manual Testing Instructions:');
-  console.log('1. Open http://localhost:3000/login');
+  console.log('1. Open http://localhost:3002/login');
   console.log('2. Test Admin user:');
   console.log('   - Email: admin@test.com');
   console.log('   - Password: password123');
