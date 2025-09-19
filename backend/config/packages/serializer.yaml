@@ -1,0 +1,7 @@
+framework:
+    serializer:
+        enable_annotations: true
+        mapping:
+            paths: ['%kernel.project_dir%/src/Entity']
+        default_context:
+            datetime_format: 'Y-m-d\TH:i:sP'
