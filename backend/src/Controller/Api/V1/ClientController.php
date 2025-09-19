@@ -897,9 +897,19 @@ class ClientController extends AbstractController
         }
     }
 
-    #[Route('/register', name: 'api_v1_clients_register', methods: ['POST'])]
+    #[Route('/register', name: 'api_v1_clients_register', methods: ['POST', 'OPTIONS'])]
     public function registerClient(Request $request): JsonResponse
     {
+        // Handle CORS preflight requests
+        if ($request->getMethod() === 'OPTIONS') {
+            $response = new JsonResponse();
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+            $response->headers->set('Access-Control-Max-Age', '3600');
+            return $response;
+        }
+
         try {
             $this->logger->info('Client registration requested', [
                 'user_agent' => $request->headers->get('User-Agent'),
@@ -1098,7 +1108,9 @@ class ClientController extends AbstractController
                 'admin_email' => $adminUser->getEmail()
             ]);
 
-            return $this->json($responseData, Response::HTTP_CREATED);
+            $response = $this->json($responseData, Response::HTTP_CREATED);
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+            return $response;
 
         } catch (BadRequestHttpException $e) {
             return $this->logAndReturnError(

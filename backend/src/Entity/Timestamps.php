@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Reusable createdAt/updatedAt with lifecycle hooks.
@@ -10,9 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 trait Timestamps
 {
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['lead:read', 'lead:admin:read', 'campaign:read', 'campaign:admin:read', 'case_study:read', 'case_study:admin:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['lead:read', 'lead:admin:read', 'campaign:read', 'campaign:admin:read', 'case_study:read', 'case_study:admin:read'])]
     private \DateTimeImmutable $updatedAt;
 
     #[ORM\PrePersist]

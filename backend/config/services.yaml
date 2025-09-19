@@ -40,3 +40,7 @@ services:
     
     # App\ApiPlatform\TenantExtension:
     #     tags: ['api_platform.doctrine.orm.query_extension.collection']
+    
+    # Custom serializer for DateTimeImmutable
+    App\Serializer\DateTimeImmutableNormalizer:
+        tags: ['serializer.normalizer']

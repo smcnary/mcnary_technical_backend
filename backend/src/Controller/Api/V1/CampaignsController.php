@@ -25,7 +25,7 @@ class CampaignsController extends AbstractController
     ) {}
 
     #[Route('', name: 'api_v1_campaigns_list', methods: ['GET'])]
-    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    #[IsGranted('ROLE_CLIENT_STAFF')]
     public function listCampaigns(Request $request): JsonResponse
     {
         $page = max(1, (int) $request->query->get('page', 1));

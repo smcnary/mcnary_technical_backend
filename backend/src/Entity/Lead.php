@@ -33,11 +33,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Get(
             normalizationContext: ['groups' => ['lead:admin:read']],
-            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or (is_granted('ROLE_CLIENT_ADMIN') and object.getClient().getClientId() == user.getClientId())"
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['lead:admin:read']],
-            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
         ),
     ],
     paginationItemsPerPage: 25
@@ -53,7 +53,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC'], arguments: ['orderParameterName' => 'order'])]
 class Lead
 {
-    use Timestamps;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $updatedAt;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $now = new \DateTimeImmutable('now');
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable('now');
+    }
+
+    #[Groups(['lead:read', 'lead:admin:read'])]
+    public function getCreatedAt(): \DateTimeImmutable 
+    { 
+        return $this->createdAt; 
+    }
+    
+    #[Groups(['lead:read', 'lead:admin:read'])]
+    public function getUpdatedAt(): \DateTimeImmutable 
+    { 
+        return $this->updatedAt; 
+    }
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]

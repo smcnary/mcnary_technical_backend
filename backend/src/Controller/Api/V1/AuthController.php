@@ -121,9 +121,19 @@ class AuthController extends AbstractController
         }
     }
 
-    #[Route('/login', name: 'api_v1_auth_login', methods: ['POST'])]
+    #[Route('/login', name: 'api_v1_auth_login', methods: ['POST', 'OPTIONS'])]
     public function login(Request $request): JsonResponse
     {
+        // Handle CORS preflight requests
+        if ($request->getMethod() === 'OPTIONS') {
+            $response = new JsonResponse();
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+            $response->headers->set('Access-Control-Max-Age', '3600');
+            return $response;
+        }
+
         try {
             $data = json_decode($request->getContent(), true);
             
@@ -185,10 +195,12 @@ class AuthController extends AbstractController
                 'last_login_at' => $user->getLastLoginAt()?->format('c')
             ];
 
-            return $this->json([
+            $response = $this->json([
                 'token' => $token,
                 'user' => $userData
             ]);
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+            return $response;
 
         } catch (\Exception $e) {
             return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
