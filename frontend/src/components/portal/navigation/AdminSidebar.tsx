@@ -6,6 +6,7 @@ export default function AdminSidebar() {
       <div className="font-semibold mb-4">Admin</div>
       <nav className="space-y-2 text-sm">
         <Link href="/admin" className="block hover:underline">Dashboard</Link>
+        <Link href="/admin/crm" className="block hover:underline">CRM</Link>
         <Link href="/admin/users" className="block hover:underline">Users</Link>
         <Link href="/admin/clients" className="block hover:underline">Clients</Link>
         <Link href="/admin/packages" className="block hover:underline">Packages</Link>
