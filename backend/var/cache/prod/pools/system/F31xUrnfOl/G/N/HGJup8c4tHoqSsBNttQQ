@@ -1,0 +1,132 @@
+<?php //App.Entity.Campaign
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Campaign',
+                'name',
+                3 => 'type',
+                5 => 'status',
+            ],
+            'defaultGroup' => [
+                'Campaign',
+            ],
+            'members' => [
+                [
+                    'name' => [
+                        $o[1],
+                    ],
+                    'type' => [
+                        $o[3],
+                    ],
+                    'status' => [
+                        $o[5],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'name' => $o[1],
+                    'type' => $o[3],
+                    'status' => $o[5],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'Campaign' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'Campaign' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'Campaign' => [
+                        $o[6],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\Campaign',
+                3 => 'App\\Entity\\Campaign',
+                5 => 'App\\Entity\\Campaign',
+            ],
+            'property' => [
+                1 => 'name',
+                3 => 'type',
+                5 => 'status',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'Campaign',
+                ],
+                4 => [
+                    'Default',
+                    'Campaign',
+                ],
+                6 => [
+                    'Default',
+                    'Campaign',
+                ],
+            ],
+            'choices' => [
+                4 => [
+                    'seo',
+                    'ppc',
+                    'social',
+                    'content',
+                    'email',
+                    'other',
+                ],
+                6 => [
+                    'draft',
+                    'active',
+                    'paused',
+                    'completed',
+                    'cancelled',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

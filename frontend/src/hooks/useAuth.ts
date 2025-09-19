@@ -45,6 +45,10 @@ export function useAuth() {
     return authService.isClientStaff();
   }, []);
 
+  const isSalesConsultant = useCallback(() => {
+    return authService.isSalesConsultant();
+  }, []);
+
   const getClientId = useCallback(() => {
     return authService.getClientId();
   }, []);
@@ -64,6 +68,7 @@ export function useAuth() {
     isAdmin,
     isClientAdmin,
     isClientStaff,
+    isSalesConsultant,
     getClientId,
     getTenantId,
   };

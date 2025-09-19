@@ -1,0 +1,63 @@
+<?php //App_Entity_OAuthToken
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\OAuthToken',
+                'id',
+                'connection',
+                'user',
+                'accessToken',
+                'refreshToken',
+                'expiresAt',
+                'status',
+                'metadata',
+                'createdAt',
+                'updatedAt',
+                'expired',
+                'active',
+                'createdAtValue',
+                'updatedAtValue',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'connection' => $o[2],
+                    'user' => $o[3],
+                    'accessToken' => $o[4],
+                    'refreshToken' => $o[5],
+                    'expiresAt' => $o[6],
+                    'status' => $o[7],
+                    'metadata' => $o[8],
+                    'createdAt' => $o[9],
+                    'updatedAt' => $o[10],
+                    'expired' => $o[11],
+                    'active' => $o[12],
+                    'createdAtValue' => $o[13],
+                    'updatedAtValue' => $o[14],
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

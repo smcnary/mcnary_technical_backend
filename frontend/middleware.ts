@@ -15,8 +15,15 @@ export function middleware(req: NextRequest) {
 
   const role = req.cookies.get('role')?.value
 
-  if (pathname.startsWith('/admin') && role !== 'ROLE_ADMIN') {
-    return NextResponse.redirect(new URL('/client', req.url))
+  // Allow admin access and sales consultant access to CRM
+  if (pathname.startsWith('/admin')) {
+    const isAdmin = role === 'ROLE_ADMIN' || role === 'ROLE_SYSTEM_ADMIN' || role === 'ROLE_AGENCY_ADMIN'
+    const isSalesConsultant = role === 'ROLE_SALES_CONSULTANT'
+    const isCrmPath = pathname.startsWith('/admin/crm')
+    
+    if (!isAdmin && !(isSalesConsultant && isCrmPath)) {
+      return NextResponse.redirect(new URL('/client', req.url))
+    }
   }
 
   if (pathname.startsWith('/client') && role !== 'ROLE_CLIENT' && role !== 'ROLE_ADMIN') {

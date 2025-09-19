@@ -1,0 +1,17 @@
+<?php //Stringable
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (\Symfony\Component\VarExporter\Internal\Registry::$prototypes['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'Stringable',
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

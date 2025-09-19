@@ -1,0 +1,51 @@
+<?php //App_Entity_SystemUser
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\SystemUser',
+                'id',
+                'username',
+                'displayName',
+                'description',
+                'permissions',
+                'isActive',
+                'createdAt',
+                'updatedAt',
+                'permission',
+                'active',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'username' => $o[2],
+                    'displayName' => $o[3],
+                    'description' => $o[4],
+                    'permissions' => $o[5],
+                    'isActive' => $o[6],
+                    'createdAt' => $o[7],
+                    'updatedAt' => $o[8],
+                    'permission' => $o[9],
+                    'active' => $o[10],
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

@@ -39,7 +39,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function CrmDashboard() {
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
   const {
     clients,
     leads,
@@ -61,10 +61,10 @@ export default function CrmDashboard() {
 
   // Load data on component mount
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
       loadInitialData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isAdmin, isSalesConsultant]);
 
   const loadInitialData = async () => {
     try {
@@ -141,6 +141,10 @@ export default function CrmDashboard() {
 
   if (!isAuthenticated) {
     return <div>Please log in to access the CRM dashboard.</div>;
+  }
+
+  if (!isAdmin() && !isSalesConsultant()) {
+    return <div>Access denied. You need admin or sales consultant permissions to access the CRM dashboard.</div>;
   }
 
   return (

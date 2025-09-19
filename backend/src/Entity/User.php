@@ -31,6 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const ROLE_CLIENT_ADMIN = 'ROLE_CLIENT_ADMIN';
     public const ROLE_CLIENT_STAFF = 'ROLE_CLIENT_STAFF';
     public const ROLE_CLIENT_USER = 'ROLE_CLIENT_USER';
+    public const ROLE_SALES_CONSULTANT = 'ROLE_SALES_CONSULTANT';
     public const ROLE_READ_ONLY = 'ROLE_READ_ONLY';
 
     #[ORM\Id]
@@ -142,6 +143,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isSystemAdmin(): bool
     {
         return $this->hasRole(self::ROLE_SYSTEM_ADMIN);
+    }
+
+    public function isSalesConsultant(): bool
+    {
+        return $this->hasRole(self::ROLE_SALES_CONSULTANT);
     }
 
     public function isAgencyAdmin(): bool

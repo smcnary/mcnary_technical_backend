@@ -1,0 +1,101 @@
+<?php //is_granted%2528%2527ROLE_AGENCY_ADMIN%2527%2529%2520or%2520is_granted%2528%2527ROLE_AGENCY_STAFF%2527%2529%2520or%2520is_granted%2528%2527ROLE_CLIENT_STAFF%2527%2529%252F%252Fauth_checker%257Cobject%257Cprevious_object%257Crequest%257Croles%257Ctoken%257Ctrust_resolver%257Cuser
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\ExpressionLanguage\\ParsedExpression'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\ExpressionLanguage\\ParsedExpression')),
+        clone ($p['Symfony\\Component\\ExpressionLanguage\\Node\\BinaryNode'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\ExpressionLanguage\\Node\\BinaryNode')),
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\BinaryNode'],
+        clone ($p['Symfony\\Component\\ExpressionLanguage\\Node\\FunctionNode'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\ExpressionLanguage\\Node\\FunctionNode')),
+        clone ($p['Symfony\\Component\\ExpressionLanguage\\Node\\Node'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\ExpressionLanguage\\Node\\Node')),
+        clone ($p['Symfony\\Component\\ExpressionLanguage\\Node\\ConstantNode'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\ExpressionLanguage\\Node\\ConstantNode')),
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\FunctionNode'],
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\Node'],
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\ConstantNode'],
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\FunctionNode'],
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\Node'],
+        clone $p['Symfony\\Component\\ExpressionLanguage\\Node\\ConstantNode'],
+    ],
+    null,
+    [
+        'Symfony\\Component\\ExpressionLanguage\\Expression' => [
+            'expression' => [
+                'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\') or is_granted(\'ROLE_CLIENT_STAFF\')',
+            ],
+        ],
+        'Symfony\\Component\\ExpressionLanguage\\ParsedExpression' => [
+            'nodes' => [
+                $o[1],
+            ],
+        ],
+        'stdClass' => [
+            'nodes' => [
+                1 => [
+                    'left' => $o[2],
+                    'right' => $o[9],
+                ],
+                [
+                    'left' => $o[3],
+                    'right' => $o[6],
+                ],
+                [
+                    'arguments' => $o[4],
+                ],
+                [
+                    $o[5],
+                ],
+                6 => [
+                    'arguments' => $o[7],
+                ],
+                [
+                    $o[8],
+                ],
+                9 => [
+                    'arguments' => $o[10],
+                ],
+                [
+                    $o[11],
+                ],
+            ],
+            'attributes' => [
+                1 => [
+                    'operator' => 'or',
+                ],
+                [
+                    'operator' => 'or',
+                ],
+                [
+                    'name' => 'is_granted',
+                ],
+                5 => [
+                    'value' => 'ROLE_AGENCY_ADMIN',
+                ],
+                [
+                    'name' => 'is_granted',
+                ],
+                8 => [
+                    'value' => 'ROLE_AGENCY_STAFF',
+                ],
+                [
+                    'name' => 'is_granted',
+                ],
+                11 => [
+                    'value' => 'ROLE_CLIENT_STAFF',
+                ],
+            ],
+        ],
+        'Symfony\\Component\\ExpressionLanguage\\Node\\ConstantNode' => [
+            'isIdentifier' => [
+                5 => false,
+                8 => false,
+                11 => false,
+            ],
+            'isNullSafe' => [
+                5 => false,
+                8 => false,
+                11 => false,
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

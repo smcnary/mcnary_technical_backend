@@ -1043,6 +1043,9 @@ p{
 .top-4{
   top: 1rem;
 }
+.top-2\.5{
+  top: 0.625rem;
+}
 .isolate{
   isolation: isolate;
 }
@@ -1318,6 +1321,9 @@ p{
 .max-h-\[90vh\]{
   max-height: 90vh;
 }
+.max-h-\[80vh\]{
+  max-height: 80vh;
+}
 .min-h-\[400px\]{
   min-height: 400px;
 }
@@ -1419,6 +1425,22 @@ p{
 }
 .w-px{
   width: 1px;
+}
+.w-\[180px\]{
+  width: 180px;
+}
+.w-fit{
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.w-\[120px\]{
+  width: 120px;
+}
+.w-auto{
+  width: auto;
+}
+.w-\[140px\]{
+  width: 140px;
 }
 .min-w-0{
   min-width: 0px;
@@ -1746,6 +1768,16 @@ p{
   --tw-space-y-reverse: 0;
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+.space-x-1 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-x-3 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 .divide-y > :not([hidden]) ~ :not([hidden]){
   --tw-divide-y-reverse: 0;
@@ -2576,6 +2608,9 @@ p{
 }
 .font-semibold{
   font-weight: 600;
+}
+.font-normal{
+  font-weight: 400;
 }
 .uppercase{
   text-transform: uppercase;
@@ -4258,6 +4293,10 @@ p{
 
   .md\:grid-cols-6{
     grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-5{
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .md\:flex-row{

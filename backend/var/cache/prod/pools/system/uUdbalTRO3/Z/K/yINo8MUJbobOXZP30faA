@@ -1,0 +1,36 @@
+<?php //ApiPlatform_Metadata_Exception_ProblemExceptionInterface
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'ApiPlatform\\Metadata\\Exception\\ProblemExceptionInterface',
+                'type',
+                'title',
+                'status',
+                'detail',
+                'instance',
+            ],
+            'attributesMetadata' => [
+                [
+                    'type' => $o[1],
+                    'title' => $o[2],
+                    'status' => $o[3],
+                    'detail' => $o[4],
+                    'instance' => $o[5],
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

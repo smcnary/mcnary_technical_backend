@@ -1,0 +1,20 @@
+<?php //ApiPlatform.Metadata.Exception.ProblemExceptionInterface
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (\Symfony\Component\VarExporter\Internal\Registry::$factories['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'ApiPlatform\\Metadata\\Exception\\ProblemExceptionInterface',
+            ],
+            'defaultGroup' => [
+                'ProblemExceptionInterface',
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

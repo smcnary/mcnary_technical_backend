@@ -165,7 +165,11 @@ class UserController extends AbstractController
                 'name' => [new Assert\NotBlank()],
                 'role' => [new Assert\NotBlank(), new Assert\Choice([
                     User::ROLE_AGENCY_ADMIN,
+                    User::ROLE_AGENCY_STAFF,
+                    User::ROLE_CLIENT_ADMIN,
+                    User::ROLE_CLIENT_STAFF,
                     User::ROLE_CLIENT_USER,
+                    User::ROLE_SALES_CONSULTANT,
                     User::ROLE_READ_ONLY
                 ])],
                 'agency_id' => [new Assert\Optional([new Assert\Uuid()])],

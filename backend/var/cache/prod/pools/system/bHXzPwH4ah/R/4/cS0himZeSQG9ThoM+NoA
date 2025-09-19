@@ -1,0 +1,126 @@
+<?php //991797ce45ecec3045f6be6312072625
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Query\\ParserResult'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ParserResult')),
+        clone ($p['Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer')),
+        clone ($p['Doctrine\\ORM\\Query\\ResultSetMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ResultSetMapping')),
+    ],
+    null,
+    [
+        'Doctrine\\ORM\\Query\\ParserResult' => [
+            'sqlFinalizer' => [
+                $o[1],
+            ],
+            'resultSetMapping' => [
+                $o[2],
+            ],
+            'parameterMappings' => [
+                [
+                    'is_active' => [
+                        0,
+                    ],
+                ],
+            ],
+        ],
+        'Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer' => [
+            'sql' => [
+                1 => 'SELECT p0_.id AS id_0, p0_.client_id AS client_id_1, p0_.name AS name_2, p0_.slug AS slug_3, p0_.description AS description_4, p0_.price AS price_5, p0_.billing_cycle AS billing_cycle_6, p0_.features AS features_7, p0_.included_services AS included_services_8, p0_.is_popular AS is_popular_9, p0_.is_active AS is_active_10, p0_.sort_order AS sort_order_11, p0_.metadata AS metadata_12, p0_.created_at AS created_at_13, p0_.updated_at AS updated_at_14 FROM packages p0_ WHERE p0_.is_active = ?',
+            ],
+        ],
+        'stdClass' => [
+            'aliasMap' => [
+                2 => [
+                    'p' => 'App\\Entity\\Package',
+                ],
+            ],
+            'fieldMappings' => [
+                2 => [
+                    'id_0' => 'id',
+                    'client_id_1' => 'clientId',
+                    'name_2' => 'name',
+                    'slug_3' => 'slug',
+                    'description_4' => 'description',
+                    'price_5' => 'price',
+                    'billing_cycle_6' => 'billingCycle',
+                    'features_7' => 'features',
+                    'included_services_8' => 'includedServices',
+                    'is_popular_9' => 'isPopular',
+                    'is_active_10' => 'isActive',
+                    'sort_order_11' => 'sortOrder',
+                    'metadata_12' => 'metadata',
+                    'created_at_13' => 'createdAt',
+                    'updated_at_14' => 'updatedAt',
+                ],
+            ],
+            'columnAliasMappings' => [
+                2 => [
+                    'App\\Entity\\Package' => [
+                        'p' => [
+                            'id' => 'id_0',
+                            'clientId' => 'client_id_1',
+                            'name' => 'name_2',
+                            'slug' => 'slug_3',
+                            'description' => 'description_4',
+                            'price' => 'price_5',
+                            'billingCycle' => 'billing_cycle_6',
+                            'features' => 'features_7',
+                            'includedServices' => 'included_services_8',
+                            'isPopular' => 'is_popular_9',
+                            'isActive' => 'is_active_10',
+                            'sortOrder' => 'sort_order_11',
+                            'metadata' => 'metadata_12',
+                            'createdAt' => 'created_at_13',
+                            'updatedAt' => 'updated_at_14',
+                        ],
+                    ],
+                ],
+            ],
+            'entityMappings' => [
+                2 => [
+                    'p' => null,
+                ],
+            ],
+            'columnOwnerMap' => [
+                2 => [
+                    'id_0' => 'p',
+                    'client_id_1' => 'p',
+                    'name_2' => 'p',
+                    'slug_3' => 'p',
+                    'description_4' => 'p',
+                    'price_5' => 'p',
+                    'billing_cycle_6' => 'p',
+                    'features_7' => 'p',
+                    'included_services_8' => 'p',
+                    'is_popular_9' => 'p',
+                    'is_active_10' => 'p',
+                    'sort_order_11' => 'p',
+                    'metadata_12' => 'p',
+                    'created_at_13' => 'p',
+                    'updated_at_14' => 'p',
+                ],
+            ],
+            'declaringClasses' => [
+                2 => [
+                    'id_0' => 'App\\Entity\\Package',
+                    'client_id_1' => 'App\\Entity\\Package',
+                    'name_2' => 'App\\Entity\\Package',
+                    'slug_3' => 'App\\Entity\\Package',
+                    'description_4' => 'App\\Entity\\Package',
+                    'price_5' => 'App\\Entity\\Package',
+                    'billing_cycle_6' => 'App\\Entity\\Package',
+                    'features_7' => 'App\\Entity\\Package',
+                    'included_services_8' => 'App\\Entity\\Package',
+                    'is_popular_9' => 'App\\Entity\\Package',
+                    'is_active_10' => 'App\\Entity\\Package',
+                    'sort_order_11' => 'App\\Entity\\Package',
+                    'metadata_12' => 'App\\Entity\\Package',
+                    'created_at_13' => 'App\\Entity\\Package',
+                    'updated_at_14' => 'App\\Entity\\Package',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

@@ -175,6 +175,11 @@ class AuthService {
     return this.hasRole('ROLE_CLIENT_STAFF');
   }
 
+  // Check if user is sales consultant
+  isSalesConsultant(): boolean {
+    return this.hasRole('ROLE_SALES_CONSULTANT');
+  }
+
   // Get user's client ID
   getClientId(): string | null {
     return this.state.user?.clientId || null;

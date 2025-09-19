@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 
 export default function ClientsManagement() {
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
   const {
     clients,
     leads,
@@ -64,10 +64,10 @@ export default function ClientsManagement() {
 
   // Load data on component mount
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
       loadInitialData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isAdmin, isSalesConsultant]);
 
   const loadInitialData = async () => {
     try {
@@ -165,6 +165,10 @@ export default function ClientsManagement() {
 
   if (!isAuthenticated) {
     return <div>Please log in to access clients management.</div>;
+  }
+
+  if (!isAdmin() && !isSalesConsultant()) {
+    return <div>Access denied. You need admin or sales consultant permissions to access clients management.</div>;
   }
 
   return (

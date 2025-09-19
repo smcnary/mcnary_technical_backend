@@ -1,0 +1,122 @@
+<?php //62a18435102096376c8aa3011a75abc1
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Query\\ParserResult'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ParserResult')),
+        clone ($p['Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer')),
+        clone ($p['Doctrine\\ORM\\Query\\ResultSetMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ResultSetMapping')),
+    ],
+    null,
+    [
+        'Doctrine\\ORM\\Query\\ParserResult' => [
+            'sqlFinalizer' => [
+                $o[1],
+            ],
+            'resultSetMapping' => [
+                $o[2],
+            ],
+        ],
+        'Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer' => [
+            'sql' => [
+                1 => 'SELECT c0_.id AS id_0, c0_.name AS name_1, c0_.description AS description_2, c0_.type AS type_3, c0_.status AS status_4, c0_.start_date AS start_date_5, c0_.end_date AS end_date_6, c0_.budget AS budget_7, c0_.goals AS goals_8, c0_.metrics AS metrics_9, c0_.metadata AS metadata_10, c0_.created_at AS created_at_11, c0_.updated_at AS updated_at_12, c0_.client_id AS client_id_13 FROM campaigns c0_ ORDER BY c0_.id ASC',
+            ],
+        ],
+        'stdClass' => [
+            'aliasMap' => [
+                2 => [
+                    'o' => 'App\\Entity\\Campaign',
+                ],
+            ],
+            'fieldMappings' => [
+                2 => [
+                    'id_0' => 'id',
+                    'name_1' => 'name',
+                    'description_2' => 'description',
+                    'type_3' => 'type',
+                    'status_4' => 'status',
+                    'start_date_5' => 'startDate',
+                    'end_date_6' => 'endDate',
+                    'budget_7' => 'budget',
+                    'goals_8' => 'goals',
+                    'metrics_9' => 'metrics',
+                    'metadata_10' => 'metadata',
+                    'created_at_11' => 'createdAt',
+                    'updated_at_12' => 'updatedAt',
+                ],
+            ],
+            'columnAliasMappings' => [
+                2 => [
+                    'App\\Entity\\Campaign' => [
+                        'o' => [
+                            'id' => 'id_0',
+                            'name' => 'name_1',
+                            'description' => 'description_2',
+                            'type' => 'type_3',
+                            'status' => 'status_4',
+                            'startDate' => 'start_date_5',
+                            'endDate' => 'end_date_6',
+                            'budget' => 'budget_7',
+                            'goals' => 'goals_8',
+                            'metrics' => 'metrics_9',
+                            'metadata' => 'metadata_10',
+                            'createdAt' => 'created_at_11',
+                            'updatedAt' => 'updated_at_12',
+                        ],
+                    ],
+                ],
+            ],
+            'typeMappings' => [
+                2 => [
+                    'client_id_13' => 'uuid',
+                ],
+            ],
+            'entityMappings' => [
+                2 => [
+                    'o' => null,
+                ],
+            ],
+            'metaMappings' => [
+                2 => [
+                    'client_id_13' => 'client_id',
+                ],
+            ],
+            'columnOwnerMap' => [
+                2 => [
+                    'id_0' => 'o',
+                    'name_1' => 'o',
+                    'description_2' => 'o',
+                    'type_3' => 'o',
+                    'status_4' => 'o',
+                    'start_date_5' => 'o',
+                    'end_date_6' => 'o',
+                    'budget_7' => 'o',
+                    'goals_8' => 'o',
+                    'metrics_9' => 'o',
+                    'metadata_10' => 'o',
+                    'created_at_11' => 'o',
+                    'updated_at_12' => 'o',
+                    'client_id_13' => 'o',
+                ],
+            ],
+            'declaringClasses' => [
+                2 => [
+                    'id_0' => 'App\\Entity\\Campaign',
+                    'name_1' => 'App\\Entity\\Campaign',
+                    'description_2' => 'App\\Entity\\Campaign',
+                    'type_3' => 'App\\Entity\\Campaign',
+                    'status_4' => 'App\\Entity\\Campaign',
+                    'start_date_5' => 'App\\Entity\\Campaign',
+                    'end_date_6' => 'App\\Entity\\Campaign',
+                    'budget_7' => 'App\\Entity\\Campaign',
+                    'goals_8' => 'App\\Entity\\Campaign',
+                    'metrics_9' => 'App\\Entity\\Campaign',
+                    'metadata_10' => 'App\\Entity\\Campaign',
+                    'created_at_11' => 'App\\Entity\\Campaign',
+                    'updated_at_12' => 'App\\Entity\\Campaign',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

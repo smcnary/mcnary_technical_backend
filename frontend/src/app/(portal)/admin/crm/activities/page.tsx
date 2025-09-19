@@ -50,7 +50,7 @@ import {
 import { format } from 'date-fns';
 
 export default function ActivitiesManagement() {
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
   const {
     clients,
     leads,
@@ -136,10 +136,10 @@ export default function ActivitiesManagement() {
 
   // Load data on component mount
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
       loadInitialData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isAdmin, isSalesConsultant]);
 
   const loadInitialData = async () => {
     try {
@@ -264,6 +264,10 @@ export default function ActivitiesManagement() {
 
   if (!isAuthenticated) {
     return <div>Please log in to access activities management.</div>;
+  }
+
+  if (!isAdmin() && !isSalesConsultant()) {
+    return <div>Access denied. You need admin or sales consultant permissions to access activities management.</div>;
   }
 
   return (
