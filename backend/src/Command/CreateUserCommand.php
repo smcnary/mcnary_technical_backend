@@ -33,7 +33,7 @@ class CreateUserCommand extends Command
             ->addArgument('email', InputArgument::REQUIRED, 'User email')
             ->addArgument('password', InputArgument::REQUIRED, 'User password')
             ->addArgument('name', InputArgument::REQUIRED, 'User full name')
-            ->addOption('role', 'r', InputOption::VALUE_REQUIRED, 'User role (AGENCY_ADMIN, AGENCY_STAFF, CLIENT_ADMIN, CLIENT_STAFF, SYSTEM_ADMIN)', 'CLIENT_STAFF')
+            ->addOption('role', 'r', InputOption::VALUE_REQUIRED, 'User role (AGENCY_ADMIN, AGENCY_STAFF, CLIENT_ADMIN, CLIENT_STAFF, SYSTEM_ADMIN, SALES_CONSULTANT)', 'CLIENT_STAFF')
             ->addOption('client-id', 'c', InputOption::VALUE_OPTIONAL, 'Client ID for client users')
             ->addOption('tenant-id', 't', InputOption::VALUE_OPTIONAL, 'Tenant ID')
             ->addOption('status', 's', InputOption::VALUE_OPTIONAL, 'User status (invited, active, inactive)', 'active')
@@ -48,6 +48,7 @@ Available roles:
   - CLIENT_ADMIN: Client administrator access
   - CLIENT_STAFF: Client staff access
   - SYSTEM_ADMIN: System-level administrator
+  - SALES_CONSULTANT: CRM access only, no core admin functionality
 
 Examples:
   # Create agency admin
@@ -80,7 +81,8 @@ HELP
             User::ROLE_AGENCY_STAFF,
             User::ROLE_CLIENT_ADMIN,
             User::ROLE_CLIENT_STAFF,
-            User::ROLE_SYSTEM_ADMIN
+            User::ROLE_SYSTEM_ADMIN,
+            User::ROLE_SALES_CONSULTANT
         ];
 
         if (!in_array($role, $validRoles)) {

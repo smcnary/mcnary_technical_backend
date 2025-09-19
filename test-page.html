@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Access Control Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .credentials {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .credentials strong {
+            color: #007bff;
+        }
+        .test-links {
+            margin: 15px 0;
+        }
+        .test-links a {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .test-links a:hover {
+            background: #0056b3;
+        }
+        .expected {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .expected h4 {
+            margin: 0 0 5px 0;
+            color: #155724;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .warning h4 {
+            margin: 0 0 10px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 CRM Access Control Test</h1>
+        <p>This page helps you test the access controls for different user roles in the CRM system.</p>
+
+        <div class="warning">
+            <h4>⚠️ Prerequisites</h4>
+            <p>Make sure both servers are running:</p>
+            <ul>
+                <li><strong>Backend:</strong> <code>php -S localhost:8000 -t public</code> (in backend directory)</li>
+                <li><strong>Frontend:</strong> <code>npm run dev</code> (in frontend directory)</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>👨‍💼 Admin User Test</h3>
+            <div class="credentials">
+                <strong>Email:</strong> admin@test.com<br>
+                <strong>Password:</strong> password123<br>
+                <strong>Role:</strong> ROLE_SYSTEM_ADMIN
+            </div>
+            
+            <div class="expected">
+                <h4>✅ Expected Access:</h4>
+                <ul>
+                    <li>Full admin dashboard access</li>
+                    <li>CRM section access</li>
+                    <li>User management access</li>
+                    <li>Settings access</li>
+                    <li>All admin functionality</li>
+                </ul>
+            </div>
+
+            <div class="test-links">
+                <a href="http://localhost:3000/login" target="_blank">Login Page</a>
+                <a href="http://localhost:3000/admin" target="_blank">Admin Dashboard</a>
+                <a href="http://localhost:3000/admin/crm" target="_blank">CRM Dashboard</a>
+                <a href="http://localhost:3000/admin/users" target="_blank">User Management</a>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>💼 Sales Consultant User Test</h3>
+            <div class="credentials">
+                <strong>Email:</strong> sales@test.com<br>
+                <strong>Password:</strong> password123<br>
+                <strong>Role:</strong> ROLE_SALES_CONSULTANT
+            </div>
+            
+            <div class="expected">
+                <h4>✅ Expected Access:</h4>
+                <ul>
+                    <li>CRM dashboard access</li>
+                    <li>Leads management</li>
+                    <li>Clients management</li>
+                    <li>Activities management</li>
+                    <li>Reports and analytics</li>
+                </ul>
+                
+                <h4>❌ Expected Restrictions:</h4>
+                <ul>
+                    <li>No access to main admin dashboard</li>
+                    <li>No access to user management</li>
+                    <li>No access to settings</li>
+                    <li>Redirected away from non-CRM admin sections</li>
+                </ul>
+            </div>
+
+            <div class="test-links">
+                <a href="http://localhost:3000/login" target="_blank">Login Page</a>
+                <a href="http://localhost:3000/admin/crm" target="_blank">CRM Dashboard</a>
+                <a href="http://localhost:3000/admin/crm/leads" target="_blank">Leads Management</a>
+                <a href="http://localhost:3000/admin/crm/clients" target="_blank">Clients Management</a>
+                <a href="http://localhost:3000/admin/crm/activities" target="_blank">Activities</a>
+                <a href="http://localhost:3000/admin/crm/reports" target="_blank">Reports</a>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test Scenarios</h3>
+            <ol>
+                <li><strong>Login Test:</strong> Try logging in with both users</li>
+                <li><strong>CRM Access:</strong> Both users should access CRM sections</li>
+                <li><strong>Admin Restrictions:</strong> Sales consultant should be blocked from non-CRM admin sections</li>
+                <li><strong>Navigation:</strong> Test sidebar navigation and redirects</li>
+                <li><strong>Middleware:</strong> Verify middleware blocks unauthorized access</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 What to Look For</h3>
+            <ul>
+                <li><strong>Successful Login:</strong> Both users should be able to log in</li>
+                <li><strong>Role Detection:</strong> Check browser cookies for correct role assignment</li>
+                <li><strong>Access Control:</strong> Sales consultant should see "Access Denied" for restricted areas</li>
+                <li><strong>Redirects:</strong> Unauthorized access should redirect appropriately</li>
+                <li><strong>UI Elements:</strong> Different navigation options based on role</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🐛 Troubleshooting</h3>
+            <ul>
+                <li><strong>Login Issues:</strong> Check backend server is running on port 8000</li>
+                <li><strong>Access Issues:</strong> Verify middleware.ts is updated with sales consultant role</li>
+                <li><strong>Role Issues:</strong> Check browser cookies for correct role values</li>
+                <li><strong>Frontend Issues:</strong> Check browser console for JavaScript errors</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
