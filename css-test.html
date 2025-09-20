@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test - Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-link {
+            display: inline-block;
+            margin: 10px 10px 10px 0;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .test-link:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Frontend CSS Test</h1>
+        <p>This page helps diagnose CSS issues with the frontend application.</p>
+
+        <div class="status success">
+            <strong>✅ This page has CSS working</strong><br>
+            If you can see styled elements, CSS is loading properly.
+        </div>
+
+        <h2>🧪 Test Links</h2>
+        <p>Click these links to test different parts of the application:</p>
+        
+        <a href="http://localhost:3002" class="test-link" target="_blank">Home Page</a>
+        <a href="http://localhost:3002/login" class="test-link" target="_blank">Login Page</a>
+        <a href="http://localhost:3002/admin" class="test-link" target="_blank">Admin Dashboard</a>
+        <a href="http://localhost:3002/admin/crm" class="test-link" target="_blank">CRM Dashboard</a>
+
+        <h2>🔍 Troubleshooting Steps</h2>
+        <ol>
+            <li><strong>Check Browser Console:</strong> Open Developer Tools (F12) and look for errors</li>
+            <li><strong>Check Network Tab:</strong> Look for failed CSS requests</li>
+            <li><strong>Check Sources:</strong> Verify CSS files are loading</li>
+            <li><strong>Hard Refresh:</strong> Try Ctrl+F5 or Cmd+Shift+R</li>
+            <li><strong>Clear Cache:</strong> Clear browser cache and cookies</li>
+        </ol>
+
+        <h2>📋 Common CSS Issues</h2>
+        <ul>
+            <li><strong>Tailwind CSS not loading:</strong> Check if Tailwind is properly configured</li>
+            <li><strong>Missing CSS imports:</strong> Verify index.css is imported in layout.tsx</li>
+            <li><strong>Build issues:</strong> Check if Next.js build completed successfully</li>
+            <li><strong>Port conflicts:</strong> Ensure frontend is running on the correct port</li>
+        </ul>
+
+        <div class="status error">
+            <strong>⚠️ If CSS is missing:</strong><br>
+            1. Check browser console for errors<br>
+            2. Verify frontend server is running on port 3002<br>
+            3. Check if Tailwind CSS is properly configured<br>
+            4. Try a hard refresh (Ctrl+F5)
+        </div>
+
+        <h2>🔗 Quick Access</h2>
+        <p><strong>Frontend:</strong> <a href="http://localhost:3002" target="_blank">http://localhost:3002</a></p>
+        <p><strong>Backend:</strong> <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
+    </div>
+
+    <script>
+        // Simple JavaScript test
+        console.log('CSS Test Page Loaded');
+        
+        // Check if we can access the frontend
+        fetch('http://localhost:3002')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Frontend is accessible');
+                } else {
+                    console.log('❌ Frontend returned error:', response.status);
+                }
+            })
+            .catch(error => {
+                console.log('❌ Frontend not accessible:', error.message);
+            });
+    </script>
+</body>
+</html>

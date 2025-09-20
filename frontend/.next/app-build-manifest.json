@@ -31,10 +31,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(portal)/client/loading.js"
     ],
-    "/login/page": [
+    "/(portal)/seo-clients/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
+      "static/chunks/app/(portal)/seo-clients/page.js"
     ]
   }
 }

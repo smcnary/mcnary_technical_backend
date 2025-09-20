@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useData } from '@/hooks/useData';
 import PageHeader from '@/components/portal/PageHeader';
@@ -13,17 +13,14 @@ import {
   Building2, 
   Target, 
   TrendingUp, 
-  DollarSign,
   Phone,
   Mail,
   Calendar,
   Plus,
   RefreshCw,
-  Filter,
   Search,
   Eye,
   Edit,
-  Trash2,
   CheckCircle,
   Clock,
   AlertCircle,
@@ -34,19 +31,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function CrmDashboard() {
-  const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
+  const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
   const {
     clients,
     leads,
-    users,
     getClients,
     getLeads,
-    getUsers,
     getLoadingState,
     getErrorState,
     clearError,
@@ -64,7 +59,7 @@ export default function CrmDashboard() {
     if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
       loadInitialData();
     }
-  }, [isAuthenticated, isAdmin, isSalesConsultant]);
+  }, [isAuthenticated, isAdmin, isSalesConsultant, getClients, getLeads]);
 
   const loadInitialData = async () => {
     try {

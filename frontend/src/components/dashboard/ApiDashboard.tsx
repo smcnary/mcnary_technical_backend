@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import { useData } from '../../hooks/useData';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -10,25 +11,25 @@ import {
   Users, 
   Target, 
   Package, 
-  FileText, 
-  Image, 
-  HelpCircle, 
   TrendingUp,
   Plus,
   RefreshCw
 } from 'lucide-react';
-import { ProtectedRoute } from '../auth/ProtectedRoute';
+import ProtectedRoute from '../auth/ProtectedRoute';
+import SeoClientsTab from './SeoClientsTab';
 
 export default function ApiDashboard() {
-  const { user, isAuthenticated, isAdmin, isClientAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
+  
+  // Debug: Force show SEO Clients tab for testing
+  const debugShowSeoClients = true;
+  const searchParams = useSearchParams();
   const {
     clients,
     campaigns,
     packages: servicePackages,
     pages,
     mediaAssets,
-    faqs,
-    caseStudies,
     leads,
     users,
     getClients,
@@ -36,8 +37,6 @@ export default function ApiDashboard() {
     getPackages,
     getPages,
     getMediaAssets,
-    getFaqs,
-    getCaseStudies,
     getLeads,
     getUsers,
     getLoadingState,
@@ -49,14 +48,7 @@ export default function ApiDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Load data on component mount
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadInitialData();
-    }
-  }, [isAuthenticated]);
-
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     try {
       await Promise.all([
         getClients(),
@@ -64,15 +56,42 @@ export default function ApiDashboard() {
         getPackages(),
         getPages(),
         getMediaAssets(),
-        getFaqs(),
-        getCaseStudies(),
         getLeads(),
-        ...(isAdmin ? [getUsers()] : []),
+        ...(isAdmin() ? [getUsers()] : []),
       ]);
     } catch (error) {
       console.error('Failed to load initial data:', error);
     }
-  };
+  }, [getClients, getCampaigns, getPackages, getPages, getMediaAssets, getLeads, getUsers, isAdmin]);
+
+  // Load data on component mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadInitialData();
+    }
+  }, [isAuthenticated, loadInitialData]);
+
+  // Handle URL parameter for tab selection
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    console.log('URL tab parameter:', tabParam);
+    console.log('Current activeTab:', activeTab);
+    console.log('debugShowSeoClients:', debugShowSeoClients);
+    
+    if (tabParam) {
+      // Validate that the tab is allowed for the current user
+      if (tabParam === 'seo-clients' && (debugShowSeoClients || isAdmin() || isSalesConsultant())) {
+        console.log('Setting activeTab to seo-clients');
+        setActiveTab('seo-clients');
+      } else if (tabParam === 'admin' && isAdmin()) {
+        console.log('Setting activeTab to admin');
+        setActiveTab('admin');
+      } else if (['overview', 'clients', 'campaigns', 'content', 'leads'].includes(tabParam)) {
+        console.log('Setting activeTab to:', tabParam);
+        setActiveTab(tabParam);
+      }
+    }
+  }, [searchParams, isAdmin, isSalesConsultant, debugShowSeoClients, activeTab]);
 
   const handleRefreshAll = async () => {
     setIsRefreshing(true);
@@ -208,18 +227,27 @@ export default function ApiDashboard() {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-6">
+        <Tabs value={activeTab} onValueChange={(value) => {
+          console.log('Tab changed to:', value);
+          setActiveTab(value);
+        }} className="space-y-4">
+          <TabsList className={`grid w-full ${(debugShowSeoClients || isAdmin() || isSalesConsultant()) ? 'grid-cols-7' : 'grid-cols-6'}`}>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="clients">Clients</TabsTrigger>
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="leads">Leads</TabsTrigger>
-            {isAdmin && <TabsTrigger value="admin">Admin</TabsTrigger>}
+            {(debugShowSeoClients || isAdmin() || isSalesConsultant()) && <TabsTrigger value="seo-clients">SEO Clients</TabsTrigger>}
+            {isAdmin() && <TabsTrigger value="admin">Admin</TabsTrigger>}
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-4">
+            {/* Active Tab Indicator */}
+            <div className="flex items-center gap-2 mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Currently viewing: Overview Dashboard</span>
+            </div>
             <div className="grid gap-4 md:grid-cols-2">
               <Card>
                 <CardHeader>
@@ -395,10 +423,10 @@ export default function ApiDashboard() {
                     {leads.map((lead) => (
                       <div key={lead.id} className="flex items-center justify-between p-3 border rounded-lg">
                         <div>
-                          <h4 className="font-medium">{lead.name}</h4>
-                          <p className="text-sm text-muted-foreground">{lead.email}</p>
+                          <h4 className="font-medium">{lead.email}</h4>
+                          <p className="text-sm text-muted-foreground">{lead.firm || lead.phone || 'No contact info'}</p>
                         </div>
-                        <Badge variant={lead.status === 'pending' ? 'secondary' : 'default'}>
+                        <Badge variant={lead.status === 'new' ? 'default' : 'secondary'}>
                           {lead.status}
                         </Badge>
                       </div>
@@ -412,9 +440,26 @@ export default function ApiDashboard() {
             </Card>
           </TabsContent>
 
+          {/* SEO Clients Tab */}
+          {(debugShowSeoClients || isAdmin() || isSalesConsultant()) && (
+            <TabsContent value="seo-clients" className="space-y-4">
+              {/* Active Tab Indicator */}
+              <div className="flex items-center gap-2 mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Currently viewing: SEO Clients CRM</span>
+              </div>
+              <SeoClientsTab />
+            </TabsContent>
+          )}
+
           {/* Admin Tab */}
-          {isAdmin && (
+          {isAdmin() && (
             <TabsContent value="admin" className="space-y-4">
+              {/* Active Tab Indicator */}
+              <div className="flex items-center gap-2 mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-red-700 dark:text-red-300">Currently viewing: Admin Panel</span>
+              </div>
               <Card>
                 <CardHeader>
                   <CardTitle>User Management</CardTitle>

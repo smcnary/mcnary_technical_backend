@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useData } from '@/hooks/useData';
 import PageHeader from '@/components/portal/PageHeader';
@@ -10,12 +10,11 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Search,
-  Filter,
   Plus,
   Eye,
   Edit,
@@ -28,17 +27,14 @@ import {
   User,
   Building2,
   MapPin,
-  Globe,
   RefreshCw
 } from 'lucide-react';
 
 export default function LeadsManagement() {
-  const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
+  const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
   const {
     leads,
-    clients,
     getLeads,
-    getClients,
     getLoadingState,
     getErrorState,
     clearError,
@@ -58,7 +54,7 @@ export default function LeadsManagement() {
     if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
       loadInitialData();
     }
-  }, [isAuthenticated, isAdmin, isSalesConsultant]);
+  }, [isAuthenticated, isAdmin, isSalesConsultant, getLeads]);
 
   const loadInitialData = async () => {
     try {
