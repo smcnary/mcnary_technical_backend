@@ -33,11 +33,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Get(
             normalizationContext: ['groups' => ['lead:admin:read']],
-            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
+            security: "is_granted('ROLE_SYSTEM_ADMIN') or is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['lead:admin:read']],
-            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
+            security: "is_granted('ROLE_SYSTEM_ADMIN') or is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
         ),
     ],
     paginationItemsPerPage: 25
