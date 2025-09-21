@@ -7,11 +7,14 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\LeadRepository;
+use App\ValueObject\LeadStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -37,6 +40,16 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['lead:admin:read']],
+            security: "is_granted('ROLE_SYSTEM_ADMIN') or is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['lead:admin:read']],
+            denormalizationContext: ['groups' => ['lead:admin:write']],
+            security: "is_granted('ROLE_SYSTEM_ADMIN') or is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['lead:admin:read']],
+            denormalizationContext: ['groups' => ['lead:admin:write']],
             security: "is_granted('ROLE_SYSTEM_ADMIN') or is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_STAFF')"
         ),
     ],
@@ -145,9 +158,10 @@ class Lead
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
     private ?string $message = null;
 
-    #[ORM\Column(type: Types::STRING, length: 16, options: ['default' => 'new'])]
-    #[Groups(['lead:read','lead:admin:read'])]
-    private string $status = 'new';
+    #[ORM\Column(type: Types::STRING, length: 32, enumType: LeadStatus::class, options: ['default' => 'new_lead'])]
+    #[Assert\Choice(callback: [LeadStatus::class, 'getValues'])]
+    #[Groups(['lead:read','lead:write','lead:admin:read','lead:admin:write'])]
+    private LeadStatus $status = LeadStatus::NEW_LEAD;
 
     #[ORM\Column(type: Types::JSON, options: ['default' => '{}'])]
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
@@ -318,15 +332,37 @@ class Lead
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): LeadStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(LeadStatus|string $status): self
     {
-        $this->status = $status;
+        if (is_string($status)) {
+            $this->status = LeadStatus::from($status);
+        } else {
+            $this->status = $status;
+        }
         return $this;
+    }
+
+    /**
+     * Get status as string for API serialization
+     */
+    #[Groups(['lead:read','lead:admin:read'])]
+    public function getStatusValue(): string
+    {
+        return $this->status->value;
+    }
+
+    /**
+     * Get status label for display
+     */
+    #[Groups(['lead:read','lead:admin:read'])]
+    public function getStatusLabel(): string
+    {
+        return $this->status->getLabel();
     }
 
     public function getUtmJson(): array
