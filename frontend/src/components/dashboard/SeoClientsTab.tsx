@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Phone, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle } from 'lucide-react';
 import OpenPhoneIntegrationComponent from '../openphone/OpenPhoneIntegration';
+import { useData } from '../../hooks/useData';
 
 // Types for the data structures
 interface Lead {
@@ -85,6 +86,9 @@ export default function SeoClientsTab() {
   const [uploadMessage, setUploadMessage] = useState('');
   const [leads, setLeads] = useState<Lead[]>(mockData.leads);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Get the importLeads function from useData hook
+  const { importLeads } = useData();
 
   const tabs = [
     { key: 'leads', label: 'Leads', icon: Users, color: 'text-blue-500', count: leads.length },
@@ -94,62 +98,6 @@ export default function SeoClientsTab() {
     { key: 'enrolled', label: 'Enrolled', icon: CheckCircle, color: 'text-emerald-500', count: mockData.enrolled.length },
     { key: 'openphone', label: 'OpenPhone', icon: Phone, color: 'text-indigo-500', count: 0 },
   ];
-
-  // CSV parsing function
-  const parseCSV = (csvText: string): Lead[] => {
-    const lines = csvText.split('\n').filter(line => line.trim());
-    if (lines.length < 2) {
-      throw new Error('CSV must have at least a header row and one data row');
-    }
-
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-    const requiredHeaders = ['name', 'email', 'company'];
-    const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
-    
-    if (missingHeaders.length > 0) {
-      throw new Error(`Missing required columns: ${missingHeaders.join(', ')}`);
-    }
-
-    const parsedLeads: Lead[] = [];
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
-      if (values.length !== headers.length) continue;
-
-      const lead: Partial<Lead> = {
-        id: Date.now() + i, // Simple ID generation
-        status: 'new',
-        createdAt: new Date().toISOString().split('T')[0]
-      };
-
-      headers.forEach((header, index) => {
-        const value = values[index];
-        switch (header) {
-          case 'name':
-            lead.name = value;
-            break;
-          case 'email':
-            lead.email = value;
-            break;
-          case 'company':
-            lead.company = value;
-            break;
-          case 'phone':
-            lead.phone = value;
-            break;
-          case 'status':
-            lead.status = value || 'new';
-            break;
-        }
-      });
-
-      // Validate required fields
-      if (lead.name && lead.email && lead.company) {
-        parsedLeads.push(lead as Lead);
-      }
-    }
-
-    return parsedLeads;
-  };
 
   // File upload handler
   const handleFileUpload = async (file: File) => {
@@ -164,24 +112,29 @@ export default function SeoClientsTab() {
 
     try {
       const text = await file.text();
-      const newLeads = parseCSV(text);
       
-      if (newLeads.length === 0) {
-        throw new Error('No valid leads found in CSV');
+      // Use the actual importLeads function from useData hook
+      const result = await importLeads(text, {
+        // You can add options here if needed
+      });
+      
+      if (result.success) {
+        setUploadStatus('success');
+        setUploadMessage(`Successfully imported ${result.importedCount || 0} leads`);
+        
+        // Refresh the leads data
+        setLeads(prevLeads => [...prevLeads, ...(result.leads || [])]);
+        
+        // Auto-close upload after success
+        setTimeout(() => {
+          setShowUpload(false);
+          setUploadedFile(null);
+          setUploadStatus('idle');
+          setUploadMessage('');
+        }, 2000);
+      } else {
+        throw new Error(result.error || 'Failed to import leads');
       }
-
-      // Add new leads to existing leads
-      setLeads(prevLeads => [...prevLeads, ...newLeads]);
-      setUploadStatus('success');
-      setUploadMessage(`Successfully imported ${newLeads.length} leads`);
-      
-      // Auto-close upload after success
-      setTimeout(() => {
-        setShowUpload(false);
-        setUploadedFile(null);
-        setUploadStatus('idle');
-        setUploadMessage('');
-      }, 2000);
 
     } catch (error) {
       setUploadStatus('error');
