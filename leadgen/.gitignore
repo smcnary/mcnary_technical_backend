@@ -1,11 +1,9 @@
 # Dependencies
 node_modules/
-vendor/
 
 # Build artifacts
 dist/
 build/
-*.tar.gz
 
 # Environment files
 .env
@@ -15,16 +13,10 @@ build/
 # Logs
 *.log
 logs/
-var/log/
-var/cache/
-var/sessions/
-var/tmp/
 
 # Test artifacts
-test-results/
-test-screenshots/
-playwright-report/
 coverage/
+test-results/
 
 # IDE files
 .vscode/
@@ -39,14 +31,9 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-*.pid
 
 # Compiled files
 *.tsbuildinfo
-
-# AWS and deployment artifacts
-*.pkg
-staging_key*
 
 # API Keys and sensitive data
 *_api_key*
@@ -56,3 +43,14 @@ YELP_API_KEY
 CLEARBIT_API_KEY
 *secret*
 *password*
+
+# Exports and generated files
+formatted-exports/
+*.csv
+*.json
+!package*.json
+!tsconfig.json
+!jest.config.js
+!*.example.json
+!*.test.json
+!*.eslintrc.json
