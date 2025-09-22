@@ -2,7 +2,55 @@ import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Phone, Mail, MapPin, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Phone, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import OpenPhoneIntegrationComponent from '../openphone/OpenPhoneIntegration';
+
+// Types for the data structures
+interface Lead {
+  id: number;
+  name: string;
+  email: string;
+  company: string;
+  status: string;
+  createdAt: string;
+  phone?: string;
+}
+
+interface Interview {
+  id: number;
+  name: string;
+  company: string;
+  scheduledDate: string;
+  time: string;
+  type: string;
+}
+
+interface Application {
+  id: number;
+  name: string;
+  company: string;
+  submittedDate: string;
+  status: string;
+  package: string;
+}
+
+interface Audit {
+  id: number;
+  name: string;
+  company: string;
+  startedDate: string;
+  status: string;
+  progress: number;
+}
+
+interface Enrolled {
+  id: number;
+  name: string;
+  company: string;
+  enrolledDate: string;
+  package: string;
+  status: string;
+}
 
 // Mock data for each category
 const mockData = {
@@ -35,7 +83,7 @@ export default function SeoClientsTab() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
-  const [leads, setLeads] = useState(mockData.leads);
+  const [leads, setLeads] = useState<Lead[]>(mockData.leads);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const tabs = [
@@ -44,10 +92,11 @@ export default function SeoClientsTab() {
     { key: 'applications', label: 'Applications', icon: FileText, color: 'text-orange-500', count: mockData.applications.length },
     { key: 'audits', label: 'Audits', icon: Search, color: 'text-purple-500', count: mockData.audits.length },
     { key: 'enrolled', label: 'Enrolled', icon: CheckCircle, color: 'text-emerald-500', count: mockData.enrolled.length },
+    { key: 'openphone', label: 'OpenPhone', icon: Phone, color: 'text-indigo-500', count: 0 },
   ];
 
   // CSV parsing function
-  const parseCSV = (csvText: string) => {
+  const parseCSV = (csvText: string): Lead[] => {
     const lines = csvText.split('\n').filter(line => line.trim());
     if (lines.length < 2) {
       throw new Error('CSV must have at least a header row and one data row');
@@ -61,12 +110,12 @@ export default function SeoClientsTab() {
       throw new Error(`Missing required columns: ${missingHeaders.join(', ')}`);
     }
 
-    const parsedLeads = [];
+    const parsedLeads: Lead[] = [];
     for (let i = 1; i < lines.length; i++) {
       const values = lines[i].split(',').map(v => v.trim());
       if (values.length !== headers.length) continue;
 
-      const lead: any = {
+      const lead: Partial<Lead> = {
         id: Date.now() + i, // Simple ID generation
         status: 'new',
         createdAt: new Date().toISOString().split('T')[0]
@@ -95,7 +144,7 @@ export default function SeoClientsTab() {
 
       // Validate required fields
       if (lead.name && lead.email && lead.company) {
-        parsedLeads.push(lead);
+        parsedLeads.push(lead as Lead);
       }
     }
 
@@ -163,6 +212,17 @@ export default function SeoClientsTab() {
   };
 
   const renderListContent = (tabKey: string) => {
+    if (tabKey === 'openphone') {
+      return (
+        <div className="p-4">
+          <OpenPhoneIntegrationComponent 
+            clientId="mock-client-id" 
+            clientName="Sample Client" 
+          />
+        </div>
+      );
+    }
+    
     const data = tabKey === 'leads' ? leads : mockData[tabKey as keyof typeof mockData];
     
     if (!data || data.length === 0) {
@@ -175,26 +235,26 @@ export default function SeoClientsTab() {
 
     return (
       <div className="space-y-3 max-h-96 overflow-y-auto">
-        {data.map((item: any) => (
+        {data.map((item: Lead | Interview | Application | Audit | Enrolled) => (
           <div key={item.id} className="p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <h4 className="font-medium text-sm">{item.name}</h4>
                 <p className="text-xs text-muted-foreground">{item.company}</p>
-                {item.email && <p className="text-xs text-muted-foreground">{item.email}</p>}
-                {item.scheduledDate && (
+                {'email' in item && item.email && <p className="text-xs text-muted-foreground">{item.email}</p>}
+                {'scheduledDate' in item && (
                   <div className="flex items-center gap-1 mt-1">
                     <Calendar className="h-3 w-3 text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">{item.scheduledDate} at {item.time}</span>
                   </div>
                 )}
-                {item.submittedDate && (
+                {'submittedDate' in item && (
                   <div className="flex items-center gap-1 mt-1">
                     <Clock className="h-3 w-3 text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">Submitted {item.submittedDate}</span>
                   </div>
                 )}
-                {item.enrolledDate && (
+                {'enrolledDate' in item && (
                   <div className="flex items-center gap-1 mt-1">
                     <CheckCircle className="h-3 w-3 text-emerald-500" />
                     <span className="text-xs text-muted-foreground">Enrolled {item.enrolledDate}</span>
@@ -202,17 +262,17 @@ export default function SeoClientsTab() {
                 )}
               </div>
               <div className="flex flex-col items-end gap-1">
-                {item.status && (
+                {'status' in item && item.status && (
                   <Badge variant={item.status === 'active' || item.status === 'qualified' ? 'default' : 'secondary'} className="text-xs">
                     {item.status.replace('_', ' ')}
                   </Badge>
                 )}
-                {item.package && (
+                {'package' in item && item.package && (
                   <Badge variant="outline" className="text-xs">
                     {item.package}
                   </Badge>
                 )}
-                {item.progress && (
+                {'progress' in item && item.progress && (
                   <div className="text-xs text-muted-foreground">
                     {item.progress}% complete
                   </div>
@@ -330,7 +390,7 @@ export default function SeoClientsTab() {
       </Card>
 
       {/* Tabs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
         {tabs.map((tab) => {
           const IconComponent = tab.icon;
           return (

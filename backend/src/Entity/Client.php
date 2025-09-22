@@ -153,6 +153,10 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: OAuthConnection::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $oauthConnections;
 
+    /** @var Collection<int,OpenPhoneIntegration> */
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: OpenPhoneIntegration::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $openPhoneIntegrations;
+
     // Temporarily commented out - missing proper mappedBy relationship
     // /** @var Collection<int,Subscription> */
     // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Subscription::class)]
@@ -177,6 +181,7 @@ class Client
         $this->auditFindings = new ArrayCollection();
         // $this->recommendations = new ArrayCollection();
         $this->oauthConnections = new ArrayCollection();
+        $this->openPhoneIntegrations = new ArrayCollection();
         // $this->subscriptions = new ArrayCollection();
         $this->metadata = [];
         $this->googleBusinessProfile = [];
@@ -656,6 +661,30 @@ class Client
         if ($this->oauthConnections->removeElement($oauthConnection)) {
             if ($oauthConnection->getClient() === $this) {
                 $oauthConnection->setClient(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getOpenPhoneIntegrations(): Collection
+    {
+        return $this->openPhoneIntegrations;
+    }
+
+    public function addOpenPhoneIntegration(OpenPhoneIntegration $openPhoneIntegration): self
+    {
+        if (!$this->openPhoneIntegrations->contains($openPhoneIntegration)) {
+            $this->openPhoneIntegrations->add($openPhoneIntegration);
+            $openPhoneIntegration->setClient($this);
+        }
+        return $this;
+    }
+
+    public function removeOpenPhoneIntegration(OpenPhoneIntegration $openPhoneIntegration): self
+    {
+        if ($this->openPhoneIntegrations->removeElement($openPhoneIntegration)) {
+            if ($openPhoneIntegration->getClient() === $this) {
+                $openPhoneIntegration->setClient(null);
             }
         }
         return $this;

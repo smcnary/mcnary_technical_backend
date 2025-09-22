@@ -14,6 +14,11 @@ parameters:
     microsoft_oauth_client_secret: '%env(MICROSOFT_OAUTH_CLIENT_SECRET)%'
     microsoft_oauth_redirect_uri: '%env(MICROSOFT_OAUTH_REDIRECT_URI)%'
     
+    # OpenPhone Configuration
+    openphone_api_key: '%env(OPENPHONE_API_KEY)%'
+    openphone_base_url: '%env(OPENPHONE_BASE_URL)%'
+    openphone_webhook_secret: '%env(OPENPHONE_WEBHOOK_SECRET)%'
+    
     app_frontend_url: '%env(APP_FRONTEND_URL)%'
 
 services:
@@ -40,6 +45,12 @@ services:
     
     # App\ApiPlatform\TenantExtension:
     #     tags: ['api_platform.doctrine.orm.query_extension.collection']
+    
+    # OpenPhone API Service
+    App\Service\OpenPhoneApiService:
+        arguments:
+            $openPhoneApiKey: '%openphone_api_key%'
+            $openPhoneBaseUrl: '%openphone_base_url%'
     
     # Custom serializer for DateTimeImmutable
     App\Serializer\DateTimeImmutableNormalizer:
