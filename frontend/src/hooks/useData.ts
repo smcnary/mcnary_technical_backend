@@ -169,6 +169,7 @@ export function useData() {
     // Lead methods
     getLeads,
     submitLead,
+    importLeads,
     
     // User methods
     getUsers,

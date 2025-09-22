@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import ProtectedRoute from '../auth/ProtectedRoute';
 import SeoClientsTab from './SeoClientsTab';
+import LeadsManagement from '../leads/LeadsManagement';
 
 export default function ApiDashboard() {
   const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
@@ -410,34 +411,7 @@ export default function ApiDashboard() {
 
           {/* Leads Tab */}
           <TabsContent value="leads" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Leads</CardTitle>
-                <CardDescription>Track potential clients and inquiries</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {renderLoadingState('leads')}
-                {renderError('leads')}
-                {!getLoadingState('leads') && (
-                  <div className="space-y-3">
-                    {leads.map((lead) => (
-                      <div key={lead.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div>
-                          <h4 className="font-medium">{lead.email}</h4>
-                          <p className="text-sm text-muted-foreground">{lead.firm || lead.phone || 'No contact info'}</p>
-                        </div>
-                        <Badge variant={lead.status === 'new' ? 'default' : 'secondary'}>
-                          {lead.status}
-                        </Badge>
-                      </div>
-                    ))}
-                    {leads.length === 0 && (
-                      <p className="text-center text-muted-foreground py-8">No leads found</p>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <LeadsManagement />
           </TabsContent>
 
           {/* SEO Clients Tab */}

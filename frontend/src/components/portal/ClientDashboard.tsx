@@ -3,7 +3,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import api, { ApiResponse, Lead } from "@/services/api";
-import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2, Users, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2, Users, Target, ArrowLeft } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import UserGreeting from "./UserGreeting";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,6 +14,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import DashboardTour from "@/components/onboarding/DashboardTour";
 import GoogleBusinessProfileDashboard from "./GoogleBusinessProfileDashboard";
+import { Button } from "@/components/ui/button";
 
 function cx(...cls: (string | false | null | undefined)[]) {
   return cls.filter(Boolean).join(" ");
@@ -354,9 +355,20 @@ export default function ClientDashboard() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex gap-6">
           <main className="flex-1 py-8">
-            {/* Header with theme toggle */}
+            {/* Header with back button and theme toggle */}
             <div className="flex items-center justify-between mb-6" data-tour="dashboard-header">
-              <UserGreeting />
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.history.back()}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+                <UserGreeting />
+              </div>
               <ThemeToggle />
             </div>
 

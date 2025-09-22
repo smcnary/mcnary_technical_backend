@@ -477,6 +477,36 @@ class DataService {
     }
   }
 
+  async importLeads(csvData: string, options?: {
+    clientId?: string;
+    sourceId?: string;
+    overwriteExisting?: boolean;
+  }): Promise<{
+    message: string;
+    imported_count: number;
+    skipped_count: number;
+    total_rows: number;
+    errors?: string[];
+  }> {
+    try {
+      this.setLoading('leads', true);
+      this.setError('leads', null);
+
+      const result = await apiService.importLeads(csvData, options);
+      
+      // Refresh leads data after import
+      await this.getLeads();
+      
+      return result;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to import leads';
+      this.setError('leads', errorMessage);
+      throw error;
+    } finally {
+      this.setLoading('leads', false);
+    }
+  }
+
   // USER MANAGEMENT (Admin only)
   async getUsers(params?: Record<string, string | number | boolean>): Promise<User[]> {
     const cacheKey = `users:${JSON.stringify(params || {})}`;

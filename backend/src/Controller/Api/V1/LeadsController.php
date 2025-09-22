@@ -3,7 +3,12 @@
 namespace App\Controller\Api\V1;
 
 use App\Entity\Lead;
+use App\Entity\Client;
+use App\Entity\LeadSource;
 use App\Repository\LeadRepository;
+use App\Repository\ClientRepository;
+use App\Repository\LeadSourceRepository;
+use App\ValueObject\LeadStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +25,8 @@ class LeadsController extends AbstractController
 {
     public function __construct(
         private LeadRepository $leadRepository,
+        private ClientRepository $clientRepository,
+        private LeadSourceRepository $leadSourceRepository,
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator
     ) {}
@@ -78,16 +85,20 @@ class LeadsController extends AbstractController
         foreach ($leads as $lead) {
             $leadData[] = [
                 'id' => $lead->getId(),
-                'name' => $lead->getName(),
+                'full_name' => $lead->getFullName(),
                 'email' => $lead->getEmail(),
                 'phone' => $lead->getPhone(),
-                'company' => $lead->getCompany(),
-                'source' => $lead->getSource(),
-                'status' => $lead->getStatus(),
-                'priority' => $lead->getPriority(),
-                'assigned_to' => $lead->getAssignedTo(),
-                'notes' => $lead->getNotes(),
-                'next_follow_up' => $lead->getNextFollowUp()?->format('c'),
+                'firm' => $lead->getFirm(),
+                'website' => $lead->getWebsite(),
+                'city' => $lead->getCity(),
+                'state' => $lead->getState(),
+                'zip_code' => $lead->getZipCode(),
+                'message' => $lead->getMessage(),
+                'practice_areas' => $lead->getPracticeAreas(),
+                'status' => $lead->getStatusValue(),
+                'status_label' => $lead->getStatusLabel(),
+                'source' => $lead->getSource()?->getName(),
+                'client' => $lead->getClient()?->getName(),
                 'created_at' => $lead->getCreatedAt()->format('c'),
                 'updated_at' => $lead->getUpdatedAt()->format('c')
             ];
@@ -119,17 +130,21 @@ class LeadsController extends AbstractController
 
         $leadData = [
             'id' => $lead->getId(),
-            'name' => $lead->getName(),
+            'full_name' => $lead->getFullName(),
             'email' => $lead->getEmail(),
             'phone' => $lead->getPhone(),
-            'company' => $lead->getCompany(),
-            'source' => $lead->getSource(),
-            'status' => $lead->getStatus(),
-            'priority' => $lead->getPriority(),
-            'assigned_to' => $lead->getAssignedTo(),
-            'notes' => $lead->getNotes(),
-            'next_follow_up' => $lead->getNextFollowUp()?->format('c'),
-            'metadata' => $lead->getMetadata(),
+            'firm' => $lead->getFirm(),
+            'website' => $lead->getWebsite(),
+            'city' => $lead->getCity(),
+            'state' => $lead->getState(),
+            'zip_code' => $lead->getZipCode(),
+            'message' => $lead->getMessage(),
+            'practice_areas' => $lead->getPracticeAreas(),
+            'status' => $lead->getStatusValue(),
+            'status_label' => $lead->getStatusLabel(),
+            'source' => $lead->getSource()?->getName(),
+            'client' => $lead->getClient()?->getName(),
+            'utm_json' => $lead->getUtmJson(),
             'created_at' => $lead->getCreatedAt()->format('c'),
             'updated_at' => $lead->getUpdatedAt()->format('c')
         ];
@@ -159,11 +174,9 @@ class LeadsController extends AbstractController
 
             // Validate input
             $constraints = new Assert\Collection([
-                'status' => [new Assert\Optional([new Assert\Choice(['new', 'contacted', 'qualified', 'converted', 'lost'])])],
-                'assigned_to' => [new Assert\Optional([new Assert\Uuid()])],
-                'notes' => [new Assert\Optional([new Assert\NotBlank()])],
-                'priority' => [new Assert\Optional([new Assert\Choice(['low', 'medium', 'high', 'urgent'])])],
-                'next_follow_up' => [new Assert\Optional([new Assert\DateTime()])]
+                'status' => [new Assert\Optional([new Assert\Choice(['new_lead', 'contacted', 'interview_scheduled', 'interview_completed', 'application_received', 'audit_in_progress', 'audit_complete', 'enrolled'])])],
+                'message' => [new Assert\Optional([new Assert\NotBlank()])],
+                'practice_areas' => [new Assert\Optional([new Assert\Type('array')])]
             ]);
 
             $violations = $this->validator->validate($data, $constraints);
@@ -180,36 +193,32 @@ class LeadsController extends AbstractController
                 $lead->setStatus($data['status']);
             }
 
-            if (isset($data['assigned_to'])) {
-                $lead->setAssignedTo($data['assigned_to']);
+            if (isset($data['message'])) {
+                $lead->setMessage($data['message']);
             }
 
-            if (isset($data['notes'])) {
-                $lead->setNotes($data['notes']);
-            }
-
-            if (isset($data['priority'])) {
-                $lead->setPriority($data['priority']);
-            }
-
-            if (isset($data['next_follow_up'])) {
-                $lead->setNextFollowUp(new \DateTimeImmutable($data['next_follow_up']));
+            if (isset($data['practice_areas'])) {
+                $lead->setPracticeAreas($data['practice_areas']);
             }
 
             $this->entityManager->flush();
 
             $leadData = [
                 'id' => $lead->getId(),
-                'name' => $lead->getName(),
+                'full_name' => $lead->getFullName(),
                 'email' => $lead->getEmail(),
                 'phone' => $lead->getPhone(),
-                'company' => $lead->getCompany(),
-                'source' => $lead->getSource(),
-                'status' => $lead->getStatus(),
-                'priority' => $lead->getPriority(),
-                'assigned_to' => $lead->getAssignedTo(),
-                'notes' => $lead->getNotes(),
-                'next_follow_up' => $lead->getNextFollowUp()?->format('c'),
+                'firm' => $lead->getFirm(),
+                'website' => $lead->getWebsite(),
+                'city' => $lead->getCity(),
+                'state' => $lead->getState(),
+                'zip_code' => $lead->getZipCode(),
+                'message' => $lead->getMessage(),
+                'practice_areas' => $lead->getPracticeAreas(),
+                'status' => $lead->getStatusValue(),
+                'status_label' => $lead->getStatusLabel(),
+                'source' => $lead->getSource()?->getName(),
+                'client' => $lead->getClient()?->getName(),
                 'created_at' => $lead->getCreatedAt()->format('c'),
                 'updated_at' => $lead->getUpdatedAt()->format('c')
             ];
@@ -284,6 +293,187 @@ class LeadsController extends AbstractController
 
         } catch (\Exception $e) {
             return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/import', name: 'api_v1_leads_import', methods: ['POST'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function importLeads(Request $request): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            
+            if (!$data) {
+                return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate input
+            $constraints = new Assert\Collection([
+                'client_id' => [new Assert\Optional([new Assert\Uuid()])],
+                'source_id' => [new Assert\Optional([new Assert\Uuid()])],
+                'csv_data' => [new Assert\NotBlank()],
+                'overwrite_existing' => [new Assert\Optional([new Assert\Type('boolean')])]
+            ]);
+
+            $violations = $this->validator->validate($data, $constraints);
+            if (count($violations) > 0) {
+                $errors = [];
+                foreach ($violations as $violation) {
+                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+                return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Parse CSV data
+            $csvLines = explode("\n", trim($data['csv_data']));
+            $headers = str_getcsv(array_shift($csvLines));
+            
+            $importedCount = 0;
+            $errors = [];
+            $skippedCount = 0;
+
+            foreach ($csvLines as $index => $line) {
+                $line = trim($line);
+                if (empty($line)) {
+                    continue;
+                }
+                
+                $row = str_getcsv($line);
+                if (count($row) !== count($headers)) {
+                    $errors[] = "Row " . ($index + 2) . ": Column count mismatch";
+                    continue;
+                }
+
+                $rowData = array_combine($headers, $row);
+                
+                try {
+                    // Validate required fields
+                    $rowConstraints = new Assert\Collection([
+                        'full_name' => [new Assert\NotBlank()],
+                        'email' => [new Assert\NotBlank(), new Assert\Email()],
+                        'phone' => [new Assert\Optional([new Assert\NotBlank()])],
+                        'firm' => [new Assert\Optional([new Assert\NotBlank()])],
+                        'website' => [new Assert\Optional([new Assert\Url()])],
+                        'city' => [new Assert\Optional([new Assert\NotBlank()])],
+                        'state' => [new Assert\Optional([new Assert\NotBlank()])],
+                        'zip_code' => [new Assert\Optional([new Assert\NotBlank()])],
+                        'message' => [new Assert\Optional([new Assert\NotBlank()])],
+                        'practice_areas' => [new Assert\Optional([new Assert\NotBlank()])]
+                    ]);
+
+                    $rowViolations = $this->validator->validate($rowData, $rowConstraints);
+                    if (count($rowViolations) > 0) {
+                        $errors[] = "Row " . ($index + 2) . ": " . implode(', ', array_map(fn($v) => $v->getMessage(), iterator_to_array($rowViolations)));
+                        continue;
+                    }
+
+                    // Check if lead already exists by email
+                    $existingLead = $this->leadRepository->findOneBy(['email' => $rowData['email']]);
+                    if ($existingLead && !($data['overwrite_existing'] ?? false)) {
+                        $skippedCount++;
+                        continue;
+                    }
+
+                    // Create or update lead
+                    if ($existingLead && ($data['overwrite_existing'] ?? false)) {
+                        $lead = $existingLead;
+                    } else {
+                        $lead = new Lead();
+                    }
+
+                    // Set basic information
+                    $lead->setFullName($rowData['full_name']);
+                    $lead->setEmail($rowData['email']);
+                    
+                    if (isset($rowData['phone']) && !empty($rowData['phone'])) {
+                        $lead->setPhone($rowData['phone']);
+                    }
+                    
+                    if (isset($rowData['firm']) && !empty($rowData['firm'])) {
+                        $lead->setFirm($rowData['firm']);
+                    }
+                    
+                    if (isset($rowData['website']) && !empty($rowData['website'])) {
+                        $lead->setWebsite($rowData['website']);
+                    }
+                    
+                    if (isset($rowData['city']) && !empty($rowData['city'])) {
+                        $lead->setCity($rowData['city']);
+                    }
+                    
+                    if (isset($rowData['state']) && !empty($rowData['state'])) {
+                        $lead->setState($rowData['state']);
+                    }
+                    
+                    if (isset($rowData['zip_code']) && !empty($rowData['zip_code'])) {
+                        $lead->setZipCode($rowData['zip_code']);
+                    }
+                    
+                    if (isset($rowData['message']) && !empty($rowData['message'])) {
+                        $lead->setMessage($rowData['message']);
+                    }
+                    
+                    if (isset($rowData['practice_areas']) && !empty($rowData['practice_areas'])) {
+                        // Parse practice areas (comma-separated or JSON)
+                        $practiceAreas = [];
+                        if (str_starts_with($rowData['practice_areas'], '[')) {
+                            $practiceAreas = json_decode($rowData['practice_areas'], true) ?? [];
+                        } else {
+                            $practiceAreas = array_map('trim', explode(',', $rowData['practice_areas']));
+                        }
+                        $lead->setPracticeAreas($practiceAreas);
+                    }
+
+                    // Set client if provided
+                    if (isset($data['client_id']) && !empty($data['client_id'])) {
+                        $client = $this->clientRepository->find($data['client_id']);
+                        if ($client) {
+                            $lead->setClient($client);
+                        }
+                    }
+
+                    // Set source if provided
+                    if (isset($data['source_id']) && !empty($data['source_id'])) {
+                        $source = $this->leadSourceRepository->find($data['source_id']);
+                        if ($source) {
+                            $lead->setSource($source);
+                        }
+                    }
+
+                    // Set default status to new_lead
+                    $lead->setStatus(LeadStatus::NEW_LEAD);
+
+                    if (!$existingLead) {
+                        $this->entityManager->persist($lead);
+                    }
+
+                    $importedCount++;
+
+                } catch (\Exception $e) {
+                    $errors[] = "Row " . ($index + 2) . ": " . $e->getMessage();
+                }
+            }
+
+            if ($importedCount > 0) {
+                $this->entityManager->flush();
+            }
+
+            $response = [
+                'message' => 'Lead import completed',
+                'imported_count' => $importedCount,
+                'skipped_count' => $skippedCount,
+                'total_rows' => count($csvLines)
+            ];
+
+            if (!empty($errors)) {
+                $response['errors'] = $errors;
+            }
+
+            $statusCode = $importedCount > 0 ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST;
+            return $this->json($response, $statusCode);
+
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Internal server error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

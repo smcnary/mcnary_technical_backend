@@ -44,3 +44,8 @@ services:
     # Custom serializer for DateTimeImmutable
     App\Serializer\DateTimeImmutableNormalizer:
         tags: ['serializer.normalizer']
+    
+    # QR Code Email Service
+    App\Service\QrCodeEmailService:
+        arguments:
+            $appFrontendUrl: '%app_frontend_url%'

@@ -395,6 +395,28 @@ export class ApiService {
     return this.fetchApi<ApiResponse<Lead>>('/api/leads');
   }
 
+  async importLeads(csvData: string, options?: {
+    clientId?: string;
+    sourceId?: string;
+    overwriteExisting?: boolean;
+  }): Promise<{
+    message: string;
+    imported_count: number;
+    skipped_count: number;
+    total_rows: number;
+    errors?: string[];
+  }> {
+    return this.fetchApi('/api/v1/leads/import', {
+      method: 'POST',
+      body: JSON.stringify({
+        csv_data: csvData,
+        client_id: options?.clientId,
+        source_id: options?.sourceId,
+        overwrite_existing: options?.overwriteExisting || false,
+      }),
+    });
+  }
+
   async getLead(id: string): Promise<Lead> {
     return this.fetchApi<Lead>(`/api/v1/leads/${id}`);
   }
