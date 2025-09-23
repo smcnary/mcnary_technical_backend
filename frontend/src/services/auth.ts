@@ -162,7 +162,7 @@ class AuthService {
 
   // Check if user is admin
   isAdmin(): boolean {
-    return this.hasRole('ROLE_ADMIN');
+    return this.hasAnyRole(['ROLE_SYSTEM_ADMIN', 'ROLE_AGENCY_ADMIN', 'ROLE_AGENCY_STAFF', 'ROLE_CLIENT_STAFF']);
   }
 
   // Check if user is client admin

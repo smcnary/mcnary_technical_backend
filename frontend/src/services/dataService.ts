@@ -449,7 +449,28 @@ class DataService {
       this.setError('leads', null);
 
       const response = await apiService.getLeads(params);
-      const leads = response.data || response['hydra:member'] || response.member || [];
+      const rawLeads = response.data || response['hydra:member'] || response.member || [];
+      
+      // Transform snake_case to camelCase
+      const leads = rawLeads.map((lead: any) => ({
+        id: lead.id,
+        fullName: lead.full_name,
+        email: lead.email,
+        phone: lead.phone,
+        firm: lead.firm,
+        website: lead.website,
+        practiceAreas: lead.practice_areas || [],
+        city: lead.city,
+        state: lead.state,
+        zipCode: lead.zip_code,
+        message: lead.message,
+        status: lead.status,
+        statusLabel: lead.status_label,
+        source: lead.source,
+        client: lead.client,
+        createdAt: lead.created_at,
+        updatedAt: lead.updated_at
+      }));
       
       this.state.leads = leads;
       this.setCachedData(cacheKey, leads);

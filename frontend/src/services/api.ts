@@ -53,7 +53,7 @@ export interface Lead {
   notes?: string;
   message?: string;
   consent?: boolean;
-  status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'closed_won' | 'closed_lost';
+  status: 'new_lead' | 'contacted' | 'interview_scheduled' | 'interview_completed' | 'application_received' | 'audit_in_progress' | 'audit_complete' | 'enrolled';
   utmJson?: any[];
   createdAt?: string;
   updatedAt?: string;
@@ -389,10 +389,10 @@ export class ApiService {
         Object.entries(params).map(([key, value]) => [key, String(value)])
       );
       const queryString = new URLSearchParams(stringParams).toString();
-      const endpoint = queryString ? `/api/leads?${queryString}` : '/api/leads';
+      const endpoint = queryString ? `/api/v1/leads?${queryString}` : '/api/v1/leads';
       return this.fetchApi<ApiResponse<Lead>>(endpoint);
     }
-    return this.fetchApi<ApiResponse<Lead>>('/api/leads');
+    return this.fetchApi<ApiResponse<Lead>>('/api/v1/leads');
   }
 
   async importLeadgenData(leads: any[], clientId?: string, sourceId?: string): Promise<any> {
