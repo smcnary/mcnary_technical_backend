@@ -48,12 +48,16 @@ export interface Lead {
   practiceAreas: string[];
   city?: string;
   state?: string;
+  zipCode?: string;
   budget?: string;
   timeline?: string;
   notes?: string;
   message?: string;
   consent?: boolean;
   status: 'new_lead' | 'contacted' | 'interview_scheduled' | 'interview_completed' | 'application_received' | 'audit_in_progress' | 'audit_complete' | 'enrolled';
+  statusLabel?: string;
+  source?: string;
+  client?: string;
   utmJson?: any[];
   createdAt?: string;
   updatedAt?: string;
