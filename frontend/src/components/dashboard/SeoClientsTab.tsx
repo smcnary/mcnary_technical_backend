@@ -26,13 +26,20 @@ export default function SeoClientsTab() {
 
   // Load real leads from database
   useEffect(() => {
-    if (isClient && isAuthenticated && (isAdmin() || isSalesConsultant())) {
+    if (isClient) {
+      console.log('Loading leads...', { isAuthenticated, isAdmin: isAdmin(), isSalesConsultant: isSalesConsultant() });
       getLeads();
     }
-  }, [isClient, isAuthenticated, isAdmin, isSalesConsultant, getLeads]);
+  }, [isClient, getLeads]);
 
   // Use real leads count from database
   const realLeadsCount = realLeads.length;
+  
+  // Debug: Log leads data
+  useEffect(() => {
+    console.log('Real leads data:', realLeads);
+    console.log('Real leads count:', realLeadsCount);
+  }, [realLeads, realLeadsCount]);
 
   // File upload handler
   const handleFileUpload = async (file: File) => {
