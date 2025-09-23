@@ -4,6 +4,7 @@ import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SeoClientsTab from "@/components/dashboard/SeoClientsTab";
+import UserAvatar from "@/components/ui/UserAvatar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function SeoClientsPage() {
@@ -36,6 +37,7 @@ export default function SeoClientsPage() {
               Manage your SEO clients, leads, and campaigns
             </p>
           </div>
+          <UserAvatar showNotifications={true} />
         </div>
 
         {/* Active Page Indicator */}

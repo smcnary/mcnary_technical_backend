@@ -103,6 +103,19 @@ export interface User {
   updatedAt: string;
 }
 
+export interface Notification {
+  id: string;
+  title: string;
+  message?: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  isRead: boolean;
+  actionUrl?: string;
+  actionLabel?: string;
+  createdAt: string;
+  readAt?: string;
+  metadata?: any;
+}
+
 export interface Client {
   id: string;
   name: string;
@@ -848,6 +861,48 @@ export class ApiService {
     }
 
     return response.blob();
+  }
+
+  // NOTIFICATIONS API
+  async getNotifications(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Notification>> {
+    const queryString = params ? new URLSearchParams(
+      Object.entries(params).map(([key, value]) => [key, String(value)])
+    ).toString() : '';
+    
+    const endpoint = queryString ? `/api/v1/notifications?${queryString}` : '/api/v1/notifications';
+    return this.fetchApi<ApiResponse<Notification>>(endpoint);
+  }
+
+  async getNotification(id: string): Promise<Notification> {
+    return this.fetchApi<Notification>(`/api/v1/notifications/${id}`);
+  }
+
+  async markNotificationAsRead(id: string): Promise<void> {
+    await this.fetchApi(`/api/v1/notifications/${id}/read`, {
+      method: 'PATCH',
+    });
+  }
+
+  async markNotificationAsUnread(id: string): Promise<void> {
+    await this.fetchApi(`/api/v1/notifications/${id}/unread`, {
+      method: 'PATCH',
+    });
+  }
+
+  async markAllNotificationsAsRead(): Promise<void> {
+    await this.fetchApi('/api/v1/notifications/mark-all-read', {
+      method: 'PATCH',
+    });
+  }
+
+  async deleteNotification(id: string): Promise<void> {
+    await this.fetchApi(`/api/v1/notifications/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getNotificationCount(): Promise<{ unread_count: number; total_count: number }> {
+    return this.fetchApi<{ unread_count: number; total_count: number }>('/api/v1/notifications/count');
   }
 
   // Check if user is authenticated

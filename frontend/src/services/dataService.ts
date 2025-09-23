@@ -12,6 +12,19 @@ import {
   ApiResponse 
 } from './api';
 
+export interface Notification {
+  id: string;
+  title: string;
+  message?: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  isRead: boolean;
+  actionUrl?: string;
+  actionLabel?: string;
+  createdAt: string;
+  readAt?: string;
+  metadata?: any;
+}
+
 export interface DataServiceState {
   clients: Client[];
   campaigns: Campaign[];
@@ -22,6 +35,7 @@ export interface DataServiceState {
   caseStudies: CaseStudy[];
   leads: Lead[];
   users: User[];
+  notifications: Notification[];
   isLoading: Record<string, boolean>;
   error: Record<string, string | null>;
 }
@@ -37,6 +51,7 @@ class DataService {
     caseStudies: [],
     leads: [],
     users: [],
+    notifications: [],
     isLoading: {},
     error: {},
   };
@@ -726,6 +741,119 @@ class DataService {
     }
   }
 
+  // NOTIFICATIONS MANAGEMENT
+  async getNotifications(params?: Record<string, string | number | boolean>): Promise<Notification[]> {
+    const cacheKey = `notifications_${JSON.stringify(params || {})}`;
+    
+    const cachedData = this.getCachedData(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+
+    this.setLoading('notifications', true);
+    this.clearError('notifications');
+
+    try {
+      const response = await apiService.getNotifications(params);
+      const notifications = (response as any).notifications || response.data || response['hydra:member'] || response.member || [];
+      
+      this.state.notifications = notifications;
+      this.setCachedData(cacheKey, notifications);
+      this.notifyListeners();
+      
+      return notifications;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch notifications';
+      this.setError('notifications', errorMessage);
+      throw error;
+    } finally {
+      this.setLoading('notifications', false);
+    }
+  }
+
+  async getNotification(id: string): Promise<Notification> {
+    try {
+      return await apiService.getNotification(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async markNotificationAsRead(id: string): Promise<void> {
+    try {
+      await apiService.markNotificationAsRead(id);
+      
+      // Update local state
+      const index = this.state.notifications.findIndex(n => n.id === id);
+      if (index !== -1) {
+        this.state.notifications[index].isRead = true;
+        this.state.notifications[index].readAt = new Date().toISOString();
+        this.notifyListeners();
+      }
+      
+      this.clearCache('notifications');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async markNotificationAsUnread(id: string): Promise<void> {
+    try {
+      await apiService.markNotificationAsUnread(id);
+      
+      // Update local state
+      const index = this.state.notifications.findIndex(n => n.id === id);
+      if (index !== -1) {
+        this.state.notifications[index].isRead = false;
+        this.state.notifications[index].readAt = undefined;
+        this.notifyListeners();
+      }
+      
+      this.clearCache('notifications');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async markAllNotificationsAsRead(): Promise<void> {
+    try {
+      await apiService.markAllNotificationsAsRead();
+      
+      // Update local state
+      this.state.notifications.forEach(notification => {
+        notification.isRead = true;
+        notification.readAt = new Date().toISOString();
+      });
+      this.notifyListeners();
+      
+      this.clearCache('notifications');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteNotification(id: string): Promise<void> {
+    try {
+      await apiService.deleteNotification(id);
+      
+      // Update local state
+      this.state.notifications = this.state.notifications.filter(n => n.id !== id);
+      this.notifyListeners();
+      
+      this.clearCache('notifications');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getNotificationCount(): Promise<{ unread_count: number; total_count: number }> {
+    try {
+      return await apiService.getNotificationCount();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Get loading state for specific data type
   getLoadingState(dataType: string): boolean {
     return this.state.isLoading[dataType] || false;
@@ -754,6 +882,7 @@ class DataService {
       this.getCaseStudies(),
       this.getLeads(),
       this.getUsers(),
+      this.getNotifications(),
     ]);
   }
 }

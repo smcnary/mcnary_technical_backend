@@ -899,6 +899,37 @@ p{
 .nav-link.active::after{
   width: 100%;
 }
+.dropdown-menu{
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0px;
+  z-index: 50;
+  margin-top: 0.5rem;
+  width: 12rem;
+  border-radius: 0.75rem;
+  opacity: 0;
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+  animation-duration: 200ms;
+}
+.group:hover .dropdown-menu{
+  visibility: visible;
+  opacity: 1;
+}
+.dropdown-menu{
+  border-width: 1px;
+  border-color: rgb(255 255 255 / 0.1);
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+  --tw-gradient-from: #1f2937 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(31 41 55 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  --tw-gradient-to: #111827 var(--tw-gradient-to-position); /* match app dark gradient */ overflow: hidden; /* ensure dropdown content doesn't overflow */
+}
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
@@ -1060,6 +1091,9 @@ p{
 }
 .top-\[50\%\]{
   top: 50%;
+}
+.top-full{
+  top: 100%;
 }
 .isolate{
   isolation: isolate;
@@ -1892,6 +1926,14 @@ p{
 .rounded-xl{
   border-radius: 0.75rem;
 }
+.rounded-l-none{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.rounded-r-none{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
 .border{
   border-width: 1px;
 }
@@ -2061,6 +2103,10 @@ p{
 }
 .border-yellow-500\/50{
   border-color: rgb(234 179 8 / 0.5);
+}
+.border-gray-100{
+  --tw-border-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-border-opacity, 1));
 }
 .border-l-blue-500{
   --tw-border-opacity: 1;
@@ -2380,6 +2426,10 @@ p{
 }
 .bg-yellow-500\/20{
   background-color: rgb(234 179 8 / 0.2);
+}
+.bg-cyan-50{
+  --tw-bg-opacity: 1;
+  background-color: rgb(236 254 255 / var(--tw-bg-opacity, 1));
 }
 .bg-opacity-50{
   --tw-bg-opacity: 0.5;
@@ -3073,6 +3123,14 @@ p{
 .text-yellow-800{
   --tw-text-opacity: 1;
   color: rgb(133 77 14 / var(--tw-text-opacity, 1));
+}
+.text-cyan-600{
+  --tw-text-opacity: 1;
+  color: rgb(8 145 178 / var(--tw-text-opacity, 1));
+}
+.text-emerald-600{
+  --tw-text-opacity: 1;
+  color: rgb(5 150 105 / var(--tw-text-opacity, 1));
 }
 .underline{
   text-decoration-line: underline;
@@ -3790,6 +3848,10 @@ p{
   color: rgb(165 180 252 / var(--tw-text-opacity, 1));
 }
 
+.group:hover .group-hover\:opacity-100{
+  opacity: 1;
+}
+
 .group:hover .group-hover\:shadow-xl{
   --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
@@ -4270,6 +4332,22 @@ p{
   background-color: rgb(113 63 18 / var(--tw-bg-opacity, 1));
 }
 
+.dark\:bg-cyan-950\/20:is(.dark *){
+  background-color: rgb(8 51 68 / 0.2);
+}
+
+.dark\:bg-emerald-950\/20:is(.dark *){
+  background-color: rgb(2 44 34 / 0.2);
+}
+
+.dark\:bg-orange-950\/20:is(.dark *){
+  background-color: rgb(67 20 7 / 0.2);
+}
+
+.dark\:bg-purple-950\/20:is(.dark *){
+  background-color: rgb(59 7 100 / 0.2);
+}
+
 .dark\:from-white:is(.dark *){
   --tw-gradient-from: #fff var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
@@ -4444,6 +4522,11 @@ p{
 .dark\:text-yellow-400:is(.dark *){
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
+}
+
+.dark\:text-gray-500:is(.dark *){
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
 .dark\:shadow-\[0_1px_0_0_rgba\(255\2c 255\2c 255\2c 0\.08\)_inset\]:is(.dark *){
@@ -4770,6 +4853,10 @@ p{
 }
 
 @media (min-width: 1280px){
+
+  .xl\:grid-cols-6{
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 
   .xl\:text-7xl{
     font-size: 4.5rem;

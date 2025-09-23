@@ -1,0 +1,36 @@
+<?php //property_name_collection_f35952d6857dfb50
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (\Symfony\Component\VarExporter\Internal\Registry::$prototypes['ApiPlatform\\Metadata\\Property\\PropertyNameCollection'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\Property\\PropertyNameCollection')),
+    ],
+    null,
+    [
+        'ApiPlatform\\Metadata\\Property\\PropertyNameCollection' => [
+            'properties' => [
+                [
+                    'createdAt',
+                    'updatedAt',
+                    'id',
+                    'fullName',
+                    'email',
+                    'phone',
+                    'firm',
+                    'website',
+                    'practiceAreas',
+                    'city',
+                    'state',
+                    'zipCode',
+                    'message',
+                    'status',
+                    'utmJson',
+                    'isTest',
+                    'statusValue',
+                    'statusLabel',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

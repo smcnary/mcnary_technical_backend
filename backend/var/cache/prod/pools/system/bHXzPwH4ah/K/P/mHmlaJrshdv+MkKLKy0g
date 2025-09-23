@@ -1,0 +1,149 @@
+<?php //21cbb471f34fb28c35eb1a3dbd744ece
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Query\\ParserResult'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ParserResult')),
+        clone ($p['Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer')),
+        clone ($p['Doctrine\\ORM\\Query\\ResultSetMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ResultSetMapping')),
+    ],
+    null,
+    [
+        'Doctrine\\ORM\\Query\\ParserResult' => [
+            'sqlFinalizer' => [
+                $o[1],
+            ],
+            'resultSetMapping' => [
+                $o[2],
+            ],
+            'parameterMappings' => [
+                [
+                    'status' => [
+                        0,
+                    ],
+                ],
+            ],
+        ],
+        'Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer' => [
+            'sql' => [
+                1 => 'SELECT l0_.created_at AS created_at_0, l0_.updated_at AS updated_at_1, l0_.id AS id_2, l0_.full_name AS full_name_3, l0_.email AS email_4, l0_.phone AS phone_5, l0_.firm AS firm_6, l0_.website AS website_7, l0_.practice_areas AS practice_areas_8, l0_.city AS city_9, l0_.state AS state_10, l0_.zip_code AS zip_code_11, l0_.message AS message_12, l0_.status AS status_13, l0_.utm_json AS utm_json_14, l0_.is_test AS is_test_15, l0_.client_id AS client_id_16, l0_.source_id AS source_id_17 FROM leads l0_ WHERE l0_.status = ? ORDER BY l0_.created_at DESC',
+            ],
+        ],
+        'stdClass' => [
+            'aliasMap' => [
+                2 => [
+                    'e' => 'App\\Entity\\Lead',
+                ],
+            ],
+            'fieldMappings' => [
+                2 => [
+                    'created_at_0' => 'createdAt',
+                    'updated_at_1' => 'updatedAt',
+                    'id_2' => 'id',
+                    'full_name_3' => 'fullName',
+                    'email_4' => 'email',
+                    'phone_5' => 'phone',
+                    'firm_6' => 'firm',
+                    'website_7' => 'website',
+                    'practice_areas_8' => 'practiceAreas',
+                    'city_9' => 'city',
+                    'state_10' => 'state',
+                    'zip_code_11' => 'zipCode',
+                    'message_12' => 'message',
+                    'status_13' => 'status',
+                    'utm_json_14' => 'utmJson',
+                    'is_test_15' => 'isTest',
+                ],
+            ],
+            'columnAliasMappings' => [
+                2 => [
+                    'App\\Entity\\Lead' => [
+                        'e' => [
+                            'createdAt' => 'created_at_0',
+                            'updatedAt' => 'updated_at_1',
+                            'id' => 'id_2',
+                            'fullName' => 'full_name_3',
+                            'email' => 'email_4',
+                            'phone' => 'phone_5',
+                            'firm' => 'firm_6',
+                            'website' => 'website_7',
+                            'practiceAreas' => 'practice_areas_8',
+                            'city' => 'city_9',
+                            'state' => 'state_10',
+                            'zipCode' => 'zip_code_11',
+                            'message' => 'message_12',
+                            'status' => 'status_13',
+                            'utmJson' => 'utm_json_14',
+                            'isTest' => 'is_test_15',
+                        ],
+                    ],
+                ],
+            ],
+            'enumMappings' => [
+                2 => [
+                    'status_13' => 'App\\ValueObject\\LeadStatus',
+                ],
+            ],
+            'typeMappings' => [
+                2 => [
+                    'client_id_16' => 'uuid',
+                    'source_id_17' => 'uuid',
+                ],
+            ],
+            'entityMappings' => [
+                2 => [
+                    'e' => null,
+                ],
+            ],
+            'metaMappings' => [
+                2 => [
+                    'client_id_16' => 'client_id',
+                    'source_id_17' => 'source_id',
+                ],
+            ],
+            'columnOwnerMap' => [
+                2 => [
+                    'created_at_0' => 'e',
+                    'updated_at_1' => 'e',
+                    'id_2' => 'e',
+                    'full_name_3' => 'e',
+                    'email_4' => 'e',
+                    'phone_5' => 'e',
+                    'firm_6' => 'e',
+                    'website_7' => 'e',
+                    'practice_areas_8' => 'e',
+                    'city_9' => 'e',
+                    'state_10' => 'e',
+                    'zip_code_11' => 'e',
+                    'message_12' => 'e',
+                    'status_13' => 'e',
+                    'utm_json_14' => 'e',
+                    'is_test_15' => 'e',
+                    'client_id_16' => 'e',
+                    'source_id_17' => 'e',
+                ],
+            ],
+            'declaringClasses' => [
+                2 => [
+                    'created_at_0' => 'App\\Entity\\Lead',
+                    'updated_at_1' => 'App\\Entity\\Lead',
+                    'id_2' => 'App\\Entity\\Lead',
+                    'full_name_3' => 'App\\Entity\\Lead',
+                    'email_4' => 'App\\Entity\\Lead',
+                    'phone_5' => 'App\\Entity\\Lead',
+                    'firm_6' => 'App\\Entity\\Lead',
+                    'website_7' => 'App\\Entity\\Lead',
+                    'practice_areas_8' => 'App\\Entity\\Lead',
+                    'city_9' => 'App\\Entity\\Lead',
+                    'state_10' => 'App\\Entity\\Lead',
+                    'zip_code_11' => 'App\\Entity\\Lead',
+                    'message_12' => 'App\\Entity\\Lead',
+                    'status_13' => 'App\\Entity\\Lead',
+                    'utm_json_14' => 'App\\Entity\\Lead',
+                    'is_test_15' => 'App\\Entity\\Lead',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

@@ -137,6 +137,43 @@ export function useData() {
     return dataService.submitLead(leadData);
   }, []);
 
+  const importLeads = useCallback(async (csvData: string, options?: {
+    clientId?: string;
+    sourceId?: string;
+    overwriteExisting?: boolean;
+  }) => {
+    return dataService.importLeads(csvData, options);
+  }, []);
+
+  // NOTIFICATIONS MANAGEMENT
+  const getNotifications = useCallback(async (params?: Record<string, string | number | boolean>) => {
+    return dataService.getNotifications(params);
+  }, []);
+
+  const getNotification = useCallback(async (id: string) => {
+    return dataService.getNotification(id);
+  }, []);
+
+  const markNotificationAsRead = useCallback(async (id: string) => {
+    return dataService.markNotificationAsRead(id);
+  }, []);
+
+  const markNotificationAsUnread = useCallback(async (id: string) => {
+    return dataService.markNotificationAsUnread(id);
+  }, []);
+
+  const markAllNotificationsAsRead = useCallback(async () => {
+    return dataService.markAllNotificationsAsRead();
+  }, []);
+
+  const deleteNotification = useCallback(async (id: string) => {
+    return dataService.deleteNotification(id);
+  }, []);
+
+  const getNotificationCount = useCallback(async () => {
+    return dataService.getNotificationCount();
+  }, []);
+
   // USER MANAGEMENT
   const getUsers = useCallback(async (params?: Record<string, string | number | boolean>) => {
     return dataService.getUsers(params);
@@ -228,6 +265,15 @@ export function useData() {
     getUsers,
     createUser,
     updateUser,
+    
+    // Notification methods
+    getNotifications,
+    getNotification,
+    markNotificationAsRead,
+    markNotificationAsUnread,
+    markAllNotificationsAsRead,
+    deleteNotification,
+    getNotificationCount,
     
     // Utility methods
     getLoadingState,
