@@ -1,0 +1,46 @@
+<?php //4e9394de2968d6115c5a971ff0378952
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Query\\ParserResult'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ParserResult')),
+        clone ($p['Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer')),
+        clone ($p['Doctrine\\ORM\\Query\\ResultSetMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ResultSetMapping')),
+    ],
+    null,
+    [
+        'Doctrine\\ORM\\Query\\ParserResult' => [
+            'sqlFinalizer' => [
+                $o[1],
+            ],
+            'resultSetMapping' => [
+                $o[2],
+            ],
+        ],
+        'Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer' => [
+            'sql' => [
+                1 => 'SELECT l0_.status AS status_0, COUNT(l0_.id) AS sclr_1 FROM leads l0_ GROUP BY l0_.status',
+            ],
+        ],
+        'stdClass' => [
+            'scalarMappings' => [
+                2 => [
+                    'status_0' => 'status',
+                    'sclr_1' => 'count',
+                ],
+            ],
+            'enumMappings' => [
+                2 => [
+                    'status_0' => 'App\\ValueObject\\LeadStatus',
+                ],
+            ],
+            'typeMappings' => [
+                2 => [
+                    'status_0' => 'string',
+                    'sclr_1' => 'integer',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];
