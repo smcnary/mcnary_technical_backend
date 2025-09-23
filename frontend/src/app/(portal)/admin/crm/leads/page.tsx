@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import LeadsKanbanBoard from '@/components/leads/LeadsKanbanBoard';
 import { 
   Search,
   Plus,
@@ -27,7 +28,9 @@ import {
   User,
   Building2,
   MapPin,
-  RefreshCw
+  RefreshCw,
+  Grid3X3,
+  List
 } from 'lucide-react';
 
 export default function LeadsManagement() {
@@ -48,6 +51,7 @@ export default function LeadsManagement() {
   const [isLeadDialogOpen, setIsLeadDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
 
   // Load data on component mount
   useEffect(() => {
@@ -184,10 +188,28 @@ export default function LeadsManagement() {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Leads Management" 
+        title="SEO Clients CRM" 
         description="Manage and track all leads"
         action={
           <div className="flex gap-2">
+            <div className="flex border border-gray-300 dark:border-gray-600 rounded-md">
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('kanban')}
+                className="rounded-r-none border-r border-gray-300 dark:border-gray-600"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className="rounded-l-none"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
             <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
               <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh
@@ -259,14 +281,20 @@ export default function LeadsManagement() {
         </CardContent>
       </Card>
 
-      {/* Leads Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Leads ({filteredLeads.length})</CardTitle>
-          <CardDescription>Manage and track all leads</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
+      {/* Leads Display */}
+      {viewMode === 'kanban' ? (
+        <LeadsKanbanBoard 
+          leads={filteredLeads} 
+          onLeadClick={handleViewLead}
+        />
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Leads ({filteredLeads.length})</CardTitle>
+            <CardDescription>Manage and track all leads</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
@@ -379,9 +407,10 @@ export default function LeadsManagement() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Lead Detail Dialog */}
       <Dialog open={isLeadDialogOpen} onOpenChange={setIsLeadDialogOpen}>
