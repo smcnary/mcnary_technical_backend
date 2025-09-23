@@ -455,11 +455,16 @@ class DataService {
 
   // LEAD MANAGEMENT
   async getLeads(params?: Record<string, string | number | boolean>): Promise<Lead[]> {
+    console.log('DataService.getLeads called with params:', params);
     const cacheKey = `leads:${JSON.stringify(params || {})}`;
     const cached = this.getCachedData<Lead[]>(cacheKey);
-    if (cached) return cached;
+    if (cached) {
+      console.log('Returning cached leads:', cached.length);
+      return cached;
+    }
 
     try {
+      console.log('Fetching leads from API...');
       this.setLoading('leads', true);
       this.setError('leads', null);
 
@@ -495,6 +500,7 @@ class DataService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch leads';
       console.warn('API Error fetching leads:', errorMessage);
+      console.log('Using fallback leads data...');
       
       // Provide fallback with known real leads for testing
       const fallbackLeads: Lead[] = [
@@ -551,6 +557,8 @@ class DataService {
       this.state.leads = fallbackLeads;
       this.setCachedData(cacheKey, fallbackLeads);
       this.notifyListeners();
+      
+      console.log('Fallback leads set:', fallbackLeads.length, 'leads');
       
       // Don't throw error, return fallback data instead
       return fallbackLeads;
