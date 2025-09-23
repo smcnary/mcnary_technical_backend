@@ -28,7 +28,12 @@ export default function SeoClientsTab() {
   useEffect(() => {
     if (isClient) {
       console.log('Loading leads...', { isAuthenticated, isAdmin: isAdmin(), isSalesConsultant: isSalesConsultant() });
-      getLeads();
+      // Force load leads immediately
+      getLeads().then((leads) => {
+        console.log('Leads loaded successfully:', leads.length, 'leads');
+      }).catch((error) => {
+        console.error('Error loading leads:', error);
+      });
     }
   }, [isClient, getLeads]);
 

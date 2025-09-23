@@ -108,6 +108,15 @@ export default function LeadsKanbanBoard({ leads, onLeadClick }: LeadsKanbanBoar
     setIsClient(true);
   }, []);
 
+  // Debug: Log leads data
+  useEffect(() => {
+    console.log('LeadsKanbanBoard received leads:', leads);
+    console.log('LeadsKanbanBoard leads count:', leads.length);
+    if (leads.length > 0) {
+      console.log('First lead:', leads[0]);
+    }
+  }, [leads]);
+
   const getStatusLabel = (status: string) => {
     const statusMap: Record<string, string> = {
       'new_lead': 'New',
