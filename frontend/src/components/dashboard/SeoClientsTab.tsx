@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Phone, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Phone, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle, Grid3X3, List } from 'lucide-react';
 import OpenPhoneIntegrationComponent from '../openphone/OpenPhoneIntegration';
+import LeadsKanbanBoard from '../leads/LeadsKanbanBoard';
 import { useData } from '../../hooks/useData';
+import { useAuth } from '../../hooks/useAuth';
 
 // Types for the data structures
 interface Lead {
@@ -84,14 +86,26 @@ export default function SeoClientsTab() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
-  const [leads, setLeads] = useState<Lead[]>(mockData.leads);
+  const [leads] = useState<Lead[]>(mockData.leads);
+  const [viewMode, setViewMode] = useState<'kanban' | 'tabs'>('kanban');
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Get the importLeads function from useData hook
-  const { importLeads } = useData();
+  const { importLeads, leads: realLeads, getLeads } = useData();
+  const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
 
+  // Load real leads from database
+  useEffect(() => {
+    if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
+      getLeads();
+    }
+  }, [isAuthenticated, isAdmin, isSalesConsultant, getLeads]);
+
+  // Use real leads count from database
+  const realLeadsCount = realLeads.length;
+  
   const tabs = [
-    { key: 'leads', label: 'Leads', icon: Users, color: 'text-blue-500', count: leads.length },
+    { key: 'leads', label: 'Leads', icon: Users, color: 'text-blue-500', count: realLeadsCount },
     { key: 'interviews', label: 'Interviews', icon: MessageSquare, color: 'text-green-500', count: mockData.interviews.length },
     { key: 'applications', label: 'Applications', icon: FileText, color: 'text-orange-500', count: mockData.applications.length },
     { key: 'audits', label: 'Audits', icon: Search, color: 'text-purple-500', count: mockData.audits.length },
@@ -118,12 +132,12 @@ export default function SeoClientsTab() {
         // You can add options here if needed
       });
       
-      if (result.success) {
+      if (result.imported_count > 0) {
         setUploadStatus('success');
-        setUploadMessage(`Successfully imported ${result.importedCount || 0} leads`);
+        setUploadMessage(`Successfully imported ${result.imported_count} leads`);
         
         // Refresh the leads data
-        setLeads(prevLeads => [...prevLeads, ...(result.leads || [])]);
+        getLeads();
         
         // Auto-close upload after success
         setTimeout(() => {
@@ -133,7 +147,7 @@ export default function SeoClientsTab() {
           setUploadMessage('');
         }, 2000);
       } else {
-        throw new Error(result.error || 'Failed to import leads');
+        throw new Error(result.message || 'Failed to import leads');
       }
 
     } catch (error) {
@@ -241,8 +255,46 @@ export default function SeoClientsTab() {
 
   return (
     <div className="space-y-6">
-      {/* Upload Section */}
-      <Card className="border-dashed border-2 border-gray-300 dark:border-gray-600">
+      {/* View Mode Toggle */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold">SEO Client Leads</h2>
+          <div className="flex border border-gray-300 dark:border-gray-600 rounded-md">
+            <Button
+              variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('kanban')}
+              className="rounded-r-none border-r border-gray-300 dark:border-gray-600"
+            >
+              <Grid3X3 className="h-4 w-4" />
+              Kanban
+            </Button>
+            <Button
+              variant={viewMode === 'tabs' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('tabs')}
+              className="rounded-l-none"
+            >
+              <List className="h-4 w-4" />
+              Tabs
+            </Button>
+          </div>
+        </div>
+        <div className="text-sm text-muted-foreground">
+          {realLeadsCount} leads from database
+        </div>
+      </div>
+
+      {/* Kanban Board View */}
+      {viewMode === 'kanban' ? (
+        <LeadsKanbanBoard 
+          leads={realLeads} 
+          onLeadClick={(lead) => console.log('Lead clicked:', lead)}
+        />
+      ) : (
+        <>
+          {/* Upload Section */}
+          <Card className="border-dashed border-2 border-gray-300 dark:border-gray-600">
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Upload className="h-5 w-5" />
@@ -378,6 +430,8 @@ export default function SeoClientsTab() {
           );
         })}
       </div>
+        </>
+      )}
     </div>
   );
 }
