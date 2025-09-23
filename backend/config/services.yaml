@@ -19,6 +19,9 @@ parameters:
     openphone_base_url: '%env(OPENPHONE_BASE_URL)%'
     openphone_webhook_secret: '%env(OPENPHONE_WEBHOOK_SECRET)%'
     
+    # Wappalyzer Configuration
+    wappalyzer_api_key: '%env(WAPPALYZER_API_KEY)%'
+    
     app_frontend_url: '%env(APP_FRONTEND_URL)%'
 
 services:
@@ -60,3 +63,8 @@ services:
     App\Service\QrCodeEmailService:
         arguments:
             $appFrontendUrl: '%app_frontend_url%'
+    
+    # Tech Stack Service
+    App\Service\TechStackService:
+        arguments:
+            $wappalyzerApiKey: '%wappalyzer_api_key%'

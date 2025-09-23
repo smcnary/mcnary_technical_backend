@@ -11,6 +11,7 @@ use App\Repository\ClientRepository;
 use App\Repository\LeadSourceRepository;
 use App\Repository\LeadEventRepository;
 use App\Service\LeadgenIntegrationService;
+use App\Service\TechStackService;
 use App\ValueObject\LeadStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +33,7 @@ class LeadsController extends AbstractController
         private LeadSourceRepository $leadSourceRepository,
         private LeadEventRepository $leadEventRepository,
         private LeadgenIntegrationService $leadgenIntegrationService,
+        private TechStackService $techStackService,
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator
     ) {}
@@ -668,5 +670,70 @@ class LeadsController extends AbstractController
             'lead_id' => $id,
             'statistics' => $statistics
         ]);
+    }
+
+    #[Route('/{id}/tech-stack', name: 'api_v1_leads_tech_stack_get', methods: ['GET'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function getLeadTechStack(string $id): JsonResponse
+    {
+        if (!Uuid::isValid($id)) {
+            return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $lead = $this->leadRepository->find($id);
+        if (!$lead) {
+            return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$lead->getWebsite()) {
+            return $this->json(['error' => 'Lead has no website'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // For now, return empty tech stack - in a real implementation, you'd store this in the database
+        $techStack = [
+            'url' => $lead->getWebsite(),
+            'technologies' => [],
+            'lastAnalyzed' => null
+        ];
+
+        return $this->json([
+            'techStack' => $techStack
+        ]);
+    }
+
+    #[Route('/{id}/tech-stack', name: 'api_v1_leads_tech_stack_analyze', methods: ['POST'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function analyzeLeadTechStack(string $id): JsonResponse
+    {
+        if (!Uuid::isValid($id)) {
+            return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $lead = $this->leadRepository->find($id);
+        if (!$lead) {
+            return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$lead->getWebsite()) {
+            return $this->json(['error' => 'Lead has no website'], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            // Analyze the website's technology stack
+            $techStack = $this->techStackService->analyzeWebsite($lead->getWebsite());
+
+            // In a real implementation, you would save this to the database
+            // For now, we'll just return the result
+
+            return $this->json([
+                'techStack' => $techStack
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'Failed to analyze technology stack',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

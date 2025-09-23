@@ -16,7 +16,7 @@ export default function SeoClientsTab() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Get the importLeads function from useData hook
-  const { importLeads, leads: realLeads, getLeads } = useData();
+  const { importLeads, leads: realLeads, getLeads, updateLead } = useData();
   const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
 
   // Prevent hydration mismatch
@@ -35,7 +35,7 @@ export default function SeoClientsTab() {
         console.error('Error loading leads:', error);
       });
     }
-  }, [isClient, getLeads]);
+  }, [isClient, getLeads, isAuthenticated, isAdmin, isSalesConsultant]);
 
   // Use real leads count from database
   const realLeadsCount = realLeads.length;
@@ -104,6 +104,17 @@ export default function SeoClientsTab() {
       const file = files[0];
       setUploadedFile(file);
       handleFileUpload(file);
+    }
+  };
+
+  // Handle lead status change
+  const handleLeadStatusChange = async (leadId: string, newStatus: string) => {
+    try {
+      await updateLead(leadId, { status: newStatus });
+      console.log(`Lead ${leadId} status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Failed to update lead status:', error);
+      // You might want to show a toast notification here
     }
   };
 
@@ -223,6 +234,7 @@ export default function SeoClientsTab() {
       <LeadsKanbanBoard 
         leads={displayLeads} 
         onLeadClick={(lead) => console.log('Lead clicked:', lead)}
+        onLeadStatusChange={handleLeadStatusChange}
       />
     </div>
   );

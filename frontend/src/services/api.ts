@@ -59,6 +59,19 @@ export interface Lead {
   source?: string;
   client?: string;
   utmJson?: any[];
+  techStack?: {
+    url: string;
+    technologies: Array<{
+      name: string;
+      confidence: number;
+      version?: string;
+      categories: string[];
+      website?: string;
+      description?: string;
+    }>;
+    lastAnalyzed?: string;
+    error?: string;
+  };
   createdAt?: string;
   updatedAt?: string;
 }
@@ -500,6 +513,26 @@ export class ApiService {
 
   async getLead(id: string): Promise<Lead> {
     return this.fetchApi<Lead>(`/api/v1/leads/${id}`);
+  }
+
+  async updateLead(id: string, leadData: Partial<Lead>): Promise<Lead> {
+    return this.fetchApi<Lead>(`/api/v1/leads/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(leadData),
+    });
+  }
+
+  // Technology Stack Detection
+  async analyzeLeadTechStack(leadId: string): Promise<Lead['techStack']> {
+    const response = await this.fetchApi<{ techStack: Lead['techStack'] }>(`/api/v1/leads/${leadId}/tech-stack`, {
+      method: 'POST',
+    });
+    return response.techStack;
+  }
+
+  async getLeadTechStack(leadId: string): Promise<Lead['techStack']> {
+    const response = await this.fetchApi<{ techStack: Lead['techStack'] }>(`/api/v1/leads/${leadId}/tech-stack`);
+    return response.techStack;
   }
 
   // Case Studies

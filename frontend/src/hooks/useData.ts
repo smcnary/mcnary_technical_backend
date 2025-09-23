@@ -137,6 +137,10 @@ export function useData() {
     return dataService.submitLead(leadData);
   }, []);
 
+  const updateLead = useCallback(async (id: string, leadData: any) => {
+    return dataService.updateLead(id, leadData);
+  }, []);
+
   const importLeads = useCallback(async (csvData: string, options?: {
     clientId?: string;
     sourceId?: string;
@@ -250,6 +254,7 @@ export function useData() {
     // Lead methods
     getLeads,
     submitLead,
+    updateLead,
     importLeads,
     importLeadgenData,
     getLeadEvents,

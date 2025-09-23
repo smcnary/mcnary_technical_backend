@@ -486,7 +486,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -506,7 +506,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -526,7 +526,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -546,7 +546,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -566,7 +566,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -586,7 +586,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -606,7 +606,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -626,7 +626,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -646,7 +646,7 @@ class DataService {
           status: 'new_lead',
           statusLabel: 'New Lead',
           source: 'Leadgen: Tulsa Attorneys Real API',
-          client: null,
+          client: undefined,
           utmJson: [],
           createdAt: '2025-09-23T12:40:11Z',
           updatedAt: '2025-09-23T12:40:11Z'
@@ -858,6 +858,26 @@ class DataService {
       throw error;
     } finally {
       this.setLoading('leads', false);
+    }
+  }
+
+  async updateLead(id: string, leadData: Partial<Lead>): Promise<Lead> {
+    try {
+      const updatedLead = await apiService.updateLead(id, leadData);
+      
+      // Update local state
+      const index = this.state.leads.findIndex(lead => lead.id === id);
+      if (index !== -1) {
+        this.state.leads[index] = updatedLead;
+      }
+      
+      // Clear cache and notify listeners
+      this.clearCache('leads');
+      this.notifyListeners();
+      
+      return updatedLead;
+    } catch (error) {
+      throw error;
     }
   }
 
