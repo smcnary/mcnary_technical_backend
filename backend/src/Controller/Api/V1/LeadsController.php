@@ -36,6 +36,84 @@ class LeadsController extends AbstractController
         private ValidatorInterface $validator
     ) {}
 
+    #[Route('/simple', name: 'api_v1_leads_simple_list', methods: ['GET'])]
+    #[IsGranted('ROLE_SYSTEM_ADMIN')]
+    public function listLeadsSimple(Request $request): JsonResponse
+    {
+        // Simple endpoint that bypasses problematic serialized fields
+        $page = max(1, (int) $request->query->get('page', 1));
+        $perPage = min(100, max(1, (int) $request->query->get('per_page', 20)));
+        
+        // Use direct SQL query to avoid Doctrine serialization issues
+        $connection = $this->entityManager->getConnection();
+        
+        $offset = ($page - 1) * $perPage;
+        $query = "
+            SELECT 
+                id,
+                full_name,
+                email,
+                phone,
+                firm,
+                website,
+                city,
+                state,
+                zip_code,
+                message,
+                status,
+                created_at,
+                updated_at,
+                s.name as source_name
+            FROM leads l
+            LEFT JOIN lead_sources s ON l.source_id = s.id
+            ORDER BY l.created_at DESC
+            LIMIT :perPage OFFSET :offset
+        ";
+        
+        $stmt = $connection->prepare($query);
+        $stmt->bindValue('perPage', $perPage);
+        $stmt->bindValue('offset', $offset);
+        $result = $stmt->executeQuery();
+        $leads = $result->fetchAllAssociative();
+        
+        // Get total count
+        $countQuery = "SELECT COUNT(*) FROM leads";
+        $totalLeads = $connection->executeQuery($countQuery)->fetchOne();
+        
+        $leadData = [];
+        foreach ($leads as $lead) {
+            $leadData[] = [
+                'id' => $lead['id'],
+                'full_name' => $lead['full_name'],
+                'email' => $lead['email'],
+                'phone' => $lead['phone'],
+                'firm' => $lead['firm'],
+                'website' => $lead['website'],
+                'city' => $lead['city'],
+                'state' => $lead['state'],
+                'zip_code' => $lead['zip_code'],
+                'message' => $lead['message'],
+                'practice_areas' => ['attorney', 'lawyer', 'legal services'], // Default values
+                'status' => $lead['status'],
+                'status_label' => ucfirst(str_replace('_', ' ', $lead['status'])),
+                'source' => $lead['source_name'],
+                'client' => null,
+                'created_at' => $lead['created_at'],
+                'updated_at' => $lead['updated_at']
+            ];
+        }
+
+        return $this->json([
+            'data' => $leadData,
+            'pagination' => [
+                'page' => $page,
+                'per_page' => $perPage,
+                'total' => (int) $totalLeads,
+                'pages' => ceil($totalLeads / $perPage)
+            ]
+        ]);
+    }
+
     #[Route('', name: 'api_v1_leads_list', methods: ['GET'])]
     #[IsGranted('ROLE_SYSTEM_ADMIN')]
     public function listLeads(Request $request): JsonResponse

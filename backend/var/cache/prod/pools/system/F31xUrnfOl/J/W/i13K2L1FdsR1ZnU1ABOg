@@ -1,0 +1,119 @@
+<?php //App.Entity.Notification
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Length'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Length')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Notification',
+                'title',
+                4 => 'type',
+            ],
+            'defaultGroup' => [
+                'Notification',
+            ],
+            'members' => [
+                [
+                    'title' => [
+                        $o[1],
+                    ],
+                    'type' => [
+                        $o[4],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'title' => $o[1],
+                    'type' => $o[4],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                    $o[3],
+                ],
+                4 => [
+                    $o[5],
+                    $o[6],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                        $o[3],
+                    ],
+                    'Notification' => [
+                        $o[2],
+                        $o[3],
+                    ],
+                ],
+                4 => [
+                    'Default' => [
+                        $o[5],
+                        $o[6],
+                    ],
+                    'Notification' => [
+                        $o[5],
+                        $o[6],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\Notification',
+                4 => 'App\\Entity\\Notification',
+            ],
+            'property' => [
+                1 => 'title',
+                4 => 'type',
+            ],
+            'payload' => [
+                2 => null,
+                null,
+                5 => null,
+                null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'Notification',
+                ],
+                [
+                    'Default',
+                    'Notification',
+                ],
+                5 => [
+                    'Default',
+                    'Notification',
+                ],
+                [
+                    'Default',
+                    'Notification',
+                ],
+            ],
+            'max' => [
+                3 => 255,
+            ],
+            'choices' => [
+                6 => [
+                    'info',
+                    'success',
+                    'warning',
+                    'error',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

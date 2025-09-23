@@ -47,14 +47,15 @@ return [[
 'App__Entity__AuditIntake__CLASSMETADATA__' => 40,
 'App__Entity__Form__CLASSMETADATA__' => 41,
 'App__Entity__Backlink__CLASSMETADATA__' => 42,
-'App__Entity__AuditFinding__CLASSMETADATA__' => 43,
-'App__Entity__Organization__CLASSMETADATA__' => 44,
-'App__Entity__DocumentTemplate__CLASSMETADATA__' => 45,
-'App__Entity__OAuthToken__CLASSMETADATA__' => 46,
-'App__Entity__LeadSource__CLASSMETADATA__' => 47,
-'App__Entity__Client__CLASSMETADATA__' => 48,
-'App__Entity__FormSubmission__CLASSMETADATA__' => 49,
-'App__Entity__Site__CLASSMETADATA__' => 50,
+'App__Entity__Notification__CLASSMETADATA__' => 43,
+'App__Entity__AuditFinding__CLASSMETADATA__' => 44,
+'App__Entity__Organization__CLASSMETADATA__' => 45,
+'App__Entity__DocumentTemplate__CLASSMETADATA__' => 46,
+'App__Entity__OAuthToken__CLASSMETADATA__' => 47,
+'App__Entity__LeadSource__CLASSMETADATA__' => 48,
+'App__Entity__Client__CLASSMETADATA__' => 49,
+'App__Entity__FormSubmission__CLASSMETADATA__' => 50,
+'App__Entity__Site__CLASSMETADATA__' => 51,
 
 ], [
 
@@ -10694,6 +10695,209 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\IdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\IdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\Notification',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'title' => $o[2],
+                        'message' => $o[3],
+                        'type' => $o[4],
+                        'isRead' => $o[5],
+                        'actionUrl' => $o[6],
+                        'actionLabel' => $o[7],
+                        'createdAt' => $o[8],
+                        'readAt' => $o[9],
+                        'metadata' => $o[10],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'title' => 'title',
+                        'message' => 'message',
+                        'type' => 'type',
+                        'is_read' => 'isRead',
+                        'action_url' => 'actionUrl',
+                        'action_label' => 'actionLabel',
+                        'created_at' => 'createdAt',
+                        'read_at' => 'readAt',
+                        'metadata' => 'metadata',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'title' => 'title',
+                        'message' => 'message',
+                        'type' => 'type',
+                        'isRead' => 'is_read',
+                        'actionUrl' => 'action_url',
+                        'actionLabel' => 'action_label',
+                        'createdAt' => 'created_at',
+                        'readAt' => 'read_at',
+                        'metadata' => 'metadata',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'notifications',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'user' => $o[11],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[13],
+                ],
+                'name' => [
+                    'App\\Entity\\Notification',
+                    12 => 'user_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'type' => [
+                    1 => 'integer',
+                    'string',
+                    'text',
+                    'string',
+                    'boolean',
+                    'string',
+                    'string',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                    'json',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'title',
+                    'message',
+                    'type',
+                    'isRead',
+                    'actionUrl',
+                    'actionLabel',
+                    'createdAt',
+                    'readAt',
+                    'metadata',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'title',
+                    'message',
+                    'type',
+                    'is_read',
+                    'action_url',
+                    'action_label',
+                    'created_at',
+                    'read_at',
+                    'metadata',
+                ],
+                'length' => [
+                    2 => 255,
+                    4 => 50,
+                    6 => 100,
+                    100,
+                ],
+                'nullable' => [
+                    3 => true,
+                    6 => true,
+                    true,
+                    9 => true,
+                    true,
+                    12 => false,
+                ],
+                'fetch' => [
+                    11 => 2,
+                ],
+                'sourceEntity' => [
+                    11 => 'App\\Entity\\Notification',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    11 => [
+                        'user_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    11 => [
+                        'id' => 'user_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    11 => [
+                        $o[12],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    11 => [
+                        'user_id' => 'user_id',
+                    ],
+                ],
+                'deferrable' => [
+                    12 => false,
+                ],
+                'unique' => [
+                    12 => false,
+                ],
+                'referencedColumnName' => [
+                    12 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    11 => 'user',
+                ],
+                'targetEntity' => [
+                    11 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+44 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
@@ -10933,7 +11137,7 @@ return [[
         []
     );
 },
-44 => static function () {
+45 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -11099,7 +11303,7 @@ return [[
         []
     );
 },
-45 => static function () {
+46 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -11342,7 +11546,7 @@ return [[
         []
     );
 },
-46 => static function () {
+47 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -11598,7 +11802,7 @@ return [[
         []
     );
 },
-47 => static function () {
+48 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -11798,7 +12002,7 @@ return [[
         []
     );
 },
-48 => static function () {
+49 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -12235,7 +12439,7 @@ return [[
         []
     );
 },
-49 => static function () {
+50 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -12346,7 +12550,7 @@ return [[
         []
     );
 },
-50 => static function () {
+51 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),

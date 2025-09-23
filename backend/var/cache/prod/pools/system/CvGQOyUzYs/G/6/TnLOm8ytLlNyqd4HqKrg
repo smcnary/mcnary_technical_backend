@@ -41,6 +41,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                     'App\\Entity\\LeadSource',
                     'App\\Entity\\MediaAsset',
                     'App\\Entity\\NewsletterSubscription',
+                    'App\\Entity\\Notification',
                     'App\\Entity\\OAuthConnection',
                     'App\\Entity\\OAuthToken',
                     'App\\Entity\\OpenPhoneCallLog',

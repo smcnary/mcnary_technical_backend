@@ -1,0 +1,117 @@
+<?php //fcdba84ac7668803d057434890941e18
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Query\\ParserResult'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ParserResult')),
+        clone ($p['Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer')),
+        clone ($p['Doctrine\\ORM\\Query\\ResultSetMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ResultSetMapping')),
+    ],
+    null,
+    [
+        'Doctrine\\ORM\\Query\\ParserResult' => [
+            'sqlFinalizer' => [
+                $o[1],
+            ],
+            'resultSetMapping' => [
+                $o[2],
+            ],
+            'parameterMappings' => [
+                [
+                    'user' => [
+                        0,
+                    ],
+                ],
+            ],
+        ],
+        'Doctrine\\ORM\\Query\\Exec\\SingleSelectSqlFinalizer' => [
+            'sql' => [
+                1 => 'SELECT n0_.id AS id_0, n0_.title AS title_1, n0_.message AS message_2, n0_.type AS type_3, n0_.is_read AS is_read_4, n0_.action_url AS action_url_5, n0_.action_label AS action_label_6, n0_.created_at AS created_at_7, n0_.read_at AS read_at_8, n0_.metadata AS metadata_9, n0_.user_id AS user_id_10 FROM notifications n0_ WHERE n0_.user_id = ? ORDER BY n0_.created_at DESC',
+            ],
+        ],
+        'stdClass' => [
+            'aliasMap' => [
+                2 => [
+                    'n' => 'App\\Entity\\Notification',
+                ],
+            ],
+            'fieldMappings' => [
+                2 => [
+                    'id_0' => 'id',
+                    'title_1' => 'title',
+                    'message_2' => 'message',
+                    'type_3' => 'type',
+                    'is_read_4' => 'isRead',
+                    'action_url_5' => 'actionUrl',
+                    'action_label_6' => 'actionLabel',
+                    'created_at_7' => 'createdAt',
+                    'read_at_8' => 'readAt',
+                    'metadata_9' => 'metadata',
+                ],
+            ],
+            'columnAliasMappings' => [
+                2 => [
+                    'App\\Entity\\Notification' => [
+                        'n' => [
+                            'id' => 'id_0',
+                            'title' => 'title_1',
+                            'message' => 'message_2',
+                            'type' => 'type_3',
+                            'isRead' => 'is_read_4',
+                            'actionUrl' => 'action_url_5',
+                            'actionLabel' => 'action_label_6',
+                            'createdAt' => 'created_at_7',
+                            'readAt' => 'read_at_8',
+                            'metadata' => 'metadata_9',
+                        ],
+                    ],
+                ],
+            ],
+            'typeMappings' => [
+                2 => [
+                    'user_id_10' => 'uuid',
+                ],
+            ],
+            'entityMappings' => [
+                2 => [
+                    'n' => null,
+                ],
+            ],
+            'metaMappings' => [
+                2 => [
+                    'user_id_10' => 'user_id',
+                ],
+            ],
+            'columnOwnerMap' => [
+                2 => [
+                    'id_0' => 'n',
+                    'title_1' => 'n',
+                    'message_2' => 'n',
+                    'type_3' => 'n',
+                    'is_read_4' => 'n',
+                    'action_url_5' => 'n',
+                    'action_label_6' => 'n',
+                    'created_at_7' => 'n',
+                    'read_at_8' => 'n',
+                    'metadata_9' => 'n',
+                    'user_id_10' => 'n',
+                ],
+            ],
+            'declaringClasses' => [
+                2 => [
+                    'id_0' => 'App\\Entity\\Notification',
+                    'title_1' => 'App\\Entity\\Notification',
+                    'message_2' => 'App\\Entity\\Notification',
+                    'type_3' => 'App\\Entity\\Notification',
+                    'is_read_4' => 'App\\Entity\\Notification',
+                    'action_url_5' => 'App\\Entity\\Notification',
+                    'action_label_6' => 'App\\Entity\\Notification',
+                    'created_at_7' => 'App\\Entity\\Notification',
+                    'read_at_8' => 'App\\Entity\\Notification',
+                    'metadata_9' => 'App\\Entity\\Notification',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];
