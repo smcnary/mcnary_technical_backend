@@ -171,35 +171,7 @@ export default function LeadsKanbanBoard({ leads, onLeadClick }: LeadsKanbanBoar
     return leads.filter(lead => column.statuses.includes(lead.status));
   };
 
-  // Show loading state during hydration
-  if (!isClient) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 p-6">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <Card key={index} className="flex flex-col h-full">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                <div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                <div className="w-6 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse ml-auto"></div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-3">
-                {Array.from({ length: 3 }).map((_, cardIndex) => (
-                  <div key={cardIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
-                    <div className="w-32 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-                    <div className="w-24 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1"></div>
-                    <div className="w-20 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
+  // Always show content (removed loading state for debugging)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 p-6">
