@@ -1,3 +1,5 @@
 {
-  "/(portal)/seo-clients/page": "app/(portal)/seo-clients/page.js"
+  "/(portal)/seo-clients/page": "app/(portal)/seo-clients/page.js",
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js"
 }

@@ -167,6 +167,18 @@ class Lead
     #[Groups(['lead:read','lead:write','lead:admin:read'])]
     private array $utmJson = [];
 
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['lead:read','lead:write','lead:admin:read'])]
+    private ?\DateTimeImmutable $interviewScheduled = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['lead:read','lead:write','lead:admin:read'])]
+    private ?\DateTimeImmutable $followUpDate = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['lead:read','lead:write','lead:admin:read'])]
+    private ?string $notes = null;
+
     #[ORM\Column(options: ['default' => false])]
     #[Groups(['lead:admin:read'])]
     private bool $isTest = false;
@@ -404,9 +416,8 @@ class Lead
     public function removeEvent(LeadEvent $event): self
     {
         if ($this->events->removeElement($event)) {
-            if ($event->getLead() === $this) {
-                $event->setLead(null);
-            }
+            // The event will be removed from the collection
+            // The LeadEvent entity should handle the relationship cleanup
         }
         return $this;
     }
@@ -421,6 +432,39 @@ class Lead
     {
         // This method is kept for backward compatibility but should not be used
         // Use setClient() instead
+        return $this;
+    }
+
+    public function getInterviewScheduled(): ?\DateTimeImmutable
+    {
+        return $this->interviewScheduled;
+    }
+
+    public function setInterviewScheduled(?\DateTimeImmutable $interviewScheduled): self
+    {
+        $this->interviewScheduled = $interviewScheduled;
+        return $this;
+    }
+
+    public function getFollowUpDate(): ?\DateTimeImmutable
+    {
+        return $this->followUpDate;
+    }
+
+    public function setFollowUpDate(?\DateTimeImmutable $followUpDate): self
+    {
+        $this->followUpDate = $followUpDate;
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
         return $this;
     }
 }

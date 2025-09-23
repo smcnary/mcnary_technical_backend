@@ -230,6 +230,9 @@ class LeadsController extends AbstractController
             'source' => $lead->getSource()?->getName(),
             'client' => $lead->getClient()?->getName(),
             'utm_json' => $lead->getUtmJson(),
+            'interview_scheduled' => $lead->getInterviewScheduled()?->format('c'),
+            'follow_up_date' => $lead->getFollowUpDate()?->format('c'),
+            'notes' => $lead->getNotes(),
             'created_at' => $lead->getCreatedAt()->format('c'),
             'updated_at' => $lead->getUpdatedAt()->format('c')
         ];
@@ -261,7 +264,10 @@ class LeadsController extends AbstractController
             $constraints = new Assert\Collection([
                 'status' => [new Assert\Optional([new Assert\Choice(['new_lead', 'contacted', 'interview_scheduled', 'interview_completed', 'application_received', 'audit_in_progress', 'audit_complete', 'enrolled'])])],
                 'message' => [new Assert\Optional([new Assert\NotBlank()])],
-                'practice_areas' => [new Assert\Optional([new Assert\Type('array')])]
+                'practice_areas' => [new Assert\Optional([new Assert\Type('array')])],
+                'interviewScheduled' => [new Assert\Optional([new Assert\DateTime()])],
+                'followUpDate' => [new Assert\Optional([new Assert\DateTime()])],
+                'notes' => [new Assert\Optional([new Assert\Type('string')])]
             ]);
 
             $violations = $this->validator->validate($data, $constraints);
@@ -286,6 +292,18 @@ class LeadsController extends AbstractController
                 $lead->setPracticeAreas($data['practice_areas']);
             }
 
+            if (isset($data['interviewScheduled'])) {
+                $lead->setInterviewScheduled(new \DateTimeImmutable($data['interviewScheduled']));
+            }
+
+            if (isset($data['followUpDate'])) {
+                $lead->setFollowUpDate(new \DateTimeImmutable($data['followUpDate']));
+            }
+
+            if (isset($data['notes'])) {
+                $lead->setNotes($data['notes']);
+            }
+
             $this->entityManager->flush();
 
             $leadData = [
@@ -304,6 +322,9 @@ class LeadsController extends AbstractController
                 'status_label' => $lead->getStatusLabel(),
                 'source' => $lead->getSource()?->getName(),
                 'client' => $lead->getClient()?->getName(),
+                'interview_scheduled' => $lead->getInterviewScheduled()?->format('c'),
+                'follow_up_date' => $lead->getFollowUpDate()?->format('c'),
+                'notes' => $lead->getNotes(),
                 'created_at' => $lead->getCreatedAt()->format('c'),
                 'updated_at' => $lead->getUpdatedAt()->format('c')
             ];
@@ -311,6 +332,80 @@ class LeadsController extends AbstractController
             return $this->json([
                 'message' => 'Lead updated successfully',
                 'lead' => $leadData
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/{id}/notes', name: 'api_v1_leads_notes_get', methods: ['GET'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function getLeadNotes(string $id): JsonResponse
+    {
+        try {
+            if (!Uuid::isValid($id)) {
+                return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $lead = $this->leadRepository->find($id);
+            if (!$lead) {
+                return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->json([
+                'notes' => $lead->getNotes() ?? ''
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/{id}/notes', name: 'api_v1_leads_notes_save', methods: ['POST'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function saveLeadNotes(string $id, Request $request): JsonResponse
+    {
+        try {
+            if (!Uuid::isValid($id)) {
+                return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $lead = $this->leadRepository->find($id);
+            if (!$lead) {
+                return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+            }
+
+            $data = json_decode($request->getContent(), true);
+            
+            if (!$data) {
+                return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate input
+            $constraints = new Assert\Collection([
+                'notes' => [new Assert\Optional([new Assert\Type('string')])]
+            ]);
+
+            $violations = $this->validator->validate($data, $constraints);
+            if (count($violations) > 0) {
+                $errors = [];
+                foreach ($violations as $violation) {
+                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+                return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Update notes
+            if (isset($data['notes'])) {
+                $lead->setNotes($data['notes']);
+            }
+
+            $this->entityManager->flush();
+
+            return $this->json([
+                'message' => 'Notes saved successfully',
+                'notes' => $lead->getNotes() ?? ''
             ]);
 
         } catch (\Exception $e) {

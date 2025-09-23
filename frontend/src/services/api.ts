@@ -72,6 +72,8 @@ export interface Lead {
     lastAnalyzed?: string;
     error?: string;
   };
+  interviewScheduled?: string;
+  followUpDate?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -519,6 +521,18 @@ export class ApiService {
     return this.fetchApi<Lead>(`/api/v1/leads/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(leadData),
+    });
+  }
+
+  // Lead Notes
+  async getLeadNotes(id: string): Promise<{ notes: string }> {
+    return this.fetchApi<{ notes: string }>(`/api/v1/leads/${id}/notes`);
+  }
+
+  async saveLeadNotes(id: string, notes: string): Promise<{ success: boolean }> {
+    return this.fetchApi<{ success: boolean }>(`/api/v1/leads/${id}/notes`, {
+      method: 'POST',
+      body: JSON.stringify({ notes }),
     });
   }
 

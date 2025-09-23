@@ -172,4 +172,168 @@ class NotificationService
             'View Lead'
         );
     }
+
+    /**
+     * Create a notification for OpenPhone call events
+     */
+    public function createOpenPhoneCallNotification(
+        User $user,
+        string $clientName,
+        string $direction,
+        string $phoneNumber,
+        ?int $duration = null,
+        ?string $recordingUrl = null
+    ): Notification {
+        $title = "OpenPhone Call: {$clientName}";
+        $message = "{$direction} call to/from {$phoneNumber}";
+        
+        if ($duration) {
+            $message .= " (Duration: " . gmdate("i:s", $duration) . ")";
+        }
+
+        $metadata = [
+            'type' => 'openphone_call',
+            'direction' => $direction,
+            'phone_number' => $phoneNumber,
+            'duration' => $duration,
+            'recording_url' => $recordingUrl
+        ];
+
+        return $this->createNotification(
+            $user,
+            $title,
+            $message,
+            'info',
+            '/seo-clients',
+            'View Details',
+            $metadata
+        );
+    }
+
+    /**
+     * Create a notification for OpenPhone message events
+     */
+    public function createOpenPhoneMessageNotification(
+        User $user,
+        string $clientName,
+        string $direction,
+        string $phoneNumber,
+        string $messageContent
+    ): Notification {
+        $title = "OpenPhone Message: {$clientName}";
+        $message = "{$direction} message to/from {$phoneNumber}";
+        
+        // Truncate message content for notification
+        $truncatedContent = strlen($messageContent) > 100 
+            ? substr($messageContent, 0, 100) . '...' 
+            : $messageContent;
+
+        $metadata = [
+            'type' => 'openphone_message',
+            'direction' => $direction,
+            'phone_number' => $phoneNumber,
+            'content' => $messageContent
+        ];
+
+        return $this->createNotification(
+            $user,
+            $title,
+            $message . ": " . $truncatedContent,
+            'info',
+            '/seo-clients',
+            'View Message',
+            $metadata
+        );
+    }
+
+    /**
+     * Create a notification for OpenPhone integration events
+     */
+    public function createOpenPhoneIntegrationNotification(
+        User $user,
+        string $clientName,
+        string $event,
+        ?string $details = null
+    ): Notification {
+        $title = "OpenPhone Integration: {$clientName}";
+        $message = "Integration {$event}";
+        
+        if ($details) {
+            $message .= ": {$details}";
+        }
+
+        $metadata = [
+            'type' => 'openphone_integration',
+            'event' => $event,
+            'details' => $details
+        ];
+
+        return $this->createNotification(
+            $user,
+            $title,
+            $message,
+            'info',
+            '/seo-clients',
+            'View Integration',
+            $metadata
+        );
+    }
+
+    /**
+     * Create a notification for missed OpenPhone calls
+     */
+    public function createMissedCallNotification(
+        User $user,
+        string $clientName,
+        string $phoneNumber,
+        \DateTimeImmutable $callTime
+    ): Notification {
+        $title = "Missed Call: {$clientName}";
+        $message = "Missed call from {$phoneNumber} at " . $callTime->format('H:i');
+
+        $metadata = [
+            'type' => 'missed_call',
+            'phone_number' => $phoneNumber,
+            'call_time' => $callTime->format('c')
+        ];
+
+        return $this->createNotification(
+            $user,
+            $title,
+            $message,
+            'warning',
+            '/seo-clients',
+            'Call Back',
+            $metadata
+        );
+    }
+
+    /**
+     * Create a notification for OpenPhone sync events
+     */
+    public function createOpenPhoneSyncNotification(
+        User $user,
+        string $clientName,
+        int $callsSynced,
+        int $messagesSynced
+    ): Notification {
+        $title = "OpenPhone Sync Complete: {$clientName}";
+        $message = "Synced {$callsSynced} calls and {$messagesSynced} messages";
+
+        $metadata = [
+            'type' => 'openphone_sync',
+            'calls_synced' => $callsSynced,
+            'messages_synced' => $messagesSynced
+        ];
+
+        return $this->createNotification(
+            $user,
+            $title,
+            $message,
+            'success',
+            '/seo-clients',
+            'View Logs',
+            $metadata
+        );
+    }
 }

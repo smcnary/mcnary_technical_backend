@@ -10,33 +10,31 @@ import {
   Search, 
   CheckCircle, 
   Phone,
-  Mail,
-  Phone as PhoneIcon,
-  MapPin,
   Building,
-  Calendar,
   ArrowRight
 } from 'lucide-react';
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
   closestCenter,
+  useDroppable,
 } from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy,
-  arrayMove,
 } from '@dnd-kit/sortable';
 import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import LeadDetailsModal from './LeadDetailsModal';
+import CallModal from './CallModal';
 
 interface Lead {
   id: string;
@@ -121,10 +119,99 @@ const statusColumns: StatusColumn[] = [
   }
 ];
 
+// Droppable Column Component
+function DroppableColumn({ 
+  column, 
+  leads, 
+  draggedLead, 
+  dragOverColumn, 
+  onLeadClick,
+  onPhoneClick, 
+  getStatusBadgeVariant, 
+  getStatusLabel, 
+  formatDate 
+}: {
+  column: StatusColumn;
+  leads: Lead[];
+  draggedLead: Lead | null;
+  dragOverColumn: string | null;
+  onLeadClick?: (lead: Lead) => void;
+  onPhoneClick?: (e: React.MouseEvent, lead: Lead) => void;
+  getStatusBadgeVariant: (status: string) => any;
+  getStatusLabel: (status: string) => string;
+  formatDate: (dateString: string) => string;
+}) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: column.id,
+  });
+
+  const columnLeads = leads.filter(lead => column.statuses.includes(lead.status));
+
+  return (
+    <div key={column.id} className="flex flex-col" ref={setNodeRef}>
+      <Card className={`h-full transition-all duration-200 ${
+        dragOverColumn === column.id && draggedLead 
+          ? 'ring-2 ring-blue-500 bg-blue-50/50 dark:bg-blue-950/30' 
+          : isOver 
+          ? 'ring-2 ring-green-500 bg-green-50/50 dark:bg-green-950/30'
+          : ''
+      }`}>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-sm font-medium">
+            <div className={`p-1 rounded ${column.bgColor}`}>
+              <div className={column.color}>
+                {column.icon}
+              </div>
+            </div>
+            {column.title}
+            <Badge variant="secondary" className="ml-auto text-xs">
+              {columnLeads.length}
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div>
+            <SortableContext
+              items={columnLeads.map(lead => lead.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-3">
+                {columnLeads.length === 0 ? (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {column.id === 'openphone' ? 'Click to view openphone' : 
+                       dragOverColumn === column.id && draggedLead ? 
+                       `Drop to move to ${column.title}` : 
+                       'No leads in this stage'}
+                    </p>
+                  </div>
+                ) : (
+                  columnLeads.map((lead) => (
+                            <SortableLeadItem
+                              key={lead.id}
+                              lead={lead}
+                              onLeadClick={onLeadClick}
+                              onPhoneClick={onPhoneClick}
+                              getStatusBadgeVariant={getStatusBadgeVariant}
+                              getStatusLabel={getStatusLabel}
+                              formatDate={formatDate}
+                            />
+                  ))
+                )}
+              </div>
+            </SortableContext>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 // Sortable Lead Item Component
-function SortableLeadItem({ lead, onLeadClick, getStatusBadgeVariant, getStatusLabel, formatDate }: {
+function SortableLeadItem({ lead, onLeadClick, onPhoneClick, getStatusBadgeVariant, getStatusLabel, formatDate }: {
   lead: Lead;
   onLeadClick?: (lead: Lead) => void;
+  onPhoneClick?: (e: React.MouseEvent, lead: Lead) => void;
   getStatusBadgeVariant: (status: string) => any;
   getStatusLabel: (status: string) => string;
   formatDate: (dateString: string) => string;
@@ -150,7 +237,7 @@ function SortableLeadItem({ lead, onLeadClick, getStatusBadgeVariant, getStatusL
       style={style}
       {...attributes}
       {...listeners}
-      className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group"
+      className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-grab active:cursor-grabbing group"
       onClick={() => onLeadClick?.(lead)}
     >
       <div className="flex items-start justify-between mb-2">
@@ -166,19 +253,13 @@ function SortableLeadItem({ lead, onLeadClick, getStatusBadgeVariant, getStatusL
           </div>
         )}
         
-        {lead.email && (
-          <div className="flex items-center gap-1">
-            <Mail className="h-3 w-3" />
-            <span className="truncate">{lead.email}</span>
-          </div>
-        )}
-        
-        {(lead.city || lead.state) && (
-          <div className="flex items-center gap-1">
-            <MapPin className="h-3 w-3" />
-            <span className="truncate">
-              {[lead.city, lead.state].filter(Boolean).join(', ')}
-            </span>
+        {lead.phone && (
+          <div 
+            className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors"
+            onClick={(e) => onPhoneClick?.(e, lead)}
+          >
+            <Phone className="h-3 w-3" />
+            <span className="truncate font-mono">{lead.phone}</span>
           </div>
         )}
       </div>
@@ -196,11 +277,12 @@ function SortableLeadItem({ lead, onLeadClick, getStatusBadgeVariant, getStatusL
 }
 
 export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChange }: LeadsKanbanBoardProps) {
-  const [isClient, setIsClient] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [draggedLead, setDraggedLead] = useState<Lead | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const [callLead, setCallLead] = useState<Lead | null>(null);
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -210,10 +292,14 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
     })
   );
 
-  // Prevent hydration mismatch
+  // Debug: Log when leads change
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    console.log('LeadsKanbanBoard - leads updated:', leads.length, 'leads');
+    leads.forEach((lead, index) => {
+      console.log(`Lead ${index + 1}: ${lead.fullName} - Status: ${lead.status}`);
+    });
+  }, [leads]);
+
 
   // Debug: Log leads data
   useEffect(() => {
@@ -235,6 +321,22 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
     setSelectedLead(null);
   };
 
+  const handlePhoneClick = (e: React.MouseEvent, lead: Lead) => {
+    e.stopPropagation(); // Prevent triggering the lead click
+    setCallLead(lead);
+    setIsCallModalOpen(true);
+  };
+
+  const handleCallModalClose = () => {
+    setIsCallModalOpen(false);
+    setCallLead(null);
+  };
+
+  const handleHangup = () => {
+    console.log('Call ended');
+    handleCallModalClose();
+  };
+
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     try {
       await onLeadStatusChange?.(leadId, newStatus);
@@ -248,6 +350,7 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
   const handleDragStart = (event: DragStartEvent) => {
     const leadId = event.active.id as string;
     const lead = leads.find(l => l.id === leadId);
+    console.log('🎯 DRAG STARTED for lead:', leadId, lead?.fullName);
     setDraggedLead(lead || null);
   };
 
@@ -263,19 +366,34 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    console.log('🎯 DRAG ENDED:', { active: active.id, over: over?.id });
     setDraggedLead(null);
     setDragOverColumn(null);
 
-    if (!over) return;
+    if (!over) {
+      console.log('❌ No drop target found');
+      return;
+    }
+
+    // Check if the drop target is a column (not another lead)
+    const targetColumn = statusColumns.find(col => col.id === over.id);
+    if (!targetColumn) {
+      console.log('❌ Drop target is not a valid column:', over.id);
+      return;
+    }
+
+    console.log('✅ Valid drop target found:', targetColumn.title);
 
     const leadId = active.id as string;
     const targetColumnId = over.id as string;
 
-    // Find the current lead and target column
+    // Find the current lead
     const currentLead = leads.find(lead => lead.id === leadId);
-    const targetColumn = statusColumns.find(col => col.id === targetColumnId);
     
-    if (!currentLead || !targetColumn) return;
+    if (!currentLead) {
+      console.log('❌ Lead not found:', leadId);
+      return;
+    }
 
     // Determine the appropriate new status based on the target column
     let newStatus: string;
@@ -311,8 +429,10 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
 
     // Only update if the status actually changed
     if (currentLead.status !== newStatus) {
-      console.log(`Moving lead ${currentLead.fullName} from ${currentLead.status} to ${newStatus}`);
+      console.log(`🔄 Moving lead ${currentLead.fullName} from ${currentLead.status} to ${newStatus}`);
       onLeadStatusChange?.(leadId, newStatus);
+    } else {
+      console.log(`⏸️ No status change needed - lead ${currentLead.fullName} already has status ${currentLead.status}`);
     }
   };
 
@@ -361,14 +481,6 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
     });
   };
 
-  const getLeadsForColumn = (column: StatusColumn) => {
-    if (column.id === 'openphone') {
-      // For OpenPhone, we could filter leads that have been synced
-      // For now, return empty array as this would need additional logic
-      return [];
-    }
-    return leads.filter(lead => column.statuses.includes(lead.status));
-  };
 
   // Always show content (removed loading state for debugging)
 
@@ -382,63 +494,20 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
                 onDragEnd={handleDragEnd}
               >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 p-6">
-          {statusColumns.map((column) => {
-            const columnLeads = getLeadsForColumn(column);
-            
-            return (
-                      <div key={column.id} className="flex flex-col">
-                        <Card className={`h-full transition-all duration-200 ${
-                          dragOverColumn === column.id && draggedLead 
-                            ? 'ring-2 ring-blue-500 bg-blue-50/50 dark:bg-blue-950/30' 
-                            : ''
-                        }`}>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-2 text-sm font-medium">
-                      <div className={`p-1 rounded ${column.bgColor}`}>
-                        <div className={column.color}>
-                          {column.icon}
-                        </div>
-                      </div>
-                      {column.title}
-                      <Badge variant="secondary" className="ml-auto text-xs">
-                        {columnLeads.length}
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <SortableContext
-                      items={columnLeads.map(lead => lead.id)}
-                      strategy={verticalListSortingStrategy}
-                    >
-                            <div className="space-y-3">
-                                {columnLeads.length === 0 ? (
-                                  <div className="text-center py-4">
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                      {column.id === 'openphone' ? 'Click to view openphone' : 
-                                       dragOverColumn === column.id && draggedLead ? 
-                                       `Drop to move to ${column.title}` : 
-                                       'No leads in this stage'}
-                                    </p>
-                                  </div>
-                                ) : (
-                                  columnLeads.map((lead) => (
-                                    <SortableLeadItem
-                                      key={lead.id}
-                                      lead={lead}
-                                      onLeadClick={handleLeadClick}
-                                      getStatusBadgeVariant={getStatusBadgeVariant}
-                                      getStatusLabel={getStatusLabel}
-                                      formatDate={formatDate}
-                                    />
-                                  ))
-                                )}
-                              </div>
-                    </SortableContext>
-                  </CardContent>
-                </Card>
-              </div>
-            );
-          })}
+          {statusColumns.map((column) => (
+              <DroppableColumn
+                key={column.id}
+                column={column}
+                leads={leads}
+                draggedLead={draggedLead}
+                dragOverColumn={dragOverColumn}
+                onLeadClick={handleLeadClick}
+                onPhoneClick={handlePhoneClick}
+                getStatusBadgeVariant={getStatusBadgeVariant}
+                getStatusLabel={getStatusLabel}
+                formatDate={formatDate}
+              />
+          ))}
         </div>
 
         <DragOverlay>
@@ -457,19 +526,10 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
                   </div>
                 )}
                 
-                {draggedLead.email && (
+                {draggedLead.phone && (
                   <div className="flex items-center gap-1">
-                    <Mail className="h-3 w-3" />
-                    <span className="truncate">{draggedLead.email}</span>
-                  </div>
-                )}
-                
-                {(draggedLead.city || draggedLead.state) && (
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    <span className="truncate">
-                      {[draggedLead.city, draggedLead.state].filter(Boolean).join(', ')}
-                    </span>
+                    <Phone className="h-3 w-3" />
+                    <span className="truncate font-mono">{draggedLead.phone}</span>
                   </div>
                 )}
               </div>
@@ -492,6 +552,13 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onStatusChange={handleStatusChange}
+      />
+
+      <CallModal
+        lead={callLead}
+        isOpen={isCallModalOpen}
+        onClose={handleCallModalClose}
+        onHangup={handleHangup}
       />
     </>
   );

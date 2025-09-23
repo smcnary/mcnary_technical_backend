@@ -7,7 +7,9 @@ use App\Entity\OpenPhoneIntegration;
 use App\Entity\OpenPhoneCallLog;
 use App\Entity\OpenPhoneMessageLog;
 use App\Service\OpenPhoneApiService;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +26,9 @@ class OpenPhoneController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private OpenPhoneApiService $openPhoneApiService,
-        private ValidatorInterface $validator
+        private ValidatorInterface $validator,
+        private NotificationService $notificationService,
+        private LoggerInterface $logger
     ) {}
 
     #[Route('/phone-numbers', name: 'openphone_phone_numbers', methods: ['GET'])]
@@ -418,6 +422,17 @@ class OpenPhoneController extends AbstractController
                 );
             }
 
+            // Create notification for sync completion
+            $currentUser = $this->getUser();
+            if ($currentUser && ($callSyncCount > 0 || $messageSyncCount > 0)) {
+                $this->notificationService->createOpenPhoneSyncNotification(
+                    $currentUser,
+                    $integration->getClient()->getName(),
+                    $callSyncCount,
+                    $messageSyncCount
+                );
+            }
+
             return $this->json([
                 'success' => true,
                 'data' => [
@@ -560,5 +575,115 @@ class OpenPhoneController extends AbstractController
                 'message' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    #[Route('/webhooks', name: 'openphone_webhooks', methods: ['POST'])]
+    public function handleWebhook(Request $request): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            
+            if (!$data) {
+                return $this->json([
+                    'success' => false,
+                    'error' => 'Invalid JSON'
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $eventType = $data['type'] ?? '';
+            $eventData = $data['data'] ?? [];
+
+            // Get the current user (you might want to get this from the webhook data or API key)
+            $currentUser = $this->getUser();
+            if (!$currentUser) {
+                return $this->json([
+                    'success' => false,
+                    'error' => 'User not authenticated'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            switch ($eventType) {
+                case 'call.completed':
+                    $this->handleCallCompletedWebhook($eventData, $currentUser);
+                    break;
+                    
+                case 'message.received':
+                case 'message.sent':
+                    $this->handleMessageWebhook($eventData, $currentUser, $eventType);
+                    break;
+                    
+                case 'call.missed':
+                    $this->handleMissedCallWebhook($eventData, $currentUser);
+                    break;
+                    
+                default:
+                    // Log unknown event type
+                    $this->logger->info('Unknown OpenPhone webhook event', [
+                        'type' => $eventType,
+                        'data' => $eventData
+                    ]);
+            }
+
+            return $this->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('OpenPhone webhook error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return $this->json([
+                'success' => false,
+                'error' => 'Internal server error'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private function handleCallCompletedWebhook(array $data, $user): void
+    {
+        $clientName = $data['client_name'] ?? 'Unknown Client';
+        $direction = $data['direction'] ?? 'unknown';
+        $phoneNumber = $data['phone_number'] ?? 'Unknown';
+        $duration = $data['duration'] ?? null;
+        $recordingUrl = $data['recording_url'] ?? null;
+
+        $this->notificationService->createOpenPhoneCallNotification(
+            $user,
+            $clientName,
+            $direction,
+            $phoneNumber,
+            $duration,
+            $recordingUrl
+        );
+    }
+
+    private function handleMessageWebhook(array $data, $user, string $eventType): void
+    {
+        $clientName = $data['client_name'] ?? 'Unknown Client';
+        $direction = $eventType === 'message.received' ? 'inbound' : 'outbound';
+        $phoneNumber = $data['phone_number'] ?? 'Unknown';
+        $messageContent = $data['content'] ?? '';
+
+        $this->notificationService->createOpenPhoneMessageNotification(
+            $user,
+            $clientName,
+            $direction,
+            $phoneNumber,
+            $messageContent
+        );
+    }
+
+    private function handleMissedCallWebhook(array $data, $user): void
+    {
+        $clientName = $data['client_name'] ?? 'Unknown Client';
+        $phoneNumber = $data['phone_number'] ?? 'Unknown';
+        $callTime = new \DateTimeImmutable($data['timestamp'] ?? 'now');
+
+        $this->notificationService->createMissedCallNotification(
+            $user,
+            $clientName,
+            $phoneNumber,
+            $callTime
+        );
     }
 }

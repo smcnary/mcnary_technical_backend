@@ -110,8 +110,12 @@ export default function SeoClientsTab() {
   // Handle lead status change
   const handleLeadStatusChange = async (leadId: string, newStatus: string) => {
     try {
-      await updateLead(leadId, { status: newStatus });
-      console.log(`Lead ${leadId} status updated to ${newStatus}`);
+      console.log(`Attempting to update lead ${leadId} status to ${newStatus}`);
+      const result = await updateLead(leadId, { status: newStatus });
+      console.log(`Lead ${leadId} status updated successfully:`, result);
+      
+      // Refresh leads data to get updated state
+      await getLeads();
     } catch (error) {
       console.error('Failed to update lead status:', error);
       // You might want to show a toast notification here
