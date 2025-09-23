@@ -20,11 +20,14 @@ import {
   Building,
   Calendar,
   Database,
-  X
+  X,
+  Grid3X3,
+  List
 } from 'lucide-react';
 import CsvUploadModal from './CsvUploadModal';
 import LeadgenImportModal from './LeadgenImportModal';
 import LeadStatistics from './LeadStatistics';
+import LeadsKanbanBoard from './LeadsKanbanBoard';
 import ProtectedRoute from '../auth/ProtectedRoute';
 
 interface Lead {
@@ -40,8 +43,8 @@ interface Lead {
   message?: string;
   practiceAreas?: string[];
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export default function LeadsManagement() {
@@ -60,6 +63,7 @@ export default function LeadsManagement() {
   const [isLeadgenModalOpen, setIsLeadgenModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
+  const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
 
   const isLoading = getLoadingState('leads');
   const error = getErrorState('leads');
@@ -181,6 +185,24 @@ export default function LeadsManagement() {
             </p>
           </div>
           <div className="flex gap-3">
+            <div className="flex border border-gray-300 dark:border-gray-600 rounded-md">
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('kanban')}
+                className="rounded-r-none border-r border-gray-300 dark:border-gray-600"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="rounded-l-none"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
             <Button 
               variant="outline" 
               onClick={() => setIsCsvModalOpen(true)}
@@ -309,7 +331,7 @@ export default function LeadsManagement() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <p className="text-red-800 dark:text-red-200">{error}</p>
-                <Button variant="ghost" size="sm" onClick={clearError}>
+                <Button variant="ghost" size="sm" onClick={() => clearError('leads')}>
                   Dismiss
                 </Button>
               </div>
@@ -317,22 +339,20 @@ export default function LeadsManagement() {
           </Card>
         )}
 
-        {/* Leads List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Leads ({filteredLeads.length})</CardTitle>
-            <CardDescription>
-              {isLoading ? 'Loading leads...' : 'Manage your leads pipeline'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-8">
+        {/* Leads Display */}
+        {isLoading ? (
+          <Card>
+            <CardContent className="p-8">
+              <div className="flex items-center justify-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 <span className="ml-2 text-gray-600 dark:text-gray-400">Loading leads...</span>
               </div>
-            ) : filteredLeads.length === 0 ? (
-              <div className="text-center py-8">
+            </CardContent>
+          </Card>
+        ) : filteredLeads.length === 0 ? (
+          <Card>
+            <CardContent className="p-8">
+              <div className="text-center">
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
                   {searchTerm || statusFilter ? 'No leads match your filters.' : 'No leads found.'}
@@ -346,7 +366,22 @@ export default function LeadsManagement() {
                   </Button>
                 )}
               </div>
-            ) : (
+            </CardContent>
+          </Card>
+        ) : viewMode === 'kanban' ? (
+          <LeadsKanbanBoard 
+            leads={filteredLeads} 
+            onLeadClick={setSelectedLead}
+          />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Leads ({filteredLeads.length})</CardTitle>
+              <CardDescription>
+                Manage your leads pipeline
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
                 {filteredLeads.map((lead) => (
                   <div 
@@ -394,7 +429,7 @@ export default function LeadsManagement() {
                           
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
-                            <span>Added {formatDate(lead.createdAt)}</span>
+                            <span>Added {lead.createdAt ? formatDate(lead.createdAt) : 'Unknown'}</span>
                           </div>
                         </div>
                         
@@ -422,9 +457,9 @@ export default function LeadsManagement() {
                   </div>
                 ))}
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Lead Statistics Modal */}
         {selectedLead && (
