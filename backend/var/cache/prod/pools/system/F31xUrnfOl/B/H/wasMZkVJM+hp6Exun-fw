@@ -1,0 +1,182 @@
+<?php //App.Entity.Document
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Document',
+                'client',
+                3 => 'createdBy',
+                5 => 'title',
+                7 => 'status',
+                9 => 'type',
+            ],
+            'defaultGroup' => [
+                'Document',
+            ],
+            'members' => [
+                [
+                    'client' => [
+                        $o[1],
+                    ],
+                    'createdBy' => [
+                        $o[3],
+                    ],
+                    'title' => [
+                        $o[5],
+                    ],
+                    'status' => [
+                        $o[7],
+                    ],
+                    'type' => [
+                        $o[9],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'client' => $o[1],
+                    'createdBy' => $o[3],
+                    'title' => $o[5],
+                    'status' => $o[7],
+                    'type' => $o[9],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+                7 => [
+                    $o[8],
+                ],
+                9 => [
+                    $o[10],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'Document' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'Document' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'Document' => [
+                        $o[6],
+                    ],
+                ],
+                7 => [
+                    'Default' => [
+                        $o[8],
+                    ],
+                    'Document' => [
+                        $o[8],
+                    ],
+                ],
+                9 => [
+                    'Default' => [
+                        $o[10],
+                    ],
+                    'Document' => [
+                        $o[10],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\Document',
+                3 => 'App\\Entity\\Document',
+                5 => 'App\\Entity\\Document',
+                7 => 'App\\Entity\\Document',
+                9 => 'App\\Entity\\Document',
+            ],
+            'property' => [
+                1 => 'client',
+                3 => 'createdBy',
+                5 => 'title',
+                7 => 'status',
+                9 => 'type',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+                8 => null,
+                10 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'Document',
+                ],
+                4 => [
+                    'Default',
+                    'Document',
+                ],
+                6 => [
+                    'Default',
+                    'Document',
+                ],
+                8 => [
+                    'Default',
+                    'Document',
+                ],
+                10 => [
+                    'Default',
+                    'Document',
+                ],
+            ],
+            'choices' => [
+                8 => [
+                    'draft',
+                    'ready_for_signature',
+                    'signed',
+                    'archived',
+                    'cancelled',
+                ],
+                10 => [
+                    'contract',
+                    'agreement',
+                    'proposal',
+                    'invoice',
+                    'report',
+                    'other',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

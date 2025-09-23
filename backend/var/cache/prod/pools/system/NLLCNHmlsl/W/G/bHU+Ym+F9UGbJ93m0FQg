@@ -509,11 +509,11 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 12 => null,
             ],
             'security' => [
-                2 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\') or (is_granted(\'ROLE_CLIENT_ADMIN\') and object.getClient().getClientId() == user.getClientId())',
-                5 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\') or is_granted(\'ROLE_CLIENT_ADMIN\') or is_granted(\'ROLE_CLIENT_STAFF\')',
-                7 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_CLIENT_ADMIN\')',
-                9 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or (is_granted(\'ROLE_CLIENT_ADMIN\') and object.getClient().getClientId() == user.getClientId())',
-                12 => 'is_granted(\'ROLE_AGENCY_ADMIN\')',
+                2 => 'is_granted(\'ROLE_SYSTEM_ADMIN\') or is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\') or (is_granted(\'ROLE_CLIENT_ADMIN\') and object.getClient().getClientId() == user.getClientId())',
+                5 => 'is_granted(\'ROLE_SYSTEM_ADMIN\') or is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\') or is_granted(\'ROLE_CLIENT_ADMIN\') or is_granted(\'ROLE_CLIENT_STAFF\')',
+                7 => 'is_granted(\'ROLE_SYSTEM_ADMIN\') or is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_CLIENT_ADMIN\')',
+                9 => 'is_granted(\'ROLE_SYSTEM_ADMIN\') or is_granted(\'ROLE_AGENCY_ADMIN\') or (is_granted(\'ROLE_CLIENT_ADMIN\') and object.getClient().getClientId() == user.getClientId())',
+                12 => 'is_granted(\'ROLE_SYSTEM_ADMIN\') or is_granted(\'ROLE_AGENCY_ADMIN\')',
             ],
             'securityMessage' => [
                 2 => null,

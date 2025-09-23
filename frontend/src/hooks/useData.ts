@@ -89,6 +89,50 @@ export function useData() {
     return dataService.getLeads(params);
   }, []);
 
+  const importLeadgenData = useCallback(async (leads: any[], clientId?: string, sourceId?: string) => {
+    return dataService.importLeadgenData(leads, clientId, sourceId);
+  }, []);
+
+  const getLeadEvents = useCallback(async (leadId: string) => {
+    return dataService.getLeadEvents(leadId);
+  }, []);
+
+  const getLeadStatistics = useCallback(async (leadId: string) => {
+    return dataService.getLeadStatistics(leadId);
+  }, []);
+
+  const createLeadEvent = useCallback(async (leadId: string, eventData: {
+    type: string;
+    direction?: string;
+    duration?: number;
+    notes?: string;
+    outcome?: string;
+    next_action?: string;
+  }) => {
+    return dataService.createLeadEvent(leadId, eventData);
+  }, []);
+
+  // LEADGEN EXECUTION (Admin Only)
+  const executeLeadgenCampaign = useCallback(async (config: any) => {
+    return dataService.executeLeadgenCampaign(config);
+  }, []);
+
+  const getLeadgenVerticals = useCallback(async () => {
+    return dataService.getLeadgenVerticals();
+  }, []);
+
+  const getLeadgenSources = useCallback(async () => {
+    return dataService.getLeadgenSources();
+  }, []);
+
+  const getLeadgenCampaignStatus = useCallback(async (campaignId: string) => {
+    return dataService.getLeadgenCampaignStatus(campaignId);
+  }, []);
+
+  const getLeadgenTemplate = useCallback(async () => {
+    return dataService.getLeadgenTemplate();
+  }, []);
+
   const submitLead = useCallback(async (leadData: any) => {
     return dataService.submitLead(leadData);
   }, []);
@@ -170,6 +214,15 @@ export function useData() {
     getLeads,
     submitLead,
     importLeads,
+    importLeadgenData,
+    getLeadEvents,
+    getLeadStatistics,
+    createLeadEvent,
+    executeLeadgenCampaign,
+    getLeadgenVerticals,
+    getLeadgenSources,
+    getLeadgenCampaignStatus,
+    getLeadgenTemplate,
     
     // User methods
     getUsers,

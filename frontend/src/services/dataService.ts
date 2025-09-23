@@ -465,6 +465,150 @@ class DataService {
     }
   }
 
+  async importLeadgenData(leads: any[], clientId?: string, sourceId?: string): Promise<any> {
+    try {
+      this.setLoading('leads', true);
+      this.setError('leads', null);
+
+      const result = await apiService.importLeadgenData(leads, clientId, sourceId);
+      
+      // Clear cache to force refresh
+      this.clearCache('leads');
+      this.notifyListeners();
+      
+      return result;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to import leadgen data';
+      this.setError('leads', errorMessage);
+      throw error;
+    } finally {
+      this.setLoading('leads', false);
+    }
+  }
+
+  async getLeadEvents(leadId: string): Promise<any[]> {
+    const cacheKey = `lead_events:${leadId}`;
+    const cached = this.getCachedData<any[]>(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const events = await apiService.getLeadEvents(leadId);
+      this.setCachedData(cacheKey, events);
+      return events;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getLeadStatistics(leadId: string): Promise<any> {
+    const cacheKey = `lead_statistics:${leadId}`;
+    const cached = this.getCachedData<any>(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const statistics = await apiService.getLeadStatistics(leadId);
+      this.setCachedData(cacheKey, statistics);
+      return statistics;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createLeadEvent(leadId: string, eventData: {
+    type: string;
+    direction?: string;
+    duration?: number;
+    notes?: string;
+    outcome?: string;
+    next_action?: string;
+  }): Promise<any> {
+    try {
+      const event = await apiService.createLeadEvent(leadId, eventData);
+      
+      // Clear related caches
+      this.clearCache(`lead_events:${leadId}`);
+      this.clearCache(`lead_statistics:${leadId}`);
+      this.clearCache('leads');
+      this.notifyListeners();
+      
+      return event;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // LEADGEN EXECUTION (Admin Only)
+  async executeLeadgenCampaign(config: any): Promise<any> {
+    try {
+      this.setLoading('leadgen', true);
+      this.setError('leadgen', null);
+
+      const result = await apiService.executeLeadgenCampaign(config);
+      
+      // Clear leads cache to force refresh
+      this.clearCache('leads');
+      this.notifyListeners();
+      
+      return result;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to execute leadgen campaign';
+      this.setError('leadgen', errorMessage);
+      throw error;
+    } finally {
+      this.setLoading('leadgen', false);
+    }
+  }
+
+  async getLeadgenVerticals(): Promise<any> {
+    const cacheKey = 'leadgen_verticals';
+    const cached = this.getCachedData<any>(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const verticals = await apiService.getLeadgenVerticals();
+      this.setCachedData(cacheKey, verticals);
+      return verticals;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getLeadgenSources(): Promise<any> {
+    const cacheKey = 'leadgen_sources';
+    const cached = this.getCachedData<any>(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const sources = await apiService.getLeadgenSources();
+      this.setCachedData(cacheKey, sources);
+      return sources;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getLeadgenCampaignStatus(campaignId: string): Promise<any> {
+    try {
+      return await apiService.getLeadgenCampaignStatus(campaignId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getLeadgenTemplate(): Promise<any> {
+    const cacheKey = 'leadgen_template';
+    const cached = this.getCachedData<any>(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const template = await apiService.getLeadgenTemplate();
+      this.setCachedData(cacheKey, template);
+      return template;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async submitLead(leadData: Omit<Lead, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<Lead> {
     try {
       const lead = await apiService.submitLead(leadData);

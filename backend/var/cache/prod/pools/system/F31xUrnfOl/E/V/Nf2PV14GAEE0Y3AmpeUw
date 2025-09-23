@@ -1,0 +1,202 @@
+<?php //App.Entity.OpenPhoneMessageLog
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotNull'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotNull')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotNull'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\OpenPhoneMessageLog',
+                'client',
+                3 => 'integration',
+                5 => 'openPhoneMessageId',
+                7 => 'direction',
+                9 => 'status',
+                11 => 'content',
+            ],
+            'defaultGroup' => [
+                'OpenPhoneMessageLog',
+            ],
+            'members' => [
+                [
+                    'client' => [
+                        $o[1],
+                    ],
+                    'integration' => [
+                        $o[3],
+                    ],
+                    'openPhoneMessageId' => [
+                        $o[5],
+                    ],
+                    'direction' => [
+                        $o[7],
+                    ],
+                    'status' => [
+                        $o[9],
+                    ],
+                    'content' => [
+                        $o[11],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'client' => $o[1],
+                    'integration' => $o[3],
+                    'openPhoneMessageId' => $o[5],
+                    'direction' => $o[7],
+                    'status' => $o[9],
+                    'content' => $o[11],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+                7 => [
+                    $o[8],
+                ],
+                9 => [
+                    $o[10],
+                ],
+                11 => [
+                    $o[12],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'OpenPhoneMessageLog' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'OpenPhoneMessageLog' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'OpenPhoneMessageLog' => [
+                        $o[6],
+                    ],
+                ],
+                7 => [
+                    'Default' => [
+                        $o[8],
+                    ],
+                    'OpenPhoneMessageLog' => [
+                        $o[8],
+                    ],
+                ],
+                9 => [
+                    'Default' => [
+                        $o[10],
+                    ],
+                    'OpenPhoneMessageLog' => [
+                        $o[10],
+                    ],
+                ],
+                11 => [
+                    'Default' => [
+                        $o[12],
+                    ],
+                    'OpenPhoneMessageLog' => [
+                        $o[12],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\OpenPhoneMessageLog',
+                3 => 'App\\Entity\\OpenPhoneMessageLog',
+                5 => 'App\\Entity\\OpenPhoneMessageLog',
+                7 => 'App\\Entity\\OpenPhoneMessageLog',
+                9 => 'App\\Entity\\OpenPhoneMessageLog',
+                11 => 'App\\Entity\\OpenPhoneMessageLog',
+            ],
+            'property' => [
+                1 => 'client',
+                3 => 'integration',
+                5 => 'openPhoneMessageId',
+                7 => 'direction',
+                9 => 'status',
+                11 => 'content',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+                8 => null,
+                10 => null,
+                12 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'OpenPhoneMessageLog',
+                ],
+                4 => [
+                    'Default',
+                    'OpenPhoneMessageLog',
+                ],
+                6 => [
+                    'Default',
+                    'OpenPhoneMessageLog',
+                ],
+                8 => [
+                    'Default',
+                    'OpenPhoneMessageLog',
+                ],
+                10 => [
+                    'Default',
+                    'OpenPhoneMessageLog',
+                ],
+                12 => [
+                    'Default',
+                    'OpenPhoneMessageLog',
+                ],
+            ],
+            'choices' => [
+                8 => [
+                    'inbound',
+                    'outbound',
+                ],
+                10 => [
+                    'sent',
+                    'delivered',
+                    'failed',
+                    'pending',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

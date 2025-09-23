@@ -5,9 +5,12 @@ namespace App\Controller\Api\V1;
 use App\Entity\Lead;
 use App\Entity\Client;
 use App\Entity\LeadSource;
+use App\Entity\LeadEvent;
 use App\Repository\LeadRepository;
 use App\Repository\ClientRepository;
 use App\Repository\LeadSourceRepository;
+use App\Repository\LeadEventRepository;
+use App\Service\LeadgenIntegrationService;
 use App\ValueObject\LeadStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +30,8 @@ class LeadsController extends AbstractController
         private LeadRepository $leadRepository,
         private ClientRepository $clientRepository,
         private LeadSourceRepository $leadSourceRepository,
+        private LeadEventRepository $leadEventRepository,
+        private LeadgenIntegrationService $leadgenIntegrationService,
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator
     ) {}
@@ -242,11 +247,6 @@ class LeadsController extends AbstractController
                 return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
             }
 
-            $lead = $this->leadRepository->find($id);
-            if (!$lead) {
-                return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
-            }
-
             $data = json_decode($request->getContent(), true);
             
             if (!$data) {
@@ -255,7 +255,7 @@ class LeadsController extends AbstractController
 
             // Validate input
             $constraints = new Assert\Collection([
-                'type' => [new Assert\NotBlank(), new Assert\Choice(['phone_call', 'email', 'meeting', 'note'])],
+                'type' => [new Assert\NotBlank(), new Assert\Choice(['phone_call', 'email', 'meeting', 'note', 'application'])],
                 'direction' => [new Assert\Optional([new Assert\Choice(['inbound', 'outbound'])])],
                 'duration' => [new Assert\Optional([new Assert\PositiveOrZero()])],
                 'notes' => [new Assert\Optional([new Assert\NotBlank()])],
@@ -272,18 +272,21 @@ class LeadsController extends AbstractController
                 return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
             }
 
-            // Create lead event (you'll need to create a LeadEvent entity)
-            // For now, we'll return a success response
+            $event = $this->leadgenIntegrationService->trackLeadStatistics($id, $data['type'], $data);
+
             $eventData = [
-                'id' => Uuid::v4()->toRfc4122(),
+                'id' => $event->getId(),
                 'lead_id' => $id,
-                'type' => $data['type'],
-                'direction' => $data['direction'] ?? null,
-                'duration' => $data['duration'] ?? null,
-                'notes' => $data['notes'] ?? null,
-                'outcome' => $data['outcome'] ?? null,
-                'next_action' => $data['next_action'] ?? null,
-                'created_at' => (new \DateTimeImmutable())->format('c')
+                'type' => $event->getType(),
+                'type_label' => $event->getTypeLabel(),
+                'direction' => $event->getDirection(),
+                'direction_label' => $event->getDirectionLabel(),
+                'duration' => $event->getDuration(),
+                'notes' => $event->getNotes(),
+                'outcome' => $event->getOutcome(),
+                'outcome_label' => $event->getOutcomeLabel(),
+                'next_action' => $event->getNextAction(),
+                'created_at' => $event->getCreatedAt()->format('c')
             ];
 
             return $this->json([
@@ -292,7 +295,7 @@ class LeadsController extends AbstractController
             ], Response::HTTP_CREATED);
 
         } catch (\Exception $e) {
-            return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json(['error' => 'Internal server error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -475,5 +478,117 @@ class LeadsController extends AbstractController
         } catch (\Exception $e) {
             return $this->json(['error' => 'Internal server error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    #[Route('/leadgen-import', name: 'api_v1_leads_leadgen_import', methods: ['POST'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function importLeadgenData(Request $request): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            
+            if (!$data) {
+                return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate input
+            $constraints = new Assert\Collection([
+                'leads' => [new Assert\NotBlank(), new Assert\Type('array')],
+                'client_id' => [new Assert\Optional([new Assert\Uuid()])],
+                'source_id' => [new Assert\Optional([new Assert\Uuid()])]
+            ]);
+
+            $violations = $this->validator->validate($data, $constraints);
+            if (count($violations) > 0) {
+                $errors = [];
+                foreach ($violations as $violation) {
+                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+                return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
+            }
+
+            $result = $this->leadgenIntegrationService->importLeadgenData(
+                $data['leads'],
+                $data['client_id'] ?? null,
+                $data['source_id'] ?? null
+            );
+
+            $response = [
+                'message' => 'Leadgen data import completed',
+                'imported' => $result['imported'],
+                'updated' => $result['updated'],
+                'skipped' => $result['skipped'],
+                'total_processed' => count($data['leads'])
+            ];
+
+            if (!empty($result['errors'])) {
+                $response['errors'] = $result['errors'];
+            }
+
+            $statusCode = $result['imported'] > 0 || $result['updated'] > 0 ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST;
+            return $this->json($response, $statusCode);
+
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Internal server error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/{id}/events', name: 'api_v1_leads_events_list', methods: ['GET'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function getLeadEvents(string $id): JsonResponse
+    {
+        if (!Uuid::isValid($id)) {
+            return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $lead = $this->leadRepository->find($id);
+        if (!$lead) {
+            return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $events = $this->leadEventRepository->findByLead($id);
+        
+        $eventData = [];
+        foreach ($events as $event) {
+            $eventData[] = [
+                'id' => $event->getId(),
+                'type' => $event->getType(),
+                'type_label' => $event->getTypeLabel(),
+                'direction' => $event->getDirection(),
+                'direction_label' => $event->getDirectionLabel(),
+                'duration' => $event->getDuration(),
+                'notes' => $event->getNotes(),
+                'outcome' => $event->getOutcome(),
+                'outcome_label' => $event->getOutcomeLabel(),
+                'next_action' => $event->getNextAction(),
+                'created_at' => $event->getCreatedAt()->format('c')
+            ];
+        }
+
+        return $this->json([
+            'lead_id' => $id,
+            'events' => $eventData
+        ]);
+    }
+
+    #[Route('/{id}/statistics', name: 'api_v1_leads_statistics', methods: ['GET'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function getLeadStatistics(string $id): JsonResponse
+    {
+        if (!Uuid::isValid($id)) {
+            return $this->json(['error' => 'Invalid UUID'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $lead = $this->leadRepository->find($id);
+        if (!$lead) {
+            return $this->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $statistics = $this->leadgenIntegrationService->getLeadStatistics($id);
+
+        return $this->json([
+            'lead_id' => $id,
+            'statistics' => $statistics
+        ]);
     }
 }

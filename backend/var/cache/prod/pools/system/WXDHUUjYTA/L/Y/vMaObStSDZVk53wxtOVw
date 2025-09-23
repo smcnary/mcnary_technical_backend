@@ -29,6 +29,7 @@ return [PHP_INT_MAX, [
     'auditIntakes',
     'auditFindings',
     'oauthConnections',
+    'openPhoneIntegrations',
     'website',
     'zipCode',
     'createdAtValue',

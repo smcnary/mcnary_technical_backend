@@ -4,32 +4,33 @@ namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 
-class DateTimeImmutableNormalizer implements NormalizerInterface, DenormalizerInterface, CacheableSupportsMethodInterface
+class DateTimeImmutableNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function normalize($object, string $format = null, array $context = []): string
+    public function normalize(mixed $object, string $format = null, array $context = []): string
     {
         return $object->format('Y-m-d\TH:i:sP');
     }
 
-    public function supportsNormalization($data, string $format = null): bool
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof \DateTimeImmutable;
     }
 
-    public function denormalize($data, string $type, string $format = null, array $context = []): \DateTimeImmutable
+    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): \DateTimeImmutable
     {
         return new \DateTimeImmutable($data);
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null): bool
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return $type === \DateTimeImmutable::class;
     }
 
-    public function hasCacheableSupportsMethod(): bool
+    public function getSupportedTypes(?string $format): array
     {
-        return true;
+        return [
+            \DateTimeImmutable::class => true,
+        ];
     }
 }

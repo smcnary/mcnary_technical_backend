@@ -9,6 +9,8 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
         'ApiPlatform\\Metadata\\Property\\PropertyNameCollection' => [
             'properties' => [
                 [
+                    'createdAt',
+                    'updatedAt',
                     'id',
                     'client',
                     'source',
@@ -26,13 +28,13 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                     'utmJson',
                     'isTest',
                     'events',
-                    'createdAt',
-                    'updatedAt',
-                    'name',
-                    'test',
-                    'clientId',
                     'createdAtValue',
                     'updatedAtValue',
+                    'name',
+                    'statusValue',
+                    'statusLabel',
+                    'test',
+                    'clientId',
                 ],
             ],
         ],

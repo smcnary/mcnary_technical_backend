@@ -33,6 +33,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                     'password',
                     'roles',
                     'systemAdmin',
+                    'salesConsultant',
                     'agencyAdmin',
                     'clientUser',
                     'readOnly',

@@ -6,68 +6,114 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use App\Repository\LeadEventRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LeadEventRepository::class)]
 #[ORM\Table(name: 'lead_events')]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     operations: [
-        new Get(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or (is_granted('ROLE_CLIENT_ADMIN') and object.getLead().getClient().getClientId() == user.getClientId())"),
-        new GetCollection(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"),
-        new Post(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF') or is_granted('ROLE_CLIENT_ADMIN')"),
-        new Put(security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"),
-        new Delete(security: "is_granted('ROLE_AGENCY_ADMIN')")
-    ]
+        new Post(
+            normalizationContext: ['groups' => ['lead_event:read']],
+            denormalizationContext: ['groups' => ['lead_event:write']],
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['lead_event:read']],
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['lead_event:read']],
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['lead_event:read']],
+            denormalizationContext: ['groups' => ['lead_event:write']],
+            security: "is_granted('ROLE_AGENCY_ADMIN') or is_granted('ROLE_AGENCY_STAFF')"
+        ),
+    ],
+    paginationItemsPerPage: 50
 )]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC'], arguments: ['orderParameterName' => 'order'])]
 class LeadEvent
 {
-    use Timestamps;
-
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[Groups(['lead_event:read'])]
+    #[ApiProperty(identifier: true)]
     private string $id;
 
     #[ORM\ManyToOne(targetEntity: Lead::class, inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
     private Lead $lead;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?User $createdBy = null;
-
-    #[ORM\Column]
+    #[ORM\Column(type: Types::STRING, length: 50)]
     #[Assert\NotBlank]
-    private string $eventType; // status_change, note, call, email, meeting, follow_up
+    #[Assert\Choice(['phone_call', 'email', 'meeting', 'note', 'application'])]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
+    private string $type;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description = null;
+    #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
+    #[Assert\Choice(['inbound', 'outbound'])]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
+    private ?string $direction = null;
 
-    #[ORM\Column(type: 'jsonb')]
-    private array $payloadJson = [];
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    #[Assert\PositiveOrZero]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
+    private ?int $duration = null;
 
-    #[ORM\Column(type: 'string', options: ['default' => 'info'])]
-    private string $severity = 'info'; // info, warning, error, success
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
+    private ?string $notes = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $scheduledAt = null;
+    #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
+    #[Assert\Choice(['positive', 'neutral', 'negative'])]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
+    private ?string $outcome = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $completedAt = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['lead_event:read', 'lead_event:write'])]
+    private ?string $nextAction = null;
 
-    public function __construct(Lead $lead, string $eventType, ?User $createdBy = null)
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['lead_event:read'])]
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['lead_event:read'])]
+    private \DateTimeImmutable $updatedAt;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $now = new \DateTimeImmutable('now');
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable('now');
+    }
+
+    public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $this->lead = $lead;
-        $this->eventType = $eventType;
-        $this->createdBy = $createdBy;
-        $this->payloadJson = [];
     }
 
     public function getId(): string
@@ -80,139 +126,139 @@ class LeadEvent
         return $this->lead;
     }
 
-    public function setLead(?Lead $lead): self
+    public function setLead(Lead $lead): self
     {
         $this->lead = $lead;
         return $this;
     }
 
-    public function getCreatedBy(): ?User
+    public function getType(): string
     {
-        return $this->createdBy;
+        return $this->type;
     }
 
-    public function setCreatedBy(?User $createdBy): self
+    public function setType(string $type): self
     {
-        $this->createdBy = $createdBy;
+        $this->type = $type;
         return $this;
     }
 
-    public function getEventType(): string
+    public function getDirection(): ?string
     {
-        return $this->eventType;
+        return $this->direction;
     }
 
-    public function setEventType(string $eventType): self
+    public function setDirection(?string $direction): self
     {
-        $this->eventType = $eventType;
+        $this->direction = $direction;
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDuration(): ?int
     {
-        return $this->description;
+        return $this->duration;
     }
 
-    public function setDescription(?string $description): self
+    public function setDuration(?int $duration): self
     {
-        $this->description = $description;
+        $this->duration = $duration;
         return $this;
     }
 
-    public function getPayloadJson(): array
+    public function getNotes(): ?string
     {
-        return $this->payloadJson;
+        return $this->notes;
     }
 
-    public function setPayloadJson(array $payloadJson): self
+    public function setNotes(?string $notes): self
     {
-        $this->payloadJson = $payloadJson;
+        $this->notes = $notes;
         return $this;
     }
 
-    public function getPayloadValue(string $key, $default = null)
+    public function getOutcome(): ?string
     {
-        return $this->payloadJson[$key] ?? $default;
+        return $this->outcome;
     }
 
-    public function setPayloadValue(string $key, $value): self
+    public function setOutcome(?string $outcome): self
     {
-        $this->payloadJson[$key] = $value;
+        $this->outcome = $outcome;
         return $this;
     }
 
-    public function getSeverity(): string
+    public function getNextAction(): ?string
     {
-        return $this->severity;
+        return $this->nextAction;
     }
 
-    public function setSeverity(string $severity): self
+    public function setNextAction(?string $nextAction): self
     {
-        $this->severity = $severity;
+        $this->nextAction = $nextAction;
         return $this;
     }
 
-    public function getScheduledAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
-        return $this->scheduledAt;
+        return $this->createdAt;
     }
 
-    public function setScheduledAt(?\DateTimeImmutable $scheduledAt): self
+    public function getUpdatedAt(): \DateTimeImmutable
     {
-        $this->scheduledAt = $scheduledAt;
-        return $this;
+        return $this->updatedAt;
     }
 
-    public function getCompletedAt(): ?\DateTimeImmutable
-    {
-        return $this->completedAt;
-    }
-
-    public function setCompletedAt(?\DateTimeImmutable $completedAt): self
-    {
-        $this->completedAt = $completedAt;
-        return $this;
-    }
-
-    public function isScheduled(): bool
-    {
-        return $this->scheduledAt !== null;
-    }
-
-    public function isCompleted(): bool
-    {
-        return $this->completedAt !== null;
-    }
-
-    public function isOverdue(): bool
-    {
-        if (!$this->isScheduled() || $this->isCompleted()) {
-            return false;
-        }
-        
-        return $this->scheduledAt < new \DateTimeImmutable('now');
-    }
-
-    public function markCompleted(): self
-    {
-        $this->completedAt = new \DateTimeImmutable('now');
-        return $this;
-    }
-
-    public function getEventTypeLabel(): string
+    /**
+     * Get event type label for display
+     */
+    #[Groups(['lead_event:read'])]
+    public function getTypeLabel(): string
     {
         $labels = [
-            'status_change' => 'Status Changed',
-            'note' => 'Note Added',
-            'call' => 'Phone Call',
-            'email' => 'Email Sent',
-            'meeting' => 'Meeting Scheduled',
-            'follow_up' => 'Follow Up',
-            'qualification' => 'Qualified',
-            'disqualification' => 'Disqualified',
-            'conversion' => 'Converted'
+            'phone_call' => 'Phone Call',
+            'email' => 'Email',
+            'meeting' => 'Meeting',
+            'note' => 'Note',
+            'application' => 'Application'
         ];
         
-        return $labels[$this->eventType] ?? ucfirst(str_replace('_', ' ', $this->eventType));
+        return $labels[$this->type] ?? $this->type;
+    }
+
+    /**
+     * Get outcome label for display
+     */
+    #[Groups(['lead_event:read'])]
+    public function getOutcomeLabel(): ?string
+    {
+        if (!$this->outcome) {
+            return null;
+        }
+        
+        $labels = [
+            'positive' => 'Positive',
+            'neutral' => 'Neutral',
+            'negative' => 'Negative'
+        ];
+        
+        return $labels[$this->outcome] ?? $this->outcome;
+    }
+
+    /**
+     * Get direction label for display
+     */
+    #[Groups(['lead_event:read'])]
+    public function getDirectionLabel(): ?string
+    {
+        if (!$this->direction) {
+            return null;
+        }
+        
+        $labels = [
+            'inbound' => 'Inbound',
+            'outbound' => 'Outbound'
+        ];
+        
+        return $labels[$this->direction] ?? $this->direction;
     }
 }

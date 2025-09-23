@@ -1,6 +1,6 @@
 framework:
     serializer:
-        enable_annotations: true
+        enable_attributes: true
         mapping:
             paths: ['%kernel.project_dir%/src/Entity']
         default_context:

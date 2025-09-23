@@ -14,13 +14,13 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 [],
             ],
             'builtinType' => [
-                'string',
+                'object',
             ],
             'nullable' => [
                 false,
             ],
             'class' => [
-                null,
+                'App\\ValueObject\\LeadStatus',
             ],
             'collection' => [
                 false,

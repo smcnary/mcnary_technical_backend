@@ -9,45 +9,52 @@ return [[
 'App__Entity__Subscription__CLASSMETADATA__' => 2,
 'App__Entity__Keyword__CLASSMETADATA__' => 3,
 'App__Entity__Category__CLASSMETADATA__' => 4,
-'App__Entity__Ranking__CLASSMETADATA__' => 5,
-'App__Entity__ContentItem__CLASSMETADATA__' => 6,
-'App__Entity__AuditCompetitor__CLASSMETADATA__' => 7,
-'App__Entity__ClientLocation__CLASSMETADATA__' => 8,
-'App__Entity__RankingDaily__CLASSMETADATA__' => 9,
-'App__Entity__Campaign__CLASSMETADATA__' => 10,
-'App__Entity__ContentBrief__CLASSMETADATA__' => 11,
-'App__Entity__Package__CLASSMETADATA__' => 12,
-'App__Entity__Post__CLASSMETADATA__' => 13,
-'App__Entity__SystemUser__CLASSMETADATA__' => 14,
-'App__Entity__Review__CLASSMETADATA__' => 15,
-'App__Entity__MediaAsset__CLASSMETADATA__' => 16,
-'App__Entity__Tag__CLASSMETADATA__' => 17,
-'App__Entity__Citation__CLASSMETADATA__' => 18,
-'App__Entity__User__CLASSMETADATA__' => 19,
-'App__Entity__AuditConversionGoal__CLASSMETADATA__' => 20,
-'App__Entity__CaseStudy__CLASSMETADATA__' => 21,
-'App__Entity__Agency__CLASSMETADATA__' => 22,
-'App__Entity__NewsletterSubscription__CLASSMETADATA__' => 23,
-'App__Entity__Tenant__CLASSMETADATA__' => 24,
-'App__Entity__LeadEvent__CLASSMETADATA__' => 25,
-'App__Entity__Invoice__CLASSMETADATA__' => 26,
-'App__Entity__AuditRun__CLASSMETADATA__' => 27,
-'App__Entity__AuditKeyword__CLASSMETADATA__' => 28,
-'App__Entity__SeoMeta__CLASSMETADATA__' => 29,
-'App__Entity__UserClientAccess__CLASSMETADATA__' => 30,
-'App__Entity__Faq__CLASSMETADATA__' => 31,
-'App__Entity__Page__CLASSMETADATA__' => 32,
-'App__Entity__Lead__CLASSMETADATA__' => 33,
-'App__Entity__AuditIntake__CLASSMETADATA__' => 34,
-'App__Entity__Form__CLASSMETADATA__' => 35,
-'App__Entity__Backlink__CLASSMETADATA__' => 36,
-'App__Entity__AuditFinding__CLASSMETADATA__' => 37,
-'App__Entity__Organization__CLASSMETADATA__' => 38,
-'App__Entity__OAuthToken__CLASSMETADATA__' => 39,
-'App__Entity__LeadSource__CLASSMETADATA__' => 40,
-'App__Entity__Client__CLASSMETADATA__' => 41,
-'App__Entity__FormSubmission__CLASSMETADATA__' => 42,
-'App__Entity__Site__CLASSMETADATA__' => 43,
+'App__Entity__Document__CLASSMETADATA__' => 5,
+'App__Entity__Ranking__CLASSMETADATA__' => 6,
+'App__Entity__ContentItem__CLASSMETADATA__' => 7,
+'App__Entity__AuditCompetitor__CLASSMETADATA__' => 8,
+'App__Entity__ClientLocation__CLASSMETADATA__' => 9,
+'App__Entity__RankingDaily__CLASSMETADATA__' => 10,
+'App__Entity__Campaign__CLASSMETADATA__' => 11,
+'App__Entity__ContentBrief__CLASSMETADATA__' => 12,
+'App__Entity__Package__CLASSMETADATA__' => 13,
+'App__Entity__Post__CLASSMETADATA__' => 14,
+'App__Entity__SystemUser__CLASSMETADATA__' => 15,
+'App__Entity__Review__CLASSMETADATA__' => 16,
+'App__Entity__MediaAsset__CLASSMETADATA__' => 17,
+'App__Entity__Tag__CLASSMETADATA__' => 18,
+'App__Entity__Citation__CLASSMETADATA__' => 19,
+'App__Entity__User__CLASSMETADATA__' => 20,
+'App__Entity__AuditConversionGoal__CLASSMETADATA__' => 21,
+'App__Entity__CaseStudy__CLASSMETADATA__' => 22,
+'App__Entity__Agency__CLASSMETADATA__' => 23,
+'App__Entity__NewsletterSubscription__CLASSMETADATA__' => 24,
+'App__Entity__OpenPhoneMessageLog__CLASSMETADATA__' => 25,
+'App__Entity__Tenant__CLASSMETADATA__' => 26,
+'App__Entity__LeadEvent__CLASSMETADATA__' => 27,
+'App__Entity__DocumentSignature__CLASSMETADATA__' => 28,
+'App__Entity__OpenPhoneCallLog__CLASSMETADATA__' => 29,
+'App__Entity__Invoice__CLASSMETADATA__' => 30,
+'App__Entity__AuditRun__CLASSMETADATA__' => 31,
+'App__Entity__AuditKeyword__CLASSMETADATA__' => 32,
+'App__Entity__OpenPhoneIntegration__CLASSMETADATA__' => 33,
+'App__Entity__DocumentVersion__CLASSMETADATA__' => 34,
+'App__Entity__SeoMeta__CLASSMETADATA__' => 35,
+'App__Entity__UserClientAccess__CLASSMETADATA__' => 36,
+'App__Entity__Faq__CLASSMETADATA__' => 37,
+'App__Entity__Page__CLASSMETADATA__' => 38,
+'App__Entity__Lead__CLASSMETADATA__' => 39,
+'App__Entity__AuditIntake__CLASSMETADATA__' => 40,
+'App__Entity__Form__CLASSMETADATA__' => 41,
+'App__Entity__Backlink__CLASSMETADATA__' => 42,
+'App__Entity__AuditFinding__CLASSMETADATA__' => 43,
+'App__Entity__Organization__CLASSMETADATA__' => 44,
+'App__Entity__DocumentTemplate__CLASSMETADATA__' => 45,
+'App__Entity__OAuthToken__CLASSMETADATA__' => 46,
+'App__Entity__LeadSource__CLASSMETADATA__' => 47,
+'App__Entity__Client__CLASSMETADATA__' => 48,
+'App__Entity__FormSubmission__CLASSMETADATA__' => 49,
+'App__Entity__Site__CLASSMETADATA__' => 50,
 
 ], [
 
@@ -1334,6 +1341,396 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\Document',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'title' => $o[2],
+                        'description' => $o[3],
+                        'content' => $o[4],
+                        'status' => $o[5],
+                        'type' => $o[6],
+                        'metadata' => $o[7],
+                        'signatureFields' => $o[8],
+                        'sentForSignatureAt' => $o[9],
+                        'signedAt' => $o[10],
+                        'expiresAt' => $o[11],
+                        'requiresSignature' => $o[12],
+                        'isTemplate' => $o[13],
+                        'createdAt' => $o[14],
+                        'updatedAt' => $o[15],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'title' => 'title',
+                        'description' => 'description',
+                        'content' => 'content',
+                        'status' => 'status',
+                        'type' => 'type',
+                        'metadata' => 'metadata',
+                        'signature_fields' => 'signatureFields',
+                        'sent_for_signature_at' => 'sentForSignatureAt',
+                        'signed_at' => 'signedAt',
+                        'expires_at' => 'expiresAt',
+                        'requires_signature' => 'requiresSignature',
+                        'is_template' => 'isTemplate',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'title' => 'title',
+                        'description' => 'description',
+                        'content' => 'content',
+                        'status' => 'status',
+                        'type' => 'type',
+                        'metadata' => 'metadata',
+                        'signatureFields' => 'signature_fields',
+                        'sentForSignatureAt' => 'sent_for_signature_at',
+                        'signedAt' => 'signed_at',
+                        'expiresAt' => 'expires_at',
+                        'requiresSignature' => 'requires_signature',
+                        'isTemplate' => 'is_template',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'documents',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'client' => $o[16],
+                        'createdBy' => $o[18],
+                        'file' => $o[20],
+                        'template' => $o[22],
+                        'signatures' => $o[24],
+                        'versions' => $o[25],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[26],
+                ],
+                'name' => [
+                    'App\\Entity\\Document',
+                    17 => 'client_id',
+                    19 => 'created_by_id',
+                    21 => 'file_id',
+                    23 => 'template_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                    17 => false,
+                    19 => false,
+                    21 => false,
+                    23 => false,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'string',
+                    'text',
+                    'text',
+                    'string',
+                    'string',
+                    'jsonb',
+                    'jsonb',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                    'boolean',
+                    'boolean',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'title',
+                    'description',
+                    'content',
+                    'status',
+                    'type',
+                    'metadata',
+                    'signatureFields',
+                    'sentForSignatureAt',
+                    'signedAt',
+                    'expiresAt',
+                    'requiresSignature',
+                    'isTemplate',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'title',
+                    'description',
+                    'content',
+                    'status',
+                    'type',
+                    'metadata',
+                    'signature_fields',
+                    'sent_for_signature_at',
+                    'signed_at',
+                    'expires_at',
+                    'requires_signature',
+                    'is_template',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    5 => 50,
+                    50,
+                ],
+                'nullable' => [
+                    3 => true,
+                    true,
+                    7 => true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    17 => false,
+                    19 => false,
+                    21 => true,
+                    23 => true,
+                ],
+                'options' => [
+                    5 => [
+                        'default' => 'draft',
+                    ],
+                    12 => [
+                        'default' => false,
+                    ],
+                    [
+                        'default' => false,
+                    ],
+                ],
+                'fetch' => [
+                    16 => 2,
+                    18 => 2,
+                    20 => 2,
+                    22 => 2,
+                    24 => 2,
+                    2,
+                ],
+                'sourceEntity' => [
+                    16 => 'App\\Entity\\Document',
+                    18 => 'App\\Entity\\Document',
+                    20 => 'App\\Entity\\Document',
+                    22 => 'App\\Entity\\Document',
+                    24 => 'App\\Entity\\Document',
+                    'App\\Entity\\Document',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    16 => [
+                        'client_id' => 'id',
+                    ],
+                    18 => [
+                        'created_by_id' => 'id',
+                    ],
+                    20 => [
+                        'file_id' => 'id',
+                    ],
+                    22 => [
+                        'template_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    16 => [
+                        'id' => 'client_id',
+                    ],
+                    18 => [
+                        'id' => 'created_by_id',
+                    ],
+                    20 => [
+                        'id' => 'file_id',
+                    ],
+                    22 => [
+                        'id' => 'template_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    16 => [
+                        $o[17],
+                    ],
+                    18 => [
+                        $o[19],
+                    ],
+                    20 => [
+                        $o[21],
+                    ],
+                    22 => [
+                        $o[23],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    16 => [
+                        'client_id' => 'client_id',
+                    ],
+                    18 => [
+                        'created_by_id' => 'created_by_id',
+                    ],
+                    20 => [
+                        'file_id' => 'file_id',
+                    ],
+                    22 => [
+                        'template_id' => 'template_id',
+                    ],
+                ],
+                'deferrable' => [
+                    17 => false,
+                    19 => false,
+                    21 => false,
+                    23 => false,
+                ],
+                'referencedColumnName' => [
+                    17 => 'id',
+                    19 => 'id',
+                    21 => 'id',
+                    23 => 'id',
+                ],
+                'cascade' => [
+                    24 => [
+                        'persist',
+                        'remove',
+                    ],
+                    [
+                        'persist',
+                        'remove',
+                    ],
+                ],
+                'orphanRemoval' => [
+                    24 => true,
+                    true,
+                ],
+                'mappedBy' => [
+                    24 => 'document',
+                    'document',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    16 => 'client',
+                    18 => 'createdBy',
+                    20 => 'file',
+                    22 => 'template',
+                    24 => 'signatures',
+                    'versions',
+                ],
+                'targetEntity' => [
+                    16 => 'App\\Entity\\Client',
+                    18 => 'App\\Entity\\User',
+                    20 => 'App\\Entity\\MediaAsset',
+                    22 => 'App\\Entity\\DocumentTemplate',
+                    24 => 'App\\Entity\\DocumentSignature',
+                    'App\\Entity\\DocumentVersion',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    26 => $o[27],
+                ],
+                'factory' => [
+                    26 => $o[27],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    27 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    27 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    27 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    27 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    27 => null,
+                ],
+                'nameBasedNamespace' => [
+                    27 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+6 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Id\\AssignedGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\AssignedGenerator')),
         ],
@@ -1509,7 +1906,7 @@ return [[
         []
     );
 },
-6 => static function () {
+7 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -1772,7 +2169,7 @@ return [[
         []
     );
 },
-7 => static function () {
+8 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -1920,7 +2317,7 @@ return [[
         []
     );
 },
-8 => static function () {
+9 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -2200,7 +2597,7 @@ return [[
         []
     );
 },
-9 => static function () {
+10 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -2458,7 +2855,7 @@ return [[
         []
     );
 },
-10 => static function () {
+11 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -2733,7 +3130,7 @@ return [[
         []
     );
 },
-11 => static function () {
+12 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -2957,7 +3354,7 @@ return [[
         []
     );
 },
-12 => static function () {
+13 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -3200,7 +3597,7 @@ return [[
         []
     );
 },
-13 => static function () {
+14 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -3411,7 +3808,7 @@ return [[
         []
     );
 },
-14 => static function () {
+15 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -3585,7 +3982,7 @@ return [[
         []
     );
 },
-15 => static function () {
+16 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -3808,7 +4205,7 @@ return [[
         []
     );
 },
-16 => static function () {
+17 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -4118,7 +4515,7 @@ return [[
         []
     );
 },
-17 => static function () {
+18 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -4302,7 +4699,7 @@ return [[
         []
     );
 },
-18 => static function () {
+19 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -4543,7 +4940,7 @@ return [[
         []
     );
 },
-19 => static function () {
+20 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -4908,7 +5305,7 @@ return [[
         []
     );
 },
-20 => static function () {
+21 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -5077,7 +5474,7 @@ return [[
         []
     );
 },
-21 => static function () {
+22 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -5302,7 +5699,7 @@ return [[
         []
     );
 },
-22 => static function () {
+23 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -5594,7 +5991,7 @@ return [[
         []
     );
 },
-23 => static function () {
+24 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -5788,7 +6185,310 @@ return [[
         []
     );
 },
-24 => static function () {
+25 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\OpenPhoneMessageLog',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'openPhoneMessageId' => $o[2],
+                        'direction' => $o[3],
+                        'status' => $o[4],
+                        'fromNumber' => $o[5],
+                        'toNumber' => $o[6],
+                        'content' => $o[7],
+                        'attachments' => $o[8],
+                        'sentAt' => $o[9],
+                        'metadata' => $o[10],
+                        'isFollowUpRequired' => $o[11],
+                        'notes' => $o[12],
+                        'createdAt' => $o[13],
+                        'updatedAt' => $o[14],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'open_phone_message_id' => 'openPhoneMessageId',
+                        'direction' => 'direction',
+                        'status' => 'status',
+                        'from_number' => 'fromNumber',
+                        'to_number' => 'toNumber',
+                        'content' => 'content',
+                        'attachments' => 'attachments',
+                        'sent_at' => 'sentAt',
+                        'metadata' => 'metadata',
+                        'is_follow_up_required' => 'isFollowUpRequired',
+                        'notes' => 'notes',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'openPhoneMessageId' => 'open_phone_message_id',
+                        'direction' => 'direction',
+                        'status' => 'status',
+                        'fromNumber' => 'from_number',
+                        'toNumber' => 'to_number',
+                        'content' => 'content',
+                        'attachments' => 'attachments',
+                        'sentAt' => 'sent_at',
+                        'metadata' => 'metadata',
+                        'isFollowUpRequired' => 'is_follow_up_required',
+                        'notes' => 'notes',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'openphone_message_logs',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'client' => $o[15],
+                        'integration' => $o[17],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[19],
+                ],
+                'name' => [
+                    'App\\Entity\\OpenPhoneMessageLog',
+                    16 => 'client_id',
+                    18 => 'integration_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                    16 => false,
+                    18 => false,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'text',
+                    'jsonb',
+                    'datetime_immutable',
+                    'jsonb',
+                    'boolean',
+                    'text',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'openPhoneMessageId',
+                    'direction',
+                    'status',
+                    'fromNumber',
+                    'toNumber',
+                    'content',
+                    'attachments',
+                    'sentAt',
+                    'metadata',
+                    'isFollowUpRequired',
+                    'notes',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'open_phone_message_id',
+                    'direction',
+                    'status',
+                    'from_number',
+                    'to_number',
+                    'content',
+                    'attachments',
+                    'sent_at',
+                    'metadata',
+                    'is_follow_up_required',
+                    'notes',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    32,
+                    32,
+                    255,
+                    255,
+                ],
+                'nullable' => [
+                    5 => true,
+                    true,
+                    8 => true,
+                    10 => true,
+                    12 => true,
+                    16 => false,
+                    18 => false,
+                ],
+                'options' => [
+                    11 => [
+                        'default' => false,
+                    ],
+                ],
+                'fetch' => [
+                    15 => 2,
+                    17 => 2,
+                ],
+                'sourceEntity' => [
+                    15 => 'App\\Entity\\OpenPhoneMessageLog',
+                    17 => 'App\\Entity\\OpenPhoneMessageLog',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    15 => [
+                        'client_id' => 'id',
+                    ],
+                    17 => [
+                        'integration_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    15 => [
+                        'id' => 'client_id',
+                    ],
+                    17 => [
+                        'id' => 'integration_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    15 => [
+                        $o[16],
+                    ],
+                    17 => [
+                        $o[18],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    15 => [
+                        'client_id' => 'client_id',
+                    ],
+                    17 => [
+                        'integration_id' => 'integration_id',
+                    ],
+                ],
+                'deferrable' => [
+                    16 => false,
+                    18 => false,
+                ],
+                'onDelete' => [
+                    16 => 'CASCADE',
+                    18 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    16 => 'id',
+                    18 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    15 => 'client',
+                    17 => 'integration',
+                ],
+                'targetEntity' => [
+                    15 => 'App\\Entity\\Client',
+                    17 => 'App\\Entity\\OpenPhoneIntegration',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    19 => $o[20],
+                ],
+                'factory' => [
+                    19 => $o[20],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    20 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    20 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    20 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    20 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    20 => null,
+                ],
+                'nameBasedNamespace' => [
+                    20 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+26 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -5906,7 +6606,7 @@ return [[
         []
     );
 },
-25 => static function () {
+27 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -5921,8 +6621,6 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
             clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
             clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
         ],
@@ -5940,6 +6638,9 @@ return [[
                         'class' => 'doctrine.uuid_generator',
                     ],
                 ],
+                'customRepositoryClassName' => [
+                    'App\\Repository\\LeadEventRepository',
+                ],
                 'identifier' => [
                     [
                         'id',
@@ -5951,12 +6652,12 @@ return [[
                 'fieldMappings' => [
                     [
                         'id' => $o[1],
-                        'eventType' => $o[2],
-                        'description' => $o[3],
-                        'payloadJson' => $o[4],
-                        'severity' => $o[5],
-                        'scheduledAt' => $o[6],
-                        'completedAt' => $o[7],
+                        'type' => $o[2],
+                        'direction' => $o[3],
+                        'duration' => $o[4],
+                        'notes' => $o[5],
+                        'outcome' => $o[6],
+                        'nextAction' => $o[7],
                         'createdAt' => $o[8],
                         'updatedAt' => $o[9],
                     ],
@@ -5964,12 +6665,12 @@ return [[
                 'fieldNames' => [
                     [
                         'id' => 'id',
-                        'event_type' => 'eventType',
-                        'description' => 'description',
-                        'payload_json' => 'payloadJson',
-                        'severity' => 'severity',
-                        'scheduled_at' => 'scheduledAt',
-                        'completed_at' => 'completedAt',
+                        'type' => 'type',
+                        'direction' => 'direction',
+                        'duration' => 'duration',
+                        'notes' => 'notes',
+                        'outcome' => 'outcome',
+                        'next_action' => 'nextAction',
                         'created_at' => 'createdAt',
                         'updated_at' => 'updatedAt',
                     ],
@@ -5977,12 +6678,12 @@ return [[
                 'columnNames' => [
                     [
                         'id' => 'id',
-                        'eventType' => 'event_type',
-                        'description' => 'description',
-                        'payloadJson' => 'payload_json',
-                        'severity' => 'severity',
-                        'scheduledAt' => 'scheduled_at',
-                        'completedAt' => 'completed_at',
+                        'type' => 'type',
+                        'direction' => 'direction',
+                        'duration' => 'duration',
+                        'notes' => 'notes',
+                        'outcome' => 'outcome',
+                        'nextAction' => 'next_action',
                         'createdAt' => 'created_at',
                         'updatedAt' => 'updated_at',
                     ],
@@ -6005,16 +6706,14 @@ return [[
                 'associationMappings' => [
                     [
                         'lead' => $o[10],
-                        'createdBy' => $o[12],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[14],
+                    $o[12],
                 ],
                 'name' => [
                     'App\\Entity\\LeadEvent',
                     11 => 'lead_id',
-                    13 => 'created_by_id',
                 ],
                 'id' => [
                     1 => true,
@@ -6022,60 +6721,58 @@ return [[
                 'unique' => [
                     1 => true,
                     11 => false,
-                    13 => false,
                 ],
                 'type' => [
                     1 => 'uuid',
                     'string',
-                    'text',
-                    'jsonb',
                     'string',
-                    'datetime_immutable',
-                    'datetime_immutable',
+                    'integer',
+                    'text',
+                    'string',
+                    'text',
                     'datetime_immutable',
                     'datetime_immutable',
                 ],
                 'fieldName' => [
                     1 => 'id',
-                    'eventType',
-                    'description',
-                    'payloadJson',
-                    'severity',
-                    'scheduledAt',
-                    'completedAt',
+                    'type',
+                    'direction',
+                    'duration',
+                    'notes',
+                    'outcome',
+                    'nextAction',
                     'createdAt',
                     'updatedAt',
                 ],
                 'columnName' => [
                     1 => 'id',
-                    'event_type',
-                    'description',
-                    'payload_json',
-                    'severity',
-                    'scheduled_at',
-                    'completed_at',
+                    'type',
+                    'direction',
+                    'duration',
+                    'notes',
+                    'outcome',
+                    'next_action',
                     'created_at',
                     'updated_at',
                 ],
+                'length' => [
+                    2 => 50,
+                    20,
+                    6 => 20,
+                ],
                 'nullable' => [
                     3 => true,
-                    6 => true,
+                    true,
+                    true,
+                    true,
                     true,
                     11 => false,
-                    13 => true,
-                ],
-                'options' => [
-                    5 => [
-                        'default' => 'info',
-                    ],
                 ],
                 'fetch' => [
                     10 => 2,
-                    12 => 2,
                 ],
                 'sourceEntity' => [
                     10 => 'App\\Entity\\LeadEvent',
-                    12 => 'App\\Entity\\LeadEvent',
                 ],
                 'inversedBy' => [
                     10 => 'events',
@@ -6084,82 +6781,66 @@ return [[
                     10 => [
                         'lead_id' => 'id',
                     ],
-                    12 => [
-                        'created_by_id' => 'id',
-                    ],
                 ],
                 'targetToSourceKeyColumns' => [
                     10 => [
                         'id' => 'lead_id',
-                    ],
-                    12 => [
-                        'id' => 'created_by_id',
                     ],
                 ],
                 'joinColumns' => [
                     10 => [
                         $o[11],
                     ],
-                    12 => [
-                        $o[13],
-                    ],
                 ],
                 'joinColumnFieldNames' => [
                     10 => [
                         'lead_id' => 'lead_id',
                     ],
-                    12 => [
-                        'created_by_id' => 'created_by_id',
-                    ],
                 ],
                 'deferrable' => [
                     11 => false,
-                    13 => false,
                 ],
                 'onDelete' => [
                     11 => 'CASCADE',
                 ],
                 'referencedColumnName' => [
                     11 => 'id',
-                    13 => 'id',
                 ],
             ],
             'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
                 'fieldName' => [
                     10 => 'lead',
-                    12 => 'createdBy',
                 ],
                 'targetEntity' => [
                     10 => 'App\\Entity\\Lead',
-                    12 => 'App\\Entity\\User',
                 ],
             ],
             'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
                 'protoFactory' => [
-                    14 => $o[15],
+                    12 => $o[13],
                 ],
                 'factory' => [
-                    14 => $o[15],
+                    12 => $o[13],
                 ],
             ],
             'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
                 'defaultClass' => [
-                    15 => 'Symfony\\Component\\Uid\\UuidV7',
+                    13 => 'Symfony\\Component\\Uid\\UuidV7',
                 ],
                 'timeBasedClass' => [
-                    15 => 'Symfony\\Component\\Uid\\UuidV7',
+                    13 => 'Symfony\\Component\\Uid\\UuidV7',
                 ],
                 'nameBasedClass' => [
-                    15 => 'Symfony\\Component\\Uid\\UuidV5',
+                    13 => 'Symfony\\Component\\Uid\\UuidV5',
                 ],
                 'randomBasedClass' => [
-                    15 => 'Symfony\\Component\\Uid\\UuidV4',
+                    13 => 'Symfony\\Component\\Uid\\UuidV4',
                 ],
                 'timeBasedNode' => [
-                    15 => null,
+                    13 => null,
                 ],
                 'nameBasedNamespace' => [
-                    15 => null,
+                    13 => null,
                 ],
             ],
         ],
@@ -6167,7 +6848,619 @@ return [[
         []
     );
 },
-26 => static function () {
+28 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\DocumentSignature',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'signatureImage' => $o[2],
+                        'signatureData' => $o[3],
+                        'ipAddress' => $o[4],
+                        'userAgent' => $o[5],
+                        'signedAt' => $o[6],
+                        'metadata' => $o[7],
+                        'status' => $o[8],
+                        'comments' => $o[9],
+                        'isDigitalSignature' => $o[10],
+                        'createdAt' => $o[11],
+                        'updatedAt' => $o[12],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'signature_image' => 'signatureImage',
+                        'signature_data' => 'signatureData',
+                        'ip_address' => 'ipAddress',
+                        'user_agent' => 'userAgent',
+                        'signed_at' => 'signedAt',
+                        'metadata' => 'metadata',
+                        'status' => 'status',
+                        'comments' => 'comments',
+                        'is_digital_signature' => 'isDigitalSignature',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'signatureImage' => 'signature_image',
+                        'signatureData' => 'signature_data',
+                        'ipAddress' => 'ip_address',
+                        'userAgent' => 'user_agent',
+                        'signedAt' => 'signed_at',
+                        'metadata' => 'metadata',
+                        'status' => 'status',
+                        'comments' => 'comments',
+                        'isDigitalSignature' => 'is_digital_signature',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'document_signatures',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'document' => $o[13],
+                        'signedBy' => $o[15],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[17],
+                ],
+                'name' => [
+                    'App\\Entity\\DocumentSignature',
+                    14 => 'document_id',
+                    16 => 'signed_by_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                    14 => false,
+                    16 => false,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'string',
+                    'text',
+                    'string',
+                    'string',
+                    'datetime_immutable',
+                    'jsonb',
+                    'string',
+                    'text',
+                    'boolean',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'signatureImage',
+                    'signatureData',
+                    'ipAddress',
+                    'userAgent',
+                    'signedAt',
+                    'metadata',
+                    'status',
+                    'comments',
+                    'isDigitalSignature',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'signature_image',
+                    'signature_data',
+                    'ip_address',
+                    'user_agent',
+                    'signed_at',
+                    'metadata',
+                    'status',
+                    'comments',
+                    'is_digital_signature',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    4 => 255,
+                    500,
+                    8 => 50,
+                ],
+                'nullable' => [
+                    2 => true,
+                    true,
+                    true,
+                    true,
+                    7 => true,
+                    9 => true,
+                    14 => false,
+                    16 => false,
+                ],
+                'options' => [
+                    8 => [
+                        'default' => 'pending',
+                    ],
+                    10 => [
+                        'default' => false,
+                    ],
+                ],
+                'fetch' => [
+                    13 => 2,
+                    15 => 2,
+                ],
+                'sourceEntity' => [
+                    13 => 'App\\Entity\\DocumentSignature',
+                    15 => 'App\\Entity\\DocumentSignature',
+                ],
+                'inversedBy' => [
+                    13 => 'signatures',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    13 => [
+                        'document_id' => 'id',
+                    ],
+                    15 => [
+                        'signed_by_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    13 => [
+                        'id' => 'document_id',
+                    ],
+                    15 => [
+                        'id' => 'signed_by_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    13 => [
+                        $o[14],
+                    ],
+                    15 => [
+                        $o[16],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    13 => [
+                        'document_id' => 'document_id',
+                    ],
+                    15 => [
+                        'signed_by_id' => 'signed_by_id',
+                    ],
+                ],
+                'deferrable' => [
+                    14 => false,
+                    16 => false,
+                ],
+                'referencedColumnName' => [
+                    14 => 'id',
+                    16 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    13 => 'document',
+                    15 => 'signedBy',
+                ],
+                'targetEntity' => [
+                    13 => 'App\\Entity\\Document',
+                    15 => 'App\\Entity\\User',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    17 => $o[18],
+                ],
+                'factory' => [
+                    17 => $o[18],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    18 => null,
+                ],
+                'nameBasedNamespace' => [
+                    18 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+29 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\OpenPhoneCallLog',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'openPhoneCallId' => $o[2],
+                        'direction' => $o[3],
+                        'status' => $o[4],
+                        'fromNumber' => $o[5],
+                        'toNumber' => $o[6],
+                        'duration' => $o[7],
+                        'startedAt' => $o[8],
+                        'endedAt' => $o[9],
+                        'recordingUrl' => $o[10],
+                        'transcript' => $o[11],
+                        'metadata' => $o[12],
+                        'isFollowUpRequired' => $o[13],
+                        'notes' => $o[14],
+                        'createdAt' => $o[15],
+                        'updatedAt' => $o[16],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'open_phone_call_id' => 'openPhoneCallId',
+                        'direction' => 'direction',
+                        'status' => 'status',
+                        'from_number' => 'fromNumber',
+                        'to_number' => 'toNumber',
+                        'duration' => 'duration',
+                        'started_at' => 'startedAt',
+                        'ended_at' => 'endedAt',
+                        'recording_url' => 'recordingUrl',
+                        'transcript' => 'transcript',
+                        'metadata' => 'metadata',
+                        'is_follow_up_required' => 'isFollowUpRequired',
+                        'notes' => 'notes',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'openPhoneCallId' => 'open_phone_call_id',
+                        'direction' => 'direction',
+                        'status' => 'status',
+                        'fromNumber' => 'from_number',
+                        'toNumber' => 'to_number',
+                        'duration' => 'duration',
+                        'startedAt' => 'started_at',
+                        'endedAt' => 'ended_at',
+                        'recordingUrl' => 'recording_url',
+                        'transcript' => 'transcript',
+                        'metadata' => 'metadata',
+                        'isFollowUpRequired' => 'is_follow_up_required',
+                        'notes' => 'notes',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'openphone_call_logs',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'client' => $o[17],
+                        'integration' => $o[19],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[21],
+                ],
+                'name' => [
+                    'App\\Entity\\OpenPhoneCallLog',
+                    18 => 'client_id',
+                    20 => 'integration_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                    18 => false,
+                    20 => false,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'integer',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                    'text',
+                    'text',
+                    'jsonb',
+                    'boolean',
+                    'text',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'openPhoneCallId',
+                    'direction',
+                    'status',
+                    'fromNumber',
+                    'toNumber',
+                    'duration',
+                    'startedAt',
+                    'endedAt',
+                    'recordingUrl',
+                    'transcript',
+                    'metadata',
+                    'isFollowUpRequired',
+                    'notes',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'open_phone_call_id',
+                    'direction',
+                    'status',
+                    'from_number',
+                    'to_number',
+                    'duration',
+                    'started_at',
+                    'ended_at',
+                    'recording_url',
+                    'transcript',
+                    'metadata',
+                    'is_follow_up_required',
+                    'notes',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    32,
+                    32,
+                    255,
+                    255,
+                ],
+                'nullable' => [
+                    5 => true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    14 => true,
+                    18 => false,
+                    20 => false,
+                ],
+                'options' => [
+                    13 => [
+                        'default' => false,
+                    ],
+                ],
+                'fetch' => [
+                    17 => 2,
+                    19 => 2,
+                ],
+                'sourceEntity' => [
+                    17 => 'App\\Entity\\OpenPhoneCallLog',
+                    19 => 'App\\Entity\\OpenPhoneCallLog',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    17 => [
+                        'client_id' => 'id',
+                    ],
+                    19 => [
+                        'integration_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    17 => [
+                        'id' => 'client_id',
+                    ],
+                    19 => [
+                        'id' => 'integration_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    17 => [
+                        $o[18],
+                    ],
+                    19 => [
+                        $o[20],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    17 => [
+                        'client_id' => 'client_id',
+                    ],
+                    19 => [
+                        'integration_id' => 'integration_id',
+                    ],
+                ],
+                'deferrable' => [
+                    18 => false,
+                    20 => false,
+                ],
+                'onDelete' => [
+                    18 => 'CASCADE',
+                    20 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    18 => 'id',
+                    20 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    17 => 'client',
+                    19 => 'integration',
+                ],
+                'targetEntity' => [
+                    17 => 'App\\Entity\\Client',
+                    19 => 'App\\Entity\\OpenPhoneIntegration',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    21 => $o[22],
+                ],
+                'factory' => [
+                    21 => $o[22],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    22 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    22 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    22 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    22 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    22 => null,
+                ],
+                'nameBasedNamespace' => [
+                    22 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+30 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -6424,7 +7717,7 @@ return [[
         []
     );
 },
-27 => static function () {
+31 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -6638,7 +7931,7 @@ return [[
         []
     );
 },
-28 => static function () {
+32 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -6797,7 +8090,576 @@ return [[
         []
     );
 },
-29 => static function () {
+33 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\OpenPhoneIntegration',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'phoneNumber' => $o[2],
+                        'displayName' => $o[3],
+                        'settings' => $o[4],
+                        'status' => $o[5],
+                        'metadata' => $o[6],
+                        'isDefault' => $o[7],
+                        'autoLogCalls' => $o[8],
+                        'autoLogMessages' => $o[9],
+                        'syncContacts' => $o[10],
+                        'createdAt' => $o[11],
+                        'updatedAt' => $o[12],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'phone_number' => 'phoneNumber',
+                        'display_name' => 'displayName',
+                        'settings' => 'settings',
+                        'status' => 'status',
+                        'metadata' => 'metadata',
+                        'is_default' => 'isDefault',
+                        'auto_log_calls' => 'autoLogCalls',
+                        'auto_log_messages' => 'autoLogMessages',
+                        'sync_contacts' => 'syncContacts',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'phoneNumber' => 'phone_number',
+                        'displayName' => 'display_name',
+                        'settings' => 'settings',
+                        'status' => 'status',
+                        'metadata' => 'metadata',
+                        'isDefault' => 'is_default',
+                        'autoLogCalls' => 'auto_log_calls',
+                        'autoLogMessages' => 'auto_log_messages',
+                        'syncContacts' => 'sync_contacts',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'openphone_integrations',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'client' => $o[13],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[15],
+                ],
+                'name' => [
+                    'App\\Entity\\OpenPhoneIntegration',
+                    14 => 'client_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                    14 => false,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'string',
+                    'string',
+                    'jsonb',
+                    'string',
+                    'jsonb',
+                    'boolean',
+                    'boolean',
+                    'boolean',
+                    'boolean',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'phoneNumber',
+                    'displayName',
+                    'settings',
+                    'status',
+                    'metadata',
+                    'isDefault',
+                    'autoLogCalls',
+                    'autoLogMessages',
+                    'syncContacts',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'phone_number',
+                    'display_name',
+                    'settings',
+                    'status',
+                    'metadata',
+                    'is_default',
+                    'auto_log_calls',
+                    'auto_log_messages',
+                    'sync_contacts',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    255,
+                    5 => 24,
+                ],
+                'nullable' => [
+                    3 => true,
+                    true,
+                    6 => true,
+                    14 => false,
+                ],
+                'options' => [
+                    5 => [
+                        'default' => 'active',
+                    ],
+                    7 => [
+                        'default' => false,
+                    ],
+                    [
+                        'default' => true,
+                    ],
+                    [
+                        'default' => true,
+                    ],
+                    [
+                        'default' => false,
+                    ],
+                ],
+                'fetch' => [
+                    13 => 2,
+                ],
+                'sourceEntity' => [
+                    13 => 'App\\Entity\\OpenPhoneIntegration',
+                ],
+                'inversedBy' => [
+                    13 => 'openPhoneIntegrations',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    13 => [
+                        'client_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    13 => [
+                        'id' => 'client_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    13 => [
+                        $o[14],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    13 => [
+                        'client_id' => 'client_id',
+                    ],
+                ],
+                'deferrable' => [
+                    14 => false,
+                ],
+                'onDelete' => [
+                    14 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    14 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    13 => 'client',
+                ],
+                'targetEntity' => [
+                    13 => 'App\\Entity\\Client',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    15 => $o[16],
+                ],
+                'factory' => [
+                    15 => $o[16],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    16 => null,
+                ],
+                'nameBasedNamespace' => [
+                    16 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+34 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\DocumentVersion',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'versionNumber' => $o[2],
+                        'content' => $o[3],
+                        'title' => $o[4],
+                        'description' => $o[5],
+                        'metadata' => $o[6],
+                        'changes' => $o[7],
+                        'isCurrent' => $o[8],
+                        'createdAt' => $o[9],
+                        'updatedAt' => $o[10],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'version_number' => 'versionNumber',
+                        'content' => 'content',
+                        'title' => 'title',
+                        'description' => 'description',
+                        'metadata' => 'metadata',
+                        'changes' => 'changes',
+                        'is_current' => 'isCurrent',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'versionNumber' => 'version_number',
+                        'content' => 'content',
+                        'title' => 'title',
+                        'description' => 'description',
+                        'metadata' => 'metadata',
+                        'changes' => 'changes',
+                        'isCurrent' => 'is_current',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'document_versions',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'document' => $o[11],
+                        'createdBy' => $o[13],
+                        'file' => $o[15],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[17],
+                ],
+                'name' => [
+                    'App\\Entity\\DocumentVersion',
+                    12 => 'document_id',
+                    14 => 'created_by_id',
+                    16 => 'file_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                    12 => false,
+                    14 => false,
+                    16 => false,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'integer',
+                    'text',
+                    'string',
+                    'text',
+                    'jsonb',
+                    'jsonb',
+                    'boolean',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'versionNumber',
+                    'content',
+                    'title',
+                    'description',
+                    'metadata',
+                    'changes',
+                    'isCurrent',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'version_number',
+                    'content',
+                    'title',
+                    'description',
+                    'metadata',
+                    'changes',
+                    'is_current',
+                    'created_at',
+                    'updated_at',
+                ],
+                'nullable' => [
+                    3 => true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    12 => false,
+                    14 => false,
+                    16 => true,
+                ],
+                'length' => [
+                    4 => 255,
+                ],
+                'options' => [
+                    8 => [
+                        'default' => false,
+                    ],
+                ],
+                'fetch' => [
+                    11 => 2,
+                    13 => 2,
+                    15 => 2,
+                ],
+                'sourceEntity' => [
+                    11 => 'App\\Entity\\DocumentVersion',
+                    13 => 'App\\Entity\\DocumentVersion',
+                    15 => 'App\\Entity\\DocumentVersion',
+                ],
+                'inversedBy' => [
+                    11 => 'versions',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    11 => [
+                        'document_id' => 'id',
+                    ],
+                    13 => [
+                        'created_by_id' => 'id',
+                    ],
+                    15 => [
+                        'file_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    11 => [
+                        'id' => 'document_id',
+                    ],
+                    13 => [
+                        'id' => 'created_by_id',
+                    ],
+                    15 => [
+                        'id' => 'file_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    11 => [
+                        $o[12],
+                    ],
+                    13 => [
+                        $o[14],
+                    ],
+                    15 => [
+                        $o[16],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    11 => [
+                        'document_id' => 'document_id',
+                    ],
+                    13 => [
+                        'created_by_id' => 'created_by_id',
+                    ],
+                    15 => [
+                        'file_id' => 'file_id',
+                    ],
+                ],
+                'deferrable' => [
+                    12 => false,
+                    14 => false,
+                    16 => false,
+                ],
+                'referencedColumnName' => [
+                    12 => 'id',
+                    14 => 'id',
+                    16 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    11 => 'document',
+                    13 => 'createdBy',
+                    15 => 'file',
+                ],
+                'targetEntity' => [
+                    11 => 'App\\Entity\\Document',
+                    13 => 'App\\Entity\\User',
+                    15 => 'App\\Entity\\MediaAsset',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    17 => $o[18],
+                ],
+                'factory' => [
+                    17 => $o[18],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    18 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    18 => null,
+                ],
+                'nameBasedNamespace' => [
+                    18 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+35 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -6956,7 +8818,7 @@ return [[
         []
     );
 },
-30 => static function () {
+36 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -7189,7 +9051,7 @@ return [[
         []
     );
 },
-31 => static function () {
+37 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -7357,7 +9219,7 @@ return [[
         []
     );
 },
-32 => static function () {
+38 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -7621,7 +9483,7 @@ return [[
         []
     );
 },
-33 => static function () {
+39 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -7676,26 +9538,28 @@ return [[
                 ],
                 'fieldMappings' => [
                     [
-                        'id' => $o[1],
-                        'fullName' => $o[2],
-                        'email' => $o[3],
-                        'phone' => $o[4],
-                        'firm' => $o[5],
-                        'website' => $o[6],
-                        'practiceAreas' => $o[7],
-                        'city' => $o[8],
-                        'state' => $o[9],
-                        'zipCode' => $o[10],
-                        'message' => $o[11],
-                        'status' => $o[12],
-                        'utmJson' => $o[13],
-                        'isTest' => $o[14],
-                        'createdAt' => $o[15],
-                        'updatedAt' => $o[16],
+                        'createdAt' => $o[1],
+                        'updatedAt' => $o[2],
+                        'id' => $o[3],
+                        'fullName' => $o[4],
+                        'email' => $o[5],
+                        'phone' => $o[6],
+                        'firm' => $o[7],
+                        'website' => $o[8],
+                        'practiceAreas' => $o[9],
+                        'city' => $o[10],
+                        'state' => $o[11],
+                        'zipCode' => $o[12],
+                        'message' => $o[13],
+                        'status' => $o[14],
+                        'utmJson' => $o[15],
+                        'isTest' => $o[16],
                     ],
                 ],
                 'fieldNames' => [
                     [
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
                         'id' => 'id',
                         'full_name' => 'fullName',
                         'email' => 'email',
@@ -7710,12 +9574,12 @@ return [[
                         'status' => 'status',
                         'utm_json' => 'utmJson',
                         'is_test' => 'isTest',
-                        'created_at' => 'createdAt',
-                        'updated_at' => 'updatedAt',
                     ],
                 ],
                 'columnNames' => [
                     [
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
                         'id' => 'id',
                         'fullName' => 'full_name',
                         'email' => 'email',
@@ -7730,8 +9594,6 @@ return [[
                         'status' => 'status',
                         'utmJson' => 'utm_json',
                         'isTest' => 'is_test',
-                        'createdAt' => 'created_at',
-                        'updatedAt' => 'updated_at',
                     ],
                 ],
                 'table' => [
@@ -7764,16 +9626,10 @@ return [[
                     18 => 'client_id',
                     20 => 'source_id',
                 ],
-                'id' => [
-                    1 => true,
-                ],
-                'unique' => [
-                    1 => true,
-                    18 => false,
-                    20 => false,
-                ],
                 'type' => [
-                    1 => 'uuid',
+                    1 => 'datetime_immutable',
+                    'datetime_immutable',
+                    'uuid',
                     'string',
                     'string',
                     'string',
@@ -7787,11 +9643,11 @@ return [[
                     'string',
                     'json',
                     'boolean',
-                    'datetime_immutable',
-                    'datetime_immutable',
                 ],
                 'fieldName' => [
-                    1 => 'id',
+                    1 => 'createdAt',
+                    'updatedAt',
+                    'id',
                     'fullName',
                     'email',
                     'phone',
@@ -7805,11 +9661,11 @@ return [[
                     'status',
                     'utmJson',
                     'isTest',
-                    'createdAt',
-                    'updatedAt',
                 ],
                 'columnName' => [
-                    1 => 'id',
+                    1 => 'created_at',
+                    'updated_at',
+                    'id',
                     'full_name',
                     'email',
                     'phone',
@@ -7823,14 +9679,20 @@ return [[
                     'status',
                     'utm_json',
                     'is_test',
-                    'created_at',
-                    'updated_at',
+                ],
+                'id' => [
+                    3 => true,
+                ],
+                'unique' => [
+                    3 => true,
+                    18 => false,
+                    20 => false,
                 ],
                 'nullable' => [
-                    4 => true,
+                    6 => true,
                     true,
                     true,
-                    8 => true,
+                    10 => true,
                     true,
                     true,
                     true,
@@ -7838,11 +9700,11 @@ return [[
                     20 => true,
                 ],
                 'options' => [
-                    7 => [
+                    9 => [
                         'default' => '{}',
                     ],
-                    12 => [
-                        'default' => 'new',
+                    14 => [
+                        'default' => 'new_lead',
                     ],
                     [
                         'default' => '{}',
@@ -7852,7 +9714,10 @@ return [[
                     ],
                 ],
                 'length' => [
-                    12 => 16,
+                    14 => 32,
+                ],
+                'enumType' => [
+                    14 => 'App\\ValueObject\\LeadStatus',
                 ],
                 'fetch' => [
                     17 => 2,
@@ -7969,7 +9834,7 @@ return [[
         []
     );
 },
-34 => static function () {
+40 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -8417,7 +10282,7 @@ return [[
         []
     );
 },
-35 => static function () {
+41 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -8545,7 +10410,7 @@ return [[
         []
     );
 },
-36 => static function () {
+42 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -8815,7 +10680,7 @@ return [[
         []
     );
 },
-37 => static function () {
+43 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -9068,7 +10933,7 @@ return [[
         []
     );
 },
-38 => static function () {
+44 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -9234,7 +11099,250 @@ return [[
         []
     );
 },
-39 => static function () {
+45 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone ($p['Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator')),
+            clone ($p['Symfony\\Component\\Uid\\Factory\\UuidFactory'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Uid\\Factory\\UuidFactory')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\DocumentTemplate',
+                ],
+                'customGeneratorDefinition' => [
+                    [
+                        'class' => 'doctrine.uuid_generator',
+                    ],
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    7,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'name' => $o[2],
+                        'description' => $o[3],
+                        'content' => $o[4],
+                        'type' => $o[5],
+                        'variables' => $o[6],
+                        'signatureFields' => $o[7],
+                        'metadata' => $o[8],
+                        'isActive' => $o[9],
+                        'requiresSignature' => $o[10],
+                        'usageCount' => $o[11],
+                        'createdAt' => $o[12],
+                        'updatedAt' => $o[13],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'name' => 'name',
+                        'description' => 'description',
+                        'content' => 'content',
+                        'type' => 'type',
+                        'variables' => 'variables',
+                        'signature_fields' => 'signatureFields',
+                        'metadata' => 'metadata',
+                        'is_active' => 'isActive',
+                        'requires_signature' => 'requiresSignature',
+                        'usage_count' => 'usageCount',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'name' => 'name',
+                        'description' => 'description',
+                        'content' => 'content',
+                        'type' => 'type',
+                        'variables' => 'variables',
+                        'signatureFields' => 'signature_fields',
+                        'metadata' => 'metadata',
+                        'isActive' => 'is_active',
+                        'requiresSignature' => 'requires_signature',
+                        'usageCount' => 'usage_count',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'document_templates',
+                    ],
+                ],
+                'lifecycleCallbacks' => [
+                    [
+                        'prePersist' => [
+                            'setCreatedAtValue',
+                        ],
+                        'preUpdate' => [
+                            'setUpdatedAtValue',
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'documents' => $o[14],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[15],
+                ],
+                'name' => [
+                    'App\\Entity\\DocumentTemplate',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'unique' => [
+                    1 => true,
+                ],
+                'type' => [
+                    1 => 'uuid',
+                    'string',
+                    'text',
+                    'text',
+                    'string',
+                    'jsonb',
+                    'jsonb',
+                    'jsonb',
+                    'boolean',
+                    'boolean',
+                    'integer',
+                    'datetime_immutable',
+                    'datetime_immutable',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'name',
+                    'description',
+                    'content',
+                    'type',
+                    'variables',
+                    'signatureFields',
+                    'metadata',
+                    'isActive',
+                    'requiresSignature',
+                    'usageCount',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'name',
+                    'description',
+                    'content',
+                    'type',
+                    'variables',
+                    'signature_fields',
+                    'metadata',
+                    'is_active',
+                    'requires_signature',
+                    'usage_count',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    5 => 50,
+                ],
+                'nullable' => [
+                    3 => true,
+                    6 => true,
+                    true,
+                    true,
+                ],
+                'options' => [
+                    9 => [
+                        'default' => true,
+                    ],
+                    [
+                        'default' => false,
+                    ],
+                    [
+                        'default' => 0,
+                    ],
+                ],
+                'fetch' => [
+                    14 => 2,
+                ],
+                'sourceEntity' => [
+                    14 => 'App\\Entity\\DocumentTemplate',
+                ],
+                'mappedBy' => [
+                    14 => 'template',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    14 => 'documents',
+                ],
+                'targetEntity' => [
+                    14 => 'App\\Entity\\Document',
+                ],
+            ],
+            'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
+                'protoFactory' => [
+                    15 => $o[16],
+                ],
+                'factory' => [
+                    15 => $o[16],
+                ],
+            ],
+            'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
+                'defaultClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'timeBasedClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV7',
+                ],
+                'nameBasedClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV5',
+                ],
+                'randomBasedClass' => [
+                    16 => 'Symfony\\Component\\Uid\\UuidV4',
+                ],
+                'timeBasedNode' => [
+                    16 => null,
+                ],
+                'nameBasedNamespace' => [
+                    16 => null,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+46 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -9490,7 +11598,7 @@ return [[
         []
     );
 },
-40 => static function () {
+47 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -9690,7 +11798,7 @@ return [[
         []
     );
 },
-41 => static function () {
+48 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -9717,6 +11825,7 @@ return [[
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
@@ -9849,10 +11958,11 @@ return [[
                         'auditRuns' => $o[29],
                         'auditFindings' => $o[30],
                         'oauthConnections' => $o[31],
+                        'openPhoneIntegrations' => $o[32],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[32],
+                    $o[33],
                 ],
                 'name' => [
                     'App\\Entity\\Client',
@@ -9980,10 +12090,12 @@ return [[
                     2,
                     2,
                     2,
+                    2,
                 ],
                 'sourceEntity' => [
                     21 => 'App\\Entity\\Client',
                     23 => 'App\\Entity\\Client',
+                    'App\\Entity\\Client',
                     'App\\Entity\\Client',
                     'App\\Entity\\Client',
                     'App\\Entity\\Client',
@@ -10038,14 +12150,20 @@ return [[
                         'persist',
                         'remove',
                     ],
+                    [
+                        'persist',
+                        'remove',
+                    ],
                 ],
                 'orphanRemoval' => [
                     23 => true,
                     true,
                     31 => true,
+                    true,
                 ],
                 'mappedBy' => [
                     23 => 'client',
+                    'client',
                     'client',
                     'client',
                     'client',
@@ -10068,6 +12186,7 @@ return [[
                     'auditRuns',
                     'auditFindings',
                     'oauthConnections',
+                    'openPhoneIntegrations',
                 ],
                 'targetEntity' => [
                     21 => 'App\\Entity\\Agency',
@@ -10080,34 +12199,35 @@ return [[
                     'App\\Entity\\AuditRun',
                     'App\\Entity\\AuditFinding',
                     'App\\Entity\\OAuthConnection',
+                    'App\\Entity\\OpenPhoneIntegration',
                 ],
             ],
             'Symfony\\Bridge\\Doctrine\\IdGenerator\\UuidGenerator' => [
                 'protoFactory' => [
-                    32 => $o[33],
+                    33 => $o[34],
                 ],
                 'factory' => [
-                    32 => $o[33],
+                    33 => $o[34],
                 ],
             ],
             'Symfony\\Component\\Uid\\Factory\\UuidFactory' => [
                 'defaultClass' => [
-                    33 => 'Symfony\\Component\\Uid\\UuidV7',
+                    34 => 'Symfony\\Component\\Uid\\UuidV7',
                 ],
                 'timeBasedClass' => [
-                    33 => 'Symfony\\Component\\Uid\\UuidV7',
+                    34 => 'Symfony\\Component\\Uid\\UuidV7',
                 ],
                 'nameBasedClass' => [
-                    33 => 'Symfony\\Component\\Uid\\UuidV5',
+                    34 => 'Symfony\\Component\\Uid\\UuidV5',
                 ],
                 'randomBasedClass' => [
-                    33 => 'Symfony\\Component\\Uid\\UuidV4',
+                    34 => 'Symfony\\Component\\Uid\\UuidV4',
                 ],
                 'timeBasedNode' => [
-                    33 => null,
+                    34 => null,
                 ],
                 'nameBasedNamespace' => [
-                    33 => null,
+                    34 => null,
                 ],
             ],
         ],
@@ -10115,7 +12235,7 @@ return [[
         []
     );
 },
-42 => static function () {
+49 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -10226,7 +12346,7 @@ return [[
         []
     );
 },
-43 => static function () {
+50 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),

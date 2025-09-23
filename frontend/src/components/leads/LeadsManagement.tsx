@@ -18,9 +18,13 @@ import {
   Phone,
   MapPin,
   Building,
-  Calendar
+  Calendar,
+  Database,
+  X
 } from 'lucide-react';
 import CsvUploadModal from './CsvUploadModal';
+import LeadgenImportModal from './LeadgenImportModal';
+import LeadStatistics from './LeadStatistics';
 import ProtectedRoute from '../auth/ProtectedRoute';
 
 interface Lead {
@@ -53,6 +57,8 @@ export default function LeadsManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
+  const [isLeadgenModalOpen, setIsLeadgenModalOpen] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
 
   const isLoading = getLoadingState('leads');
@@ -85,6 +91,12 @@ export default function LeadsManagement() {
 
   const handleCsvUploadSuccess = (result: any) => {
     console.log('CSV upload successful:', result);
+    // Refresh leads data
+    getLeads();
+  };
+
+  const handleLeadgenUploadSuccess = (result: any) => {
+    console.log('Leadgen upload successful:', result);
     // Refresh leads data
     getLeads();
   };
@@ -176,6 +188,14 @@ export default function LeadsManagement() {
             >
               <Upload className="h-4 w-4" />
               Import CSV
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsLeadgenModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Database className="h-4 w-4" />
+              Import Leadgen
             </Button>
             <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
@@ -331,7 +351,8 @@ export default function LeadsManagement() {
                 {filteredLeads.map((lead) => (
                   <div 
                     key={lead.id} 
-                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
+                    onClick={() => setSelectedLead(lead)}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -405,11 +426,38 @@ export default function LeadsManagement() {
           </CardContent>
         </Card>
 
+        {/* Lead Statistics Modal */}
+        {selectedLead && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <div>
+                  <CardTitle>Lead Statistics</CardTitle>
+                  <CardDescription>Track interactions for {selectedLead.fullName}</CardDescription>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => setSelectedLead(null)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <LeadStatistics leadId={selectedLead.id} leadName={selectedLead.fullName} />
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* CSV Upload Modal */}
         <CsvUploadModal
           isOpen={isCsvModalOpen}
           onClose={() => setIsCsvModalOpen(false)}
           onSuccess={handleCsvUploadSuccess}
+        />
+
+        {/* Leadgen Import Modal */}
+        <LeadgenImportModal
+          isOpen={isLeadgenModalOpen}
+          onClose={() => setIsLeadgenModalOpen(false)}
+          onSuccess={handleLeadgenUploadSuccess}
         />
       </div>
     </ProtectedRoute>

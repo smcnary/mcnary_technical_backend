@@ -55,8 +55,7 @@ final class Version20250922143519 extends AbstractMigration
         $this->addSql('ALTER TABLE openphone_integrations ADD CONSTRAINT FK_80D45CFF19EB6921 FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE openphone_message_logs ADD CONSTRAINT FK_A5E06DD019EB6921 FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE openphone_message_logs ADD CONSTRAINT FK_A5E06DD09E82DDEA FOREIGN KEY (integration_id) REFERENCES openphone_integrations (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE leads ALTER status SET DEFAULT \'new\'');
-        $this->addSql('ALTER TABLE leads ALTER status TYPE VARCHAR(16)');
+        // Removed the problematic leads status column change
     }
 
     public function down(Schema $schema): void
@@ -71,7 +70,6 @@ final class Version20250922143519 extends AbstractMigration
         $this->addSql('DROP TABLE openphone_call_logs');
         $this->addSql('DROP TABLE openphone_integrations');
         $this->addSql('DROP TABLE openphone_message_logs');
-        $this->addSql('ALTER TABLE leads ALTER status SET DEFAULT \'new_lead\'');
-        $this->addSql('ALTER TABLE leads ALTER status TYPE VARCHAR(32)');
+        // Removed the problematic leads status column change
     }
 }

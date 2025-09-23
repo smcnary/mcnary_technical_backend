@@ -37,6 +37,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                     'auditRuns',
                     'auditFindings',
                     'oauthConnections',
+                    'openPhoneIntegrations',
                     'createdAt',
                     'updatedAt',
                     'website',

@@ -2,13 +2,24 @@
 
 return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
     $o = [
-        clone (\Symfony\Component\VarExporter\Internal\Registry::$prototypes['Symfony\\Component\\TypeInfo\\Type\\BuiltinType'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\TypeInfo\\Type\\BuiltinType')),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\TypeInfo\\Type\\BackedEnumType'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\TypeInfo\\Type\\BackedEnumType')),
+        clone ($p['Symfony\\Component\\TypeInfo\\Type\\BuiltinType'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\TypeInfo\\Type\\BuiltinType')),
     ],
     null,
     [
+        'Symfony\\Component\\TypeInfo\\Type\\ObjectType' => [
+            'className' => [
+                'App\\ValueObject\\LeadStatus',
+            ],
+        ],
+        'Symfony\\Component\\TypeInfo\\Type\\BackedEnumType' => [
+            'backingType' => [
+                $o[1],
+            ],
+        ],
         'Symfony\\Component\\TypeInfo\\Type\\BuiltinType' => [
             'typeIdentifier' => [
-                \Symfony\Component\TypeInfo\TypeIdentifier::STRING,
+                1 => \Symfony\Component\TypeInfo\TypeIdentifier::STRING,
             ],
         ],
     ],

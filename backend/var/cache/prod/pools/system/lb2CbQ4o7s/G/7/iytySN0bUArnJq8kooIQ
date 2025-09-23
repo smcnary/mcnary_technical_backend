@@ -38,7 +38,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 null,
             ],
             'default' => [
-                'new',
+                \App\ValueObject\LeadStatus::NEW_LEAD,
             ],
             'example' => [
                 null,
@@ -77,9 +77,19 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
             ],
             'schema' => [
                 [
-                    'default' => 'new',
-                    'example' => 'new',
+                    'default' => 'new_lead',
+                    'example' => 'new_lead',
                     'type' => 'string',
+                    'enum' => [
+                        'new_lead',
+                        'contacted',
+                        'interview_scheduled',
+                        'interview_completed',
+                        'application_received',
+                        'audit_in_progress',
+                        'audit_complete',
+                        'enrolled',
+                    ],
                 ],
             ],
             'initializable' => [
@@ -112,13 +122,13 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 1 => [],
             ],
             'builtinType' => [
-                1 => 'string',
+                1 => 'object',
             ],
             'nullable' => [
                 1 => false,
             ],
             'class' => [
-                1 => null,
+                1 => 'App\\ValueObject\\LeadStatus',
             ],
             'collection' => [
                 1 => false,

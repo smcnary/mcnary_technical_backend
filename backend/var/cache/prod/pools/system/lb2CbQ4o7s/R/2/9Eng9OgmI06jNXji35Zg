@@ -83,7 +83,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 ],
             ],
             'initializable' => [
-                true,
+                false,
             ],
             'genId' => [
                 null,

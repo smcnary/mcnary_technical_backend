@@ -16,7 +16,7 @@ use App\Repository\DocumentVersionRepository;
 use App\Repository\ClientRepository;
 use App\Repository\MediaAssetRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 

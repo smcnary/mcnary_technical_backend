@@ -18,6 +18,7 @@ import {
 import ProtectedRoute from '../auth/ProtectedRoute';
 import SeoClientsTab from './SeoClientsTab';
 import LeadsManagement from '../leads/LeadsManagement';
+import LeadgenExecution from '../admin/LeadgenExecution';
 
 export default function ApiDashboard() {
   const { user, isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
@@ -232,13 +233,14 @@ export default function ApiDashboard() {
           console.log('Tab changed to:', value);
           setActiveTab(value);
         }} className="space-y-4">
-          <TabsList className={`grid w-full ${(debugShowSeoClients || isAdmin() || isSalesConsultant()) ? 'grid-cols-7' : 'grid-cols-6'}`}>
+          <TabsList className={`grid w-full ${(debugShowSeoClients || isAdmin() || isSalesConsultant()) ? 'grid-cols-8' : 'grid-cols-7'}`}>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="clients">Clients</TabsTrigger>
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="leads">Leads</TabsTrigger>
             {(debugShowSeoClients || isAdmin() || isSalesConsultant()) && <TabsTrigger value="seo-clients">SEO Clients</TabsTrigger>}
+            {isAdmin() && <TabsTrigger value="leadgen">Leadgen</TabsTrigger>}
             {isAdmin() && <TabsTrigger value="admin">Admin</TabsTrigger>}
           </TabsList>
 
@@ -423,6 +425,18 @@ export default function ApiDashboard() {
                 <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Currently viewing: SEO Clients CRM</span>
               </div>
               <SeoClientsTab />
+            </TabsContent>
+          )}
+
+          {/* Leadgen Tab */}
+          {isAdmin() && (
+            <TabsContent value="leadgen" className="space-y-4">
+              {/* Active Tab Indicator */}
+              <div className="flex items-center gap-2 mb-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Currently viewing: Leadgen Execution</span>
+              </div>
+              <LeadgenExecution />
             </TabsContent>
           )}
 

@@ -10,6 +10,8 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
         clone ($p['Symfony\\Component\\Validator\\Constraints\\Email'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Email')),
         $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
         clone ($p['Symfony\\Component\\Validator\\Constraints\\Url'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Url')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
     ],
     null,
     [
@@ -19,6 +21,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 'fullName',
                 3 => 'email',
                 6 => 'website',
+                8 => 'status',
             ],
             'defaultGroup' => [
                 'Lead',
@@ -34,6 +37,9 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                     'website' => [
                         $o[6],
                     ],
+                    'status' => [
+                        $o[8],
+                    ],
                 ],
             ],
             'properties' => [
@@ -41,6 +47,7 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                     'fullName' => $o[1],
                     'email' => $o[3],
                     'website' => $o[6],
+                    'status' => $o[8],
                 ],
             ],
             'constraints' => [
@@ -53,6 +60,9 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 ],
                 6 => [
                     $o[7],
+                ],
+                8 => [
+                    $o[9],
                 ],
             ],
             'constraintsByGroup' => [
@@ -82,22 +92,33 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                         $o[7],
                     ],
                 ],
+                8 => [
+                    'Default' => [
+                        $o[9],
+                    ],
+                    'Lead' => [
+                        $o[9],
+                    ],
+                ],
             ],
             'class' => [
                 1 => 'App\\Entity\\Lead',
                 3 => 'App\\Entity\\Lead',
                 6 => 'App\\Entity\\Lead',
+                8 => 'App\\Entity\\Lead',
             ],
             'property' => [
                 1 => 'fullName',
                 3 => 'email',
                 6 => 'website',
+                8 => 'status',
             ],
             'payload' => [
                 2 => null,
                 4 => null,
                 null,
                 7 => null,
+                9 => null,
             ],
             'groups' => [
                 2 => [
@@ -115,6 +136,16 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 7 => [
                     'Default',
                     'Lead',
+                ],
+                9 => [
+                    'Default',
+                    'Lead',
+                ],
+            ],
+            'callback' => [
+                9 => [
+                    'App\\ValueObject\\LeadStatus',
+                    'getValues',
                 ],
             ],
         ],

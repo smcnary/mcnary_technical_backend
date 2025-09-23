@@ -1,0 +1,178 @@
+<?php //App.Entity.OpenPhoneCallLog
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotNull'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotNull')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotNull'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\OpenPhoneCallLog',
+                'client',
+                3 => 'integration',
+                5 => 'openPhoneCallId',
+                7 => 'direction',
+                9 => 'status',
+            ],
+            'defaultGroup' => [
+                'OpenPhoneCallLog',
+            ],
+            'members' => [
+                [
+                    'client' => [
+                        $o[1],
+                    ],
+                    'integration' => [
+                        $o[3],
+                    ],
+                    'openPhoneCallId' => [
+                        $o[5],
+                    ],
+                    'direction' => [
+                        $o[7],
+                    ],
+                    'status' => [
+                        $o[9],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'client' => $o[1],
+                    'integration' => $o[3],
+                    'openPhoneCallId' => $o[5],
+                    'direction' => $o[7],
+                    'status' => $o[9],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+                7 => [
+                    $o[8],
+                ],
+                9 => [
+                    $o[10],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'OpenPhoneCallLog' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'OpenPhoneCallLog' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'OpenPhoneCallLog' => [
+                        $o[6],
+                    ],
+                ],
+                7 => [
+                    'Default' => [
+                        $o[8],
+                    ],
+                    'OpenPhoneCallLog' => [
+                        $o[8],
+                    ],
+                ],
+                9 => [
+                    'Default' => [
+                        $o[10],
+                    ],
+                    'OpenPhoneCallLog' => [
+                        $o[10],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\OpenPhoneCallLog',
+                3 => 'App\\Entity\\OpenPhoneCallLog',
+                5 => 'App\\Entity\\OpenPhoneCallLog',
+                7 => 'App\\Entity\\OpenPhoneCallLog',
+                9 => 'App\\Entity\\OpenPhoneCallLog',
+            ],
+            'property' => [
+                1 => 'client',
+                3 => 'integration',
+                5 => 'openPhoneCallId',
+                7 => 'direction',
+                9 => 'status',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+                8 => null,
+                10 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'OpenPhoneCallLog',
+                ],
+                4 => [
+                    'Default',
+                    'OpenPhoneCallLog',
+                ],
+                6 => [
+                    'Default',
+                    'OpenPhoneCallLog',
+                ],
+                8 => [
+                    'Default',
+                    'OpenPhoneCallLog',
+                ],
+                10 => [
+                    'Default',
+                    'OpenPhoneCallLog',
+                ],
+            ],
+            'choices' => [
+                8 => [
+                    'inbound',
+                    'outbound',
+                ],
+                10 => [
+                    'answered',
+                    'missed',
+                    'voicemail',
+                    'busy',
+                    'failed',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];
