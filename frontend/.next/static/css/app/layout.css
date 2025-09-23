@@ -1934,6 +1934,14 @@ p{
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+.rounded-l-md{
+  border-top-left-radius: calc(var(--radius) - 2px);
+  border-bottom-left-radius: calc(var(--radius) - 2px);
+}
+.rounded-r-md{
+  border-top-right-radius: calc(var(--radius) - 2px);
+  border-bottom-right-radius: calc(var(--radius) - 2px);
+}
 .border{
   border-width: 1px;
 }

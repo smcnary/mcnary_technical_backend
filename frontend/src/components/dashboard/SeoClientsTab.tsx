@@ -88,18 +88,24 @@ export default function SeoClientsTab() {
   const [uploadMessage, setUploadMessage] = useState('');
   const [leads] = useState<Lead[]>(mockData.leads);
   const [viewMode, setViewMode] = useState<'kanban' | 'tabs'>('kanban');
+  const [isClient, setIsClient] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Get the importLeads function from useData hook
   const { importLeads, leads: realLeads, getLeads } = useData();
   const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
 
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Load real leads from database
   useEffect(() => {
-    if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
+    if (isClient && isAuthenticated && (isAdmin() || isSalesConsultant())) {
       getLeads();
     }
-  }, [isAuthenticated, isAdmin, isSalesConsultant, getLeads]);
+  }, [isClient, isAuthenticated, isAdmin, isSalesConsultant, getLeads]);
 
   // Use real leads count from database
   const realLeadsCount = realLeads.length;
@@ -252,6 +258,25 @@ export default function SeoClientsTab() {
       </div>
     );
   };
+
+  // Show loading state during hydration
+  if (!isClient) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-semibold">SEO Client Leads</h2>
+            <div className="flex border border-gray-300 dark:border-gray-600 rounded-md">
+              <div className="w-16 h-8 bg-gray-200 dark:bg-gray-700 rounded-l-md animate-pulse"></div>
+              <div className="w-16 h-8 bg-gray-200 dark:bg-gray-700 rounded-r-md animate-pulse"></div>
+            </div>
+          </div>
+          <div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+        </div>
+        <div className="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -43,13 +43,19 @@ export default function UserAvatar({ showNotifications = true, className = '' }:
   const { notifications, getNotifications, markNotificationAsRead, markAllNotificationsAsRead } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Load notifications when component mounts
   useEffect(() => {
-    if (showNotifications) {
+    if (showNotifications && isClient) {
       getNotifications();
     }
-  }, [showNotifications, getNotifications]);
+  }, [showNotifications, getNotifications, isClient]);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
   const recentNotifications = notifications.slice(0, 5);
@@ -99,8 +105,15 @@ export default function UserAvatar({ showNotifications = true, className = '' }:
       .slice(0, 2);
   };
 
-  if (!user) {
-    return null;
+  if (!user || !isClient) {
+    return (
+      <div className={`flex items-center gap-3 ${className}`}>
+        {showNotifications && (
+          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+        )}
+        <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+      </div>
+    );
   }
 
   return (

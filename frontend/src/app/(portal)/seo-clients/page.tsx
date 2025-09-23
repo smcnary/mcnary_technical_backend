@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SeoClientsTab from "@/components/dashboard/SeoClientsTab";
@@ -8,10 +8,43 @@ import UserAvatar from "@/components/ui/UserAvatar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function SeoClientsPage() {
-  const { isAdmin, isSalesConsultant } = useAuth();
+  const { isAdmin, isSalesConsultant, isAuthenticated } = useAuth();
+  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Debug: Force show SEO Clients for testing
   const debugShowSeoClients = true;
+
+  // Prevent hydration mismatch by only rendering after client-side mount
+  useEffect(() => {
+    setIsClient(true);
+    setIsLoading(false);
+  }, []);
+
+  // Show loading state during hydration
+  if (!isClient || isLoading) {
+    return (
+      <div className="container mx-auto p-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">SEO Clients CRM</h1>
+            <p className="text-muted-foreground">
+              Manage your SEO clients, leads, and campaigns
+            </p>
+          </div>
+          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+        </div>
+        <div className="flex items-center gap-2 mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+          <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+          <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Loading...</span>
+        </div>
+        <div className="space-y-4">
+          <div className="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
+          <div className="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!debugShowSeoClients && !isAdmin() && !isSalesConsultant()) {
     return (
