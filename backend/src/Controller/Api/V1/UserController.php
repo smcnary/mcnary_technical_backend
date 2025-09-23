@@ -51,11 +51,12 @@ class UserController extends AbstractController
             'lastName' => $user->getLastName(),
             'name' => $user->getName(),
             'roles' => $user->getRoles(),
-            'agency_id' => $user->getAgency()?->getId(),
-            'client_id' => $user->getClientId(),
+            'agencyId' => $user->getAgency()?->getId(),
+            'clientId' => $user->getClientId(),
+            'tenantId' => $user->getTenant()?->getId(),
             'status' => $user->getStatus(),
-            'created_at' => $user->getCreatedAt()->format('c'),
-            'last_login_at' => $user->getLastLoginAt()?->format('c'),
+            'createdAt' => $user->getCreatedAt()->format('c'),
+            'lastLoginAt' => $user->getLastLoginAt()?->format('c'),
             'metadata' => $user->getMetadata()
         ];
 

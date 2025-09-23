@@ -187,12 +187,14 @@ class AuthController extends AbstractController
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
                 'name' => $user->getName(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
                 'roles' => $user->getRoles(),
-                'client_id' => $user->getClientId(),
-                'tenant_id' => null, // Tenant not implemented yet
+                'clientId' => $user->getClientId(),
+                'tenantId' => $user->getTenant()?->getId(),
                 'status' => $user->getStatus(),
-                'created_at' => $user->getCreatedAt()->format('c'),
-                'last_login_at' => $user->getLastLoginAt()?->format('c')
+                'createdAt' => $user->getCreatedAt()->format('c'),
+                'lastLoginAt' => $user->getLastLoginAt()?->format('c')
             ];
 
             $response = $this->json([
