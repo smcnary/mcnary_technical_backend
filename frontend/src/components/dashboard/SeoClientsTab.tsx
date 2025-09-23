@@ -127,20 +127,7 @@ export default function SeoClientsTab() {
     }
   };
 
-  // Show loading state during hydration
-  if (!isClient) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-xl font-semibold">SEO Client Leads</h2>
-          </div>
-          <div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-        </div>
-        <div className="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
-      </div>
-    );
-  }
+  // Always show content (removed loading state for debugging)
 
   return (
     <div className="space-y-6">
