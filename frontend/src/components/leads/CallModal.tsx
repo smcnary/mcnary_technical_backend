@@ -18,6 +18,7 @@ import {
   Clock,
   PhoneCall
 } from 'lucide-react';
+import { twilioApiService } from '../../services/twilioApi';
 
 interface Lead {
   id: string;
@@ -78,6 +79,9 @@ export default function CallModal({ lead, isOpen, onClose, onHangup }: CallModal
   const [callDuration, setCallDuration] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
   const [callStartTime, setCallStartTime] = useState<Date | null>(null);
+  const [isInitiating, setIsInitiating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [twilioFromNumber, setTwilioFromNumber] = useState<string | null>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -97,13 +101,30 @@ export default function CallModal({ lead, isOpen, onClose, onHangup }: CallModal
     };
   }, [isConnected, callStartTime]);
 
+  // Load Twilio integrations to get a phone number to call from
   useEffect(() => {
-    if (isOpen && lead?.phone) {
-      // Simulate call initiation
-      setTimeout(() => {
-        setIsConnected(true);
-        setCallStartTime(new Date());
-      }, 2000);
+    const loadTwilioNumber = async () => {
+      try {
+        const integrations = await twilioApiService.getIntegrations();
+        // Find the first active or default integration
+        const activeIntegration = integrations.find(i => i.isDefault || i.status === 'active');
+        if (activeIntegration) {
+          setTwilioFromNumber(activeIntegration.phoneNumber);
+        }
+      } catch (err) {
+        console.error('Failed to load Twilio integrations:', err);
+      }
+    };
+
+    if (isOpen) {
+      loadTwilioNumber();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && lead?.phone && twilioFromNumber && !isConnected && !isInitiating) {
+      // Automatically initiate call when modal opens
+      initiateCall();
     }
     
     if (!isOpen) {
@@ -111,8 +132,10 @@ export default function CallModal({ lead, isOpen, onClose, onHangup }: CallModal
       setIsConnected(false);
       setCallDuration(0);
       setCallStartTime(null);
+      setIsInitiating(false);
+      setError(null);
     }
-  }, [isOpen, lead?.phone]);
+  }, [isOpen, twilioFromNumber]);
 
   const handleHangup = () => {
     setIsConnected(false);
@@ -128,25 +151,31 @@ export default function CallModal({ lead, isOpen, onClose, onHangup }: CallModal
   };
 
   const initiateCall = async () => {
-    if (!lead?.phone) return;
+    if (!lead?.phone || !twilioFromNumber) {
+      setError('Missing required information to place call');
+      return;
+    }
+    
+    setIsInitiating(true);
+    setError(null);
     
     try {
-      // Here you would integrate with OpenPhone API
-      // For now, we'll simulate the call initiation
-      console.log(`Initiating call to ${lead.fullName} at ${lead.phone} via OpenPhone API`);
+      console.log(`Initiating Twilio call to ${lead.fullName} at ${lead.phone} from ${twilioFromNumber}`);
       
-      // Simulate API call to OpenPhone
-      // const response = await fetch('/api/openphone/call', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ 
-      //     phoneNumber: lead.phone,
-      //     leadId: lead.id 
-      //   })
-      // });
+      // Make the actual Twilio call
+      await twilioApiService.makeCall({
+        fromNumber: twilioFromNumber,
+        toNumber: lead.phone,
+      });
       
+      // Mark as connected after successful API call
+      setIsConnected(true);
+      setCallStartTime(new Date());
+      setIsInitiating(false);
     } catch (error) {
       console.error('Failed to initiate call:', error);
+      setError(error instanceof Error ? error.message : 'Failed to initiate call');
+      setIsInitiating(false);
     }
   };
 
@@ -188,9 +217,35 @@ export default function CallModal({ lead, isOpen, onClose, onHangup }: CallModal
             </CardContent>
           </Card>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
+          {/* Twilio Number Info */}
+          {twilioFromNumber && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-600">
+                Calling from Twilio: {twilioFromNumber}
+              </p>
+            </div>
+          )}
+
           {/* Call Status */}
           <div className="text-center py-6">
-            {!isConnected ? (
+            {error ? (
+              <div className="space-y-4">
+                <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+                  <PhoneOff className="h-8 w-8 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-red-600">Call Failed</h3>
+                  <p className="text-sm text-gray-600">Unable to connect</p>
+                </div>
+              </div>
+            ) : !isConnected ? (
               <div className="space-y-4">
                 <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
                   <Phone className="h-8 w-8 text-blue-600 animate-pulse" />
@@ -215,14 +270,24 @@ export default function CallModal({ lead, isOpen, onClose, onHangup }: CallModal
 
           {/* Call Controls */}
           <div className="flex justify-center gap-4">
-            {!isConnected ? (
+            {error ? (
               <Button 
-                onClick={initiateCall}
+                onClick={() => {
+                  setError(null);
+                  initiateCall();
+                }}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                Retry Call
+              </Button>
+            ) : !isConnected ? (
+              <Button 
                 className="bg-green-600 hover:bg-green-700"
                 disabled
               >
                 <Phone className="h-4 w-4 mr-2" />
-                Initiating Call...
+                {isInitiating ? 'Initiating Call...' : 'Connecting...'}
               </Button>
             ) : (
               <Button 

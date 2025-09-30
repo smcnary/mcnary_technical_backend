@@ -255,11 +255,12 @@ function SortableLeadItem({ lead, onLeadClick, onPhoneClick, getStatusBadgeVaria
         
         {lead.phone && (
           <div 
-            className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors"
+            className="flex items-center gap-1 cursor-pointer hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded px-1 py-0.5 -ml-1 transition-colors group/phone"
             onClick={(e) => onPhoneClick?.(e, lead)}
+            title="Click to call via Twilio"
           >
-            <Phone className="h-3 w-3" />
-            <span className="truncate font-mono">{lead.phone}</span>
+            <Phone className="h-3 w-3 group-hover/phone:animate-pulse" />
+            <span className="truncate font-mono font-semibold">{lead.phone}</span>
           </div>
         )}
       </div>
