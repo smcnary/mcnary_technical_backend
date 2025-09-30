@@ -476,22 +476,22 @@ export default function ClientDashboard() {
                 </div>
               </div>
             </section>
+
+            {/* Onboarding Modal */}
+            <OnboardingModal 
+              isOpen={showOnboarding} 
+              onClose={handleOnboardingComplete} 
+            />
+
+            {/* Dashboard Tour */}
+            <DashboardTour 
+              isOpen={showTour} 
+              onClose={handleTourComplete}
+              onComplete={handleTourComplete}
+            />
           </main>
         </div>
       </div>
-
-      {/* Onboarding Modal */}
-      <OnboardingModal 
-        isOpen={showOnboarding} 
-        onClose={handleOnboardingComplete} 
-      />
-
-      {/* Dashboard Tour */}
-      <DashboardTour 
-        isOpen={showTour} 
-        onClose={handleTourComplete}
-        onComplete={handleTourComplete}
-      />
     </div>
   );
 }
