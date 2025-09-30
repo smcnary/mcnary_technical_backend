@@ -56,3 +56,9 @@ YELP_API_KEY
 CLEARBIT_API_KEY
 *secret*
 *password*
+
+# Next.js build artifacts
+frontend/.next/
+frontend/.next/*
+*.pack
+*.pack.gz
