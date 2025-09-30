@@ -7,11 +7,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <ThemeProvider>
       <OnboardingProvider>
-        <div className="min-h-screen grid grid-cols-[240px_1fr]">
+        <div className="min-h-screen grid grid-cols-[240px_1fr] bg-slate-50 dark:bg-slate-900">
           <ClientSidebar data-tour="sidebar-nav" />
-          <div className="flex flex-col">
+          <div className="flex flex-col min-h-screen bg-slate-100/70 dark:bg-slate-900">
             <Topbar />
-            <main className="p-6">{children}</main>
+            <main className="flex-1 p-6">{children}</main>
           </div>
         </div>
       </OnboardingProvider>

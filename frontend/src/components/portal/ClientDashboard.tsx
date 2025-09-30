@@ -351,12 +351,9 @@ export default function ClientDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-900">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex gap-6">
-          <main className="flex-1 py-8">
-            {/* Header with back button and theme toggle */}
-            <div className="flex items-center justify-between mb-6" data-tour="dashboard-header">
+    <>
+      {/* Header with back button and theme toggle */}
+      <div className="flex items-center justify-between mb-6" data-tour="dashboard-header">
               <div className="flex items-center gap-4">
                 <Button
                   variant="outline"
@@ -598,9 +595,6 @@ export default function ClientDashboard() {
                 </div>
               </div>
             </section>
-          </main>
-        </div>
-      </div>
 
       {/* Onboarding Modal */}
       <OnboardingModal 
@@ -614,6 +608,6 @@ export default function ClientDashboard() {
         onClose={handleTourComplete}
         onComplete={handleTourComplete}
       />
-    </div>
+    </>
   );
 }
