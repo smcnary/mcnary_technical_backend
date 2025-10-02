@@ -1,0 +1,170 @@
+<?php //App.Entity.LeadEvent
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\PositiveOrZero'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\PositiveOrZero')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\LeadEvent',
+                'type',
+                4 => 'direction',
+                6 => 'duration',
+                8 => 'outcome',
+            ],
+            'defaultGroup' => [
+                'LeadEvent',
+            ],
+            'members' => [
+                [
+                    'type' => [
+                        $o[1],
+                    ],
+                    'direction' => [
+                        $o[4],
+                    ],
+                    'duration' => [
+                        $o[6],
+                    ],
+                    'outcome' => [
+                        $o[8],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'type' => $o[1],
+                    'direction' => $o[4],
+                    'duration' => $o[6],
+                    'outcome' => $o[8],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                    $o[3],
+                ],
+                4 => [
+                    $o[5],
+                ],
+                6 => [
+                    $o[7],
+                ],
+                8 => [
+                    $o[9],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                        $o[3],
+                    ],
+                    'LeadEvent' => [
+                        $o[2],
+                        $o[3],
+                    ],
+                ],
+                4 => [
+                    'Default' => [
+                        $o[5],
+                    ],
+                    'LeadEvent' => [
+                        $o[5],
+                    ],
+                ],
+                6 => [
+                    'Default' => [
+                        $o[7],
+                    ],
+                    'LeadEvent' => [
+                        $o[7],
+                    ],
+                ],
+                8 => [
+                    'Default' => [
+                        $o[9],
+                    ],
+                    'LeadEvent' => [
+                        $o[9],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\LeadEvent',
+                4 => 'App\\Entity\\LeadEvent',
+                6 => 'App\\Entity\\LeadEvent',
+                8 => 'App\\Entity\\LeadEvent',
+            ],
+            'property' => [
+                1 => 'type',
+                4 => 'direction',
+                6 => 'duration',
+                8 => 'outcome',
+            ],
+            'payload' => [
+                2 => null,
+                null,
+                5 => null,
+                7 => null,
+                9 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'LeadEvent',
+                ],
+                [
+                    'Default',
+                    'LeadEvent',
+                ],
+                5 => [
+                    'Default',
+                    'LeadEvent',
+                ],
+                7 => [
+                    'Default',
+                    'LeadEvent',
+                ],
+                9 => [
+                    'Default',
+                    'LeadEvent',
+                ],
+            ],
+            'choices' => [
+                3 => [
+                    'phone_call',
+                    'email',
+                    'meeting',
+                    'note',
+                    'application',
+                ],
+                5 => [
+                    'inbound',
+                    'outbound',
+                ],
+                9 => [
+                    'positive',
+                    'neutral',
+                    'negative',
+                ],
+            ],
+            'value' => [
+                7 => 0,
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

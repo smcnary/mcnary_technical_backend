@@ -16,7 +16,7 @@ export default function SeoClientsTab() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Get the importLeads function from useData hook
-  const { importLeads, leads: realLeads, getLeads, updateLead } = useData();
+  const { importLeads, leads: realLeads, getLeads, updateLead, createLead } = useData();
   const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
 
   // Prevent hydration mismatch
@@ -119,6 +119,34 @@ export default function SeoClientsTab() {
     } catch (error) {
       console.error('Failed to update lead status:', error);
       // You might want to show a toast notification here
+    }
+  };
+
+  // Handle lead creation
+  const handleLeadCreate = async (lead: any) => {
+    try {
+      console.log('Creating new lead:', lead);
+      await createLead(lead);
+      
+      // Refresh leads after creation
+      await getLeads();
+      console.log('Leads refreshed after creation');
+    } catch (error) {
+      console.error('Error creating lead:', error);
+    }
+  };
+
+  // Handle lead update
+  const handleLeadUpdate = async (lead: any) => {
+    try {
+      console.log('Updating lead:', lead);
+      await updateLead(lead.id, lead);
+      
+      // Refresh leads after update
+      await getLeads();
+      console.log('Leads refreshed after update');
+    } catch (error) {
+      console.error('Error updating lead:', error);
     }
   };
 
@@ -239,6 +267,8 @@ export default function SeoClientsTab() {
         leads={displayLeads} 
         onLeadClick={(lead) => console.log('Lead clicked:', lead)}
         onLeadStatusChange={handleLeadStatusChange}
+        onLeadCreate={handleLeadCreate}
+        onLeadUpdate={handleLeadUpdate}
       />
     </div>
   );

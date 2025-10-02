@@ -36,7 +36,8 @@
         "symfony/serializer": "7.3.*",
         "symfony/twig-bundle": "7.3.*",
         "symfony/validator": "7.3.*",
-        "symfony/yaml": "7.3.*"
+        "symfony/yaml": "7.3.*",
+        "twilio/sdk": "^8.8"
     },
     "config": {
         "allow-plugins": {

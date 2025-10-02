@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import TechStackDisplay from './TechStackDisplay';
 import CallModal from './CallModal';
+import LeadFormModal from './LeadFormModal';
 import { apiService, Lead } from '../../services/api';
 import { TechStackResult } from '../../services/techStackService';
 
@@ -37,13 +38,15 @@ interface LeadDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onStatusChange?: (leadId: string, newStatus: string) => void;
+  onLeadUpdate?: (lead: Lead) => void;
 }
 
 export default function LeadDetailsModal({ 
   lead, 
   isOpen, 
   onClose, 
-  onStatusChange 
+  onStatusChange,
+  onLeadUpdate
 }: LeadDetailsModalProps) {
   const [techStack, setTechStack] = useState<TechStackResult | undefined>(lead?.techStack);
   const [isAnalyzingTechStack, setIsAnalyzingTechStack] = useState(false);
@@ -57,6 +60,7 @@ export default function LeadDetailsModal({
   const [interviewScheduled, setInterviewScheduled] = useState<Date | undefined>(undefined);
   const [followUpDate, setFollowUpDate] = useState<Date | undefined>(undefined);
   const [isSavingDates, setIsSavingDates] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Update tech stack when lead changes
   useEffect(() => {
@@ -258,6 +262,19 @@ export default function LeadDetailsModal({
   const handleHangup = () => {
     console.log('Call ended');
     handleCallModalClose();
+  };
+
+  const handleEditLead = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleEditSave = (updatedLead: Lead) => {
+    onLeadUpdate?.(updatedLead);
+    setIsEditModalOpen(false);
   };
 
   const handleAnalyzeTechStack = async () => {
@@ -679,6 +696,10 @@ export default function LeadDetailsModal({
         {/* Actions */}
         <div className="flex justify-between items-center gap-2 pt-4 border-t">
           <div className="flex gap-2">
+            <Button onClick={handleEditLead} variant="outline">
+              <User className="h-4 w-4 mr-2" />
+              Edit Lead
+            </Button>
             {lead.phone && (
               <Button onClick={handleCallLead} className="bg-green-600 hover:bg-green-700">
                 <PhoneCall className="h-4 w-4 mr-2" />
@@ -717,6 +738,14 @@ export default function LeadDetailsModal({
           isOpen={isCallModalOpen}
           onClose={handleCallModalClose}
           onHangup={handleHangup}
+        />
+
+        {/* Edit Lead Modal */}
+        <LeadFormModal
+          isOpen={isEditModalOpen}
+          onClose={handleEditModalClose}
+          onSave={handleEditSave}
+          lead={lead}
         />
       </DialogContent>
     </Dialog>

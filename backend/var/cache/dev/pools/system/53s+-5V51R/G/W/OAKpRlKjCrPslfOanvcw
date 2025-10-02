@@ -1,0 +1,114 @@
+<?php //App_Entity_LeadEvent
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\LeadEvent',
+                'id',
+                'lead',
+                'type',
+                'direction',
+                'duration',
+                'notes',
+                'outcome',
+                'nextAction',
+                'createdAt',
+                'updatedAt',
+                'createdAtValue',
+                'updatedAtValue',
+                'typeLabel',
+                'outcomeLabel',
+                'directionLabel',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'lead' => $o[2],
+                    'type' => $o[3],
+                    'direction' => $o[4],
+                    'duration' => $o[5],
+                    'notes' => $o[6],
+                    'outcome' => $o[7],
+                    'nextAction' => $o[8],
+                    'createdAt' => $o[9],
+                    'updatedAt' => $o[10],
+                    'createdAtValue' => $o[11],
+                    'updatedAtValue' => $o[12],
+                    'typeLabel' => $o[13],
+                    'outcomeLabel' => $o[14],
+                    'directionLabel' => $o[15],
+                ],
+            ],
+            'groups' => [
+                1 => [
+                    'lead_event:read',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                    'lead_event:write',
+                ],
+                [
+                    'lead_event:read',
+                ],
+                [
+                    'lead_event:read',
+                ],
+                13 => [
+                    'lead_event:read',
+                ],
+                [
+                    'lead_event:read',
+                ],
+                [
+                    'lead_event:read',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

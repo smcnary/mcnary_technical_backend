@@ -409,7 +409,7 @@ export class ApiService {
 
   // Lead Management
   async submitLead(leadData: Omit<Lead, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<Lead> {
-    return this.fetchApi<Lead>('/api/v1/leads', {
+    return this.fetchApi<Lead>('/api/leads', {
       method: 'POST',
       body: JSON.stringify(leadData),
     });
@@ -954,6 +954,27 @@ export class ApiService {
 
   async getNotificationCount(): Promise<{ unread_count: number; total_count: number }> {
     return this.fetchApi<{ unread_count: number; total_count: number }>('/api/v1/notifications/count');
+  }
+
+  // GOOGLE SHEETS IMPORT API
+  async importLeadsFromGoogleSheets(data: {
+    spreadsheet_url: string;
+    range?: string;
+    client_id?: string;
+    source_id?: string;
+    overwrite_existing?: boolean;
+  }): Promise<{
+    message: string;
+    imported: number;
+    updated: number;
+    skipped: number;
+    total_processed: number;
+    errors?: string[];
+  }> {
+    return this.fetchApi('/api/v1/leads/google-sheets-import', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   }
 
   // Check if user is authenticated

@@ -1,0 +1,72 @@
+<?php //App_Entity_Organization
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Organization',
+                'id',
+                'name',
+                'domain',
+                'metadata',
+                'status',
+                'users',
+                'clients',
+                'createdAt',
+                'updatedAt',
+                'createdAtValue',
+                'updatedAtValue',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'name' => $o[2],
+                    'domain' => $o[3],
+                    'metadata' => $o[4],
+                    'status' => $o[5],
+                    'users' => $o[6],
+                    'clients' => $o[7],
+                    'createdAt' => $o[8],
+                    'updatedAt' => $o[9],
+                    'createdAtValue' => $o[10],
+                    'updatedAtValue' => $o[11],
+                ],
+            ],
+            'groups' => [
+                8 => [
+                    'lead:read',
+                    'lead:admin:read',
+                    'campaign:read',
+                    'campaign:admin:read',
+                    'case_study:read',
+                    'case_study:admin:read',
+                ],
+                [
+                    'lead:read',
+                    'lead:admin:read',
+                    'campaign:read',
+                    'campaign:admin:read',
+                    'case_study:read',
+                    'case_study:admin:read',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

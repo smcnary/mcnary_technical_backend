@@ -1,0 +1,165 @@
+<?php //App.Entity.MediaAsset
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\MediaAsset',
+                'filename',
+                3 => 'originalFilename',
+                5 => 'mimeType',
+                7 => 'storageKey',
+                9 => 'storageProvider',
+            ],
+            'defaultGroup' => [
+                'MediaAsset',
+            ],
+            'members' => [
+                [
+                    'filename' => [
+                        $o[1],
+                    ],
+                    'originalFilename' => [
+                        $o[3],
+                    ],
+                    'mimeType' => [
+                        $o[5],
+                    ],
+                    'storageKey' => [
+                        $o[7],
+                    ],
+                    'storageProvider' => [
+                        $o[9],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'filename' => $o[1],
+                    'originalFilename' => $o[3],
+                    'mimeType' => $o[5],
+                    'storageKey' => $o[7],
+                    'storageProvider' => $o[9],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+                7 => [
+                    $o[8],
+                ],
+                9 => [
+                    $o[10],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'MediaAsset' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'MediaAsset' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'MediaAsset' => [
+                        $o[6],
+                    ],
+                ],
+                7 => [
+                    'Default' => [
+                        $o[8],
+                    ],
+                    'MediaAsset' => [
+                        $o[8],
+                    ],
+                ],
+                9 => [
+                    'Default' => [
+                        $o[10],
+                    ],
+                    'MediaAsset' => [
+                        $o[10],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\MediaAsset',
+                3 => 'App\\Entity\\MediaAsset',
+                5 => 'App\\Entity\\MediaAsset',
+                7 => 'App\\Entity\\MediaAsset',
+                9 => 'App\\Entity\\MediaAsset',
+            ],
+            'property' => [
+                1 => 'filename',
+                3 => 'originalFilename',
+                5 => 'mimeType',
+                7 => 'storageKey',
+                9 => 'storageProvider',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+                8 => null,
+                10 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'MediaAsset',
+                ],
+                4 => [
+                    'Default',
+                    'MediaAsset',
+                ],
+                6 => [
+                    'Default',
+                    'MediaAsset',
+                ],
+                8 => [
+                    'Default',
+                    'MediaAsset',
+                ],
+                10 => [
+                    'Default',
+                    'MediaAsset',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

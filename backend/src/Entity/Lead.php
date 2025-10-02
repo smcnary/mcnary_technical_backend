@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(
             normalizationContext: ['groups' => ['lead:read']],
             denormalizationContext: ['groups' => ['lead:write']],
-            security: "is_granted('PUBLIC_ACCESS')",
+            security: "is_granted('ROLE_AGENCY_ADMIN')",
             validationContext: ['groups' => ['Default']]
         ),
         new Get(

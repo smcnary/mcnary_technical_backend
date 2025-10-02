@@ -93,6 +93,16 @@ export function useData() {
     return dataService.importLeadgenData(leads, clientId, sourceId);
   }, []);
 
+  const importLeadsFromGoogleSheets = useCallback(async (data: {
+    spreadsheet_url: string;
+    range?: string;
+    client_id?: string;
+    source_id?: string;
+    overwrite_existing?: boolean;
+  }) => {
+    return dataService.importLeadsFromGoogleSheets(data);
+  }, []);
+
   const getLeadEvents = useCallback(async (leadId: string) => {
     return dataService.getLeadEvents(leadId);
   }, []);
@@ -139,6 +149,10 @@ export function useData() {
 
   const updateLead = useCallback(async (id: string, leadData: any) => {
     return dataService.updateLead(id, leadData);
+  }, []);
+
+  const createLead = useCallback(async (leadData: any) => {
+    return dataService.submitLead(leadData);
   }, []);
 
   const importLeads = useCallback(async (csvData: string, options?: {
@@ -254,9 +268,11 @@ export function useData() {
     // Lead methods
     getLeads,
     submitLead,
+    createLead,
     updateLead,
     importLeads,
     importLeadgenData,
+    importLeadsFromGoogleSheets,
     getLeadEvents,
     getLeadStatistics,
     createLeadEvent,

@@ -1,0 +1,172 @@
+<?php //App.Entity.Backlink
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Url'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Url')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Url'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\Choice'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Backlink',
+                'sourceUrl',
+                4 => 'targetUrl',
+                7 => 'status',
+                9 => 'linkType',
+            ],
+            'defaultGroup' => [
+                'Backlink',
+            ],
+            'members' => [
+                [
+                    'sourceUrl' => [
+                        $o[1],
+                    ],
+                    'targetUrl' => [
+                        $o[4],
+                    ],
+                    'status' => [
+                        $o[7],
+                    ],
+                    'linkType' => [
+                        $o[9],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'sourceUrl' => $o[1],
+                    'targetUrl' => $o[4],
+                    'status' => $o[7],
+                    'linkType' => $o[9],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                    $o[3],
+                ],
+                4 => [
+                    $o[5],
+                    $o[6],
+                ],
+                7 => [
+                    $o[8],
+                ],
+                9 => [
+                    $o[10],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                        $o[3],
+                    ],
+                    'Backlink' => [
+                        $o[2],
+                        $o[3],
+                    ],
+                ],
+                4 => [
+                    'Default' => [
+                        $o[5],
+                        $o[6],
+                    ],
+                    'Backlink' => [
+                        $o[5],
+                        $o[6],
+                    ],
+                ],
+                7 => [
+                    'Default' => [
+                        $o[8],
+                    ],
+                    'Backlink' => [
+                        $o[8],
+                    ],
+                ],
+                9 => [
+                    'Default' => [
+                        $o[10],
+                    ],
+                    'Backlink' => [
+                        $o[10],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\Backlink',
+                4 => 'App\\Entity\\Backlink',
+                7 => 'App\\Entity\\Backlink',
+                9 => 'App\\Entity\\Backlink',
+            ],
+            'property' => [
+                1 => 'sourceUrl',
+                4 => 'targetUrl',
+                7 => 'status',
+                9 => 'linkType',
+            ],
+            'payload' => [
+                2 => null,
+                null,
+                5 => null,
+                null,
+                8 => null,
+                10 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'Backlink',
+                ],
+                [
+                    'Default',
+                    'Backlink',
+                ],
+                5 => [
+                    'Default',
+                    'Backlink',
+                ],
+                [
+                    'Default',
+                    'Backlink',
+                ],
+                8 => [
+                    'Default',
+                    'Backlink',
+                ],
+                10 => [
+                    'Default',
+                    'Backlink',
+                ],
+            ],
+            'choices' => [
+                8 => [
+                    'active',
+                    'lost',
+                    'pending',
+                    'discovered',
+                ],
+                10 => [
+                    'dofollow',
+                    'nofollow',
+                    'sponsored',
+                    'ugc',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

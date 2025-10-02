@@ -1,0 +1,805 @@
+<?php //resource_metadata_collection_97ce0dae33f8f56b
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['ApiPlatform\\Metadata\\ApiResource'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\ApiResource')),
+        clone ($p['ApiPlatform\\Metadata\\Operations'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\Operations')),
+        clone ($p['ApiPlatform\\Metadata\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\Get')),
+        clone ($p['ApiPlatform\\Doctrine\\Orm\\State\\Options'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Doctrine\\Orm\\State\\Options')),
+        clone ($p['ApiPlatform\\Metadata\\Link'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\Link')),
+        clone ($p['ApiPlatform\\Metadata\\GetCollection'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\GetCollection')),
+        clone $p['ApiPlatform\\Doctrine\\Orm\\State\\Options'],
+        clone ($p['ApiPlatform\\Metadata\\Post'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('ApiPlatform\\Metadata\\Post')),
+        clone $p['ApiPlatform\\Doctrine\\Orm\\State\\Options'],
+        clone $p['ApiPlatform\\Metadata\\Link'],
+    ],
+    null,
+    [
+        'ApiPlatform\\Metadata\\ApiResource' => [
+            'shortName' => [
+                'OpenPhoneMessageLog',
+            ],
+            'class' => [
+                'App\\Entity\\OpenPhoneMessageLog',
+            ],
+            'description' => [
+                null,
+            ],
+            'urlGenerationStrategy' => [
+                null,
+            ],
+            'deprecationReason' => [
+                null,
+            ],
+            'normalizationContext' => [
+                null,
+            ],
+            'denormalizationContext' => [
+                null,
+            ],
+            'collectDenormalizationErrors' => [
+                null,
+            ],
+            'validationContext' => [
+                null,
+            ],
+            'filters' => [
+                null,
+            ],
+            'order' => [
+                null,
+            ],
+            'fetchPartial' => [
+                null,
+            ],
+            'forceEager' => [
+                null,
+            ],
+            'paginationEnabled' => [
+                null,
+            ],
+            'paginationType' => [
+                null,
+            ],
+            'paginationItemsPerPage' => [
+                null,
+            ],
+            'paginationMaximumItemsPerPage' => [
+                null,
+            ],
+            'paginationPartial' => [
+                null,
+            ],
+            'paginationClientEnabled' => [
+                null,
+            ],
+            'paginationClientItemsPerPage' => [
+                null,
+            ],
+            'paginationClientPartial' => [
+                null,
+            ],
+            'paginationFetchJoinCollection' => [
+                null,
+            ],
+            'paginationUseOutputWalkers' => [
+                null,
+            ],
+            'security' => [
+                null,
+            ],
+            'securityMessage' => [
+                null,
+            ],
+            'securityPostDenormalize' => [
+                null,
+            ],
+            'securityPostDenormalizeMessage' => [
+                null,
+            ],
+            'securityPostValidation' => [
+                null,
+            ],
+            'securityPostValidationMessage' => [
+                null,
+            ],
+            'stateOptions' => [
+                null,
+            ],
+            'rules' => [
+                null,
+            ],
+            'queryParameterValidationEnabled' => [
+                null,
+            ],
+            'strictQueryParameterValidation' => [
+                null,
+            ],
+            'hideHydraOperation' => [
+                null,
+            ],
+            'extraProperties' => [
+                [],
+            ],
+            'operations' => [
+                $o[1],
+            ],
+            'uriTemplate' => [
+                null,
+            ],
+            'types' => [
+                null,
+            ],
+            'formats' => [
+                null,
+            ],
+            'inputFormats' => [
+                null,
+            ],
+            'outputFormats' => [
+                null,
+            ],
+            'uriVariables' => [
+                [
+                    'id' => $o[9],
+                ],
+            ],
+            'routePrefix' => [
+                null,
+            ],
+            'defaults' => [
+                null,
+            ],
+            'requirements' => [
+                null,
+            ],
+            'options' => [
+                null,
+            ],
+            'stateless' => [
+                true,
+            ],
+            'sunset' => [
+                null,
+            ],
+            'acceptPatch' => [
+                null,
+            ],
+            'status' => [
+                null,
+            ],
+            'host' => [
+                null,
+            ],
+            'schemes' => [
+                null,
+            ],
+            'condition' => [
+                null,
+            ],
+            'controller' => [
+                null,
+            ],
+            'headers' => [
+                null,
+            ],
+            'cacheHeaders' => [
+                [
+                    'vary' => [
+                        'Content-Type',
+                        'Authorization',
+                        'Origin',
+                    ],
+                ],
+            ],
+            'hydraContext' => [
+                null,
+            ],
+            'openapi' => [
+                null,
+            ],
+            'paginationViaCursor' => [
+                null,
+            ],
+            'compositeIdentifier' => [
+                null,
+            ],
+            'exceptionToStatus' => [
+                null,
+            ],
+            'links' => [
+                null,
+            ],
+            'graphQlOperations' => [
+                null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Metadata' => [
+            'policy' => [
+                null,
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'middleware' => [
+                null,
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'rules' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'queryParameterValidationEnabled' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Operations' => [
+            'operations' => [
+                1 => [
+                    [
+                        '_api_/open_phone_message_logs/{id}{._format}_get',
+                        $o[2],
+                    ],
+                    [
+                        '_api_/open_phone_message_logs{._format}_get_collection',
+                        $o[5],
+                    ],
+                    [
+                        '_api_/open_phone_message_logs{._format}_post',
+                        $o[7],
+                    ],
+                ],
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Operation' => [
+            'shortName' => [
+                2 => 'OpenPhoneMessageLog',
+                5 => 'OpenPhoneMessageLog',
+                7 => 'OpenPhoneMessageLog',
+            ],
+            'class' => [
+                2 => 'App\\Entity\\OpenPhoneMessageLog',
+                5 => 'App\\Entity\\OpenPhoneMessageLog',
+                7 => 'App\\Entity\\OpenPhoneMessageLog',
+            ],
+            'description' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'urlGenerationStrategy' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'deprecationReason' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'normalizationContext' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'denormalizationContext' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'collectDenormalizationErrors' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'validationContext' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'filters' => [
+                2 => [],
+                5 => [],
+                7 => [],
+            ],
+            'order' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'fetchPartial' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'forceEager' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationEnabled' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationType' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationItemsPerPage' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationMaximumItemsPerPage' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationPartial' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationClientEnabled' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationClientItemsPerPage' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationClientPartial' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationFetchJoinCollection' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationUseOutputWalkers' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'security' => [
+                2 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\') or (is_granted(\'ROLE_CLIENT_ADMIN\') and object.getClient().getClientId() == user.getClientId())',
+                5 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\')',
+                7 => 'is_granted(\'ROLE_AGENCY_ADMIN\') or is_granted(\'ROLE_AGENCY_STAFF\')',
+            ],
+            'securityMessage' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'securityPostDenormalize' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'securityPostDenormalizeMessage' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'securityPostValidation' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'securityPostValidationMessage' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'provider' => [
+                2 => 'ApiPlatform\\Doctrine\\Orm\\State\\ItemProvider',
+                5 => 'ApiPlatform\\Doctrine\\Orm\\State\\CollectionProvider',
+                7 => 'ApiPlatform\\Doctrine\\Orm\\State\\ItemProvider',
+            ],
+            'processor' => [
+                2 => 'api_platform.doctrine.orm.state.persist_processor',
+                5 => 'api_platform.doctrine.orm.state.persist_processor',
+                7 => 'api_platform.doctrine.orm.state.persist_processor',
+            ],
+            'stateOptions' => [
+                2 => $o[3],
+                5 => $o[6],
+                7 => $o[8],
+            ],
+            'extraProperties' => [
+                2 => [],
+                5 => [],
+                7 => [],
+            ],
+            'read' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'deserialize' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'validate' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'write' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'serialize' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'priority' => [
+                2 => 0,
+                5 => 1,
+                7 => 2,
+            ],
+            'name' => [
+                2 => '_api_/open_phone_message_logs/{id}{._format}_get',
+                5 => '_api_/open_phone_message_logs{._format}_get_collection',
+                7 => '_api_/open_phone_message_logs{._format}_post',
+            ],
+        ],
+        'ApiPlatform\\Metadata\\HttpOperation' => [
+            'strictQueryParameterValidation' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'paginationViaCursor' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'method' => [
+                2 => 'GET',
+                5 => 'GET',
+                7 => 'POST',
+            ],
+            'uriTemplate' => [
+                2 => '/open_phone_message_logs/{id}{._format}',
+                5 => '/open_phone_message_logs{._format}',
+                7 => '/open_phone_message_logs{._format}',
+            ],
+            'types' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'inputFormats' => [
+                2 => [
+                    'jsonld' => [
+                        'application/ld+json',
+                    ],
+                ],
+                5 => [
+                    'jsonld' => [
+                        'application/ld+json',
+                    ],
+                ],
+                7 => [
+                    'jsonld' => [
+                        'application/ld+json',
+                    ],
+                ],
+            ],
+            'outputFormats' => [
+                2 => [
+                    'jsonld' => [
+                        'application/ld+json',
+                    ],
+                ],
+                5 => [
+                    'jsonld' => [
+                        'application/ld+json',
+                    ],
+                ],
+                7 => [
+                    'jsonld' => [
+                        'application/ld+json',
+                    ],
+                ],
+            ],
+            'uriVariables' => [
+                2 => [
+                    'id' => $o[4],
+                ],
+                7 => [],
+            ],
+            'routePrefix' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'routeName' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'defaults' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'requirements' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'options' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'stateless' => [
+                2 => true,
+                5 => true,
+                7 => true,
+            ],
+            'sunset' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'acceptPatch' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'host' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'schemes' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'condition' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'controller' => [
+                2 => 'api_platform.symfony.main_controller',
+                5 => 'api_platform.symfony.main_controller',
+                7 => 'api_platform.symfony.main_controller',
+            ],
+            'headers' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'cacheHeaders' => [
+                2 => [
+                    'vary' => [
+                        'Content-Type',
+                        'Authorization',
+                        'Origin',
+                    ],
+                ],
+                5 => [
+                    'vary' => [
+                        'Content-Type',
+                        'Authorization',
+                        'Origin',
+                    ],
+                ],
+                7 => [
+                    'vary' => [
+                        'Content-Type',
+                        'Authorization',
+                        'Origin',
+                    ],
+                ],
+            ],
+            'hydraContext' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'openapi' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'exceptionToStatus' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'links' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'errors' => [
+                2 => null,
+                5 => null,
+                7 => null,
+            ],
+            'hideHydraOperation' => [
+                7 => null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Get' => [
+            'hideHydraOperation' => [
+                2 => null,
+            ],
+        ],
+        'ApiPlatform\\Doctrine\\Common\\State\\Options' => [
+            'handleLinks' => [
+                3 => 'api_platform.doctrine.orm.links_handler',
+                6 => 'api_platform.doctrine.orm.links_handler',
+                8 => 'api_platform.doctrine.orm.links_handler',
+            ],
+        ],
+        'ApiPlatform\\Doctrine\\Orm\\State\\Options' => [
+            'entityClass' => [
+                3 => null,
+                6 => null,
+                8 => null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Parameter' => [
+            'key' => [
+                4 => null,
+                9 => null,
+            ],
+            'schema' => [
+                4 => null,
+                9 => null,
+            ],
+            'openApi' => [
+                4 => null,
+                9 => null,
+            ],
+            'provider' => [
+                4 => null,
+                9 => null,
+            ],
+            'filter' => [
+                4 => null,
+                9 => null,
+            ],
+            'property' => [
+                4 => null,
+                9 => null,
+            ],
+            'description' => [
+                4 => null,
+                9 => null,
+            ],
+            'properties' => [
+                4 => null,
+                9 => null,
+            ],
+            'required' => [
+                4 => null,
+                9 => null,
+            ],
+            'priority' => [
+                4 => null,
+                9 => null,
+            ],
+            'hydra' => [
+                4 => null,
+                9 => null,
+            ],
+            'constraints' => [
+                4 => null,
+                9 => null,
+            ],
+            'security' => [
+                4 => null,
+                9 => null,
+            ],
+            'securityMessage' => [
+                4 => null,
+                9 => null,
+            ],
+            'extraProperties' => [
+                4 => [],
+                9 => [],
+            ],
+            'filterContext' => [
+                4 => null,
+                9 => null,
+            ],
+            'nativeType' => [
+                4 => null,
+                9 => null,
+            ],
+            'castToArray' => [
+                4 => null,
+                9 => null,
+            ],
+            'castToNativeType' => [
+                4 => null,
+                9 => null,
+            ],
+            'castFn' => [
+                4 => null,
+                9 => null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Link' => [
+            'parameterName' => [
+                4 => 'id',
+                9 => 'id',
+            ],
+            'fromProperty' => [
+                4 => null,
+                9 => null,
+            ],
+            'toProperty' => [
+                4 => null,
+                9 => null,
+            ],
+            'fromClass' => [
+                4 => 'App\\Entity\\OpenPhoneMessageLog',
+                9 => 'App\\Entity\\OpenPhoneMessageLog',
+            ],
+            'toClass' => [
+                4 => null,
+                9 => null,
+            ],
+            'identifiers' => [
+                4 => [
+                    'id',
+                ],
+                9 => [
+                    'id',
+                ],
+            ],
+            'compositeIdentifier' => [
+                4 => null,
+                9 => null,
+            ],
+            'expandedValue' => [
+                4 => null,
+                9 => null,
+            ],
+            'securityObjectName' => [
+                4 => null,
+                9 => null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\GetCollection' => [
+            'hideHydraOperation' => [
+                5 => null,
+            ],
+            'itemUriTemplate' => [
+                5 => null,
+            ],
+        ],
+        'ApiPlatform\\Metadata\\Post' => [
+            'itemUriTemplate' => [
+                7 => null,
+            ],
+        ],
+    ],
+    [
+        $o[0],
+    ],
+    []
+)];

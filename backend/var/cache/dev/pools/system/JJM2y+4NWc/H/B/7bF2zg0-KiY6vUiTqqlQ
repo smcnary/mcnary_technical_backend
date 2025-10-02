@@ -1,0 +1,118 @@
+<?php //App.Entity.DocumentVersion
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Positive'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Positive')),
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\DocumentVersion',
+                'document',
+                3 => 'createdBy',
+                5 => 'versionNumber',
+            ],
+            'defaultGroup' => [
+                'DocumentVersion',
+            ],
+            'members' => [
+                [
+                    'document' => [
+                        $o[1],
+                    ],
+                    'createdBy' => [
+                        $o[3],
+                    ],
+                    'versionNumber' => [
+                        $o[5],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'document' => $o[1],
+                    'createdBy' => $o[3],
+                    'versionNumber' => $o[5],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'DocumentVersion' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'DocumentVersion' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'DocumentVersion' => [
+                        $o[6],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\DocumentVersion',
+                3 => 'App\\Entity\\DocumentVersion',
+                5 => 'App\\Entity\\DocumentVersion',
+            ],
+            'property' => [
+                1 => 'document',
+                3 => 'createdBy',
+                5 => 'versionNumber',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'DocumentVersion',
+                ],
+                4 => [
+                    'Default',
+                    'DocumentVersion',
+                ],
+                6 => [
+                    'Default',
+                    'DocumentVersion',
+                ],
+            ],
+            'value' => [
+                6 => 0,
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

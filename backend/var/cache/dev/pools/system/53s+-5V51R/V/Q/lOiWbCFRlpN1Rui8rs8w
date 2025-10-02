@@ -1,0 +1,69 @@
+<?php //App_Entity_UserClientAccess
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\UserClientAccess',
+                'id',
+                'user',
+                'client',
+                'permissions',
+                'status',
+                'createdAt',
+                'updatedAt',
+                'permission',
+                'createdAtValue',
+                'updatedAtValue',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'user' => $o[2],
+                    'client' => $o[3],
+                    'permissions' => $o[4],
+                    'status' => $o[5],
+                    'createdAt' => $o[6],
+                    'updatedAt' => $o[7],
+                    'permission' => $o[8],
+                    'createdAtValue' => $o[9],
+                    'updatedAtValue' => $o[10],
+                ],
+            ],
+            'groups' => [
+                6 => [
+                    'lead:read',
+                    'lead:admin:read',
+                    'campaign:read',
+                    'campaign:admin:read',
+                    'case_study:read',
+                    'case_study:admin:read',
+                ],
+                [
+                    'lead:read',
+                    'lead:admin:read',
+                    'campaign:read',
+                    'campaign:admin:read',
+                    'case_study:read',
+                    'case_study:admin:read',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

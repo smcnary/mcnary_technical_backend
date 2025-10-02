@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { 
   Users, 
   MessageSquare, 
@@ -35,6 +36,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import LeadDetailsModal from './LeadDetailsModal';
 import CallModal from './CallModal';
+import LeadFormModal from './LeadFormModal';
 
 interface Lead {
   id: string;
@@ -57,6 +59,8 @@ interface LeadsKanbanBoardProps {
   leads: Lead[];
   onLeadClick?: (lead: Lead) => void;
   onLeadStatusChange?: (leadId: string, newStatus: string) => void;
+  onLeadCreate?: (lead: Lead) => void;
+  onLeadUpdate?: (lead: Lead) => void;
 }
 
 interface StatusColumn {
@@ -108,14 +112,6 @@ const statusColumns: StatusColumn[] = [
     color: 'text-emerald-600',
     bgColor: 'bg-emerald-50 dark:bg-emerald-950/20',
     statuses: ['enrolled']
-  },
-  {
-    id: 'openphone',
-    title: 'OpenPhone',
-    icon: <Phone className="h-5 w-5" />,
-    color: 'text-cyan-600',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-950/20',
-    statuses: [] // This would be for leads that have been synced to OpenPhone
   }
 ];
 
@@ -179,8 +175,7 @@ function DroppableColumn({
                 {columnLeads.length === 0 ? (
                   <div className="text-center py-4">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {column.id === 'openphone' ? 'Click to view openphone' : 
-                       dragOverColumn === column.id && draggedLead ? 
+                      {dragOverColumn === column.id && draggedLead ? 
                        `Drop to move to ${column.title}` : 
                        'No leads in this stage'}
                     </p>
@@ -276,13 +271,16 @@ function SortableLeadItem({ lead, onLeadClick, onPhoneClick, getStatusBadgeVaria
   );
 }
 
-export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChange }: LeadsKanbanBoardProps) {
+export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChange, onLeadCreate, onLeadUpdate }: LeadsKanbanBoardProps) {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [draggedLead, setDraggedLead] = useState<Lead | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const [callLead, setCallLead] = useState<Lead | null>(null);
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -335,6 +333,35 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
   const handleHangup = () => {
     console.log('Call ended');
     handleCallModalClose();
+  };
+
+  const handleCreateLead = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCreateModalClose = () => {
+    setIsCreateModalOpen(false);
+  };
+
+  const handleCreateSave = (lead: Lead) => {
+    onLeadCreate?.(lead);
+    setIsCreateModalOpen(false);
+  };
+
+  const handleEditLead = (lead: Lead) => {
+    setEditingLead(lead);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+    setEditingLead(null);
+  };
+
+  const handleEditSave = (lead: Lead) => {
+    onLeadUpdate?.(lead);
+    setIsEditModalOpen(false);
+    setEditingLead(null);
   };
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
@@ -486,14 +513,23 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
 
   return (
     <>
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
-                onDragEnd={handleDragEnd}
-              >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 p-6">
+      {/* Header with Create Lead Button */}
+      <div className="flex justify-between items-center p-6 pb-0">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Leads Management</h2>
+        <Button onClick={handleCreateLead} className="bg-blue-600 hover:bg-blue-700">
+          <Users className="h-4 w-4 mr-2" />
+          Create Lead
+        </Button>
+      </div>
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 p-6 pt-4">
           {statusColumns.map((column) => (
               <DroppableColumn
                 key={column.id}
@@ -559,6 +595,20 @@ export default function LeadsKanbanBoard({ leads, onLeadClick, onLeadStatusChang
         isOpen={isCallModalOpen}
         onClose={handleCallModalClose}
         onHangup={handleHangup}
+      />
+
+      <LeadFormModal
+        isOpen={isCreateModalOpen}
+        onClose={handleCreateModalClose}
+        onSave={handleCreateSave}
+        lead={null}
+      />
+
+      <LeadFormModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        onSave={handleEditSave}
+        lead={editingLead}
       />
     </>
   );

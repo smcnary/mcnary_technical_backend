@@ -22,6 +22,11 @@ parameters:
     # Wappalyzer Configuration
     wappalyzer_api_key: '%env(WAPPALYZER_API_KEY)%'
     
+    # Twilio Configuration
+    twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    twilio_auth_token: '%env(TWILIO_AUTH_TOKEN)%'
+    twilio_phone_number: '%env(TWILIO_PHONE_NUMBER)%'
+    
     app_frontend_url: '%env(APP_FRONTEND_URL)%'
 
 services:
@@ -41,6 +46,13 @@ services:
             - '../src/Tests/'
 
     # add more service definitions when explicit configuration is needed
+    
+    # Twilio Service Configuration
+    App\Service\TwilioService:
+        arguments:
+            $twilioAccountSid: '%twilio_account_sid%'
+            $twilioAuthToken: '%twilio_auth_token%'
+            $twilioPhoneNumber: '%twilio_phone_number%'
     # please note that last definitions always *replace* previous ones
     
     # App\MultiTenancy\TenantResolver: ~

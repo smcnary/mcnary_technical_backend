@@ -733,6 +733,33 @@ class DataService {
     }
   }
 
+  async importLeadsFromGoogleSheets(data: {
+    spreadsheet_url: string;
+    range?: string;
+    client_id?: string;
+    source_id?: string;
+    overwrite_existing?: boolean;
+  }): Promise<any> {
+    try {
+      this.setLoading('leads', true);
+      this.setError('leads', null);
+
+      const result = await apiService.importLeadsFromGoogleSheets(data);
+      
+      // Clear cache to force refresh
+      this.clearCache('leads');
+      this.notifyListeners();
+      
+      return result;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to import from Google Sheets';
+      this.setError('leads', errorMessage);
+      throw error;
+    } finally {
+      this.setLoading('leads', false);
+    }
+  }
+
   async createLeadEvent(leadId: string, eventData: {
     type: string;
     direction?: string;

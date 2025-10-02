@@ -12,6 +12,7 @@ use App\Repository\LeadSourceRepository;
 use App\Repository\LeadEventRepository;
 use App\Service\LeadgenIntegrationService;
 use App\Service\TechStackService;
+use App\Service\GoogleSheetsService;
 use App\ValueObject\LeadStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,6 +35,7 @@ class LeadsController extends AbstractController
         private LeadEventRepository $leadEventRepository,
         private LeadgenIntegrationService $leadgenIntegrationService,
         private TechStackService $techStackService,
+        private GoogleSheetsService $googleSheetsService,
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator
     ) {}
@@ -200,6 +202,7 @@ class LeadsController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'api_v1_leads_get', methods: ['GET'])]
     #[IsGranted('ROLE_AGENCY_ADMIN')]
     public function getLead(string $id): JsonResponse
@@ -262,12 +265,33 @@ class LeadsController extends AbstractController
 
             // Validate input
             $constraints = new Assert\Collection([
+                'fullName' => [new Assert\Optional([new Assert\NotBlank()])],
+                'email' => [new Assert\Optional([new Assert\Email()])],
+                'phone' => [new Assert\Optional([new Assert\Type('string')])],
+                'firm' => [new Assert\Optional([new Assert\Type('string')])],
+                'website' => [new Assert\Optional([new Assert\Url()])],
+                'city' => [new Assert\Optional([new Assert\Type('string')])],
+                'state' => [new Assert\Optional([new Assert\Type('string')])],
+                'zipCode' => [new Assert\Optional([new Assert\Type('string')])],
                 'status' => [new Assert\Optional([new Assert\Choice(['new_lead', 'contacted', 'interview_scheduled', 'interview_completed', 'application_received', 'audit_in_progress', 'audit_complete', 'enrolled'])])],
-                'message' => [new Assert\Optional([new Assert\NotBlank()])],
-                'practice_areas' => [new Assert\Optional([new Assert\Type('array')])],
-                'interviewScheduled' => [new Assert\Optional([new Assert\DateTime()])],
-                'followUpDate' => [new Assert\Optional([new Assert\DateTime()])],
-                'notes' => [new Assert\Optional([new Assert\Type('string')])]
+                'message' => [new Assert\Optional([new Assert\Type('string')])],
+                'practiceAreas' => [new Assert\Optional([new Assert\Type('array')])],
+                'interviewScheduled' => [new Assert\Optional([new Assert\Type('string')])],
+                'followUpDate' => [new Assert\Optional([new Assert\Type('string')])],
+                'notes' => [new Assert\Optional([new Assert\Type('string')])],
+                // Allow extra fields from frontend that aren't stored in backend
+                'budget' => [new Assert\Optional()],
+                'timeline' => [new Assert\Optional()],
+                'consent' => [new Assert\Optional()],
+                'statusLabel' => [new Assert\Optional()],
+                'source' => [new Assert\Optional()],
+                'client' => [new Assert\Optional()],
+                'utmJson' => [new Assert\Optional()],
+                'techStack' => [new Assert\Optional()],
+                'createdAt' => [new Assert\Optional()],
+                'updatedAt' => [new Assert\Optional()]
+            ], [
+                'allowExtraFields' => true
             ]);
 
             $violations = $this->validator->validate($data, $constraints);
@@ -280,6 +304,38 @@ class LeadsController extends AbstractController
             }
 
             // Update fields
+            if (isset($data['fullName'])) {
+                $lead->setFullName($data['fullName']);
+            }
+
+            if (isset($data['email'])) {
+                $lead->setEmail($data['email']);
+            }
+
+            if (isset($data['phone'])) {
+                $lead->setPhone($data['phone']);
+            }
+
+            if (isset($data['firm'])) {
+                $lead->setFirm($data['firm']);
+            }
+
+            if (isset($data['website'])) {
+                $lead->setWebsite($data['website']);
+            }
+
+            if (isset($data['city'])) {
+                $lead->setCity($data['city']);
+            }
+
+            if (isset($data['state'])) {
+                $lead->setState($data['state']);
+            }
+
+            if (isset($data['zipCode'])) {
+                $lead->setZipCode($data['zipCode']);
+            }
+
             if (isset($data['status'])) {
                 $lead->setStatus($data['status']);
             }
@@ -288,16 +344,24 @@ class LeadsController extends AbstractController
                 $lead->setMessage($data['message']);
             }
 
-            if (isset($data['practice_areas'])) {
-                $lead->setPracticeAreas($data['practice_areas']);
+            if (isset($data['practiceAreas'])) {
+                $lead->setPracticeAreas($data['practiceAreas']);
             }
 
             if (isset($data['interviewScheduled'])) {
-                $lead->setInterviewScheduled(new \DateTimeImmutable($data['interviewScheduled']));
+                if (!empty($data['interviewScheduled'])) {
+                    $lead->setInterviewScheduled(new \DateTimeImmutable($data['interviewScheduled']));
+                } else {
+                    $lead->setInterviewScheduled(null);
+                }
             }
 
             if (isset($data['followUpDate'])) {
-                $lead->setFollowUpDate(new \DateTimeImmutable($data['followUpDate']));
+                if (!empty($data['followUpDate'])) {
+                    $lead->setFollowUpDate(new \DateTimeImmutable($data['followUpDate']));
+                } else {
+                    $lead->setFollowUpDate(null);
+                }
             }
 
             if (isset($data['notes'])) {
@@ -827,6 +891,73 @@ class LeadsController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => 'Failed to analyze technology stack',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/google-sheets-import', name: 'api_v1_leads_google_sheets_import', methods: ['POST'])]
+    #[IsGranted('ROLE_AGENCY_ADMIN')]
+    public function importFromGoogleSheets(Request $request): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            
+            if (!$data) {
+                return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate input
+            $constraints = new Assert\Collection([
+                'spreadsheet_url' => [new Assert\NotBlank()],
+                'range' => [new Assert\Optional([new Assert\NotBlank()])],
+                'client_id' => [new Assert\Optional([new Assert\Uuid()])],
+                'source_id' => [new Assert\Optional([new Assert\Uuid()])],
+                'overwrite_existing' => [new Assert\Optional([new Assert\Type('boolean')])]
+            ]);
+
+            $violations = $this->validator->validate($data, $constraints);
+            if (count($violations) > 0) {
+                $errors = [];
+                foreach ($violations as $violation) {
+                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+                return $this->json(['error' => 'Validation failed', 'details' => $errors], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Extract spreadsheet ID from URL
+            $spreadsheetId = $this->googleSheetsService->extractSpreadsheetId($data['spreadsheet_url']);
+            
+            // Fetch sheet data using public CSV export
+            $range = $data['range'] ?? 'A:Z'; // Default to all columns
+            $sheetData = $this->googleSheetsService->fetchSheetData($spreadsheetId, $range);
+            
+            // Import leads
+            $result = $this->googleSheetsService->importLeadsFromSheet(
+                $sheetData,
+                $data['client_id'] ?? null,
+                $data['source_id'] ?? null,
+                $data['overwrite_existing'] ?? false
+            );
+
+            $response = [
+                'message' => 'Google Sheets import completed',
+                'imported' => $result['imported'],
+                'updated' => $result['updated'],
+                'skipped' => $result['skipped'],
+                'total_processed' => $result['imported'] + $result['updated'] + $result['skipped']
+            ];
+
+            if (!empty($result['errors'])) {
+                $response['errors'] = $result['errors'];
+            }
+
+            $statusCode = $result['imported'] > 0 || $result['updated'] > 0 ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST;
+            return $this->json($response, $statusCode);
+
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'Failed to import from Google Sheets',
                 'message' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

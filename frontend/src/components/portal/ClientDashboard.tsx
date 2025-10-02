@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useEffect, useState } from "react";
 import api, { ApiResponse, Lead } from "@/services/api";
 import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2, Users, Target, ArrowLeft } from "lucide-react";
@@ -51,7 +50,7 @@ function KpiCard({ label, value, delta, icon: Icon, help }: { label: string; val
 
 
 function WeeklyChart({ leads, campaigns }: { leads: any[], campaigns: any[] }) {
-  const [activeTab, setActiveTab] = React.useState<'weekly' | 'monthly' | 'yearly'>('weekly');
+  const [activeTab, setActiveTab] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
 
   // Generate real data based on actual leads and campaigns
   const generateChartData = () => {

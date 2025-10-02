@@ -1,0 +1,63 @@
+<?php //App_Entity_AuditFinding
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\AuditFinding',
+                'id',
+                'client',
+                'auditRun',
+                'title',
+                'description',
+                'severity',
+                'status',
+                'category',
+                'location',
+                'impact',
+                'recommendation',
+                'impactScore',
+                'effortScore',
+                'priorityScore',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'client' => $o[2],
+                    'auditRun' => $o[3],
+                    'title' => $o[4],
+                    'description' => $o[5],
+                    'severity' => $o[6],
+                    'status' => $o[7],
+                    'category' => $o[8],
+                    'location' => $o[9],
+                    'impact' => $o[10],
+                    'recommendation' => $o[11],
+                    'impactScore' => $o[12],
+                    'effortScore' => $o[13],
+                    'priorityScore' => $o[14],
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

@@ -1,0 +1,125 @@
+<?php //App.Entity.DocumentTemplate
+
+return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\DocumentTemplate',
+                'name',
+                3 => 'content',
+                5 => 'type',
+            ],
+            'defaultGroup' => [
+                'DocumentTemplate',
+            ],
+            'members' => [
+                [
+                    'name' => [
+                        $o[1],
+                    ],
+                    'content' => [
+                        $o[3],
+                    ],
+                    'type' => [
+                        $o[5],
+                    ],
+                ],
+            ],
+            'properties' => [
+                [
+                    'name' => $o[1],
+                    'content' => $o[3],
+                    'type' => $o[5],
+                ],
+            ],
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                ],
+                5 => [
+                    $o[6],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'DocumentTemplate' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                    ],
+                    'DocumentTemplate' => [
+                        $o[4],
+                    ],
+                ],
+                5 => [
+                    'Default' => [
+                        $o[6],
+                    ],
+                    'DocumentTemplate' => [
+                        $o[6],
+                    ],
+                ],
+            ],
+            'class' => [
+                1 => 'App\\Entity\\DocumentTemplate',
+                3 => 'App\\Entity\\DocumentTemplate',
+                5 => 'App\\Entity\\DocumentTemplate',
+            ],
+            'property' => [
+                1 => 'name',
+                3 => 'content',
+                5 => 'type',
+            ],
+            'payload' => [
+                2 => null,
+                4 => null,
+                6 => null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'DocumentTemplate',
+                ],
+                4 => [
+                    'Default',
+                    'DocumentTemplate',
+                ],
+                6 => [
+                    'Default',
+                    'DocumentTemplate',
+                ],
+            ],
+            'choices' => [
+                6 => [
+                    'contract',
+                    'agreement',
+                    'proposal',
+                    'invoice',
+                    'report',
+                    'other',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+)];

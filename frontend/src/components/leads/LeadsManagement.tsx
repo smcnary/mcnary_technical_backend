@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import CsvUploadModal from './CsvUploadModal';
 import LeadgenImportModal from './LeadgenImportModal';
+import GoogleSheetsImportModal from './GoogleSheetsImportModal';
 import LeadStatistics from './LeadStatistics';
 import LeadsKanbanBoard from './LeadsKanbanBoard';
 import ProtectedRoute from '../auth/ProtectedRoute';
@@ -54,13 +55,16 @@ export default function LeadsManagement() {
     getLeads, 
     getLoadingState, 
     getErrorState, 
-    clearError 
+    clearError,
+    createLead,
+    updateLead
   } = useData();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
   const [isLeadgenModalOpen, setIsLeadgenModalOpen] = useState(false);
+  const [isGoogleSheetsModalOpen, setIsGoogleSheetsModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
@@ -103,6 +107,51 @@ export default function LeadsManagement() {
     console.log('Leadgen upload successful:', result);
     // Refresh leads data
     getLeads();
+  };
+
+  const handleGoogleSheetsUploadSuccess = (result: any) => {
+    console.log('Google Sheets upload successful:', result);
+    // Refresh leads data
+    getLeads();
+  };
+
+  const handleLeadCreate = async (lead: any) => {
+    try {
+      console.log('Creating new lead:', lead);
+      await createLead(lead);
+      
+      // Refresh leads after creation
+      await getLeads();
+      console.log('Leads refreshed after creation');
+    } catch (error) {
+      console.error('Error creating lead:', error);
+    }
+  };
+
+  const handleLeadUpdate = async (lead: any) => {
+    try {
+      console.log('Updating lead:', lead);
+      await updateLead(lead.id, lead);
+      
+      // Refresh leads after update
+      await getLeads();
+      console.log('Leads refreshed after update');
+    } catch (error) {
+      console.error('Error updating lead:', error);
+    }
+  };
+
+  const handleLeadStatusChange = async (leadId: string, newStatus: string) => {
+    try {
+      console.log(`Updating lead ${leadId} status to ${newStatus}`);
+      await updateLead(leadId, { status: newStatus });
+      
+      // Refresh leads after update
+      await getLeads();
+      console.log('Leads refreshed after status update');
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+    }
   };
 
   const getStatusBadgeVariant = (status: string) => {
@@ -218,6 +267,14 @@ export default function LeadsManagement() {
             >
               <Database className="h-4 w-4" />
               Import Leadgen
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsGoogleSheetsModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <FileText className="h-4 w-4" />
+              Import Sheets
             </Button>
             <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
@@ -372,6 +429,9 @@ export default function LeadsManagement() {
           <LeadsKanbanBoard 
             leads={filteredLeads} 
             onLeadClick={setSelectedLead}
+            onLeadStatusChange={handleLeadStatusChange}
+            onLeadCreate={handleLeadCreate}
+            onLeadUpdate={handleLeadUpdate}
           />
         ) : (
           <Card>
@@ -493,6 +553,13 @@ export default function LeadsManagement() {
           isOpen={isLeadgenModalOpen}
           onClose={() => setIsLeadgenModalOpen(false)}
           onSuccess={handleLeadgenUploadSuccess}
+        />
+
+        {/* Google Sheets Import Modal */}
+        <GoogleSheetsImportModal
+          isOpen={isGoogleSheetsModalOpen}
+          onClose={() => setIsGoogleSheetsModalOpen(false)}
+          onSuccess={handleGoogleSheetsUploadSuccess}
         />
       </div>
     </ProtectedRoute>
