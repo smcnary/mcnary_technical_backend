@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Phone, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle, Grid3X3, List } from 'lucide-react';
-import OpenPhoneIntegrationComponent from '../openphone/OpenPhoneIntegration';
+import { Users, MessageSquare, FileText, Search, CheckCircle, Calendar, Clock, ChevronRight, Upload, X, CheckCircle2, AlertCircle, Grid3X3, List } from 'lucide-react';
 import LeadsKanbanBoard from '../leads/LeadsKanbanBoard';
 import { useData } from '../../hooks/useData';
 import { useAuth } from '../../hooks/useAuth';
@@ -110,7 +109,6 @@ export default function SeoClientsTab() {
     { key: 'applications', label: 'Applications', icon: FileText, color: 'text-orange-500', count: mockData.applications.length },
     { key: 'audits', label: 'Audits', icon: Search, color: 'text-purple-500', count: mockData.audits.length },
     { key: 'enrolled', label: 'Enrolled', icon: CheckCircle, color: 'text-emerald-500', count: mockData.enrolled.length },
-    { key: 'openphone', label: 'OpenPhone', icon: Phone, color: 'text-indigo-500', count: 0 },
   ];
 
   // File upload handler
@@ -179,17 +177,6 @@ export default function SeoClientsTab() {
   };
 
   const renderListContent = (tabKey: string) => {
-    if (tabKey === 'openphone') {
-      return (
-        <div className="p-4">
-          <OpenPhoneIntegrationComponent 
-            clientId="mock-client-id" 
-            clientName="Sample Client" 
-          />
-        </div>
-      );
-    }
-    
     const data = tabKey === 'leads' ? leads : mockData[tabKey as keyof typeof mockData];
     
     if (!data || data.length === 0) {
