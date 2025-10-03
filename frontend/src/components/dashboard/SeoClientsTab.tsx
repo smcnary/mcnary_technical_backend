@@ -92,14 +92,14 @@ export default function SeoClientsTab() {
   
   // Get the importLeads function from useData hook
   const { importLeads, leads: realLeads, getLeads } = useData();
-  const { isAuthenticated, isAdmin, isSalesConsultant } = useAuth();
+  const { isAuthenticated, isAdmin, isSalesConsultant, isClientAdmin } = useAuth();
 
   // Load real leads from database
   useEffect(() => {
-    if (isAuthenticated && (isAdmin() || isSalesConsultant())) {
+    if (isAuthenticated && (isAdmin() || isSalesConsultant() || isClientAdmin())) {
       getLeads();
     }
-  }, [isAuthenticated, isAdmin, isSalesConsultant, getLeads]);
+  }, [isAuthenticated, isAdmin, isSalesConsultant, isClientAdmin, getLeads]);
 
   // Use real leads count from database
   const realLeadsCount = realLeads.length;

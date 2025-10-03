@@ -104,8 +104,15 @@ export default function Topbar() {
               Dashboard
             </Link>
             <Link 
+              href="/seo-clients" 
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200 font-medium"
+            >
+              <Users className="w-4 h-4" />
+              SEO Clients
+            </Link>
+            <Link 
               href="/client/leads" 
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200 font-medium"
             >
               <BarChart3 className="w-4 h-4" />
               Analytics

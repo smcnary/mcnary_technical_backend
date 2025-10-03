@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import { Bell, User, Building2, CreditCard } from 'lucide-react'
+import { Bell, User, Building2, CreditCard, Users } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function ClientSidebar() {
@@ -14,6 +14,10 @@ export default function ClientSidebar() {
         <Link href="/client" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-gray-300">
           <div className="w-4 h-4 bg-gray-400 rounded"></div>
           Dashboard
+        </Link>
+        <Link href="/seo-clients" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-gray-300">
+          <Users className="w-4 h-4" />
+          SEO Clients CRM
         </Link>
         <Link href="/user-preferences" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-gray-300">
           <User className="w-4 h-4" />

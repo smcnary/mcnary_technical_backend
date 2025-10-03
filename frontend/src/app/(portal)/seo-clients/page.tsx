@@ -8,12 +8,12 @@ import UserAvatar from "@/components/ui/UserAvatar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function SeoClientsPage() {
-  const { isAdmin, isSalesConsultant, isAuthenticated } = useAuth();
+  const { isAdmin, isSalesConsultant, isAuthenticated, isClientAdmin } = useAuth();
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Check if user has access to SEO Clients
-  const hasAccess = isAdmin() || isSalesConsultant();
+  // Check if user has access to SEO Clients - allow admins, sales consultants, and client admins
+  const hasAccess = isAdmin() || isSalesConsultant() || isClientAdmin();
 
   // Prevent hydration mismatch by only rendering after client-side mount
   useEffect(() => {
