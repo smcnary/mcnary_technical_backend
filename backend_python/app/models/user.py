@@ -7,9 +7,17 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import uuid
+import enum
 
 from app.core.database import Base
 from app.models.base import TimestampMixin, UUIDMixin
+
+class UserStatus(str, enum.Enum):
+    """User status enumeration"""
+    INVITED = "invited"
+    ACTIVE = "active"
+    SUSPENDED = "suspended"
+    DEACTIVATED = "deactivated"
 
 class User(Base, TimestampMixin, UUIDMixin):
     __tablename__ = "users"

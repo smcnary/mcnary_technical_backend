@@ -2,7 +2,7 @@
 Citation model for local SEO tracking
 """
 
-from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Enum as SQLEnum
+from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Enum as SQLEnum, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 import uuid

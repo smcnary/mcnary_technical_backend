@@ -19,9 +19,9 @@ class ProjectBase(BaseModel):
     description: Optional[str] = None
     website_url: str = Field(..., max_length=500)
     status: ProjectStatus = ProjectStatus.ACTIVE
-    cms: Optional[str] = Field(None, max_length=64)
-    cms_version: Optional[str] = Field(None, max_length=64)
-    hosting_provider: Optional[str] = Field(None, max_length=128)
+    cms: Optional[str] = Field(default=None, max_length=64)
+    cms_version: Optional[str] = Field(default=None, max_length=64)
+    hosting_provider: Optional[str] = Field(default=None, max_length=128)
     tech_stack: Optional[Dict[str, Any]] = None
     has_google_analytics: bool = False
     has_search_console: bool = False
@@ -39,13 +39,13 @@ class ProjectCreate(ProjectBase):
 
 
 class ProjectUpdate(BaseModel):
-    name: Optional[str] = Field(None, max_length=255)
+    name: Optional[str] = Field(default=None, max_length=255)
     description: Optional[str] = None
-    website_url: Optional[str] = Field(None, max_length=500)
+    website_url: Optional[str] = Field(default=None, max_length=500)
     status: Optional[ProjectStatus] = None
-    cms: Optional[str] = Field(None, max_length=64)
-    cms_version: Optional[str] = Field(None, max_length=64)
-    hosting_provider: Optional[str] = Field(None, max_length=128)
+    cms: Optional[str] = Field(default=None, max_length=64)
+    cms_version: Optional[str] = Field(default=None, max_length=64)
+    hosting_provider: Optional[str] = Field(default=None, max_length=128)
     tech_stack: Optional[Dict[str, Any]] = None
     has_google_analytics: Optional[bool] = None
     has_search_console: Optional[bool] = None
@@ -81,13 +81,13 @@ class AuditRunBase(BaseModel):
     seed_urls: List[str] = Field(default_factory=list)
     max_pages: int = Field(default=1000, ge=1, le=10000)
     crawl_depth: int = Field(default=3, ge=1, le=10)
-    respect_robots_txt: str = Field(default="yes", regex="^(yes|no)$")
+    respect_robots_txt: str = Field(default="yes", pattern="^(yes|no)$")
     crawl_delay: int = Field(default=1, ge=0, le=10)
     audit_config: Optional[Dict[str, Any]] = None
-    include_external_links: str = Field(default="no", regex="^(yes|no)$")
-    include_images: str = Field(default="yes", regex="^(yes|no)$")
-    include_js: str = Field(default="yes", regex="^(yes|no)$")
-    include_css: str = Field(default="yes", regex="^(yes|no)$")
+    include_external_links: str = Field(default="no", pattern="^(yes|no)$")
+    include_images: str = Field(default="yes", pattern="^(yes|no)$")
+    include_js: str = Field(default="yes", pattern="^(yes|no)$")
+    include_css: str = Field(default="yes", pattern="^(yes|no)$")
     metadata: Optional[Dict[str, Any]] = None
 
 
@@ -96,18 +96,18 @@ class AuditRunCreate(AuditRunBase):
 
 
 class AuditRunUpdate(BaseModel):
-    name: Optional[str] = Field(None, max_length=255)
+    name: Optional[str] = Field(default=None, max_length=255)
     description: Optional[str] = None
     seed_urls: Optional[List[str]] = None
-    max_pages: Optional[int] = Field(None, ge=1, le=10000)
-    crawl_depth: Optional[int] = Field(None, ge=1, le=10)
-    respect_robots_txt: Optional[str] = Field(None, regex="^(yes|no)$")
-    crawl_delay: Optional[int] = Field(None, ge=0, le=10)
+    max_pages: Optional[int] = Field(default=None, ge=1, le=10000)
+    crawl_depth: Optional[int] = Field(default=None, ge=1, le=10)
+    respect_robots_txt: Optional[str] = Field(default=None, pattern="^(yes|no)$")
+    crawl_delay: Optional[int] = Field(default=None, ge=0, le=10)
     audit_config: Optional[Dict[str, Any]] = None
-    include_external_links: Optional[str] = Field(None, regex="^(yes|no)$")
-    include_images: Optional[str] = Field(None, regex="^(yes|no)$")
-    include_js: Optional[str] = Field(None, regex="^(yes|no)$")
-    include_css: Optional[str] = Field(None, regex="^(yes|no)$")
+    include_external_links: Optional[str] = Field(default=None, pattern="^(yes|no)$")
+    include_images: Optional[str] = Field(default=None, pattern="^(yes|no)$")
+    include_js: Optional[str] = Field(default=None, pattern="^(yes|no)$")
+    include_css: Optional[str] = Field(default=None, pattern="^(yes|no)$")
     metadata: Optional[Dict[str, Any]] = None
 
 
@@ -153,21 +153,21 @@ class AuditFindingBase(BaseModel):
     title: str = Field(..., max_length=255)
     description: Optional[str] = None
     recommendation: Optional[str] = None
-    impact: Optional[str] = Field(None, max_length=255)
-    element: Optional[str] = Field(None, max_length=255)
-    attribute: Optional[str] = Field(None, max_length=255)
+    impact: Optional[str] = Field(default=None, max_length=255)
+    element: Optional[str] = Field(default=None, max_length=255)
+    attribute: Optional[str] = Field(default=None, max_length=255)
     value: Optional[str] = None
     expected_value: Optional[str] = None
-    url: Optional[str] = Field(None, max_length=500)
+    url: Optional[str] = Field(default=None, max_length=500)
     line_number: Optional[int] = None
     column_number: Optional[int] = None
-    xpath: Optional[str] = Field(None, max_length=500)
-    css_selector: Optional[str] = Field(None, max_length=500)
-    score_impact: Optional[float] = Field(None, ge=-100.0, le=100.0)
-    difficulty: Optional[str] = Field(None, regex="^(easy|medium|hard)$")
-    status: str = Field(default="open", regex="^(open|in_progress|fixed|ignored)$")
+    xpath: Optional[str] = Field(default=None, max_length=500)
+    css_selector: Optional[str] = Field(default=None, max_length=500)
+    score_impact: Optional[float] = Field(default=None, ge=-100.0, le=100.0)
+    difficulty: Optional[str] = Field(default=None, pattern="^(easy|medium|hard)$")
+    status: str = Field(default="open", pattern="^(open|in_progress|fixed|ignored)$")
     assigned_to: Optional[UUID] = None
-    due_date: Optional[str] = Field(None, max_length=50)
+    due_date: Optional[str] = Field(default=None, max_length=50)
     screenshots: Optional[List[str]] = None
     code_snippets: Optional[Dict[str, Any]] = None
     references: Optional[List[str]] = None
@@ -181,29 +181,29 @@ class AuditFindingCreate(AuditFindingBase):
 
 
 class AuditFindingUpdate(BaseModel):
-    check_code: Optional[str] = Field(None, max_length=100)
-    check_name: Optional[str] = Field(None, max_length=255)
+    check_code: Optional[str] = Field(default=None, max_length=100)
+    check_name: Optional[str] = Field(default=None, max_length=255)
     category: Optional[FindingCategory] = None
     severity: Optional[FindingSeverity] = None
-    title: Optional[str] = Field(None, max_length=255)
+    title: Optional[str] = Field(default=None, max_length=255)
     description: Optional[str] = None
     recommendation: Optional[str] = None
-    impact: Optional[str] = Field(None, max_length=255)
-    element: Optional[str] = Field(None, max_length=255)
-    attribute: Optional[str] = Field(None, max_length=255)
+    impact: Optional[str] = Field(default=None, max_length=255)
+    element: Optional[str] = Field(default=None, max_length=255)
+    attribute: Optional[str] = Field(default=None, max_length=255)
     value: Optional[str] = None
     expected_value: Optional[str] = None
-    url: Optional[str] = Field(None, max_length=500)
+    url: Optional[str] = Field(default=None, max_length=500)
     line_number: Optional[int] = None
     column_number: Optional[int] = None
-    xpath: Optional[str] = Field(None, max_length=500)
-    css_selector: Optional[str] = Field(None, max_length=500)
-    score_impact: Optional[float] = Field(None, ge=-100.0, le=100.0)
-    difficulty: Optional[str] = Field(None, regex="^(easy|medium|hard)$")
-    status: Optional[str] = Field(None, regex="^(open|in_progress|fixed|ignored)$")
+    xpath: Optional[str] = Field(default=None, max_length=500)
+    css_selector: Optional[str] = Field(default=None, max_length=500)
+    score_impact: Optional[float] = Field(default=None, ge=-100.0, le=100.0)
+    difficulty: Optional[str] = Field(default=None, pattern="^(easy|medium|hard)$")
+    status: Optional[str] = Field(default=None, pattern="^(open|in_progress|fixed|ignored)$")
     assigned_to: Optional[UUID] = None
-    due_date: Optional[str] = Field(None, max_length=50)
-    resolved_at: Optional[str] = Field(None, max_length=50)
+    due_date: Optional[str] = Field(default=None, max_length=50)
+    resolved_at: Optional[str] = Field(default=None, max_length=50)
     screenshots: Optional[List[str]] = None
     code_snippets: Optional[Dict[str, Any]] = None
     references: Optional[List[str]] = None
@@ -233,12 +233,12 @@ class AuditFindingResponse(AuditFinding):
 # Page Schemas
 class PageBase(BaseModel):
     url: str = Field(..., max_length=500)
-    canonical_url: Optional[str] = Field(None, max_length=500)
-    title: Optional[str] = Field(None, max_length=500)
+    canonical_url: Optional[str] = Field(default=None, max_length=500)
+    title: Optional[str] = Field(default=None, max_length=500)
     meta_description: Optional[str] = None
     meta_keywords: Optional[str] = None
-    language: Optional[str] = Field(None, max_length=10)
-    content_type: Optional[str] = Field(None, max_length=100)
+    language: Optional[str] = Field(default=None, max_length=10)
+    content_type: Optional[str] = Field(default=None, max_length=100)
     status_code: Optional[int] = None
     response_time: Optional[int] = None
     content_length: Optional[int] = None
@@ -259,9 +259,9 @@ class PageBase(BaseModel):
     load_time: Optional[int] = None
     time_to_first_byte: Optional[int] = None
     depth: int = 0
-    parent_url: Optional[str] = Field(None, max_length=500)
-    discovered_at: Optional[str] = Field(None, max_length=50)
-    crawled_at: Optional[str] = Field(None, max_length=50)
+    parent_url: Optional[str] = Field(default=None, max_length=500)
+    discovered_at: Optional[str] = Field(default=None, max_length=50)
+    crawled_at: Optional[str] = Field(default=None, max_length=50)
     error_message: Optional[str] = None
     screenshots: Optional[List[str]] = None
     metadata: Optional[Dict[str, Any]] = None
@@ -272,12 +272,12 @@ class PageCreate(PageBase):
 
 
 class PageUpdate(BaseModel):
-    canonical_url: Optional[str] = Field(None, max_length=500)
-    title: Optional[str] = Field(None, max_length=500)
+    canonical_url: Optional[str] = Field(default=None, max_length=500)
+    title: Optional[str] = Field(default=None, max_length=500)
     meta_description: Optional[str] = None
     meta_keywords: Optional[str] = None
-    language: Optional[str] = Field(None, max_length=10)
-    content_type: Optional[str] = Field(None, max_length=100)
+    language: Optional[str] = Field(default=None, max_length=10)
+    content_type: Optional[str] = Field(default=None, max_length=100)
     status_code: Optional[int] = None
     response_time: Optional[int] = None
     content_length: Optional[int] = None
@@ -298,9 +298,9 @@ class PageUpdate(BaseModel):
     load_time: Optional[int] = None
     time_to_first_byte: Optional[int] = None
     depth: Optional[int] = None
-    parent_url: Optional[str] = Field(None, max_length=500)
-    discovered_at: Optional[str] = Field(None, max_length=50)
-    crawled_at: Optional[str] = Field(None, max_length=50)
+    parent_url: Optional[str] = Field(default=None, max_length=500)
+    discovered_at: Optional[str] = Field(default=None, max_length=50)
+    crawled_at: Optional[str] = Field(default=None, max_length=50)
     error_message: Optional[str] = None
     screenshots: Optional[List[str]] = None
     metadata: Optional[Dict[str, Any]] = None
@@ -332,18 +332,18 @@ class CredentialBase(BaseModel):
     name: str = Field(..., max_length=255)
     credential_type: CredentialType
     status: CredentialStatus = CredentialStatus.ACTIVE
-    client_id: Optional[str] = Field(None, max_length=255)
-    client_secret: Optional[str] = Field(None, max_length=255)
-    account_id: Optional[str] = Field(None, max_length=255)
-    property_id: Optional[str] = Field(None, max_length=255)
-    view_id: Optional[str] = Field(None, max_length=255)
-    profile_id: Optional[str] = Field(None, max_length=255)
-    expires_at: Optional[str] = Field(None, max_length=50)
-    token_type: Optional[str] = Field(None, max_length=50)
+    client_id: Optional[str] = Field(default=None, max_length=255)
+    client_secret: Optional[str] = Field(default=None, max_length=255)
+    account_id: Optional[str] = Field(default=None, max_length=255)
+    property_id: Optional[str] = Field(default=None, max_length=255)
+    view_id: Optional[str] = Field(default=None, max_length=255)
+    profile_id: Optional[str] = Field(default=None, max_length=255)
+    expires_at: Optional[str] = Field(default=None, max_length=50)
+    token_type: Optional[str] = Field(default=None, max_length=50)
     scope: Optional[str] = None
     settings: Optional[Dict[str, Any]] = None
-    webhook_url: Optional[str] = Field(None, max_length=500)
-    rate_limit: Optional[int] = Field(None, ge=1, le=10000)
+    webhook_url: Optional[str] = Field(default=None, max_length=500)
+    rate_limit: Optional[int] = Field(default=None, ge=1, le=10000)
     notes: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
@@ -353,21 +353,21 @@ class CredentialCreate(CredentialBase):
 
 
 class CredentialUpdate(BaseModel):
-    name: Optional[str] = Field(None, max_length=255)
+    name: Optional[str] = Field(default=None, max_length=255)
     credential_type: Optional[CredentialType] = None
     status: Optional[CredentialStatus] = None
-    client_id: Optional[str] = Field(None, max_length=255)
-    client_secret: Optional[str] = Field(None, max_length=255)
-    account_id: Optional[str] = Field(None, max_length=255)
-    property_id: Optional[str] = Field(None, max_length=255)
-    view_id: Optional[str] = Field(None, max_length=255)
-    profile_id: Optional[str] = Field(None, max_length=255)
-    expires_at: Optional[str] = Field(None, max_length=50)
-    token_type: Optional[str] = Field(None, max_length=50)
+    client_id: Optional[str] = Field(default=None, max_length=255)
+    client_secret: Optional[str] = Field(default=None, max_length=255)
+    account_id: Optional[str] = Field(default=None, max_length=255)
+    property_id: Optional[str] = Field(default=None, max_length=255)
+    view_id: Optional[str] = Field(default=None, max_length=255)
+    profile_id: Optional[str] = Field(default=None, max_length=255)
+    expires_at: Optional[str] = Field(default=None, max_length=50)
+    token_type: Optional[str] = Field(default=None, max_length=50)
     scope: Optional[str] = None
     settings: Optional[Dict[str, Any]] = None
-    webhook_url: Optional[str] = Field(None, max_length=500)
-    rate_limit: Optional[int] = Field(None, ge=1, le=10000)
+    webhook_url: Optional[str] = Field(default=None, max_length=500)
+    rate_limit: Optional[int] = Field(default=None, ge=1, le=10000)
     notes: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
@@ -395,11 +395,11 @@ class CredentialResponse(Credential):
 class LighthouseRunBase(BaseModel):
     url: str = Field(..., max_length=500)
     run_at: str = Field(..., max_length=50)
-    performance_score: Optional[int] = Field(None, ge=0, le=100)
-    accessibility_score: Optional[int] = Field(None, ge=0, le=100)
-    best_practices_score: Optional[int] = Field(None, ge=0, le=100)
-    seo_score: Optional[int] = Field(None, ge=0, le=100)
-    pwa_score: Optional[int] = Field(None, ge=0, le=100)
+    performance_score: Optional[int] = Field(default=None, ge=0, le=100)
+    accessibility_score: Optional[int] = Field(default=None, ge=0, le=100)
+    best_practices_score: Optional[int] = Field(default=None, ge=0, le=100)
+    seo_score: Optional[int] = Field(default=None, ge=0, le=100)
+    pwa_score: Optional[int] = Field(default=None, ge=0, le=100)
     first_contentful_paint: Optional[float] = None
     largest_contentful_paint: Optional[float] = None
     first_input_delay: Optional[float] = None
@@ -415,11 +415,11 @@ class LighthouseRunBase(BaseModel):
     opportunities: Optional[List[Dict[str, Any]]] = None
     diagnostics: Optional[List[Dict[str, Any]]] = None
     audits: Optional[List[Dict[str, Any]]] = None
-    device_type: Optional[str] = Field(None, max_length=20)
-    browser: Optional[str] = Field(None, max_length=50)
+    device_type: Optional[str] = Field(default=None, max_length=20)
+    browser: Optional[str] = Field(default=None, max_length=50)
     viewport_width: Optional[int] = None
     viewport_height: Optional[int] = None
-    lighthouse_version: Optional[str] = Field(None, max_length=20)
+    lighthouse_version: Optional[str] = Field(default=None, max_length=20)
     config: Optional[Dict[str, Any]] = None
     metadata: Optional[Dict[str, Any]] = None
 

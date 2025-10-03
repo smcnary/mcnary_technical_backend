@@ -128,3 +128,20 @@ def update_last_login(db: Session, user: User) -> None:
     """Update user's last login timestamp"""
     user.last_login_at = datetime.utcnow()
     db.commit()
+
+def get_current_tenant(current_user: User = Depends(get_current_active_user)):
+    """Get the current tenant from the authenticated user"""
+    from app.models.tenant import Tenant
+    from app.core.database import SessionLocal
+    
+    db = SessionLocal()
+    try:
+        tenant = db.query(Tenant).filter(Tenant.id == current_user.tenant_id).first()
+        if not tenant:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Tenant not found"
+            )
+        return tenant
+    finally:
+        db.close()

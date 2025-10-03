@@ -24,7 +24,8 @@ fastapi-cors>=0.0.6
 celery>=5.3.0
 redis>=5.0.0
 
-# UUID support (built-in module, no installation needed)
+# UUID support
+uuid>=1.30
 
 # Development dependencies
 pytest>=7.4.0
@@ -34,3 +35,5 @@ httpx>=0.25.0
 # Additional utilities
 email-validator>=2.1.0
 python-dateutil>=2.8.0
+aiohttp>=3.8.0
+beautifulsoup4>=4.12.0

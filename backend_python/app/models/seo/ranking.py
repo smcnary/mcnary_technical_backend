@@ -2,7 +2,7 @@
 Ranking models for SEO tracking
 """
 
-from sqlalchemy import Column, String, Integer, Date, ForeignKey, Enum as SQLEnum, Float
+from sqlalchemy import Column, String, Integer, Date, ForeignKey, Enum as SQLEnum, Float, Text
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 import uuid

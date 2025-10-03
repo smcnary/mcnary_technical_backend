@@ -2,7 +2,7 @@
 Credential model for audit service integrations
 """
 
-from sqlalchemy import Column, String, Text, ForeignKey, Enum as SQLEnum, Boolean
+from sqlalchemy import Column, String, Text, ForeignKey, Enum as SQLEnum, Boolean, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 import uuid

@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 import uuid
 import enum
 from datetime import datetime
+from typing import Optional
 
 from app.models.base import Base, TimestampMixin
 

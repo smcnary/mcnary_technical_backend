@@ -1,10 +1,14 @@
 # Services
-from app.services.auth_service import AuthService
-from app.services.lead_service import LeadService
+from app.services.analysis_engine import SEOAnalysisEngine
+from app.services.audit_service import AuditService
+from app.services.crawler_service import CrawlerService
+from app.services.reporting_service import ReportingService
 from app.services.seo_service import SeoService
 
 __all__ = [
-    "AuthService",
-    "LeadService", 
+    "SEOAnalysisEngine",
+    "AuditService",
+    "CrawlerService",
+    "ReportingService",
     "SeoService"
 ]

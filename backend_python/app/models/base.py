@@ -9,6 +9,9 @@ from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr
 import uuid
 
+# Import Base from database module for backward compatibility
+from app.core.database import Base
+
 class TimestampMixin:
     """Mixin for created_at and updated_at fields"""
     

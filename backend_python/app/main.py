@@ -11,12 +11,13 @@ from dotenv import load_dotenv
 
 from app.api.v1.auth import auth_router
 from app.api.v1.leads import leads_router
-from app.api.v1.users import users_router
-from app.api.v1.clients import clients_router
-from app.api.v1.agencies import agencies_router
 from app.api.v1.me import me_router
-from app.api.v1.seo import router as seo_router
-from app.api.v1.audits import router as audit_router
+# Commented out for now to get basic backend running
+# from app.api.v1.users import users_router
+# from app.api.v1.clients import clients_router
+# from app.api.v1.agencies import agencies_router
+# from app.api.v1.seo import router as seo_router
+# from app.api.v1.audits import router as audit_router
 from app.core.config import settings
 from app.core.database import engine
 from app.models import Base
@@ -50,13 +51,14 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication"])
-app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(leads_router, prefix="/api/v1/leads", tags=["Leads"])
-app.include_router(clients_router, prefix="/api/v1/clients", tags=["Clients"])
-app.include_router(agencies_router, prefix="/api/v1/agencies", tags=["Agencies"])
 app.include_router(me_router, prefix="/api/v1", tags=["User Info"])
-app.include_router(seo_router, prefix="/api/v1/seo", tags=["SEO Tracking"])
-app.include_router(audit_router, prefix="/api/v1/audits", tags=["Audit Service"])
+# Commented out for now to get basic backend running
+# app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
+# app.include_router(clients_router, prefix="/api/v1/clients", tags=["Clients"])
+# app.include_router(agencies_router, prefix="/api/v1/agencies", tags=["Agencies"])
+# app.include_router(seo_router, prefix="/api/v1/seo", tags=["SEO Tracking"])
+# app.include_router(audit_router, prefix="/api/v1/audits", tags=["Audit Service"])
 
 @app.get("/")
 async def root():

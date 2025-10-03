@@ -1,6 +1,5 @@
 # Database models
-from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import Base, TimestampMixin, UUIDMixin
 from app.models.user import User
 from app.models.lead import Lead
 from app.models.organization import Organization
