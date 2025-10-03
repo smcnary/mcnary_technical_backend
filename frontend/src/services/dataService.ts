@@ -477,6 +477,27 @@ class DataService {
     }
   }
 
+  async importLeads(csvData: string, options?: {
+    clientId?: string;
+    sourceId?: string;
+    overwriteExisting?: boolean;
+  }): Promise<{
+    message: string;
+    imported_count: number;
+    skipped_count: number;
+    total_rows: number;
+    errors?: string[];
+  }> {
+    try {
+      const result = await apiService.importLeads(csvData, options);
+      // Refresh leads data after import
+      await this.getLeads();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // USER MANAGEMENT (Admin only)
   async getUsers(params?: Record<string, string | number | boolean>): Promise<User[]> {
     const cacheKey = `users:${JSON.stringify(params || {})}`;

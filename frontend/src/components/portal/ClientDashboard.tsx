@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api, { ApiResponse, Lead } from "@/services/api";
-import { TrendingUp, TrendingDown, Phone, Eye, MapPin, Building2, Users, Target } from "lucide-react";
+import api, { Lead } from "@/services/api";
+import { TrendingUp, TrendingDown, Building2, Users, Target } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import UserGreeting from "./UserGreeting";
 import { useAuth } from "@/hooks/useAuth";
@@ -248,21 +248,11 @@ export default function ClientDashboard() {
     clearError 
   } = useData();
   
-  const [gbpData, setGbpData] = useState<any>(null);
-  const [isLoadingGbp, setIsLoadingGbp] = useState<boolean>(false);
-  const [gbpError, setGbpError] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showTour, setShowTour] = useState(false);
 
-  const getUserInitials = (name?: string) => {
-    if (!name) return 'U';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  };
-
   const isLoadingLeads = getLoadingState('leads');
   const leadsError = getErrorState('leads');
-  const isLoadingCampaigns = getLoadingState('campaigns');
-  const isLoadingCaseStudies = getLoadingState('caseStudies');
 
   useEffect(() => {
     let isMounted = true;
@@ -372,27 +362,27 @@ export default function ClientDashboard() {
               <KpiCard 
                 label="Total Leads" 
                 value={leads.length} 
-                delta={{ value: leads.filter(l => new Date(l.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
+                delta={{ value: leads.filter(l => l.createdAt && new Date(l.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
                 icon={Users} 
                 help="Total leads in your system." 
               />
               <KpiCard 
                 label="Qualified Leads" 
-                value={leads.filter(l => l.status === 'qualified').length} 
-                delta={{ value: leads.filter(l => l.status === 'qualified' && new Date(l.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
+                value={leads.filter(l => l.status === 'enrolled').length} 
+                delta={{ value: leads.filter(l => l.status === 'enrolled' && l.createdAt && new Date(l.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
                 icon={Target} 
                 help="Leads that have been qualified." 
               />
               <KpiCard 
                 label="Active Campaigns" 
                 value={campaigns.filter(c => c.status === 'active').length} 
-                delta={{ value: campaigns.filter(c => c.status === 'active' && new Date(c.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
+                delta={{ value: campaigns.filter(c => c.status === 'active' && c.createdAt && new Date(c.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length }} 
                 icon={TrendingUp} 
                 help="Currently running marketing campaigns." 
               />
               <KpiCard 
                 label="Conversion Rate" 
-                value={`${leads.length > 0 ? ((leads.filter(l => l.status === 'qualified').length / leads.length) * 100).toFixed(1) : 0}%`} 
+                value={`${leads.length > 0 ? ((leads.filter(l => l.status === 'enrolled').length / leads.length) * 100).toFixed(1) : 0}%`} 
                 delta={{ value: 2.3 }} 
                 icon={Building2} 
                 help="Percentage of leads that convert to qualified." 
@@ -479,8 +469,8 @@ export default function ClientDashboard() {
                       ) : (
                         leads.map((lead) => (
                           <tr key={lead.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-700/60">
-                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{new Date(lead.createdAt).toLocaleDateString()}</td>
-                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{lead.name || '—'}</td>
+                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : 'Unknown'}</td>
+                            <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{lead.firm || '—'}</td>
                             <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{lead.practiceAreas?.[0] || '—'}</td>
                             <td className="px-4 py-3">
                               <span className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 capitalize">

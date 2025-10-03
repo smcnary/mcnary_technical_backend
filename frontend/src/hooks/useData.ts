@@ -93,6 +93,14 @@ export function useData() {
     return dataService.submitLead(leadData);
   }, []);
 
+  const importLeads = useCallback(async (csvData: string, options?: {
+    clientId?: string;
+    sourceId?: string;
+    overwriteExisting?: boolean;
+  }) => {
+    return dataService.importLeads(csvData, options);
+  }, []);
+
   // USER MANAGEMENT
   const getUsers = useCallback(async (params?: Record<string, string | number | boolean>) => {
     return dataService.getUsers(params);
@@ -169,6 +177,7 @@ export function useData() {
     // Lead methods
     getLeads,
     submitLead,
+    importLeads,
     
     // User methods
     getUsers,
