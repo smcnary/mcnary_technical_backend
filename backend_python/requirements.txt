@@ -20,6 +20,12 @@ pydantic-settings>=2.1.0
 # CORS middleware
 fastapi-cors>=0.0.6
 
+# Background tasks
+celery>=5.3.0
+redis>=5.0.0
+
+# UUID support (built-in module, no installation needed)
+
 # Development dependencies
 pytest>=7.4.0
 pytest-asyncio>=0.21.0

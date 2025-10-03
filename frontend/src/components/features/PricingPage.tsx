@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 
-// If you have Next.js, replace <a> with Link from "next/link"
 
 type TierKey = "Growth" | "Pro" | "Enterprise";
 
@@ -173,19 +171,19 @@ function tierGrid(
           highlight={t.key === highlightKey}
           cta={
             mode === "audit" ? (
-              <Link
-                href={`/audit-wizard?tier=${encodeURIComponent(t.key)}`}
-                className="block w-full text-center rounded-xl bg-indigo-600 px-4 py-2 font-medium text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
+              <button
+                disabled
+                className="block w-full text-center rounded-xl bg-gray-500 px-4 py-2 font-medium text-white cursor-not-allowed"
               >
-                Start {t.key} Audit
-              </Link>
+                Audit Service Disabled
+              </button>
             ) : (
-              <Link
-                href={`/audit-wizard?tier=${encodeURIComponent(t.key)}#subscribe`}
-                className="block w-full text-center rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500"
+              <button
+                disabled
+                className="block w-full text-center rounded-xl bg-gray-500 px-4 py-2 font-medium text-white cursor-not-allowed"
               >
-                Choose {t.key} Plan
-              </Link>
+                Subscription Service Disabled
+              </button>
             )
           }
         >
@@ -258,7 +256,7 @@ export default function PricingPage() {
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold text-white">Pricing</h1>
-            <p className="text-white/90">Audit first. Then subscribe to scale. Built to pair with your Audit Wizard flow.</p>
+            <p className="text-white/90">Audit first. Then subscribe to scale.</p>
           </div>
           <Toggle mode={mode} setMode={setMode} />
         </div>
@@ -273,14 +271,14 @@ export default function PricingPage() {
 
         {/* CTA */}
         <div className="mt-14 text-center">
-          <Link
-            href="/audit-wizard"
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-medium shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
+          <button
+            disabled
+            className="inline-flex items-center gap-2 rounded-xl bg-gray-500 px-6 py-3 font-medium cursor-not-allowed"
           >
-            Start an Audit
+            Audit Service Disabled
             <span aria-hidden>→</span>
-          </Link>
-          <p className="text-xs text-white/80 mt-3">Your progress autosaves. You can switch tiers on the Review step.</p>
+          </button>
+          <p className="text-xs text-white/80 mt-3">The audit wizard service has been removed.</p>
         </div>
       </div>
     </div>

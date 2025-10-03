@@ -1,0 +1,23 @@
+{
+  "name": "Tulsa Law Firms",
+  "vertical": "local_services",
+  "geo": {
+    "city": "Tulsa",
+    "region": "OK",
+    "country": "US",
+    "radius_km": 30
+  },
+  "filters": {
+    "min_rating": 3.5,
+    "keywords": ["law firm", "attorney", "legal"]
+  },
+  "sources": ["google_places"],
+  "enrichment": [],
+  "budget": {
+    "max_cost_usd": 25
+  },
+  "schedule": {
+    "enabled": false
+  },
+  "destinations": []
+}

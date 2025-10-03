@@ -1,0 +1,307 @@
+# Page snapshot
+
+```yaml
+- generic:
+  - alert
+  - generic: "0"
+  - generic:
+    - generic:
+      - generic:
+        - heading [level=1]: SEO Clients CRM
+        - paragraph: Manage your SEO clients, leads, and campaigns
+      - generic:
+        - generic:
+          - button:
+            - img
+        - button:
+          - generic:
+            - generic: SM
+    - generic:
+      - generic: "Currently viewing: SEO Clients CRM"
+    - generic:
+      - generic:
+        - generic:
+          - heading [level=2]: SEO Client Leads
+        - generic:
+          - generic: 9 leads from database
+          - button:
+            - img
+            - text: Upload CSV
+      - generic:
+        - heading [level=2]: Leads Management
+        - button:
+          - img
+          - text: Create Lead
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=3]:
+                - generic:
+                  - generic:
+                    - img
+                - text: New Leads
+                - generic: "7"
+            - generic:
+              - generic:
+                - generic:
+                  - button:
+                    - generic:
+                      - heading [level=4]: Toon Law Firm
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Toon Law Firm
+                      - generic:
+                        - img
+                        - generic: +1 918-477-7884
+                    - generic:
+                      - generic: New
+                      - generic: Sep 23, 2025
+                  - button:
+                    - generic:
+                      - heading [level=4]: Gorospe Law Group
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Gorospe Law Group
+                      - generic:
+                        - img
+                        - generic: +1 918-582-7775
+                    - generic:
+                      - generic: Contacted
+                      - generic: Sep 23, 2025
+                  - button:
+                    - generic:
+                      - heading [level=4]: Fry & Elder
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Fry & Elder
+                      - generic:
+                        - img
+                        - generic: +1 918-585-1107
+                    - generic:
+                      - generic: New
+                      - generic: Sep 23, 2025
+                  - button:
+                    - generic:
+                      - heading [level=4]: Wirth Law Office
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Wirth Law Office
+                      - generic:
+                        - img
+                        - generic: +1 918-879-1681
+                    - generic:
+                      - generic: New
+                      - generic: Sep 23, 2025
+                  - button:
+                    - generic:
+                      - heading [level=4]: Doerner Saunders Daniel & Anderson
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Doerner Saunders Daniel & Anderson
+                      - generic:
+                        - img
+                        - generic: +1 918-584-4651
+                    - generic:
+                      - generic: New
+                      - generic: Sep 23, 2025
+                  - button:
+                    - generic:
+                      - heading [level=4]: McAfee & Taft
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: McAfee & Taft
+                      - generic:
+                        - img
+                        - generic: +1 918-592-8400
+                    - generic:
+                      - generic: New
+                      - generic: Sep 23, 2025
+                  - button:
+                    - generic:
+                      - heading [level=4]: Hall Estill
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Hall Estill
+                      - generic:
+                        - img
+                        - generic: +1 918-594-0400
+                    - generic:
+                      - generic: New
+                      - generic: Sep 23, 2025
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=3]:
+                - generic:
+                  - generic:
+                    - img
+                - text: Interviews
+                - generic: "1"
+            - generic:
+              - generic:
+                - generic:
+                  - button:
+                    - generic:
+                      - heading [level=4]: Riggs Abney Neal Turpen Orbison & Lewis
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Riggs Abney Neal Turpen Orbison & Lewis
+                      - generic:
+                        - img
+                        - generic: +1 918-587-3161
+                    - generic:
+                      - generic: Scheduled
+                      - generic: Sep 23, 2025
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=3]:
+                - generic:
+                  - generic:
+                    - img
+                - text: Applications
+                - generic: "1"
+            - generic:
+              - generic:
+                - generic:
+                  - button:
+                    - generic:
+                      - heading [level=4]: Gungoll Jackson Collins Box & Devoll
+                      - img
+                    - generic:
+                      - generic:
+                        - img
+                        - generic: Gungoll Jackson Collins Box & Devoll
+                      - generic:
+                        - img
+                        - generic: +1 918-584-5521
+                    - generic:
+                      - generic: Received
+                      - generic: Sep 23, 2025
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=3]:
+                - generic:
+                  - generic:
+                    - img
+                - text: Audits
+                - generic: "0"
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: No leads in this stage
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=3]:
+                - generic:
+                  - generic:
+                    - img
+                - text: Enrolled
+                - generic: "0"
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: No leads in this stage
+      - status
+  - dialog "Create New Lead" [ref=e2]:
+    - heading "Create New Lead" [level=2] [ref=e4]:
+      - img [ref=e5]
+      - text: Create New Lead
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - heading "Basic Information" [level=3] [ref=e11]:
+          - img [ref=e12]
+          - text: Basic Information
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - generic [ref=e18]:
+                - img [ref=e19]
+                - text: Full Name *
+              - textbox "Full Name *" [ref=e22]: Blaine
+            - generic [ref=e23]:
+              - generic [ref=e24]:
+                - img [ref=e25]
+                - text: Email *
+              - textbox "Email *" [ref=e28]: blainefrierson@gmail.com
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - text: Phone Number
+            - textbox "Phone Number" [ref=e33]: 918-264-0500
+      - generic [ref=e34]:
+        - heading "Business Information" [level=3] [ref=e36]:
+          - img [ref=e37]
+          - text: Business Information
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - img [ref=e52]
+              - text: Firm/Company Name
+            - textbox "Firm/Company Name" [active] [ref=e64]: A1 Accident Law
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - text: Website
+            - textbox "Website" [ref=e71]
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - generic [ref=e74]:
+                - img [ref=e75]
+                - text: City
+              - textbox "City" [ref=e78]
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - img [ref=e81]
+                - text: State
+              - textbox "State" [ref=e84]
+            - generic [ref=e85]:
+              - generic [ref=e86]:
+                - img [ref=e87]
+                - text: Zip Code
+              - textbox "Zip Code" [ref=e90]
+      - generic [ref=e91]:
+        - heading "Practice Areas" [level=3] [ref=e93]:
+          - img [ref=e94]
+          - text: Practice Areas
+        - generic [ref=e98]:
+          - textbox "Enter practice area" [ref=e99]
+          - button [ref=e100] [cursor=pointer]:
+            - img [ref=e101] [cursor=pointer]
+      - generic [ref=e104]:
+        - heading "Message/Notes" [level=3] [ref=e106]:
+          - img [ref=e107]
+          - text: Message/Notes
+        - generic [ref=e110]:
+          - generic [ref=e111]: Additional Message or Notes
+          - textbox "Additional Message or Notes" [ref=e112]
+      - generic [ref=e113]:
+        - button "Cancel" [ref=e114] [cursor=pointer]
+        - button "Create Lead" [ref=e115] [cursor=pointer]:
+          - img [ref=e116] [cursor=pointer]
+          - text: Create Lead
+    - button "Close" [ref=e120] [cursor=pointer]:
+      - img [ref=e121] [cursor=pointer]
+      - generic [ref=e124] [cursor=pointer]: Close
+```

@@ -1,71 +1,41 @@
 """
-Authentication endpoints migrated from Symfony AuthController
+Authentication endpoints
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import timedelta
 
 from app.core.database import get_db
-from app.core.auth import verify_password, create_access_token, verify_token
+from app.core.auth import authenticate_user, create_access_token, get_current_user, update_last_login
+from app.schemas.user import UserLogin, Token, UserResponse
 from app.models.user import User
+from app.core.config import settings
 
 auth_router = APIRouter()
-security = HTTPBearer()
 
-class LoginRequest(BaseModel):
-    """Login request model"""
-    email: str
-    password: str
-
-class LoginResponse(BaseModel):
-    """Login response model"""
-    token: str
-    user: dict
-
-@auth_router.post("/login", response_model=LoginResponse)
-async def login(request: LoginRequest, db: Session = Depends(get_db)):
-    """User login endpoint"""
-    
-    # Find user by email (we'll create a default admin user for testing)
-    user = db.query(User).filter(User.email == request.email).first()
-    
+@auth_router.post("/login", response_model=Token)
+async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
+    """Login endpoint"""
+    user = authenticate_user(db, user_credentials.email, user_credentials.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password"
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # For now, we'll skip password verification since we don't have a password set
-    # In production, you'd verify_password(request.password, user.password_hash)
+    # Update last login
+    update_last_login(db, user)
     
-    # Create access token
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     access_token = create_access_token(
-        data={
-            "sub": str(user.id),
-            "email": user.email,
-            "roles": user.get_roles(),
-            "username": user.email
-        }
+        data={"sub": user.email}, expires_delta=access_token_expires
     )
     
-    return LoginResponse(
-        token=access_token,
-        user={
-            "id": str(user.id),
-            "email": user.email,
-            "firstName": user.first_name,
-            "lastName": user.last_name,
-            "name": user.name,
-            "roles": user.get_roles(),
-            "agencyId": str(user.agency_id) if user.agency_id else None,
-            "clientId": str(user.client_id) if user.client_id else None,
-            "tenantId": str(user.tenant_id) if user.tenant_id else None,
-            "status": user.status.value,
-            "createdAt": user.created_at.isoformat(),
-            "lastLoginAt": user.last_login_at or datetime.utcnow().isoformat(),
-            "metadata": user.metadata_json
-        }
-    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@auth_router.get("/me", response_model=UserResponse)
+async def get_current_user_info(current_user: User = Depends(get_current_user)):
+    """Get current user information"""
+    return current_user

@@ -137,6 +137,93 @@ class LeadsController extends AbstractController
         return $this->json($leadData);
     }
 
+    #[Route('/create-lead', name: 'api_v1_leads_create', methods: ['POST'])]
+    public function createLead(Request $request): JsonResponse
+    {
+        // TEMPORARY DEBUG: Log that we reached this point
+        error_log("LeadsController::createLead() - Method called successfully!");
+        
+        try {
+            $data = json_decode($request->getContent(), true);
+            error_log("LeadsController::createLead() - JSON data: " . json_encode($data));
+            
+            if (!$data) {
+                error_log("LeadsController::createLead() - Invalid JSON");
+                return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Basic validation only
+            if (empty($data['fullName']) || empty($data['email'])) {
+                error_log("LeadsController::createLead() - Missing required fields");
+                return $this->json(['error' => 'fullName and email are required'], Response::HTTP_BAD_REQUEST);
+            }
+
+            error_log("LeadsController::createLead() - Creating lead entity");
+            
+            // Create lead using the correct entity structure
+            $lead = new Lead();
+            $lead->setFullName($data['fullName']);
+            $lead->setEmail($data['email']);
+            
+            if (isset($data['phone'])) {
+                $lead->setPhone($data['phone']);
+            }
+            if (isset($data['firm'])) {
+                $lead->setFirm($data['firm']);
+            }
+            if (isset($data['website'])) {
+                $lead->setWebsite($data['website']);
+            }
+            if (isset($data['city'])) {
+                $lead->setCity($data['city']);
+            }
+            if (isset($data['state'])) {
+                $lead->setState($data['state']);
+            }
+            if (isset($data['zipCode'])) {
+                $lead->setZipCode($data['zipCode']);
+            }
+            if (isset($data['message'])) {
+                $lead->setMessage($data['message']);
+            }
+            if (isset($data['practiceAreas'])) {
+                $lead->setPracticeAreas($data['practiceAreas']);
+            }
+
+            // Explicitly set status to new_lead to satisfy database constraint
+            $lead->setStatus('new_lead');
+
+            error_log("LeadsController::createLead() - Persisting lead with status: " . $lead->getStatusValue());
+            $this->entityManager->persist($lead);
+            $this->entityManager->flush();
+
+            error_log("LeadsController::createLead() - Lead created with ID: " . $lead->getId());
+
+            return $this->json([
+                'id' => $lead->getId(),
+                'full_name' => $lead->getFullName(),
+                'email' => $lead->getEmail(),
+                'phone' => $lead->getPhone(),
+                'firm' => $lead->getFirm(),
+                'website' => $lead->getWebsite(),
+                'city' => $lead->getCity(),
+                'state' => $lead->getState(),
+                'zip_code' => $lead->getZipCode(),
+                'message' => $lead->getMessage(),
+                'practice_areas' => $lead->getPracticeAreas(),
+                'status' => $lead->getStatusValue(),
+                'status_label' => $lead->getStatusLabel(),
+                'created_at' => $lead->getCreatedAt()->format('c'),
+                'updated_at' => $lead->getUpdatedAt()->format('c')
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $e) {
+            error_log("LeadsController::createLead() - Exception: " . $e->getMessage());
+            error_log("LeadsController::createLead() - Stack trace: " . $e->getTraceAsString());
+            return $this->json(['error' => 'Internal server error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     #[Route('/{id}', name: 'api_v1_leads_update', methods: ['PATCH'])]
     #[IsGranted('ROLE_AGENCY_ADMIN')]
     public function updateLead(string $id, Request $request): JsonResponse

@@ -16,8 +16,7 @@ import {
   BarChart3,
   FileText,
   Users,
-  Target,
-  ClipboardCheck
+  Target
 } from "lucide-react";
 import { useState } from "react";
 import { 
@@ -124,13 +123,6 @@ export default function Topbar() {
             >
               <FileText className="w-4 h-4" />
               Reports
-            </Link>
-            <Link 
-              href="/audit-wizard" 
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 font-medium"
-            >
-              <ClipboardCheck className="w-4 h-4" />
-              Audits
             </Link>
             {isAdmin() && (
               <Link 
@@ -338,14 +330,6 @@ export default function Topbar() {
             >
               <FileText className="w-4 h-4" />
               Reports
-            </Link>
-            <Link 
-              href="/audit-wizard" 
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <ClipboardCheck className="w-4 h-4" />
-              Audits
             </Link>
             {isAdmin() && (
               <Link 

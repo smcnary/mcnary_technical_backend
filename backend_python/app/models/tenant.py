@@ -1,25 +1,24 @@
 """
-Tenant model
+Tenant model - migrated from Symfony Tenant entity
 """
 
 from sqlalchemy import Column, String
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID as PostgresUUID
-import uuid
 
-from app.models.base import TimestampMixin
 from app.core.database import Base
+from app.models.base import TimestampMixin, UUIDMixin
 
-class Tenant(Base, TimestampMixin):
-    """Tenant model"""
-    
+class Tenant(Base, TimestampMixin, UUIDMixin):
     __tablename__ = "tenants"
     
-    id = Column(PostgresUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(255), nullable=False)
-    slug = Column(String(255), nullable=False, unique=True)
-    status = Column(String(50), default="trial", nullable=False)
+    slug = Column(String(255), unique=True, nullable=False, index=True)
+    status = Column(String(50), default="trial", nullable=False)  # trial, active, suspended
     timezone = Column(String(50), default="UTC", nullable=False)
     
-    # Relationships - commented out to avoid circular imports for now
-    # users = relationship("User", back_populates="tenant")
+    # Relationships
+    users = relationship("User", back_populates="tenant")
+    
+    def __repr__(self):
+        return f"<Tenant(id={self.id}, name='{self.name}', slug='{self.slug}')>"

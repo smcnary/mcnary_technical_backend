@@ -1,0 +1,23 @@
+{
+  "name": "Denver Test",
+  "vertical": "local_services",
+  "geo": {
+    "lat": 39.7392,
+    "lon": -104.9903,
+    "country": "US",
+    "radius_km": 10
+  },
+  "filters": {
+    "min_rating": 3.0,
+    "keywords": ["restaurant"]
+  },
+  "sources": ["google_places"],
+  "enrichment": [],
+  "budget": {
+    "max_cost_usd": 25
+  },
+  "schedule": {
+    "enabled": false
+  },
+  "destinations": []
+}

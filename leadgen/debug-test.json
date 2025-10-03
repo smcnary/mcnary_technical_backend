@@ -1,0 +1,22 @@
+{
+  "name": "Debug Test",
+  "vertical": "local_services",
+  "geo": {
+    "lat": 36.1540,
+    "lon": -95.9928,
+    "country": "US",
+    "radius_km": 10
+  },
+  "filters": {
+    "keywords": ["attorney"]
+  },
+  "sources": ["google_places"],
+  "enrichment": [],
+  "budget": {
+    "max_cost_usd": 5
+  },
+  "schedule": {
+    "enabled": false
+  },
+  "destinations": []
+}

@@ -25,28 +25,10 @@ export interface AuditIntake {
   updatedAt?: string;
 }
 
-export interface AuditSubmission {
-  account: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  };
-  audit: {
-    companyName: string;
-    website: string;
-    industry: string;
-    goals: string[];
-    competitors: string;
-    monthlyBudget: string;
-    tier: string;
-    notes: string;
-  };
-}
 
 export interface Lead {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   phone?: string;
   firm?: string;
@@ -54,13 +36,34 @@ export interface Lead {
   practiceAreas: string[];
   city?: string;
   state?: string;
+  zipCode?: string;
   budget?: string;
   timeline?: string;
   notes?: string;
-  consent: boolean;
-  status: 'pending' | 'contacted' | 'qualified' | 'disqualified';
-  createdAt: string;
-  updatedAt: string;
+  message?: string;
+  consent?: boolean;
+  status: 'new_lead' | 'contacted' | 'interview_scheduled' | 'interview_completed' | 'application_received' | 'audit_in_progress' | 'audit_complete' | 'enrolled';
+  statusLabel?: string;
+  source?: string;
+  client?: string;
+  utmJson?: any[];
+  techStack?: {
+    url: string;
+    technologies: Array<{
+      name: string;
+      confidence: number;
+      version?: string;
+      categories: string[];
+      website?: string;
+      description?: string;
+    }>;
+    lastAnalyzed?: string;
+    error?: string;
+  };
+  interviewScheduled?: string;
+  followUpDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CaseStudy {
@@ -105,6 +108,19 @@ export interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Notification {
+  id: string;
+  title: string;
+  message?: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  isRead: boolean;
+  actionUrl?: string;
+  actionLabel?: string;
+  createdAt: string;
+  readAt?: string;
+  metadata?: any;
 }
 
 export interface Client {
@@ -223,6 +239,56 @@ export interface ApiError {
   message?: string;
 }
 
+export interface AuditRun {
+  id: string;
+  status: 'DRAFT' | 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED';
+  startedAt?: string;
+  finishedAt?: string;
+  healthScore?: number;
+  pagesCrawled?: number;
+  issuesFound?: number;
+  createdAt: string;
+  websiteUrl: string;
+  maxPages?: number;
+  includeLighthouse?: boolean;
+}
+
+export interface AuditIssue {
+  id: string;
+  title: string;
+  description: string;
+  severity: 'P1' | 'P2' | 'P3';
+  category: 'TECHNICAL' | 'ON_PAGE' | 'LOCAL' | 'CONTENT';
+  affectedPages: number;
+  status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'IGNORED';
+  fixHint: string;
+  createdAt: string;
+  updatedAt?: string;
+  resolvedAt?: string;
+  pages?: string[];
+}
+
+export interface QuickWin {
+  id: string;
+  title: string;
+  description: string;
+  impact: 'HIGH' | 'MEDIUM' | 'LOW';
+  effort: 'LOW' | 'MEDIUM' | 'HIGH';
+  category: 'TECHNICAL' | 'ON_PAGE' | 'LOCAL' | 'CONTENT';
+  affectedPages: number;
+  estimatedTime: string;
+}
+
+export interface AuditMetrics {
+  healthScore: number;
+  previousScore?: number;
+  scoreChange?: number;
+  totalIssues: number;
+  criticalIssues: number;
+  pagesAnalyzed: number;
+  lastAuditDate: string;
+}
+
 // API service class
 export class ApiService {
   private baseUrl: string;
@@ -271,6 +337,7 @@ export class ApiService {
 
     const response = await fetch(url, {
       headers,
+      credentials: 'include',
       ...options,
     });
 
@@ -307,12 +374,13 @@ export class ApiService {
       const response = await this.fetchApi<{ message: string }>('/api/v1/auth/logout', {
         method: 'POST',
       });
+      
       this.clearAuthToken();
       return response;
     } catch (error) {
       // Even if logout fails, clear local token
       this.clearAuthToken();
-      throw error;
+      return { message: 'Logged out successfully' };
     }
   }
 
@@ -329,7 +397,7 @@ export class ApiService {
 
   // Lead Management
   async submitLead(leadData: Omit<Lead, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<Lead> {
-    return this.fetchApi<Lead>('/api/v1/leads', {
+    return this.fetchApi<Lead>('/api/v1/leads/create-lead', {
       method: 'POST',
       body: JSON.stringify(leadData),
     });
@@ -347,17 +415,135 @@ export class ApiService {
     return this.fetchApi<ApiResponse<Lead>>('/api/v1/leads');
   }
 
+  async importLeadgenData(leads: any[], clientId?: string, sourceId?: string): Promise<any> {
+    return this.fetchApi('/api/v1/leads/leadgen-import', {
+      method: 'POST',
+      body: JSON.stringify({
+        leads,
+        client_id: clientId,
+        source_id: sourceId
+      })
+    });
+  }
+
+  async getLeadEvents(leadId: string): Promise<any[]> {
+    const response = await this.fetchApi(`/api/v1/leads/${leadId}/events`);
+    return response.events || [];
+  }
+
+  async getLeadStatistics(leadId: string): Promise<any> {
+    const response = await this.fetchApi(`/api/v1/leads/${leadId}/statistics`);
+    return response.statistics;
+  }
+
+  async createLeadEvent(leadId: string, eventData: {
+    type: string;
+    direction?: string;
+    duration?: number;
+    notes?: string;
+    outcome?: string;
+    next_action?: string;
+  }): Promise<any> {
+    const response = await this.fetchApi(`/api/v1/leads/${leadId}/events`, {
+      method: 'POST',
+      body: JSON.stringify(eventData)
+    });
+    return response.event;
+  }
+
+  // LEADGEN EXECUTION (Admin Only)
+  async executeLeadgenCampaign(config: any): Promise<any> {
+    return this.fetchApi('/api/v1/admin/leadgen/execute', {
+      method: 'POST',
+      body: JSON.stringify(config)
+    });
+  }
+
+  async getLeadgenVerticals(): Promise<any> {
+    const response = await this.fetchApi('/api/v1/admin/leadgen/verticals');
+    return response.verticals;
+  }
+
+  async getLeadgenSources(): Promise<any> {
+    const response = await this.fetchApi('/api/v1/admin/leadgen/sources');
+    return response.sources;
+  }
+
+  async getLeadgenCampaignStatus(campaignId: string): Promise<any> {
+    const response = await this.fetchApi(`/api/v1/admin/leadgen/status/${campaignId}`);
+    return response.status;
+  }
+
+  async getLeadgenTemplate(): Promise<any> {
+    const response = await this.fetchApi('/api/v1/admin/leadgen/template');
+    return response.template;
+  }
+
+  async importLeads(csvData: string, options?: {
+    clientId?: string;
+    sourceId?: string;
+    overwriteExisting?: boolean;
+  }): Promise<{
+    message: string;
+    imported_count: number;
+    skipped_count: number;
+    total_rows: number;
+    errors?: string[];
+  }> {
+    return this.fetchApi('/api/v1/leads/import', {
+      method: 'POST',
+      body: JSON.stringify({
+        csv_data: csvData,
+        client_id: options?.clientId,
+        source_id: options?.sourceId,
+        overwrite_existing: options?.overwriteExisting || false,
+      }),
+    });
+  }
+
   async getLead(id: string): Promise<Lead> {
     return this.fetchApi<Lead>(`/api/v1/leads/${id}`);
   }
 
+  async updateLead(id: string, leadData: Partial<Lead>): Promise<Lead> {
+    return this.fetchApi<Lead>(`/api/v1/leads/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(leadData),
+    });
+  }
+
+  // Lead Notes
+  async getLeadNotes(id: string): Promise<{ notes: string }> {
+    return this.fetchApi<{ notes: string }>(`/api/v1/leads/${id}/notes`);
+  }
+
+  async saveLeadNotes(id: string, notes: string): Promise<{ success: boolean }> {
+    return this.fetchApi<{ success: boolean }>(`/api/v1/leads/${id}/notes`, {
+      method: 'POST',
+      body: JSON.stringify({ notes }),
+    });
+  }
+
+  // Technology Stack Detection
+  async analyzeLeadTechStack(leadId: string): Promise<Lead['techStack']> {
+    const response = await this.fetchApi<{ techStack: Lead['techStack'] }>(`/api/v1/leads/${leadId}/tech-stack`, {
+      method: 'POST',
+    });
+    return response.techStack;
+  }
+
+  async getLeadTechStack(leadId: string): Promise<Lead['techStack']> {
+    const response = await this.fetchApi<{ techStack: Lead['techStack'] }>(`/api/v1/leads/${leadId}/tech-stack`);
+    return response.techStack;
+  }
+
   // Case Studies
   async getCaseStudies(): Promise<ApiResponse<CaseStudy>> {
-    return this.fetchApi<ApiResponse<CaseStudy>>('/api/v1/case-studies');
+    return this.fetchApi<ApiResponse<CaseStudy>>('/api/case_studies');
   }
 
   async getCaseStudy(id: string): Promise<CaseStudy> {
-    return this.fetchApi<CaseStudy>(`/api/v1/case-studies/${id}`);
+    return this.fetchApi<CaseStudy>(`/api/case_studies/${id}`);
   }
 
   // FAQs
@@ -444,10 +630,10 @@ export class ApiService {
         Object.entries(params).map(([key, value]) => [key, String(value)])
       );
       const queryString = new URLSearchParams(stringParams).toString();
-      const endpoint = queryString ? `/api/v1/campaigns?${queryString}` : '/api/v1/campaigns';
+      const endpoint = queryString ? `/api/campaigns?${queryString}` : '/api/campaigns';
       return this.fetchApi<ApiResponse<Campaign>>(endpoint);
     }
-    return this.fetchApi<ApiResponse<Campaign>>('/api/v1/campaigns');
+    return this.fetchApi<ApiResponse<Campaign>>('/api/campaigns');
   }
 
   async createCampaign(campaignData: Omit<Campaign, 'id' | 'createdAt' | 'updatedAt'>): Promise<Campaign> {
@@ -561,6 +747,11 @@ export class ApiService {
     });
   }
 
+  async initiateGbpAuth(clientId: string): Promise<void> {
+    // Redirect to OAuth flow - this will be handled by the backend
+    window.location.href = `${this.baseUrl}/api/v1/gbp/auth/${clientId}`;
+  }
+
   // Health check
   async healthCheck(): Promise<{ status: string }> {
     try {
@@ -594,50 +785,139 @@ export class ApiService {
     return response;
   }
 
-  async submitAuditWizard(submission: AuditSubmission): Promise<{ auditIntake: AuditIntake; user: User; token: string }> {
-    // First, try to register the user using the client registration endpoint
-    const userResponse = await this.fetchApi<LoginResponse>('/api/v1/clients/register', {
+
+  // Audit Run methods
+  async getAuditRuns(params?: Record<string, string | number | boolean>): Promise<ApiResponse<AuditRun>> {
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `/api/v1/audits/runs?${queryString}` : '/api/v1/audits/runs';
+      return this.fetchApi<ApiResponse<AuditRun>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<AuditRun>>('/api/v1/audits/runs');
+  }
+
+  async getAuditRun(id: string): Promise<AuditRun> {
+    return this.fetchApi<AuditRun>(`/api/v1/audits/runs/${id}`);
+  }
+
+  async startAuditRun(auditData: {
+    websiteUrl: string;
+    maxPages?: number;
+    includeLighthouse?: boolean;
+    keywords?: string[];
+  }): Promise<AuditRun> {
+    return this.fetchApi<AuditRun>('/api/v1/audits/runs', {
       method: 'POST',
-      body: JSON.stringify({
-        organization_name: submission.audit.companyName,
-        organization_domain: submission.audit.website,
-        client_name: submission.audit.companyName,
-        client_website: submission.audit.website,
-        admin_email: submission.account.email,
-        admin_password: submission.account.password,
-        admin_first_name: submission.account.firstName,
-        admin_last_name: submission.account.lastName,
-      }),
+      body: JSON.stringify(auditData),
+    });
+  }
+
+  async getAuditIssues(auditRunId: string, params?: Record<string, string | number | boolean>): Promise<ApiResponse<AuditIssue>> {
+    const baseEndpoint = `/api/v1/audits/runs/${auditRunId}/issues`;
+    if (params) {
+      const stringParams = Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      );
+      const queryString = new URLSearchParams(stringParams).toString();
+      const endpoint = queryString ? `${baseEndpoint}?${queryString}` : baseEndpoint;
+      return this.fetchApi<ApiResponse<AuditIssue>>(endpoint);
+    }
+    return this.fetchApi<ApiResponse<AuditIssue>>(baseEndpoint);
+  }
+
+  async updateAuditIssue(issueId: string, updates: Partial<AuditIssue>): Promise<AuditIssue> {
+    return this.fetchApi<AuditIssue>(`/api/v1/audits/issues/${issueId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async getAuditQuickWins(auditRunId: string): Promise<QuickWin[]> {
+    return this.fetchApi<QuickWin[]>(`/api/v1/audits/runs/${auditRunId}/quick-wins`);
+  }
+
+  async getAuditMetrics(auditRunId: string): Promise<AuditMetrics> {
+    return this.fetchApi<AuditMetrics>(`/api/v1/audits/runs/${auditRunId}/metrics`);
+  }
+
+  async exportAuditReport(auditRunId: string, format: 'pdf' | 'csv' | 'json' = 'pdf'): Promise<Blob> {
+    const response = await fetch(`${this.baseUrl}/api/v1/audits/runs/${auditRunId}/export?format=${format}`, {
+      headers: {
+        'Authorization': `Bearer ${this.authToken}`,
+      },
     });
 
-    // Then create the audit intake
-    const auditIntakeData: Omit<AuditIntake, 'id' | 'createdAt' | 'updatedAt'> = {
-      contactName: `${submission.account.firstName} ${submission.account.lastName}`,
-      contactEmail: submission.account.email,
-      websiteUrl: submission.audit.website,
-      cms: 'custom', // Default value
-      techStack: {
-        industry: submission.audit.industry,
-        goals: submission.audit.goals,
-        competitors: submission.audit.competitors,
-        budget: submission.audit.monthlyBudget,
-        tier: submission.audit.tier,
-        notes: submission.audit.notes,
-        companyName: submission.audit.companyName,
-      },
-      hasGoogleAnalytics: false,
-      hasSearchConsole: false,
-      hasGoogleBusinessProfile: false,
-      hasTagManager: false,
-    };
+    if (!response.ok) {
+      throw new Error(`Failed to export audit report: ${response.status}`);
+    }
 
-    const auditIntake = await this.createAuditIntake(auditIntakeData);
+    return response.blob();
+  }
 
-    return {
-      auditIntake,
-      user: userResponse.user,
-      token: userResponse.token,
-    };
+  // NOTIFICATIONS API
+  async getNotifications(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Notification>> {
+    const queryString = params ? new URLSearchParams(
+      Object.entries(params).map(([key, value]) => [key, String(value)])
+    ).toString() : '';
+    
+    const endpoint = queryString ? `/api/v1/notifications?${queryString}` : '/api/v1/notifications';
+    return this.fetchApi<ApiResponse<Notification>>(endpoint);
+  }
+
+  async getNotification(id: string): Promise<Notification> {
+    return this.fetchApi<Notification>(`/api/v1/notifications/${id}`);
+  }
+
+  async markNotificationAsRead(id: string): Promise<void> {
+    await this.fetchApi(`/api/v1/notifications/${id}/read`, {
+      method: 'PATCH',
+    });
+  }
+
+  async markNotificationAsUnread(id: string): Promise<void> {
+    await this.fetchApi(`/api/v1/notifications/${id}/unread`, {
+      method: 'PATCH',
+    });
+  }
+
+  async markAllNotificationsAsRead(): Promise<void> {
+    await this.fetchApi('/api/v1/notifications/mark-all-read', {
+      method: 'PATCH',
+    });
+  }
+
+  async deleteNotification(id: string): Promise<void> {
+    await this.fetchApi(`/api/v1/notifications/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getNotificationCount(): Promise<{ unread_count: number; total_count: number }> {
+    return this.fetchApi<{ unread_count: number; total_count: number }>('/api/v1/notifications/count');
+  }
+
+  // GOOGLE SHEETS IMPORT API
+  async importLeadsFromGoogleSheets(data: {
+    spreadsheet_url: string;
+    range?: string;
+    client_id?: string;
+    source_id?: string;
+    overwrite_existing?: boolean;
+  }): Promise<{
+    message: string;
+    imported: number;
+    updated: number;
+    skipped: number;
+    total_processed: number;
+    errors?: string[];
+  }> {
+    return this.fetchApi('/api/v1/leads/google-sheets-import', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   }
 
   // Check if user is authenticated

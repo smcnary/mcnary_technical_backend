@@ -7,10 +7,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
-# Create database engine
+# Create database engine with connection pooling
 engine = create_engine(
     settings.database_url,
-    echo=settings.debug  # Log SQL queries in debug mode
+    echo=settings.debug,  # Log SQL queries in debug mode
+    pool_size=10,
+    max_overflow=20,
+    pool_pre_ping=True,  # Verify connections before use
+    pool_recycle=3600,   # Recycle connections after 1 hour
 )
 
 # Create session factory

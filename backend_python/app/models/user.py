@@ -1,80 +1,86 @@
 """
-User model migrated from Symfony User entity
+User model - migrated from Symfony User entity
 """
 
-from sqlalchemy import Column, String, Boolean, Text, UUID, ForeignKey, Enum as SQLEnum
+from sqlalchemy import Column, String, DateTime, ForeignKey, Boolean, Text
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID as PostgresUUID
+from sqlalchemy.sql import func
 import uuid
-import enum
 
-from app.models.base import TimestampMixin
 from app.core.database import Base
+from app.models.base import TimestampMixin, UUIDMixin
 
-class UserRole(str, enum.Enum):
-    """User role enumeration"""
-    SYSTEM_ADMIN = "ROLE_SYSTEM_ADMIN"
-    AGENCY_ADMIN = "ROLE_AGENCY_ADMIN"
-    AGENCY_STAFF = "ROLE_AGENCY_STAFF"
-    CLIENT_ADMIN = "ROLE_CLIENT_ADMIN"
-    CLIENT_STAFF = "ROLE_CLIENT_STAFF"
-    CLIENT_USER = "ROLE_CLIENT_USER"
-    SALES_CONSULTANT = "ROLE_SALES_CONSULTANT"
-    READ_ONLY = "ROLE_READ_ONLY"
-    USER = "ROLE_USER"
-
-class UserStatus(str, enum.Enum):
-    """User status enumeration"""
-    INVITED = "invited"
-    ACTIVE = "active"
-    SUSPENDED = "suspended"
-    DEACTIVATED = "deactivated"
-
-class User(Base, TimestampMixin):
-    """User model"""
-    
+class User(Base, TimestampMixin, UUIDMixin):
     __tablename__ = "users"
     
-    id = Column(PostgresUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    email = Column(String(255), unique=True, index=True, nullable=False)
+    # User identification
+    email = Column(String(255), unique=True, nullable=False, index=True)
     password_hash = Column(String(255), nullable=True)
-    first_name = Column(String(255), nullable=True)
-    last_name = Column(String(255), nullable=True)
-    status = Column(SQLEnum(UserStatus), default=UserStatus.INVITED, nullable=False)
-    last_login_at = Column(String(255), nullable=True)
+    first_name = Column(String(100), nullable=True)
+    last_name = Column(String(100), nullable=True)
     
-    # Foreign keys
-    organization_id = Column(PostgresUUID(as_uuid=True), ForeignKey('organizations.id'), nullable=False)
-    agency_id = Column(PostgresUUID(as_uuid=True), ForeignKey('agencies.id'), nullable=True)
-    tenant_id = Column(PostgresUUID(as_uuid=True), ForeignKey('tenants.id'), nullable=True)
-    client_id = Column(PostgresUUID(as_uuid=True), nullable=True)
+    # User status and role
+    status = Column(String(50), default="invited", nullable=False)  # invited, active, suspended, deleted
+    role = Column(String(50), nullable=False)  # ROLE_SYSTEM_ADMIN, ROLE_AGENCY_ADMIN, etc.
     
-    # Metadata
-    metadata_json = Column(Text, nullable=True)
+    # Login tracking
+    last_login_at = Column(DateTime(timezone=True), nullable=True)
     
-# Relationships - commented out for now to avoid circular imports
-# organization = relationship("Organization", back_populates="users")
-# agency = relationship("Agency", back_populates="users")
-# tenant = relationship("Tenant", back_populates="users")
+    # Multi-tenancy relationships
+    organization_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+    organization = relationship("Organization", back_populates="users")
     
-    @property
-    def full_name(self) -> str:
-        """Get user's full name"""
+    agency_id = Column(UUID(as_uuid=True), ForeignKey("agencies.id"), nullable=True)
+    agency = relationship("Agency", back_populates="users")
+    
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True)
+    tenant = relationship("Tenant", back_populates="users")
+    
+    # Client access (for client users)
+    client_id = Column(UUID(as_uuid=True), nullable=True)
+    
+    # Additional metadata
+    metadata_json = Column(JSONB, nullable=True, default=dict)
+    
+    # Role constants (matching Symfony)
+    ROLE_SYSTEM_ADMIN = 'ROLE_SYSTEM_ADMIN'
+    ROLE_AGENCY_ADMIN = 'ROLE_AGENCY_ADMIN'
+    ROLE_AGENCY_STAFF = 'ROLE_AGENCY_STAFF'
+    ROLE_CLIENT_ADMIN = 'ROLE_CLIENT_ADMIN'
+    ROLE_CLIENT_STAFF = 'ROLE_CLIENT_STAFF'
+    ROLE_CLIENT_USER = 'ROLE_CLIENT_USER'
+    ROLE_READ_ONLY = 'ROLE_READ_ONLY'
+    
+    def get_name(self) -> str:
+        """Get full name or partial name"""
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
-        return self.email
-    
-    @property
-    def name(self) -> str:
-        """Alias for full_name"""
-        return self.full_name
-    
-    def get_roles(self) -> list[str]:
-        """Get user roles - simplified implementation"""
-        # In the actual implementation, you might have a separate roles table
-        # For now, we'll assume system admin role
-        return ["ROLE_USER", "ROLE_SYSTEM_ADMIN"]
+        return self.first_name or self.last_name or ""
     
     def has_role(self, role: str) -> bool:
-        """Check if user has a specific role"""
-        return role in self.get_roles()
+        """Check if user has specific role"""
+        return self.role == role
+    
+    def is_system_admin(self) -> bool:
+        """Check if user is system admin"""
+        return self.has_role(self.ROLE_SYSTEM_ADMIN)
+    
+    def is_agency_admin(self) -> bool:
+        """Check if user is agency admin"""
+        return self.has_role(self.ROLE_AGENCY_ADMIN)
+    
+    def is_client_user(self) -> bool:
+        """Check if user is client user"""
+        return self.has_role(self.ROLE_CLIENT_USER)
+    
+    def is_read_only(self) -> bool:
+        """Check if user is read-only"""
+        return self.has_role(self.ROLE_READ_ONLY)
+    
+    def get_roles(self) -> list:
+        """Get all roles for the user"""
+        return ['ROLE_USER', self.role]
+    
+    def __repr__(self):
+        return f"<User(id={self.id}, email='{self.email}', role='{self.role}')>"

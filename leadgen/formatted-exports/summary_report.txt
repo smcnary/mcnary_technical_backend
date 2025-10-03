@@ -1,0 +1,82 @@
+================================================================================
+CSV FILES SUMMARY REPORT
+================================================================================
+
+Debug Test_run_1757958046479_b1cqos1qu.csv
+  Leads: 20
+  Size: 5.55 KB
+
+Debug Test_run_1757958589065_ja1c8rv7j.csv
+  Leads: 20
+  Size: 5.55 KB
+
+Debug_Test_2025-09-15T18-02-26.csv
+  Leads: 60
+  Size: 20.84 KB
+
+Denver Test_run_1757957337433_lyp1zr00i.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Denver Test_run_1757957384873_21cyt5b3f.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys Fixed_run_1757958731942_q4p1sp1hu.csv
+  Leads: 20
+  Size: 5.55 KB
+
+Tulsa Attorneys Fixed_run_1757958917329_hh472w7vn.csv
+  Leads: 60
+  Size: 20.84 KB
+
+Tulsa Attorneys_run_1757957324419_vr6hv3ym0.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757957671533_c6spygf8w.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757957942995_gaczj7rbt.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757957982407_2mxklxhz7.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757958040015_frfi2zi75.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757958060517_9ig9o49ko.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757958490589_n62db5id2.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Attorneys_run_1757958583339_yloix0db5.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Law Firms_run_1757957250642_hi22djjed.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Law Firms_run_1757957318262_n62gza73r.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa Restaurants_run_1757957329371_fv7q037a1.csv
+  Leads: 0
+  Size: 0.00 KB
+
+Tulsa_Attorneys_Fixed_2025-09-15T18-02-07.csv
+  Leads: 60
+  Size: 20.84 KB
+
+Total Leads Across All Files: 240
+Report Generated: 9/15/2025, 3:13:17 PM

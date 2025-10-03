@@ -1,22 +1,24 @@
 """
-Organization model
+Organization model - migrated from Symfony Organization entity
 """
 
 from sqlalchemy import Column, String
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID as PostgresUUID
-import uuid
 
-from app.models.base import TimestampMixin
 from app.core.database import Base
+from app.models.base import TimestampMixin, UUIDMixin
 
-class Organization(Base, TimestampMixin):
-    """Organization model"""
-    
+class Organization(Base, TimestampMixin, UUIDMixin):
     __tablename__ = "organizations"
     
-    id = Column(PostgresUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(255), nullable=False)
+    domain = Column(String(255), nullable=True)
+    status = Column(String(50), default="active", nullable=False)
+    metadata_json = Column(JSONB, nullable=True, default=dict)
     
-    # Relationships - commented out to avoid circular imports for now
-    # users = relationship("User", back_populates="organization")
+    # Relationships
+    users = relationship("User", back_populates="organization")
+    
+    def __repr__(self):
+        return f"<Organization(id={self.id}, name='{self.name}')>"
