@@ -1,4 +1,4 @@
-// API service for connecting to Symfony backend
+// API service for connecting to Python backend
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
 // TypeScript interfaces matching your backend entities
@@ -451,6 +451,212 @@ export class ApiService {
     });
   }
 
+  // SEO Tracking API methods
+  async getKeywords(clientId?: string, status?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (clientId) params.append('client_id', clientId);
+    if (status) params.append('status', status);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/seo/keywords?${params}`);
+  }
+
+  async createKeyword(keywordData: any): Promise<any> {
+    return this.fetchApi('/api/v1/seo/keywords', {
+      method: 'POST',
+      body: JSON.stringify(keywordData)
+    });
+  }
+
+  async updateKeyword(keywordId: string, keywordData: any): Promise<any> {
+    return this.fetchApi(`/api/v1/seo/keywords/${keywordId}`, {
+      method: 'PUT',
+      body: JSON.stringify(keywordData)
+    });
+  }
+
+  async deleteKeyword(keywordId: string): Promise<void> {
+    return this.fetchApi(`/api/v1/seo/keywords/${keywordId}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async getRankings(keywordId?: string, clientId?: string, startDate?: string, endDate?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (keywordId) params.append('keyword_id', keywordId);
+    if (clientId) params.append('client_id', clientId);
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/seo/rankings?${params}`);
+  }
+
+  async createRanking(rankingData: any): Promise<any> {
+    return this.fetchApi('/api/v1/seo/rankings', {
+      method: 'POST',
+      body: JSON.stringify(rankingData)
+    });
+  }
+
+  async getReviews(clientId?: string, status?: string, source?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (clientId) params.append('client_id', clientId);
+    if (status) params.append('status', status);
+    if (source) params.append('source', source);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/seo/reviews?${params}`);
+  }
+
+  async createReview(reviewData: any): Promise<any> {
+    return this.fetchApi('/api/v1/seo/reviews', {
+      method: 'POST',
+      body: JSON.stringify(reviewData)
+    });
+  }
+
+  async getCitations(clientId?: string, status?: string, platformType?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (clientId) params.append('client_id', clientId);
+    if (status) params.append('status', status);
+    if (platformType) params.append('platform_type', platformType);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/seo/citations?${params}`);
+  }
+
+  async createCitation(citationData: any): Promise<any> {
+    return this.fetchApi('/api/v1/seo/citations', {
+      method: 'POST',
+      body: JSON.stringify(citationData)
+    });
+  }
+
+  async getKeywordPerformance(clientId: string, startDate: string, endDate: string): Promise<any> {
+    return this.fetchApi(`/api/v1/seo/analytics/keyword-performance/${clientId}?start_date=${startDate}&end_date=${endDate}`);
+  }
+
+  async getReviewSummary(clientId: string): Promise<any> {
+    return this.fetchApi(`/api/v1/seo/analytics/review-summary/${clientId}`);
+  }
+
+  async getCitationSummary(clientId: string): Promise<any> {
+    return this.fetchApi(`/api/v1/seo/analytics/citation-summary/${clientId}`);
+  }
+
+  // Audit API methods
+  async getProjects(clientId?: string, status?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (clientId) params.append('client_id', clientId);
+    if (status) params.append('status', status);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/audits/projects?${params}`);
+  }
+
+  async createProject(projectData: any): Promise<any> {
+    return this.fetchApi('/api/v1/audits/projects', {
+      method: 'POST',
+      body: JSON.stringify(projectData)
+    });
+  }
+
+  async updateProject(projectId: string, projectData: any): Promise<any> {
+    return this.fetchApi(`/api/v1/audits/projects/${projectId}`, {
+      method: 'PUT',
+      body: JSON.stringify(projectData)
+    });
+  }
+
+  async deleteProject(projectId: string): Promise<void> {
+    return this.fetchApi(`/api/v1/audits/projects/${projectId}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async getAuditRuns(projectId?: string, state?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (projectId) params.append('project_id', projectId);
+    if (state) params.append('state', state);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/audits/audit-runs?${params}`);
+  }
+
+  async createAuditRun(auditData: any): Promise<any> {
+    return this.fetchApi('/api/v1/audits/audit-runs', {
+      method: 'POST',
+      body: JSON.stringify(auditData)
+    });
+  }
+
+  async startAudit(auditRunId: string): Promise<any> {
+    return this.fetchApi(`/api/v1/audits/audit-runs/${auditRunId}/start`, {
+      method: 'POST'
+    });
+  }
+
+  async getAuditSummary(auditRunId: string): Promise<any> {
+    return this.fetchApi(`/api/v1/audits/audit-runs/${auditRunId}/summary`);
+  }
+
+  async getFindings(auditRunId?: string, pageId?: string, severity?: string, category?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (auditRunId) params.append('audit_run_id', auditRunId);
+    if (pageId) params.append('page_id', pageId);
+    if (severity) params.append('severity', severity);
+    if (category) params.append('category', category);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/audits/findings?${params}`);
+  }
+
+  async updateFinding(findingId: string, status?: string, assignedTo?: string, notes?: string): Promise<any> {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    if (assignedTo) params.append('assigned_to', assignedTo);
+    if (notes) params.append('notes', notes);
+    
+    return this.fetchApi(`/api/v1/audits/findings/${findingId}?${params}`, {
+      method: 'PUT'
+    });
+  }
+
+  async getPages(auditRunId?: string, skip = 0, limit = 100): Promise<any> {
+    const params = new URLSearchParams();
+    if (auditRunId) params.append('audit_run_id', auditRunId);
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+    
+    return this.fetchApi(`/api/v1/audits/pages?${params}`);
+  }
+
+  async getAuditReport(auditRunId: string, format: 'html' | 'csv' | 'json' = 'html'): Promise<any> {
+    if (format === 'html') {
+      return this.fetchApi(`/api/v1/audits/audit-runs/${auditRunId}/report`, {
+        headers: {
+          'Accept': 'text/html'
+        }
+      });
+    } else if (format === 'csv') {
+      return this.fetchApi(`/api/v1/audits/audit-runs/${auditRunId}/report.csv`, {
+        headers: {
+          'Accept': 'text/csv'
+        }
+      });
+    } else {
+      return this.fetchApi(`/api/v1/audits/audit-runs/${auditRunId}/report.json`);
+    }
+  }
+
   async getLeadEvents(leadId: string): Promise<any[]> {
     const response = await this.fetchApi(`/api/v1/leads/${leadId}/events`);
     return response.events || [];
@@ -589,7 +795,7 @@ export class ApiService {
   }
 
   // Pages
-  async getPages(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Page>> {
+  async getCmsPages(params?: Record<string, string | number | boolean>): Promise<ApiResponse<Page>> {
     if (params) {
       const stringParams = Object.fromEntries(
         Object.entries(params).map(([key, value]) => [key, String(value)])
@@ -811,18 +1017,6 @@ export class ApiService {
   }
 
 
-  // Audit Run methods
-  async getAuditRuns(params?: Record<string, string | number | boolean>): Promise<ApiResponse<AuditRun>> {
-    if (params) {
-      const stringParams = Object.fromEntries(
-        Object.entries(params).map(([key, value]) => [key, String(value)])
-      );
-      const queryString = new URLSearchParams(stringParams).toString();
-      const endpoint = queryString ? `/api/v1/audits/runs?${queryString}` : '/api/v1/audits/runs';
-      return this.fetchApi<ApiResponse<AuditRun>>(endpoint);
-    }
-    return this.fetchApi<ApiResponse<AuditRun>>('/api/v1/audits/runs');
-  }
 
   async getAuditRun(id: string): Promise<AuditRun> {
     return this.fetchApi<AuditRun>(`/api/v1/audits/runs/${id}`);

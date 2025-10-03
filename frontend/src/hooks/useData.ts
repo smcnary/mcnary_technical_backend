@@ -101,6 +101,96 @@ export function useData() {
     return dataService.importLeads(csvData, options);
   }, []);
 
+  // SEO Tracking methods
+  const getKeywords = useCallback(async (clientId?: string, status?: string, skip = 0, limit = 100) => {
+    return dataService.getKeywords(clientId, status, skip, limit);
+  }, []);
+
+  const createKeyword = useCallback(async (keywordData: any) => {
+    return dataService.createKeyword(keywordData);
+  }, []);
+
+  const updateKeyword = useCallback(async (keywordId: string, keywordData: any) => {
+    return dataService.updateKeyword(keywordId, keywordData);
+  }, []);
+
+  const deleteKeyword = useCallback(async (keywordId: string) => {
+    return dataService.deleteKeyword(keywordId);
+  }, []);
+
+  const getRankings = useCallback(async (keywordId?: string, clientId?: string, startDate?: string, endDate?: string, skip = 0, limit = 100) => {
+    return dataService.getRankings(keywordId, clientId, startDate, endDate, skip, limit);
+  }, []);
+
+  const getReviews = useCallback(async (clientId?: string, status?: string, source?: string, skip = 0, limit = 100) => {
+    return dataService.getReviews(clientId, status, source, skip, limit);
+  }, []);
+
+  const getCitations = useCallback(async (clientId?: string, status?: string, platformType?: string, skip = 0, limit = 100) => {
+    return dataService.getCitations(clientId, status, platformType, skip, limit);
+  }, []);
+
+  const getKeywordPerformance = useCallback(async (clientId: string, startDate: string, endDate: string) => {
+    return dataService.getKeywordPerformance(clientId, startDate, endDate);
+  }, []);
+
+  const getReviewSummary = useCallback(async (clientId: string) => {
+    return dataService.getReviewSummary(clientId);
+  }, []);
+
+  const getCitationSummary = useCallback(async (clientId: string) => {
+    return dataService.getCitationSummary(clientId);
+  }, []);
+
+  // Audit methods
+  const getProjects = useCallback(async (clientId?: string, status?: string, skip = 0, limit = 100) => {
+    return dataService.getProjects(clientId, status, skip, limit);
+  }, []);
+
+  const createProject = useCallback(async (projectData: any) => {
+    return dataService.createProject(projectData);
+  }, []);
+
+  const updateProject = useCallback(async (projectId: string, projectData: any) => {
+    return dataService.updateProject(projectId, projectData);
+  }, []);
+
+  const deleteProject = useCallback(async (projectId: string) => {
+    return dataService.deleteProject(projectId);
+  }, []);
+
+  const getAuditRuns = useCallback(async (projectId?: string, state?: string, skip = 0, limit = 100) => {
+    return dataService.getAuditRuns(projectId, state, skip, limit);
+  }, []);
+
+  const createAuditRun = useCallback(async (auditData: any) => {
+    return dataService.createAuditRun(auditData);
+  }, []);
+
+  const startAudit = useCallback(async (auditRunId: string) => {
+    return dataService.startAudit(auditRunId);
+  }, []);
+
+  const getAuditSummary = useCallback(async (auditRunId: string) => {
+    return dataService.getAuditSummary(auditRunId);
+  }, []);
+
+  const getFindings = useCallback(async (auditRunId?: string, pageId?: string, severity?: string, category?: string, skip = 0, limit = 100) => {
+    return dataService.getFindings(auditRunId, pageId, severity, category, skip, limit);
+  }, []);
+
+  const updateFinding = useCallback(async (findingId: string, status?: string, assignedTo?: string, notes?: string) => {
+    return dataService.updateFinding(findingId, status, assignedTo, notes);
+  }, []);
+
+  const getAuditPages = useCallback(async (auditRunId?: string, skip = 0, limit = 100) => {
+    return dataService.getAuditPages(auditRunId, skip, limit);
+  }, []);
+
+  const getAuditReport = useCallback(async (auditRunId: string, format: 'html' | 'csv' | 'json' = 'html') => {
+    return dataService.getAuditReport(auditRunId, format);
+  }, []);
+
   // USER MANAGEMENT
   const getUsers = useCallback(async (params?: Record<string, string | number | boolean>) => {
     return dataService.getUsers(params);
@@ -178,6 +268,32 @@ export function useData() {
     getLeads,
     submitLead,
     importLeads,
+    
+    // SEO Tracking methods
+    getKeywords,
+    createKeyword,
+    updateKeyword,
+    deleteKeyword,
+    getRankings,
+    getReviews,
+    getCitations,
+    getKeywordPerformance,
+    getReviewSummary,
+    getCitationSummary,
+    
+    // Audit methods
+    getProjects,
+    createProject,
+    updateProject,
+    deleteProject,
+    getAuditRuns,
+    createAuditRun,
+    startAudit,
+    getAuditSummary,
+    getFindings,
+    updateFinding,
+    getAuditPages,
+    getAuditReport,
     
     // User methods
     getUsers,

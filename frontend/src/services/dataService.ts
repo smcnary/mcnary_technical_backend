@@ -498,6 +498,310 @@ class DataService {
     }
   }
 
+  // SEO Tracking methods
+  async getKeywords(clientId?: string, status?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('keywords', true);
+      const result = await apiService.getKeywords(clientId, status, skip, limit);
+      this.setLoading('keywords', false);
+      return result;
+    } catch (error) {
+      this.setError('keywords', error instanceof Error ? error.message : 'Failed to fetch keywords');
+      this.setLoading('keywords', false);
+      throw error;
+    }
+  }
+
+  async createKeyword(keywordData: any): Promise<any> {
+    try {
+      this.setLoading('createKeyword', true);
+      const result = await apiService.createKeyword(keywordData);
+      // Refresh keywords data
+      await this.getKeywords();
+      this.setLoading('createKeyword', false);
+      return result;
+    } catch (error) {
+      this.setError('createKeyword', error instanceof Error ? error.message : 'Failed to create keyword');
+      this.setLoading('createKeyword', false);
+      throw error;
+    }
+  }
+
+  async updateKeyword(keywordId: string, keywordData: any): Promise<any> {
+    try {
+      this.setLoading('updateKeyword', true);
+      const result = await apiService.updateKeyword(keywordId, keywordData);
+      // Refresh keywords data
+      await this.getKeywords();
+      this.setLoading('updateKeyword', false);
+      return result;
+    } catch (error) {
+      this.setError('updateKeyword', error instanceof Error ? error.message : 'Failed to update keyword');
+      this.setLoading('updateKeyword', false);
+      throw error;
+    }
+  }
+
+  async deleteKeyword(keywordId: string): Promise<void> {
+    try {
+      this.setLoading('deleteKeyword', true);
+      await apiService.deleteKeyword(keywordId);
+      // Refresh keywords data
+      await this.getKeywords();
+      this.setLoading('deleteKeyword', false);
+    } catch (error) {
+      this.setError('deleteKeyword', error instanceof Error ? error.message : 'Failed to delete keyword');
+      this.setLoading('deleteKeyword', false);
+      throw error;
+    }
+  }
+
+  async getRankings(keywordId?: string, clientId?: string, startDate?: string, endDate?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('rankings', true);
+      const result = await apiService.getRankings(keywordId, clientId, startDate, endDate, skip, limit);
+      this.setLoading('rankings', false);
+      return result;
+    } catch (error) {
+      this.setError('rankings', error instanceof Error ? error.message : 'Failed to fetch rankings');
+      this.setLoading('rankings', false);
+      throw error;
+    }
+  }
+
+  async getReviews(clientId?: string, status?: string, source?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('reviews', true);
+      const result = await apiService.getReviews(clientId, status, source, skip, limit);
+      this.setLoading('reviews', false);
+      return result;
+    } catch (error) {
+      this.setError('reviews', error instanceof Error ? error.message : 'Failed to fetch reviews');
+      this.setLoading('reviews', false);
+      throw error;
+    }
+  }
+
+  async getCitations(clientId?: string, status?: string, platformType?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('citations', true);
+      const result = await apiService.getCitations(clientId, status, platformType, skip, limit);
+      this.setLoading('citations', false);
+      return result;
+    } catch (error) {
+      this.setError('citations', error instanceof Error ? error.message : 'Failed to fetch citations');
+      this.setLoading('citations', false);
+      throw error;
+    }
+  }
+
+  async getKeywordPerformance(clientId: string, startDate: string, endDate: string): Promise<any> {
+    try {
+      this.setLoading('keywordPerformance', true);
+      const result = await apiService.getKeywordPerformance(clientId, startDate, endDate);
+      this.setLoading('keywordPerformance', false);
+      return result;
+    } catch (error) {
+      this.setError('keywordPerformance', error instanceof Error ? error.message : 'Failed to fetch keyword performance');
+      this.setLoading('keywordPerformance', false);
+      throw error;
+    }
+  }
+
+  async getReviewSummary(clientId: string): Promise<any> {
+    try {
+      this.setLoading('reviewSummary', true);
+      const result = await apiService.getReviewSummary(clientId);
+      this.setLoading('reviewSummary', false);
+      return result;
+    } catch (error) {
+      this.setError('reviewSummary', error instanceof Error ? error.message : 'Failed to fetch review summary');
+      this.setLoading('reviewSummary', false);
+      throw error;
+    }
+  }
+
+  async getCitationSummary(clientId: string): Promise<any> {
+    try {
+      this.setLoading('citationSummary', true);
+      const result = await apiService.getCitationSummary(clientId);
+      this.setLoading('citationSummary', false);
+      return result;
+    } catch (error) {
+      this.setError('citationSummary', error instanceof Error ? error.message : 'Failed to fetch citation summary');
+      this.setLoading('citationSummary', false);
+      throw error;
+    }
+  }
+
+  // Audit methods
+  async getProjects(clientId?: string, status?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('projects', true);
+      const result = await apiService.getProjects(clientId, status, skip, limit);
+      this.setLoading('projects', false);
+      return result;
+    } catch (error) {
+      this.setError('projects', error instanceof Error ? error.message : 'Failed to fetch projects');
+      this.setLoading('projects', false);
+      throw error;
+    }
+  }
+
+  async createProject(projectData: any): Promise<any> {
+    try {
+      this.setLoading('createProject', true);
+      const result = await apiService.createProject(projectData);
+      // Refresh projects data
+      await this.getProjects();
+      this.setLoading('createProject', false);
+      return result;
+    } catch (error) {
+      this.setError('createProject', error instanceof Error ? error.message : 'Failed to create project');
+      this.setLoading('createProject', false);
+      throw error;
+    }
+  }
+
+  async updateProject(projectId: string, projectData: any): Promise<any> {
+    try {
+      this.setLoading('updateProject', true);
+      const result = await apiService.updateProject(projectId, projectData);
+      // Refresh projects data
+      await this.getProjects();
+      this.setLoading('updateProject', false);
+      return result;
+    } catch (error) {
+      this.setError('updateProject', error instanceof Error ? error.message : 'Failed to update project');
+      this.setLoading('updateProject', false);
+      throw error;
+    }
+  }
+
+  async deleteProject(projectId: string): Promise<void> {
+    try {
+      this.setLoading('deleteProject', true);
+      await apiService.deleteProject(projectId);
+      // Refresh projects data
+      await this.getProjects();
+      this.setLoading('deleteProject', false);
+    } catch (error) {
+      this.setError('deleteProject', error instanceof Error ? error.message : 'Failed to delete project');
+      this.setLoading('deleteProject', false);
+      throw error;
+    }
+  }
+
+  async getAuditRuns(projectId?: string, state?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('auditRuns', true);
+      const result = await apiService.getAuditRuns(projectId, state, skip, limit);
+      this.setLoading('auditRuns', false);
+      return result;
+    } catch (error) {
+      this.setError('auditRuns', error instanceof Error ? error.message : 'Failed to fetch audit runs');
+      this.setLoading('auditRuns', false);
+      throw error;
+    }
+  }
+
+  async createAuditRun(auditData: any): Promise<any> {
+    try {
+      this.setLoading('createAuditRun', true);
+      const result = await apiService.createAuditRun(auditData);
+      // Refresh audit runs data
+      await this.getAuditRuns();
+      this.setLoading('createAuditRun', false);
+      return result;
+    } catch (error) {
+      this.setError('createAuditRun', error instanceof Error ? error.message : 'Failed to create audit run');
+      this.setLoading('createAuditRun', false);
+      throw error;
+    }
+  }
+
+  async startAudit(auditRunId: string): Promise<any> {
+    try {
+      this.setLoading('startAudit', true);
+      const result = await apiService.startAudit(auditRunId);
+      // Refresh audit runs data
+      await this.getAuditRuns();
+      this.setLoading('startAudit', false);
+      return result;
+    } catch (error) {
+      this.setError('startAudit', error instanceof Error ? error.message : 'Failed to start audit');
+      this.setLoading('startAudit', false);
+      throw error;
+    }
+  }
+
+  async getAuditSummary(auditRunId: string): Promise<any> {
+    try {
+      this.setLoading('auditSummary', true);
+      const result = await apiService.getAuditSummary(auditRunId);
+      this.setLoading('auditSummary', false);
+      return result;
+    } catch (error) {
+      this.setError('auditSummary', error instanceof Error ? error.message : 'Failed to fetch audit summary');
+      this.setLoading('auditSummary', false);
+      throw error;
+    }
+  }
+
+  async getFindings(auditRunId?: string, pageId?: string, severity?: string, category?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('findings', true);
+      const result = await apiService.getFindings(auditRunId, pageId, severity, category, skip, limit);
+      this.setLoading('findings', false);
+      return result;
+    } catch (error) {
+      this.setError('findings', error instanceof Error ? error.message : 'Failed to fetch findings');
+      this.setLoading('findings', false);
+      throw error;
+    }
+  }
+
+  async updateFinding(findingId: string, status?: string, assignedTo?: string, notes?: string): Promise<any> {
+    try {
+      this.setLoading('updateFinding', true);
+      const result = await apiService.updateFinding(findingId, status, assignedTo, notes);
+      // Refresh findings data
+      await this.getFindings();
+      this.setLoading('updateFinding', false);
+      return result;
+    } catch (error) {
+      this.setError('updateFinding', error instanceof Error ? error.message : 'Failed to update finding');
+      this.setLoading('updateFinding', false);
+      throw error;
+    }
+  }
+
+  async getAuditPages(auditRunId?: string, skip = 0, limit = 100): Promise<any[]> {
+    try {
+      this.setLoading('auditPages', true);
+      const result = await apiService.getPages(auditRunId, skip, limit);
+      this.setLoading('auditPages', false);
+      return result;
+    } catch (error) {
+      this.setError('auditPages', error instanceof Error ? error.message : 'Failed to fetch audit pages');
+      this.setLoading('auditPages', false);
+      throw error;
+    }
+  }
+
+  async getAuditReport(auditRunId: string, format: 'html' | 'csv' | 'json' = 'html'): Promise<any> {
+    try {
+      this.setLoading('auditReport', true);
+      const result = await apiService.getAuditReport(auditRunId, format);
+      this.setLoading('auditReport', false);
+      return result;
+    } catch (error) {
+      this.setError('auditReport', error instanceof Error ? error.message : 'Failed to fetch audit report');
+      this.setLoading('auditReport', false);
+      throw error;
+    }
+  }
+
   // USER MANAGEMENT (Admin only)
   async getUsers(params?: Record<string, string | number | boolean>): Promise<User[]> {
     const cacheKey = `users:${JSON.stringify(params || {})}`;
