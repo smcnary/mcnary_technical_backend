@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from app.api.v1.auth import auth_router
 from app.api.v1.leads import leads_router
 from app.api.v1.me import me_router
+from app.api.v1.user_profile import user_profile_router
 # Commented out for now to get basic backend running
 # from app.api.v1.users import users_router
 # from app.api.v1.clients import clients_router
@@ -53,6 +54,7 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(leads_router, prefix="/api/v1/leads", tags=["Leads"])
 app.include_router(me_router, prefix="/api/v1", tags=["User Info"])
+app.include_router(user_profile_router, prefix="/api/v1", tags=["User Profile"])
 # Commented out for now to get basic backend running
 # app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
 # app.include_router(clients_router, prefix="/api/v1/clients", tags=["Clients"])
