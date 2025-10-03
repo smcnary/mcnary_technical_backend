@@ -410,9 +410,98 @@ export class ApiService {
       );
       const queryString = new URLSearchParams(stringParams).toString();
       const endpoint = queryString ? `/api/v1/leads?${queryString}` : '/api/v1/leads';
-      return this.fetchApi<ApiResponse<Lead>>(endpoint);
+      const response = await this.fetchApi<ApiResponse<Lead>>(endpoint);
+      
+      // Transform snake_case to camelCase for frontend compatibility
+      if (response.data && Array.isArray(response.data)) {
+        response.data = response.data.map((lead: any) => this.transformLeadData(lead));
+      }
+      
+      return response;
     }
-    return this.fetchApi<ApiResponse<Lead>>('/api/v1/leads');
+    const response = await this.fetchApi<ApiResponse<Lead>>('/api/v1/leads');
+    
+    // Transform snake_case to camelCase for frontend compatibility
+    if (response.data && Array.isArray(response.data)) {
+      response.data = response.data.map((lead: any) => this.transformLeadData(lead));
+    }
+    
+    return response;
+  }
+
+  private transformLeadData(lead: any): Lead {
+    return {
+      ...lead,
+      fullName: lead.full_name || lead.fullName,
+      practiceAreas: lead.practice_areas || lead.practiceAreas || [],
+      zipCode: lead.zip_code || lead.zipCode,
+      createdAt: lead.created_at || lead.createdAt,
+      updatedAt: lead.updated_at || lead.updatedAt,
+    };
+  }
+
+  async importLeadgenData(leads: any[], clientId?: string, sourceId?: string): Promise<any> {
+    return this.fetchApi('/api/v1/leads/leadgen-import', {
+      method: 'POST',
+      body: JSON.stringify({
+        leads,
+        client_id: clientId,
+        source_id: sourceId
+      })
+    });
+  }
+
+  async getLeadEvents(leadId: string): Promise<any[]> {
+    const response = await this.fetchApi(`/api/v1/leads/${leadId}/events`);
+    return response.events || [];
+  }
+
+  async getLeadStatistics(leadId: string): Promise<any> {
+    const response = await this.fetchApi(`/api/v1/leads/${leadId}/statistics`);
+    return response.statistics;
+  }
+
+  async createLeadEvent(leadId: string, eventData: {
+    type: string;
+    direction?: string;
+    duration?: number;
+    notes?: string;
+    outcome?: string;
+    next_action?: string;
+  }): Promise<any> {
+    const response = await this.fetchApi(`/api/v1/leads/${leadId}/events`, {
+      method: 'POST',
+      body: JSON.stringify(eventData)
+    });
+    return response.event;
+  }
+
+  // LEADGEN EXECUTION (Admin Only)
+  async executeLeadgenCampaign(config: any): Promise<any> {
+    return this.fetchApi('/api/v1/admin/leadgen/execute', {
+      method: 'POST',
+      body: JSON.stringify(config)
+    });
+  }
+
+  async getLeadgenVerticals(): Promise<any> {
+    const response = await this.fetchApi('/api/v1/admin/leadgen/verticals');
+    return response.verticals;
+  }
+
+  async getLeadgenSources(): Promise<any> {
+    const response = await this.fetchApi('/api/v1/admin/leadgen/sources');
+    return response.sources;
+  }
+
+  async getLeadgenCampaignStatus(campaignId: string): Promise<any> {
+    const response = await this.fetchApi(`/api/v1/admin/leadgen/status/${campaignId}`);
+    return response.status;
+  }
+
+  async getLeadgenTemplate(): Promise<any> {
+    const response = await this.fetchApi('/api/v1/admin/leadgen/template');
+    return response.template;
   }
 
   async importLeadgenData(leads: any[], clientId?: string, sourceId?: string): Promise<any> {

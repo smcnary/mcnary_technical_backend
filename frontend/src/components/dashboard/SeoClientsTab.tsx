@@ -206,8 +206,8 @@ export default function SeoClientsTab() {
           <div key={item.id} className="p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h4 className="font-medium text-sm">{item.name}</h4>
-                <p className="text-xs text-muted-foreground">{item.company}</p>
+                <h4 className="font-medium text-sm">{'fullName' in item ? item.fullName : item.name}</h4>
+                <p className="text-xs text-muted-foreground">{'firm' in item ? item.firm : item.company}</p>
                 {'email' in item && item.email && <p className="text-xs text-muted-foreground">{item.email}</p>}
                 {'scheduledDate' in item && (
                   <div className="flex items-center gap-1 mt-1">

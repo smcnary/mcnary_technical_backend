@@ -339,6 +339,34 @@ export default function ClientDashboard() {
               <ThemeToggle />
             </div>
 
+            {/* Quick Navigation */}
+            <div className="mb-6 p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Quick Access</h3>
+              <div className="flex flex-wrap gap-3">
+                <a 
+                  href="/seo-clients" 
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-sm font-medium"
+                >
+                  <Users className="h-4 w-4" />
+                  SEO Clients CRM
+                </a>
+                <a 
+                  href="/client/leads" 
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-sm font-medium"
+                >
+                  <Target className="h-4 w-4" />
+                  Leads Analytics
+                </a>
+                <a 
+                  href="/audit-wizard" 
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-sm font-medium"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                  Audit Wizard
+                </a>
+              </div>
+            </div>
+
             {/* KPI grid */}
             <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4" data-tour="kpi-cards">
               <KpiCard 
