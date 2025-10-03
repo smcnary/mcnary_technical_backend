@@ -13,9 +13,13 @@ from app.api.v1.auth import auth_router
 from app.api.v1.leads import leads_router
 from app.api.v1.me import me_router
 from app.api.v1.user_profile import user_profile_router
+from app.api.v1.campaigns import campaigns_router
+from app.api.v1.case_studies import case_studies_router
+from app.api.v1.packages import packages_router
+from app.api.v1.faqs import faqs_router
 # Commented out for now to get basic backend running
 # from app.api.v1.users import users_router
-# from app.api.v1.clients import clients_router
+from app.api.v1.clients import clients_router
 # from app.api.v1.agencies import agencies_router
 # from app.api.v1.seo import router as seo_router
 # from app.api.v1.audits import router as audit_router
@@ -55,9 +59,13 @@ app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(leads_router, prefix="/api/v1/leads", tags=["Leads"])
 app.include_router(me_router, prefix="/api/v1", tags=["User Info"])
 app.include_router(user_profile_router, prefix="/api/v1", tags=["User Profile"])
+app.include_router(campaigns_router, prefix="/api", tags=["Campaigns"])
+app.include_router(case_studies_router, prefix="/api", tags=["Case Studies"])
+app.include_router(packages_router, prefix="/api/v1", tags=["Packages"])
+app.include_router(faqs_router, prefix="/api/v1", tags=["FAQs"])
 # Commented out for now to get basic backend running
 # app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
-# app.include_router(clients_router, prefix="/api/v1/clients", tags=["Clients"])
+app.include_router(clients_router, prefix="/api/v1/clients", tags=["Clients"])
 # app.include_router(agencies_router, prefix="/api/v1/agencies", tags=["Agencies"])
 # app.include_router(seo_router, prefix="/api/v1/seo", tags=["SEO Tracking"])
 # app.include_router(audit_router, prefix="/api/v1/audits", tags=["Audit Service"])

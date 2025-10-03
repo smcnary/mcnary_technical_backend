@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     """Application settings"""
     
     # Database settings
-    database_url: str = "postgresql://admin:admin@localhost:5432/technical_db"
+    database_url: str = "postgresql://smcnary@localhost:5432/tulsa_seo"
     
     # JWT settings
     secret_key: str = "your-secret-key-change-in-production"

@@ -41,23 +41,30 @@ export default function LoginPage() {
     setFormError(null);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password, remember }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
         let msg = "Login failed. Please check your credentials.";
         try {
           const j = await res.json();
-          if (j?.message) msg = j.message;
+          if (j?.detail) msg = j.detail;
         } catch {
           /* ignore */
         }
         setFormError(msg);
       } else {
+        const data = await res.json();
+        
+        // Store the JWT token
+        if (data.access_token) {
+          localStorage.setItem('auth_token', data.access_token);
+        }
+        
         // Redirect to next (preserve tier if heading back to audit)
         const url = new URL(redirectNext, window.location.origin);
         if (tierParam && (redirectNext.startsWith("/services/audit") || redirectNext === "/client")) {

@@ -321,6 +321,7 @@ export class ApiService {
     return this.authToken;
   }
 
+
   // Generic fetch method with error handling
   private async fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;

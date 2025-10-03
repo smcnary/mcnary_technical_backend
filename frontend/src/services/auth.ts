@@ -120,6 +120,14 @@ class AuthService {
       this.state.token = null;
       this.state.isAuthenticated = false;
       this.state.error = null;
+      
+      // Clear localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('clientData');
+      }
+      
       this.notifyListeners();
     }
   }
@@ -156,7 +164,7 @@ class AuthService {
 
   // Check if user is admin
   isAdmin(): boolean {
-    return this.hasRole('ROLE_ADMIN');
+    return this.hasRole('ROLE_ADMIN') || this.hasRole('ROLE_SYSTEM_ADMIN');
   }
 
   // Check if user is client admin

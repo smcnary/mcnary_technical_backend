@@ -49,7 +49,7 @@ class User(Base, TimestampMixin, UUIDMixin):
     client_id = Column(UUID(as_uuid=True), nullable=True)
     
     # Additional metadata
-    metadata_json = Column(JSONB, nullable=True, default=dict)
+    metadata_json = Column('metadata', JSONB, nullable=True, default=dict)
     
     # Role constants (matching Symfony)
     ROLE_SYSTEM_ADMIN = 'ROLE_SYSTEM_ADMIN'
